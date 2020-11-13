@@ -1,4 +1,4 @@
-# horizon
+# Horizon
 Horizon - a trustless harmony to ethereum bridge
 
 ## Key points
@@ -9,19 +9,19 @@ Horizon - a trustless harmony to ethereum bridge
 
 ## Bridge Components
 ### Used in Ethereum to Harmony flow
-* Bridge smart contract
-* Ethereum Light Client (ELC) smart contract 
-* Ethereum Verifier (EVerifier)
-* Ethereum Prover (EProver)
-* Ethereum Relayer
+* Bridge smart contract on Harmony
+* Ethereum Light Client (ELC) smart contract on Harmony
+* Ethereum Verifier (EVerifier) smart contract on Harmony
+* Ethereum Prover (EProver) is an Ethereum full node or a client that has access to a full node
+* Ethereum Relayer relays every Ethereum header information to ELC
 
 
 ### Used in Harmony to Ethereum flow
 * Bridge smart contract on Ethereum
-* Harmony Light Client (HLC) smart contract 
-* Harmony Verifier (HVerifier)
-* Harmony Prover (HProver)
-* Harmony Relayer
+* Harmony Light Client (HLC) smart contract on Ethereum
+* Harmony Verifier (HVerifier) smart contract on Ethereum
+* Harmony Prover (HProver) is a Harmony full node or a client that has access to a full node
+* Harmony Relayer relays every checkpoint block header information to HLC
 
 ## Ethereum to Harmony asset transfer
 1. User locks ERC20 on Ethereum by transferring to bridge smart contract and obtains the hash of this transaction from blockchain

@@ -1,2 +1,2 @@
-# horizon
-Horizon - trustless harmony to ethereum bridge
+# Horizon Bridge Documentation and API reference
+

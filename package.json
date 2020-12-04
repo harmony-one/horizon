@@ -1,0 +1,23 @@
+{
+  "name": "horizon-bridge",
+  "version": "1.0.0",
+  "description": "horizon decentralized trustless bridge",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs",
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "./index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/harshabakku/horizon.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/harshabakku/horizon/issues"
+  },
+  "homepage": "https://github.com/harshabakku/horizon#readme"
+}

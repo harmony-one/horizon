@@ -11,7 +11,7 @@ const {
 } = require('./cli/start/eth2hmy-relay.js')
 // const {
 //   StartHarmony2EthRelayCommand,
-// } = require('./commands/start/harmony2eth-relay.js')
+// } = require('./commands/start/hmy2eth-relay.js')
 // const { StartWatchdogCommand } = require('./commands/start/watchdog.js')
 // const { StartGanacheNodeCommand } = require('./commands/start/ganache.js')
 // const { StartLocalHarmonyNodeCommand } = require('./commands/start/harmony.js')
@@ -250,17 +250,17 @@ BridgeConfig.declareOption(
   path.join(LIBS_SOL_SRC_DIR, 'harmonyprover/dist/HarmonyProver.full.bin')
 )
 BridgeConfig.declareOption(
-  'harmony2eth-relay-min-delay',
+  'hmy2eth-relay-min-delay',
   'Minimum number of seconds to wait if the relay can\'t submit a block right away.',
   '1'
 )
 BridgeConfig.declareOption(
-  'harmony2eth-relay-max-delay',
+  'hmy2eth-relay-max-delay',
   'Maximum number of seconds to wait if the relay can\'t submit a block right away.',
   '600'
 )
 BridgeConfig.declareOption(
-  'harmony2eth-relay-error-delay',
+  'hmy2eth-relay-error-delay',
   'Number of seconds to wait before retrying if there is an error.',
   '1'
 )
@@ -301,7 +301,7 @@ const startCommand = program.command('start')
 
 BridgeConfig.addOptions(
   startCommand
-    .command('eth2harmony-relay')
+    .command('eth2hmy-relay')
     .action(StartEth2HmyRelayCommand.execute),
   [
     'harmony-master-account',
@@ -315,7 +315,7 @@ BridgeConfig.addOptions(
 
 // BridgeConfig.addOptions(
 //   startCommand
-//     .command('harmony2eth-relay')
+//     .command('hmy2eth-relay')
 //     .action(StartHarmony2EthRelayCommand.execute),
 //   [
 //     'eth-node-url',
@@ -324,9 +324,9 @@ BridgeConfig.addOptions(
 //     'harmony-network-id',
 //     'eth-client-abi-path',
 //     'eth-client-address',
-//     'harmony2eth-relay-min-delay',
-//     'harmony2eth-relay-max-delay',
-//     'harmony2eth-relay-error-delay',
+//     'hmy2eth-relay-min-delay',
+//     'hmy2eth-relay-max-delay',
+//     'hmy2eth-relay-error-delay',
 //     'eth-gas-multiplier',
 //     'daemon',
 //   ]
@@ -352,9 +352,9 @@ stopCommand.command('harmony-node').action(StopManagedProcessCommand.execute)
 
 stopCommand.command('ganache').action(StopManagedProcessCommand.execute)
 
-stopCommand.command('eth2harmony-relay').action(StopManagedProcessCommand.execute)
+stopCommand.command('eth2hmy-relay').action(StopManagedProcessCommand.execute)
 
-stopCommand.command('harmony2eth-relay').action(StopManagedProcessCommand.execute)
+stopCommand.command('hmy2eth-relay').action(StopManagedProcessCommand.execute)
 
 stopCommand.command('bridge-watchdog').action(StopManagedProcessCommand.execute)
 
@@ -587,9 +587,9 @@ const dangerCommand = program
 //     'harmony-network-id',
 //     'eth-client-abi-path',
 //     'eth-client-address',
-//     'harmony2eth-relay-min-delay',
-//     'harmony2eth-relay-max-delay',
-//     'harmony2eth-relay-error-delay',
+//     'hmy2eth-relay-min-delay',
+//     'hmy2eth-relay-max-delay',
+//     'hmy2eth-relay-error-delay',
 //     'eth-gas-multiplier',
 //   ]
 // )

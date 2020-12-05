@@ -7,8 +7,11 @@ const os = require('os')
 
 class StartEth2HmyRelayCommand {
   static async execute() {
-    if (BridgeConfig.getParam('daemon') === 'true') {
-      ProcessManager.connect((err) => {
+    
+    //correct his later, disable daemon mode by default for now
+    // if (BridgeConfig.getParam('daemon') === 'false') {
+    if(false){  
+    ProcessManager.connect((err) => {
         if (err) {
           console.log(
             'Unable to connect to the ProcessManager daemon! Please retry.'

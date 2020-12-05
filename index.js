@@ -28,15 +28,15 @@ const {
 // const { ETHDump } = require('./commands/eth-dump')
 // const { HarmonyDump } = require('harmony-bridge-lib/harmony/harmony-dump')
 const { BridgeConfig } = require('harmony-bridge-lib/config')
-const {
-  InitHarmonyContracts,
-  InitHarmonyTokenFactory,
-  InitEthEd25519,
-  InitEthErc20,
-  InitEthLocker,
-  InitEthClient,
-  InitEthProver,
-} = require('harmony-bridge-lib/init')
+// const {
+//   InitHarmonyContracts,
+//   InitHarmonyTokenFactory,
+//   InitEthEd25519,
+//   InitEthErc20,
+//   InitEthLocker,
+//   InitEthClient,
+//   InitEthProver,
+// } = require('harmony-bridge-lib/init')
 
 // source dir or where harmony-bridge cli is installed (when install with npm)
 // const BRIDGE_SRC_DIR = __dirname

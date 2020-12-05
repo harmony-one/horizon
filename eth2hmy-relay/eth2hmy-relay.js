@@ -3,9 +3,7 @@ const os = require('os')
 const exec = require('child_process').exec
 const utils = require('ethereumjs-util')
 const BN = require('bn.js')
-const { RobustWeb3, sleep } = require('rainbow-bridge-lib/rainbow/robust')
-const { txnStatus } = require('rainbow-bridge-lib/rainbow/borsh')
-const { web3BlockToRlp } = require('rainbow-bridge-lib/eth2hmy-relay')
+const { RobustWeb3, sleep } = require('../harmony-bridge-lib/robust')
 const MAX_SUBMIT_BLOCK = 10
 const BRIDGE_SRC_DIR = path.join(__dirname, '..')
 
@@ -18,6 +16,19 @@ function execute(command, _callback) {
       resolve(stdout)
     })
   )
+}
+
+function web3BlockToRlp(blockData) {
+  // difficulty is only used and make sense in PoW network
+  blockData.difficulty = parseInt(blockData.difficulty || '0', 10)
+  blockData.totalDifficulty = parseInt(blockData.totalDifficulty, 10)
+  blockData.uncleHash = blockData.sha3Uncles
+  blockData.coinbase = blockData.miner
+  blockData.transactionTrie = blockData.transactionsRoot
+  blockData.receiptTrie = blockData.receiptsRoot
+  blockData.bloom = blockData.logsBloom
+  const blockHeader = blockFromRpc(blockData)
+  return utils.rlp.encode(blockHeader.header.raw)
 }
 
 class Eth2HmyRelay {
@@ -101,11 +112,11 @@ class Eth2HmyRelay {
           )
 
           // Wait add_block txns commit
-          await Promise.all(
-            txHashes.map((txHash) =>
-              txnStatus(this.ethClientContract.account, txHash, 10, 2000)
-            )
-          )
+          // await Promise.all(
+          //   txHashes.map((txHash) =>
+          //     txnStatus(this.ethClientContract.account, txHash, 10, 2000)
+          //   )
+          // )
           console.log(
             `Success added block ${clientBlockNumber + 1} to block ${endBlock}`
           )
@@ -174,3 +185,4 @@ class Eth2HmyRelay {
 
 exports.Eth2HmyRelay = Eth2HmyRelay
 exports.execute = execute
+exports.web3BlockToRlp = web3BlockToRlp

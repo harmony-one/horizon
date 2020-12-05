@@ -1,7 +1,7 @@
 const ProcessManager = require('pm2')
 const { spawnProcess } = require('./helpers')
 const { Eth2HmyRelay } = require('../../eth2hmy-relay/eth2hmy-relay')
-const { BridgeConfig } = require('harmony-bridge-lib/config')
+const { BridgeConfig } = require('../../harmony-bridge-lib/config')
 const path = require('path')
 const os = require('os')
 

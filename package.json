@@ -18,7 +18,8 @@
     "pm2-promise": "^2.0.1",
     "request": "^2.88.2",
     "web3": "=1.2.6",
-    "configstore": "^5.0.1"
+    "configstore": "^5.0.1",
+    "change-case": "^4.1.1"
   },
   "scripts": {
     "test": "./index.js"

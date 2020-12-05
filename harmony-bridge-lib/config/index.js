@@ -3,7 +3,7 @@ const path = require('path')
 const homedir = require('os').homedir()
 const changeCase = require('change-case')
 
-class RainbowConfig {
+class BridgeConfig {
   // Remembers the description of the parameter.
   static declareOption(name, description, defaultValue = '', noConfig = false) {
     this.paramDeclarations[name] = {
@@ -145,15 +145,15 @@ class RainbowConfig {
 // Stores key values 'my-param-name' => { value: 'value', paramType: ...}
 // where paramType is one of 'env', 'arg', 'config', 'default' representing where the
 // value is coming from.
-RainbowConfig.paramValues = {}
+BridgeConfig.paramValues = {}
 
 // Stores key values 'my-param-name' => { description: 'my description', defaultValue: 'default value', noConfig: false}
 // where default value might not be provided.
 // noConfig indicates whether the param should not be written into config.
-RainbowConfig.paramDeclarations = {}
+BridgeConfig.paramDeclarations = {}
 
 // File that stores config.
-RainbowConfig.configFile = new Configstore(
+BridgeConfig.configFile = new Configstore(
   '',
   {},
   {
@@ -161,4 +161,4 @@ RainbowConfig.configFile = new Configstore(
   }
 )
 
-exports.RainbowConfig = RainbowConfig
+exports.BridgeConfig = BridgeConfig

@@ -3,31 +3,31 @@ const path = require('path')
 const os = require('os')
 const { program } = require('commander')
 
-const { CleanCommand } = require('./commands/clean')
-const { PrepareCommand } = require('./commands/prepare')
-const { StatusCommand } = require('./commands/status')
+// const { CleanCommand } = require('./commands/clean')
+// const { PrepareCommand } = require('./commands/prepare')
+// const { StatusCommand } = require('./commands/status')
 const {
   StartEth2HarmonyRelayCommand,
-} = require('./commands/start/eth2harmony-relay.js')
-const {
-  StartHarmony2EthRelayCommand,
-} = require('./commands/start/harmony2eth-relay.js')
-const { StartWatchdogCommand } = require('./commands/start/watchdog.js')
-const { StartGanacheNodeCommand } = require('./commands/start/ganache.js')
-const { StartLocalHarmonyNodeCommand } = require('./commands/start/harmony.js')
-const { StopManagedProcessCommand } = require('./commands/stop/process.js')
-const {
-  DangerSubmitInvalidHarmonyBlock,
-} = require('./commands/danger-submit-invalid-harmony-block')
-const { DangerDeployMyERC20 } = require('./commands/danger-deploy-myerc20')
-const {
-  TransferETHERC20ToHarmony,
-  TransferEthERC20FromHarmony,
-  DeployToken,
-} = require('harmony-bridge-lib/transfer-eth-erc20')
-const { ETHDump } = require('./commands/eth-dump')
-const { HarmonyDump } = require('harmony-bridge-lib/harmony/harmony-dump')
-const { RainbowConfig } = require('harmony-bridge-lib/config')
+} = require('./cli/start/eth2hmy-relay.js')
+// const {
+//   StartHarmony2EthRelayCommand,
+// } = require('./commands/start/harmony2eth-relay.js')
+// const { StartWatchdogCommand } = require('./commands/start/watchdog.js')
+// const { StartGanacheNodeCommand } = require('./commands/start/ganache.js')
+// const { StartLocalHarmonyNodeCommand } = require('./commands/start/harmony.js')
+// const { StopManagedProcessCommand } = require('./commands/stop/process.js')
+// const {
+//   DangerSubmitInvalidHarmonyBlock,
+// } = require('./commands/danger-submit-invalid-harmony-block')
+// const { DangerDeployMyERC20 } = require('./commands/danger-deploy-myerc20')
+// const {
+//   TransferETHERC20ToHarmony,
+//   TransferEthERC20FromHarmony,
+//   DeployToken,
+// } = require('harmony-bridge-lib/transfer-eth-erc20')
+// const { ETHDump } = require('./commands/eth-dump')
+// const { HarmonyDump } = require('harmony-bridge-lib/harmony/harmony-dump')
+const { BridgeConfig } = require('harmony-bridge-lib/config')
 const {
   InitHarmonyContracts,
   InitHarmonyTokenFactory,
@@ -39,247 +39,247 @@ const {
 } = require('harmony-bridge-lib/init')
 
 // source dir or where harmony-bridge cli is installed (when install with npm)
-const BRIDGE_SRC_DIR = __dirname
-const LIBS_SOL_SRC_DIR = path.join(
-  BRIDGE_SRC_DIR,
-  'node_modules/harmony-bridge-sol'
-)
-const LIBS_RS_SRC_DIR = path.join(
-  BRIDGE_SRC_DIR,
-  'node_modules/harmony-bridge-rs'
-)
-const LIBS_TC_SRC_DIR = path.join(
-  BRIDGE_SRC_DIR,
-  'node_modules/harmony-token-connector'
-)
+// const BRIDGE_SRC_DIR = __dirname
+// const LIBS_SOL_SRC_DIR = path.join(
+//   BRIDGE_SRC_DIR,
+//   'node_modules/harmony-bridge-sol'
+// )
+// const LIBS_RS_SRC_DIR = path.join(
+//   BRIDGE_SRC_DIR,
+//   'node_modules/harmony-bridge-rs'
+// )
+// const LIBS_TC_SRC_DIR = path.join(
+//   BRIDGE_SRC_DIR,
+//   'node_modules/harmony-token-connector'
+// )
 
-RainbowConfig.declareOption(
+BridgeConfig.declareOption(
   'harmony-network-id',
   'The identifier of the NEAR network that the given NEAR node is expected to represent.'
 )
-RainbowConfig.declareOption('harmony-node-url', 'The URL of the NEAR node.')
-RainbowConfig.declareOption('eth-node-url', 'The URL of the Ethereum node.')
-RainbowConfig.declareOption(
+BridgeConfig.declareOption('harmony-node-url', 'The URL of the NEAR node.')
+BridgeConfig.declareOption('eth-node-url', 'The URL of the Ethereum node.')
+BridgeConfig.declareOption(
   'harmony-master-account',
   'The account of the master account on NEAR blockchain that can be used to deploy and initialize the test contracts.' +
     ' This account will also own the initial supply of the fungible tokens.'
 )
-RainbowConfig.declareOption(
+BridgeConfig.declareOption(
   'harmony-master-sk',
   'The secret key of the master account on NEAR blockchain.'
 )
-RainbowConfig.declareOption(
+BridgeConfig.declareOption(
   'eth-master-sk',
   'The secret key of the master account on Ethereum blockchain.'
 )
-RainbowConfig.declareOption(
+BridgeConfig.declareOption(
   'harmony-client-account',
   'The account of the Harmony Client contract that can be used to accept ETH headers.',
   'rainbow_bridge_eth_on_harmony_client'
 )
-RainbowConfig.declareOption(
+BridgeConfig.declareOption(
   'harmony-client-sk',
   'The secret key of the Harmony Client account. If not specified will use master SK.'
 )
-RainbowConfig.declareOption(
+BridgeConfig.declareOption(
   'harmony-client-contract-path',
   'The path to the Wasm file containing the Harmony Client contract.',
   path.join(LIBS_RS_SRC_DIR, 'res/eth_client.wasm')
 )
-RainbowConfig.declareOption(
+BridgeConfig.declareOption(
   'harmony-client-init-balance',
   'The initial balance of Harmony Client contract in femtoNEAR.',
   '100000000000000000000000000'
 )
-RainbowConfig.declareOption(
+BridgeConfig.declareOption(
   'harmony-client-validate-ethash',
   'Whether validate ethash of submitted eth block, should set to true on mainnet and false on PoA testnets',
   'true'
 )
-RainbowConfig.declareOption(
+BridgeConfig.declareOption(
   'harmony-client-trusted-signer',
   'When non empty, deploy as trusted-signer mode where only tursted signer can submit blocks to client',
   ''
 )
-RainbowConfig.declareOption(
+BridgeConfig.declareOption(
   'harmony-prover-account',
   'The account of the Harmony Prover contract that can be used to accept ETH headers.',
   'rainbow_bridge_eth_on_harmony_prover'
 )
-RainbowConfig.declareOption(
+BridgeConfig.declareOption(
   'harmony-prover-sk',
   'The secret key of the Harmony Prover account. If not specified will use master SK.'
 )
-RainbowConfig.declareOption(
+BridgeConfig.declareOption(
   'harmony-prover-contract-path',
   'The path to the Wasm file containing the Harmony Prover contract.',
   path.join(LIBS_RS_SRC_DIR, 'res/eth_prover.wasm')
 )
-RainbowConfig.declareOption(
+BridgeConfig.declareOption(
   'harmony-prover-init-balance',
   'The initial balance of Harmony Prover contract in femtoNEAR.',
   '100000000000000000000000000'
 )
-RainbowConfig.declareOption(
+BridgeConfig.declareOption(
   'daemon',
   'Whether the process should be launched as a daemon.',
   'true',
   true
 )
-RainbowConfig.declareOption(
+BridgeConfig.declareOption(
   'core-src',
   'Path to the harmonycore source. It will be downloaded if not provided.',
   ''
 )
-RainbowConfig.declareOption(
+BridgeConfig.declareOption(
   'harmonyup-src',
   'Path to the harmonyup source. It will be downloaded if not provided.',
   ''
 )
-RainbowConfig.declareOption(
+BridgeConfig.declareOption(
   'eth-gas-multiplier',
   'How many times more in Ethereum gas are we willing to overpay.',
   '1'
 )
 
 // User-specific arguments.
-RainbowConfig.declareOption(
+BridgeConfig.declareOption(
   'harmony-token-factory-account',
   'The account of the token factory contract that will be used to mint tokens locked on Ethereum.',
   'harmonytokenfactory'
 )
-RainbowConfig.declareOption(
+BridgeConfig.declareOption(
   'harmony-token-factory-sk',
   'The secret key of the token factory account. If not specified will use master SK.'
 )
-RainbowConfig.declareOption(
+BridgeConfig.declareOption(
   'harmony-token-factory-contract-path',
   'The path to the Wasm file containing the token factory contract.',
   path.join(LIBS_TC_SRC_DIR, 'res/bridge_token_factory.wasm')
 )
-RainbowConfig.declareOption(
+BridgeConfig.declareOption(
   'harmony-token-factory-init-balance',
   'The initial balance of token factory contract in yoctoNEAR.',
   '1000000000000000000000000000'
 )
-RainbowConfig.declareOption(
+BridgeConfig.declareOption(
   'eth-locker-address',
   'ETH address of the locker contract.'
 )
-RainbowConfig.declareOption(
+BridgeConfig.declareOption(
   'eth-locker-abi-path',
   'Path to the .abi file defining Ethereum locker contract. This contract works in pair with mintable fungible token on NEAR blockchain.',
   path.join(LIBS_TC_SRC_DIR, 'res/BridgeTokenFactory.full.abi')
 )
-RainbowConfig.declareOption(
+BridgeConfig.declareOption(
   'eth-locker-bin-path',
   'Path to the .bin file defining Ethereum locker contract. This contract works in pair with mintable fungible token on NEAR blockchain.',
   path.join(LIBS_TC_SRC_DIR, 'res/BridgeTokenFactory.full.bin')
 )
-RainbowConfig.declareOption(
+BridgeConfig.declareOption(
   'eth-erc20-address',
   'ETH address of the ERC20 contract.'
 )
-RainbowConfig.declareOption(
+BridgeConfig.declareOption(
   'eth-erc20-abi-path',
   'Path to the .abi file defining Ethereum ERC20 contract.',
   path.join(LIBS_TC_SRC_DIR, 'res/TToken.full.abi')
 )
-RainbowConfig.declareOption(
+BridgeConfig.declareOption(
   'eth-erc20-bin-path',
   'Path to the .bin file defining Ethereum ERC20 contract.',
   path.join(LIBS_TC_SRC_DIR, 'res/TToken.full.bin')
 )
-RainbowConfig.declareOption(
+BridgeConfig.declareOption(
   'eth-ed25519-address',
   'ETH address of the ED25519 contract.'
 )
-RainbowConfig.declareOption(
+BridgeConfig.declareOption(
   'eth-ed25519-abi-path',
   'Path to the .abi file defining Ethereum ED25519 contract.',
   path.join(LIBS_SOL_SRC_DIR, 'harmonybridge/dist/Ed25519.full.abi')
 )
-RainbowConfig.declareOption(
+BridgeConfig.declareOption(
   'eth-ed25519-bin-path',
   'Path to the .bin file defining Ethereum ED25519 contract.',
   path.join(LIBS_SOL_SRC_DIR, 'harmonybridge/dist/Ed25519.full.bin')
 )
-RainbowConfig.declareOption(
+BridgeConfig.declareOption(
   'eth-client-lock-eth-amount',
   'Amount of Ether that should be temporarily locked when submitting a new header to EthClient, in wei.',
   '100000000000000000000'
 )
-RainbowConfig.declareOption(
+BridgeConfig.declareOption(
   'eth-client-lock-duration',
   'The challenge window during which anyone can challenge an incorrect ED25519 signature of the Harmony block, in EthClient, in seconds.',
   14400
 )
-RainbowConfig.declareOption(
+BridgeConfig.declareOption(
   'eth-client-replace-duration',
   'Minimum time difference required to replace a block during challenge period, in EthClient, in seconds.',
   18000
 )
-RainbowConfig.declareOption(
+BridgeConfig.declareOption(
   'eth-client-address',
   'ETH address of the EthClient contract.'
 )
-RainbowConfig.declareOption(
+BridgeConfig.declareOption(
   'eth-client-abi-path',
   'Path to the .abi file defining Ethereum Client contract.',
   path.join(LIBS_SOL_SRC_DIR, 'harmonybridge/dist/HarmonyBridge.full.abi')
 )
-RainbowConfig.declareOption(
+BridgeConfig.declareOption(
   'eth-client-bin-path',
   'Path to the .bin file defining Ethereum Client contract.',
   path.join(LIBS_SOL_SRC_DIR, 'harmonybridge/dist/HarmonyBridge.full.bin')
 )
-RainbowConfig.declareOption(
+BridgeConfig.declareOption(
   'eth-prover-address',
   'ETH address of the EthProver contract.'
 )
-RainbowConfig.declareOption(
+BridgeConfig.declareOption(
   'eth-prover-abi-path',
   'Path to the .abi file defining Ethereum Prover contract.',
   path.join(LIBS_SOL_SRC_DIR, 'harmonyprover/dist/HarmonyProver.full.abi')
 )
-RainbowConfig.declareOption(
+BridgeConfig.declareOption(
   'eth-prover-bin-path',
   'Path to the .bin file defining Ethereum Prover contract.',
   path.join(LIBS_SOL_SRC_DIR, 'harmonyprover/dist/HarmonyProver.full.bin')
 )
-RainbowConfig.declareOption(
+BridgeConfig.declareOption(
   'harmony2eth-relay-min-delay',
   'Minimum number of seconds to wait if the relay can\'t submit a block right away.',
   '1'
 )
-RainbowConfig.declareOption(
+BridgeConfig.declareOption(
   'harmony2eth-relay-max-delay',
   'Maximum number of seconds to wait if the relay can\'t submit a block right away.',
   '600'
 )
-RainbowConfig.declareOption(
+BridgeConfig.declareOption(
   'harmony2eth-relay-error-delay',
   'Number of seconds to wait before retrying if there is an error.',
   '1'
 )
-RainbowConfig.declareOption(
+BridgeConfig.declareOption(
   'watchdog-delay',
   'Number of seconds to wait after validating all signatures.',
   '300'
 )
-RainbowConfig.declareOption(
+BridgeConfig.declareOption(
   'watchdog-error-delay',
   'Number of seconds to wait before retrying if there is an error.',
   '1'
 )
-RainbowConfig.declareOption('harmony-erc20-account', 'Must be declared before set')
+BridgeConfig.declareOption('harmony-erc20-account', 'Must be declared before set')
 
 program.version('0.1.0')
 
 // General-purpose commands.
 program.command('clean').action(CleanCommand.execute)
 
-RainbowConfig.addOptions(
+BridgeConfig.addOptions(
   program.command('prepare').action(PrepareCommand.execute),
   ['core-src', 'harmonyup-src']
 )
@@ -292,12 +292,12 @@ const startCommand = program.command('start')
 
 startCommand.command('harmony-node').action(StartLocalHarmonyNodeCommand.execute)
 
-RainbowConfig.addOptions(
+BridgeConfig.addOptions(
   startCommand.command('ganache').action(StartGanacheNodeCommand.execute),
   ['daemon']
 )
 
-RainbowConfig.addOptions(
+BridgeConfig.addOptions(
   startCommand
     .command('eth2harmony-relay')
     .action(StartEth2HarmonyRelayCommand.execute),
@@ -311,7 +311,7 @@ RainbowConfig.addOptions(
   ]
 )
 
-RainbowConfig.addOptions(
+BridgeConfig.addOptions(
   startCommand
     .command('harmony2eth-relay')
     .action(StartHarmony2EthRelayCommand.execute),
@@ -330,7 +330,7 @@ RainbowConfig.addOptions(
   ]
 )
 
-RainbowConfig.addOptions(
+BridgeConfig.addOptions(
   startCommand.command('bridge-watchdog').action(StartWatchdogCommand.execute),
   [
     'eth-node-url',
@@ -356,7 +356,7 @@ stopCommand.command('harmony2eth-relay').action(StopManagedProcessCommand.execut
 
 stopCommand.command('bridge-watchdog').action(StopManagedProcessCommand.execute)
 
-RainbowConfig.addOptions(
+BridgeConfig.addOptions(
   program
     .command('init-harmony-contracts')
     .description(
@@ -382,7 +382,7 @@ RainbowConfig.addOptions(
   ]
 )
 
-RainbowConfig.addOptions(
+BridgeConfig.addOptions(
   program
     .command('init-eth-ed25519')
     .description(
@@ -398,7 +398,7 @@ RainbowConfig.addOptions(
   ]
 )
 
-RainbowConfig.addOptions(
+BridgeConfig.addOptions(
   program
     .command('init-eth-client')
     .description('Deploys and initializes EthClient.')
@@ -416,7 +416,7 @@ RainbowConfig.addOptions(
   ]
 )
 
-RainbowConfig.addOptions(
+BridgeConfig.addOptions(
   program
     .command('init-eth-prover')
     .description('Deploys and initializes EthProver.')
@@ -433,7 +433,7 @@ RainbowConfig.addOptions(
 
 // User commands.
 
-RainbowConfig.addOptions(
+BridgeConfig.addOptions(
   program
     .command('init-harmony-token-factory')
     .description(
@@ -449,7 +449,7 @@ RainbowConfig.addOptions(
   ]
 )
 
-RainbowConfig.addOptions(
+BridgeConfig.addOptions(
   program
     .command('deploy-token <token_name> <token_address>')
     .description('Deploys and initializes token on NEAR.')
@@ -457,7 +457,7 @@ RainbowConfig.addOptions(
   ['harmony-token-factory-account']
 )
 
-RainbowConfig.addOptions(
+BridgeConfig.addOptions(
   program
     .command('init-eth-locker')
     .description(
@@ -476,7 +476,7 @@ RainbowConfig.addOptions(
   ]
 )
 
-RainbowConfig.addOptions(
+BridgeConfig.addOptions(
   program
     .command('init-eth-erc20')
     .description(
@@ -492,7 +492,7 @@ RainbowConfig.addOptions(
   ]
 )
 
-RainbowConfig.addOptions(
+BridgeConfig.addOptions(
   program
     .command('transfer-eth-erc20-to-harmony')
     .action(TransferETHERC20ToHarmony.execute)
@@ -525,7 +525,7 @@ RainbowConfig.addOptions(
   ]
 )
 
-RainbowConfig.addOptions(
+BridgeConfig.addOptions(
   program
     .command('transfer-eth-erc20-from-harmony')
     .action(TransferEthERC20FromHarmony.execute)
@@ -571,7 +571,7 @@ const dangerCommand = program
     'Dangerous commands that should only be used for testing purpose.'
   )
 
-RainbowConfig.addOptions(
+BridgeConfig.addOptions(
   dangerCommand
     .command('submit_invalid_harmony_block')
     .description(
@@ -592,7 +592,7 @@ RainbowConfig.addOptions(
   ]
 )
 
-RainbowConfig.addOptions(
+BridgeConfig.addOptions(
   dangerCommand
     .command('deploy_test_erc20')
     .description('Deploys MyERC20')
@@ -619,7 +619,7 @@ program
   )
   .action(ETHDump.execute)
 
-RainbowConfig.addOptions(
+BridgeConfig.addOptions(
   program
     .command('harmony-dump <kind_of_data>')
     .option('--path <path>', 'Dir path to dump harmony data')

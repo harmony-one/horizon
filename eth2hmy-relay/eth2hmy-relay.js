@@ -32,8 +32,8 @@ function web3BlockToRlp(blockData) {
 }
 
 class Eth2HmyRelay {
-  initialize(ethClientContract, ethNodeURL) {
-    this.ethClientContract = ethClientContract
+  initialize() {
+    let ethNodeURL = "http://localhost:9545"
     // @ts-ignore
     this.robustWeb3 = new RobustWeb3(ethNodeURL)
     this.web3 = this.robustWeb3.web3
@@ -47,10 +47,10 @@ class Eth2HmyRelay {
       try {
         // Even retry 10 times ethClientContract.last_block_number could still fail
         // Return back to loop to avoid crash eth2hmy-relay.
-        clientBlockNumber = (
-          await this.ethClientContract.last_block_number()
-        ).toNumber()
-        console.log('Client block number is ' + clientBlockNumber)
+        // clientBlockNumber = (
+        //   await this.ethClientContract.last_block_number()
+        // ).toNumber()
+        // console.log('Client block number is ' + clientBlockNumber)
         chainBlockNumber = await robustWeb3.getBlockNumber()
         console.log('Chain block number is ' + chainBlockNumber)
       } catch (e) {

@@ -1,0 +1,16 @@
+{
+  "name": "ethClient.app",
+  "version": "1.0.0",
+  "description": "Eth light client",
+  "main": "truffle.js",
+  "dependencies": {
+    "@harmony-js/core": "^0.1.46",
+    "dotenv": "^8.2.0",
+    "openzeppelin-solidity": "^2.5.0",
+    "solc": "^0.5.0",
+    "tslib": "^1.10.0",
+    "@summa-tx/bitcoin-spv-sol": "^3.0.0",
+    "rlp": "^2.2.4",
+    "web3": "^1.2.4"
+  }
+}

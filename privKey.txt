@@ -1,0 +1,11 @@
+
+openssl ecparam -genkey -name secp256k1 -text -noout -outform DER | xxd -p -c 1000 | sed 's/41534e31204f49443a20736563703235366b310a30740201010420/PrivKey: /' | sed 's/a00706052b8104000aa144034200/\'$'\nPubKey: /'
+
+
+PrivKey: 3054d9107ed6900390d0de14fee63d1ac0f430f5e89a954a2b255a5fff639575
+PubKey: 044ea538e02c21ffab2c44ed9776d9421aca484a72ca033519671ef769d257fabb41a07a0422ec3cc00f40105309a3b6134c1e3424e1cbab99bb8bd51d0613f067
+
+
+ ./hmy keys import-private-key 3054d9107ed6900390d0de14fee63d1ac0f430f5e89a954a2b255a5fff639575 testwallet 
+Imported keystore given account alias of `testwallet`
+ONE Address: one1ctrp060zds0phu57xylrhv9due7ax8258h3rmk

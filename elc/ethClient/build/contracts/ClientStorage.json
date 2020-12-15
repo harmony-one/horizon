@@ -1,0 +1,1544 @@
+{
+  "contractName": "ClientStorage",
+  "abi": [
+    {
+      "inputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "name": "blockExisting",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "blockHeightMax",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "name": "blocks",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "parentHash",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "stateRoot",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "transactionsRoot",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "receiptsRoot",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "number",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "difficulty",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "time",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "hash",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "name": "finalizedBlocks",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "firstBlock",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "name": "longestBranchHead",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "name": "verifiedBlocks",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ],
+  "metadata": "{\"compiler\":{\"version\":\"0.5.17+commit.d19bba13\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"blockExisting\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"blockHeightMax\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"blocks\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"parentHash\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"stateRoot\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"transactionsRoot\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"receiptsRoot\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"number\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"difficulty\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"time\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"hash\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"finalizedBlocks\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"firstBlock\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"longestBranchHead\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"verifiedBlocks\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"methods\":{}},\"userdoc\":{\"methods\":{},\"notice\":\"The ClientStorage contract contains underlying data for EthNtyRelay contract\"}},\"settings\":{\"compilationTarget\":{\"/media/harsha/home/workspace/horizon/elc/ethClient/contracts/ClientStorage.sol\":\"ClientStorage\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"/media/harsha/home/workspace/horizon/elc/ethClient/contracts/ClientStorage.sol\":{\"keccak256\":\"0x3b0ad0e216379881f2c0ea46441d115afb555cd61ff3cf1cdad38db76eb784df\",\"urls\":[\"bzz-raw://420dccec354ca11e57cd732233665aee79a8bbdded0c283feb22285ec11c4639\",\"dweb:/ipfs/QmaouJKWHwb4keBKNmZrfKMQhug9dYD4Eyw1TpudMdr8m7\"]}},\"version\":1}",
+  "bytecode": "0x608060405234801561001057600080fd5b50610264806100206000396000f3fe608060405234801561001057600080fd5b506004361061007d5760003560e01c8063a8b00a341161005b578063a8b00a34146100ea578063b1d3e15914610107578063d072e8d714610124578063f25b3f991461012c5761007d565b8063231b02681461008257806341e637491461009c57806392947cc0146100cd575b600080fd5b61008a61018a565b60408051918252519081900360200190f35b6100b9600480360360208110156100b257600080fd5b5035610190565b604080519115158252519081900360200190f35b61008a600480360360208110156100e357600080fd5b50356101a5565b6100b96004803603602081101561010057600080fd5b50356101b7565b6100b96004803603602081101561011d57600080fd5b50356101cc565b61008a6101e1565b6101496004803603602081101561014257600080fd5b50356101e7565b604080519889526020890197909752878701959095526060870193909352608086019190915260a085015260c084015260e083015251908190036101000190f35b60005481565b60026020526000908152604090205460ff1681565b60086020526000908152604090205481565b60046020526000908152604090205460ff1681565b60036020526000908152604090205460ff1681565b60075481565b6001602052806000526040600020600091509050806000015490806001015490806002015490806003015490806004015490806005015490806006015490806007015490508856fea265627a7a723158207aa7143099ffa6061e51cc88fa92147f5a2634ac6f79fc9061786a49a166f72564736f6c63430005110032",
+  "deployedBytecode": "0x608060405234801561001057600080fd5b506004361061007d5760003560e01c8063a8b00a341161005b578063a8b00a34146100ea578063b1d3e15914610107578063d072e8d714610124578063f25b3f991461012c5761007d565b8063231b02681461008257806341e637491461009c57806392947cc0146100cd575b600080fd5b61008a61018a565b60408051918252519081900360200190f35b6100b9600480360360208110156100b257600080fd5b5035610190565b604080519115158252519081900360200190f35b61008a600480360360208110156100e357600080fd5b50356101a5565b6100b96004803603602081101561010057600080fd5b50356101b7565b6100b96004803603602081101561011d57600080fd5b50356101cc565b61008a6101e1565b6101496004803603602081101561014257600080fd5b50356101e7565b604080519889526020890197909752878701959095526060870193909352608086019190915260a085015260c084015260e083015251908190036101000190f35b60005481565b60026020526000908152604090205460ff1681565b60086020526000908152604090205481565b60046020526000908152604090205460ff1681565b60036020526000908152604090205460ff1681565b60075481565b6001602052806000526040600020600091509050806000015490806001015490806002015490806003015490806004015490806005015490806006015490806007015490508856fea265627a7a723158207aa7143099ffa6061e51cc88fa92147f5a2634ac6f79fc9061786a49a166f72564736f6c63430005110032",
+  "sourceMap": "114:1450:1:-;;;1534:27;8:9:-1;5:2;;;30:1;27;20:12;5:2;1534:27:1;114:1450;;;;;;",
+  "deployedSourceMap": "114:1450:1:-;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;114:1450:1;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;359:22;;;:::i;:::-;;;;;;;;;;;;;;;;571:43;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;-1:-1;571:43:1;;:::i;:::-;;;;;;;;;;;;;;;;;;1483:46;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;-1:-1;1483:46:1;;:::i;739:45::-;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;-1:-1;739:45:1;;:::i;654:44::-;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;-1:-1;654:44:1;;:::i;1080:26::-;;;:::i;452:49::-;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;-1:-1;452:49:1;;:::i;:::-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;359:22;;;;:::o;571:43::-;;;;;;;;;;;;;;;:::o;1483:46::-;;;;;;;;;;;;;:::o;739:45::-;;;;;;;;;;;;;;;:::o;654:44::-;;;;;;;;;;;;;;;:::o;1080:26::-;;;;:::o;452:49::-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::o",
+  "source": "pragma solidity ^0.5.0;\n\n/**\n * The ClientStorage contract contains underlying data for EthNtyRelay contract\n */\n contract ClientStorage {\n \tstruct StoredBlockHeader {\n \t\tuint parentHash;\n \t\tuint stateRoot;\n \t\tuint transactionsRoot;\n \t\tuint receiptsRoot;\n \t\tuint number;\n \t\tuint difficulty;\n \t\tuint time;\n \t\tuint hash;\n \t}\n\n \t// The first block header hash\n \tuint public firstBlock;\n\n    // Blocks data, in the form: blockHeaderHash => BlockHeader\n    mapping (uint => StoredBlockHeader) public blocks;\n    // Block existing map, in the form: blockHeaderHash => bool\n    mapping (uint => bool) public blockExisting;\n    // Blocks in 'Verified' state\n    mapping (uint => bool) public verifiedBlocks;\n    // Blocks in 'Finalized' state\n    mapping (uint => bool) public finalizedBlocks;\n\n    // Valid relayed blocks for a block height, in the form: blockNumber => blockHeaderHash[]\n    mapping (uint => uint[]) blocksByHeight;\n    // Block height existing map, in the form: blockNumber => bool\n    mapping (uint => bool) blocksByHeightExisting;\n\n    // Max block height stored\n    uint public blockHeightMax;\n\n \t// Block header hash that points to longest chain head\n \t// (please note that 'longest' chain is based on total difficulty)\n \t// uint public longestChainHead;\n\n\t // Longest branch head of each checkpoint, in the form: (checkpoint block hash) => (head block hash)\n\t // (note that 'longest branch' means the branch which has biggest cumulative difficulty from checkpoint)\n\t mapping(uint => uint) public longestBranchHead;\n\n \tconstructor() public {\n\n \t}\n }\n\n",
+  "sourcePath": "/media/harsha/home/workspace/horizon/elc/ethClient/contracts/ClientStorage.sol",
+  "ast": {
+    "absolutePath": "/media/harsha/home/workspace/horizon/elc/ethClient/contracts/ClientStorage.sol",
+    "exportedSymbols": {
+      "ClientStorage": [
+        493
+      ]
+    },
+    "id": 494,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 438,
+        "literals": [
+          "solidity",
+          "^",
+          "0.5",
+          ".0"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "0:23:1"
+      },
+      {
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "documentation": "The ClientStorage contract contains underlying data for EthNtyRelay contract",
+        "fullyImplemented": true,
+        "id": 493,
+        "linearizedBaseContracts": [
+          493
+        ],
+        "name": "ClientStorage",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "canonicalName": "ClientStorage.StoredBlockHeader",
+            "id": 455,
+            "members": [
+              {
+                "constant": false,
+                "id": 440,
+                "name": "parentHash",
+                "nodeType": "VariableDeclaration",
+                "scope": 455,
+                "src": "171:15:1",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                },
+                "typeName": {
+                  "id": 439,
+                  "name": "uint",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "171:4:1",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 442,
+                "name": "stateRoot",
+                "nodeType": "VariableDeclaration",
+                "scope": 455,
+                "src": "191:14:1",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                },
+                "typeName": {
+                  "id": 441,
+                  "name": "uint",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "191:4:1",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 444,
+                "name": "transactionsRoot",
+                "nodeType": "VariableDeclaration",
+                "scope": 455,
+                "src": "210:21:1",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                },
+                "typeName": {
+                  "id": 443,
+                  "name": "uint",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "210:4:1",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 446,
+                "name": "receiptsRoot",
+                "nodeType": "VariableDeclaration",
+                "scope": 455,
+                "src": "236:17:1",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                },
+                "typeName": {
+                  "id": 445,
+                  "name": "uint",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "236:4:1",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 448,
+                "name": "number",
+                "nodeType": "VariableDeclaration",
+                "scope": 455,
+                "src": "258:11:1",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                },
+                "typeName": {
+                  "id": 447,
+                  "name": "uint",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "258:4:1",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 450,
+                "name": "difficulty",
+                "nodeType": "VariableDeclaration",
+                "scope": 455,
+                "src": "274:15:1",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                },
+                "typeName": {
+                  "id": 449,
+                  "name": "uint",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "274:4:1",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 452,
+                "name": "time",
+                "nodeType": "VariableDeclaration",
+                "scope": 455,
+                "src": "294:9:1",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                },
+                "typeName": {
+                  "id": 451,
+                  "name": "uint",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "294:4:1",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 454,
+                "name": "hash",
+                "nodeType": "VariableDeclaration",
+                "scope": 455,
+                "src": "308:9:1",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                },
+                "typeName": {
+                  "id": 453,
+                  "name": "uint",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "308:4:1",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              }
+            ],
+            "name": "StoredBlockHeader",
+            "nodeType": "StructDefinition",
+            "scope": 493,
+            "src": "141:181:1",
+            "visibility": "public"
+          },
+          {
+            "constant": false,
+            "id": 457,
+            "name": "firstBlock",
+            "nodeType": "VariableDeclaration",
+            "scope": 493,
+            "src": "359:22:1",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_uint256",
+              "typeString": "uint256"
+            },
+            "typeName": {
+              "id": 456,
+              "name": "uint",
+              "nodeType": "ElementaryTypeName",
+              "src": "359:4:1",
+              "typeDescriptions": {
+                "typeIdentifier": "t_uint256",
+                "typeString": "uint256"
+              }
+            },
+            "value": null,
+            "visibility": "public"
+          },
+          {
+            "constant": false,
+            "id": 461,
+            "name": "blocks",
+            "nodeType": "VariableDeclaration",
+            "scope": 493,
+            "src": "452:49:1",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_StoredBlockHeader_$455_storage_$",
+              "typeString": "mapping(uint256 => struct ClientStorage.StoredBlockHeader)"
+            },
+            "typeName": {
+              "id": 460,
+              "keyType": {
+                "id": 458,
+                "name": "uint",
+                "nodeType": "ElementaryTypeName",
+                "src": "461:4:1",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                }
+              },
+              "nodeType": "Mapping",
+              "src": "452:35:1",
+              "typeDescriptions": {
+                "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_StoredBlockHeader_$455_storage_$",
+                "typeString": "mapping(uint256 => struct ClientStorage.StoredBlockHeader)"
+              },
+              "valueType": {
+                "contractScope": null,
+                "id": 459,
+                "name": "StoredBlockHeader",
+                "nodeType": "UserDefinedTypeName",
+                "referencedDeclaration": 455,
+                "src": "469:17:1",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_struct$_StoredBlockHeader_$455_storage_ptr",
+                  "typeString": "struct ClientStorage.StoredBlockHeader"
+                }
+              }
+            },
+            "value": null,
+            "visibility": "public"
+          },
+          {
+            "constant": false,
+            "id": 465,
+            "name": "blockExisting",
+            "nodeType": "VariableDeclaration",
+            "scope": 493,
+            "src": "571:43:1",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_mapping$_t_uint256_$_t_bool_$",
+              "typeString": "mapping(uint256 => bool)"
+            },
+            "typeName": {
+              "id": 464,
+              "keyType": {
+                "id": 462,
+                "name": "uint",
+                "nodeType": "ElementaryTypeName",
+                "src": "580:4:1",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                }
+              },
+              "nodeType": "Mapping",
+              "src": "571:22:1",
+              "typeDescriptions": {
+                "typeIdentifier": "t_mapping$_t_uint256_$_t_bool_$",
+                "typeString": "mapping(uint256 => bool)"
+              },
+              "valueType": {
+                "id": 463,
+                "name": "bool",
+                "nodeType": "ElementaryTypeName",
+                "src": "588:4:1",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_bool",
+                  "typeString": "bool"
+                }
+              }
+            },
+            "value": null,
+            "visibility": "public"
+          },
+          {
+            "constant": false,
+            "id": 469,
+            "name": "verifiedBlocks",
+            "nodeType": "VariableDeclaration",
+            "scope": 493,
+            "src": "654:44:1",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_mapping$_t_uint256_$_t_bool_$",
+              "typeString": "mapping(uint256 => bool)"
+            },
+            "typeName": {
+              "id": 468,
+              "keyType": {
+                "id": 466,
+                "name": "uint",
+                "nodeType": "ElementaryTypeName",
+                "src": "663:4:1",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                }
+              },
+              "nodeType": "Mapping",
+              "src": "654:22:1",
+              "typeDescriptions": {
+                "typeIdentifier": "t_mapping$_t_uint256_$_t_bool_$",
+                "typeString": "mapping(uint256 => bool)"
+              },
+              "valueType": {
+                "id": 467,
+                "name": "bool",
+                "nodeType": "ElementaryTypeName",
+                "src": "671:4:1",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_bool",
+                  "typeString": "bool"
+                }
+              }
+            },
+            "value": null,
+            "visibility": "public"
+          },
+          {
+            "constant": false,
+            "id": 473,
+            "name": "finalizedBlocks",
+            "nodeType": "VariableDeclaration",
+            "scope": 493,
+            "src": "739:45:1",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_mapping$_t_uint256_$_t_bool_$",
+              "typeString": "mapping(uint256 => bool)"
+            },
+            "typeName": {
+              "id": 472,
+              "keyType": {
+                "id": 470,
+                "name": "uint",
+                "nodeType": "ElementaryTypeName",
+                "src": "748:4:1",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                }
+              },
+              "nodeType": "Mapping",
+              "src": "739:22:1",
+              "typeDescriptions": {
+                "typeIdentifier": "t_mapping$_t_uint256_$_t_bool_$",
+                "typeString": "mapping(uint256 => bool)"
+              },
+              "valueType": {
+                "id": 471,
+                "name": "bool",
+                "nodeType": "ElementaryTypeName",
+                "src": "756:4:1",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_bool",
+                  "typeString": "bool"
+                }
+              }
+            },
+            "value": null,
+            "visibility": "public"
+          },
+          {
+            "constant": false,
+            "id": 478,
+            "name": "blocksByHeight",
+            "nodeType": "VariableDeclaration",
+            "scope": 493,
+            "src": "885:39:1",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_mapping$_t_uint256_$_t_array$_t_uint256_$dyn_storage_$",
+              "typeString": "mapping(uint256 => uint256[])"
+            },
+            "typeName": {
+              "id": 477,
+              "keyType": {
+                "id": 474,
+                "name": "uint",
+                "nodeType": "ElementaryTypeName",
+                "src": "894:4:1",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                }
+              },
+              "nodeType": "Mapping",
+              "src": "885:24:1",
+              "typeDescriptions": {
+                "typeIdentifier": "t_mapping$_t_uint256_$_t_array$_t_uint256_$dyn_storage_$",
+                "typeString": "mapping(uint256 => uint256[])"
+              },
+              "valueType": {
+                "baseType": {
+                  "id": 475,
+                  "name": "uint",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "902:4:1",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "id": 476,
+                "length": null,
+                "nodeType": "ArrayTypeName",
+                "src": "902:6:1",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_array$_t_uint256_$dyn_storage_ptr",
+                  "typeString": "uint256[]"
+                }
+              }
+            },
+            "value": null,
+            "visibility": "internal"
+          },
+          {
+            "constant": false,
+            "id": 482,
+            "name": "blocksByHeightExisting",
+            "nodeType": "VariableDeclaration",
+            "scope": 493,
+            "src": "997:45:1",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_mapping$_t_uint256_$_t_bool_$",
+              "typeString": "mapping(uint256 => bool)"
+            },
+            "typeName": {
+              "id": 481,
+              "keyType": {
+                "id": 479,
+                "name": "uint",
+                "nodeType": "ElementaryTypeName",
+                "src": "1006:4:1",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                }
+              },
+              "nodeType": "Mapping",
+              "src": "997:22:1",
+              "typeDescriptions": {
+                "typeIdentifier": "t_mapping$_t_uint256_$_t_bool_$",
+                "typeString": "mapping(uint256 => bool)"
+              },
+              "valueType": {
+                "id": 480,
+                "name": "bool",
+                "nodeType": "ElementaryTypeName",
+                "src": "1014:4:1",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_bool",
+                  "typeString": "bool"
+                }
+              }
+            },
+            "value": null,
+            "visibility": "internal"
+          },
+          {
+            "constant": false,
+            "id": 484,
+            "name": "blockHeightMax",
+            "nodeType": "VariableDeclaration",
+            "scope": 493,
+            "src": "1080:26:1",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_uint256",
+              "typeString": "uint256"
+            },
+            "typeName": {
+              "id": 483,
+              "name": "uint",
+              "nodeType": "ElementaryTypeName",
+              "src": "1080:4:1",
+              "typeDescriptions": {
+                "typeIdentifier": "t_uint256",
+                "typeString": "uint256"
+              }
+            },
+            "value": null,
+            "visibility": "public"
+          },
+          {
+            "constant": false,
+            "id": 488,
+            "name": "longestBranchHead",
+            "nodeType": "VariableDeclaration",
+            "scope": 493,
+            "src": "1483:46:1",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_mapping$_t_uint256_$_t_uint256_$",
+              "typeString": "mapping(uint256 => uint256)"
+            },
+            "typeName": {
+              "id": 487,
+              "keyType": {
+                "id": 485,
+                "name": "uint",
+                "nodeType": "ElementaryTypeName",
+                "src": "1491:4:1",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                }
+              },
+              "nodeType": "Mapping",
+              "src": "1483:21:1",
+              "typeDescriptions": {
+                "typeIdentifier": "t_mapping$_t_uint256_$_t_uint256_$",
+                "typeString": "mapping(uint256 => uint256)"
+              },
+              "valueType": {
+                "id": 486,
+                "name": "uint",
+                "nodeType": "ElementaryTypeName",
+                "src": "1499:4:1",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                }
+              }
+            },
+            "value": null,
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 491,
+              "nodeType": "Block",
+              "src": "1555:6:1",
+              "statements": []
+            },
+            "documentation": null,
+            "id": 492,
+            "implemented": true,
+            "kind": "constructor",
+            "modifiers": [],
+            "name": "",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 489,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "1545:2:1"
+            },
+            "returnParameters": {
+              "id": 490,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "1555:0:1"
+            },
+            "scope": 493,
+            "src": "1534:27:1",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "public"
+          }
+        ],
+        "scope": 494,
+        "src": "114:1450:1"
+      }
+    ],
+    "src": "0:1566:1"
+  },
+  "legacyAST": {
+    "absolutePath": "/media/harsha/home/workspace/horizon/elc/ethClient/contracts/ClientStorage.sol",
+    "exportedSymbols": {
+      "ClientStorage": [
+        493
+      ]
+    },
+    "id": 494,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 438,
+        "literals": [
+          "solidity",
+          "^",
+          "0.5",
+          ".0"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "0:23:1"
+      },
+      {
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "documentation": "The ClientStorage contract contains underlying data for EthNtyRelay contract",
+        "fullyImplemented": true,
+        "id": 493,
+        "linearizedBaseContracts": [
+          493
+        ],
+        "name": "ClientStorage",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "canonicalName": "ClientStorage.StoredBlockHeader",
+            "id": 455,
+            "members": [
+              {
+                "constant": false,
+                "id": 440,
+                "name": "parentHash",
+                "nodeType": "VariableDeclaration",
+                "scope": 455,
+                "src": "171:15:1",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                },
+                "typeName": {
+                  "id": 439,
+                  "name": "uint",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "171:4:1",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 442,
+                "name": "stateRoot",
+                "nodeType": "VariableDeclaration",
+                "scope": 455,
+                "src": "191:14:1",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                },
+                "typeName": {
+                  "id": 441,
+                  "name": "uint",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "191:4:1",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 444,
+                "name": "transactionsRoot",
+                "nodeType": "VariableDeclaration",
+                "scope": 455,
+                "src": "210:21:1",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                },
+                "typeName": {
+                  "id": 443,
+                  "name": "uint",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "210:4:1",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 446,
+                "name": "receiptsRoot",
+                "nodeType": "VariableDeclaration",
+                "scope": 455,
+                "src": "236:17:1",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                },
+                "typeName": {
+                  "id": 445,
+                  "name": "uint",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "236:4:1",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 448,
+                "name": "number",
+                "nodeType": "VariableDeclaration",
+                "scope": 455,
+                "src": "258:11:1",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                },
+                "typeName": {
+                  "id": 447,
+                  "name": "uint",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "258:4:1",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 450,
+                "name": "difficulty",
+                "nodeType": "VariableDeclaration",
+                "scope": 455,
+                "src": "274:15:1",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                },
+                "typeName": {
+                  "id": 449,
+                  "name": "uint",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "274:4:1",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 452,
+                "name": "time",
+                "nodeType": "VariableDeclaration",
+                "scope": 455,
+                "src": "294:9:1",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                },
+                "typeName": {
+                  "id": 451,
+                  "name": "uint",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "294:4:1",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 454,
+                "name": "hash",
+                "nodeType": "VariableDeclaration",
+                "scope": 455,
+                "src": "308:9:1",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                },
+                "typeName": {
+                  "id": 453,
+                  "name": "uint",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "308:4:1",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              }
+            ],
+            "name": "StoredBlockHeader",
+            "nodeType": "StructDefinition",
+            "scope": 493,
+            "src": "141:181:1",
+            "visibility": "public"
+          },
+          {
+            "constant": false,
+            "id": 457,
+            "name": "firstBlock",
+            "nodeType": "VariableDeclaration",
+            "scope": 493,
+            "src": "359:22:1",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_uint256",
+              "typeString": "uint256"
+            },
+            "typeName": {
+              "id": 456,
+              "name": "uint",
+              "nodeType": "ElementaryTypeName",
+              "src": "359:4:1",
+              "typeDescriptions": {
+                "typeIdentifier": "t_uint256",
+                "typeString": "uint256"
+              }
+            },
+            "value": null,
+            "visibility": "public"
+          },
+          {
+            "constant": false,
+            "id": 461,
+            "name": "blocks",
+            "nodeType": "VariableDeclaration",
+            "scope": 493,
+            "src": "452:49:1",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_StoredBlockHeader_$455_storage_$",
+              "typeString": "mapping(uint256 => struct ClientStorage.StoredBlockHeader)"
+            },
+            "typeName": {
+              "id": 460,
+              "keyType": {
+                "id": 458,
+                "name": "uint",
+                "nodeType": "ElementaryTypeName",
+                "src": "461:4:1",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                }
+              },
+              "nodeType": "Mapping",
+              "src": "452:35:1",
+              "typeDescriptions": {
+                "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_StoredBlockHeader_$455_storage_$",
+                "typeString": "mapping(uint256 => struct ClientStorage.StoredBlockHeader)"
+              },
+              "valueType": {
+                "contractScope": null,
+                "id": 459,
+                "name": "StoredBlockHeader",
+                "nodeType": "UserDefinedTypeName",
+                "referencedDeclaration": 455,
+                "src": "469:17:1",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_struct$_StoredBlockHeader_$455_storage_ptr",
+                  "typeString": "struct ClientStorage.StoredBlockHeader"
+                }
+              }
+            },
+            "value": null,
+            "visibility": "public"
+          },
+          {
+            "constant": false,
+            "id": 465,
+            "name": "blockExisting",
+            "nodeType": "VariableDeclaration",
+            "scope": 493,
+            "src": "571:43:1",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_mapping$_t_uint256_$_t_bool_$",
+              "typeString": "mapping(uint256 => bool)"
+            },
+            "typeName": {
+              "id": 464,
+              "keyType": {
+                "id": 462,
+                "name": "uint",
+                "nodeType": "ElementaryTypeName",
+                "src": "580:4:1",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                }
+              },
+              "nodeType": "Mapping",
+              "src": "571:22:1",
+              "typeDescriptions": {
+                "typeIdentifier": "t_mapping$_t_uint256_$_t_bool_$",
+                "typeString": "mapping(uint256 => bool)"
+              },
+              "valueType": {
+                "id": 463,
+                "name": "bool",
+                "nodeType": "ElementaryTypeName",
+                "src": "588:4:1",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_bool",
+                  "typeString": "bool"
+                }
+              }
+            },
+            "value": null,
+            "visibility": "public"
+          },
+          {
+            "constant": false,
+            "id": 469,
+            "name": "verifiedBlocks",
+            "nodeType": "VariableDeclaration",
+            "scope": 493,
+            "src": "654:44:1",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_mapping$_t_uint256_$_t_bool_$",
+              "typeString": "mapping(uint256 => bool)"
+            },
+            "typeName": {
+              "id": 468,
+              "keyType": {
+                "id": 466,
+                "name": "uint",
+                "nodeType": "ElementaryTypeName",
+                "src": "663:4:1",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                }
+              },
+              "nodeType": "Mapping",
+              "src": "654:22:1",
+              "typeDescriptions": {
+                "typeIdentifier": "t_mapping$_t_uint256_$_t_bool_$",
+                "typeString": "mapping(uint256 => bool)"
+              },
+              "valueType": {
+                "id": 467,
+                "name": "bool",
+                "nodeType": "ElementaryTypeName",
+                "src": "671:4:1",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_bool",
+                  "typeString": "bool"
+                }
+              }
+            },
+            "value": null,
+            "visibility": "public"
+          },
+          {
+            "constant": false,
+            "id": 473,
+            "name": "finalizedBlocks",
+            "nodeType": "VariableDeclaration",
+            "scope": 493,
+            "src": "739:45:1",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_mapping$_t_uint256_$_t_bool_$",
+              "typeString": "mapping(uint256 => bool)"
+            },
+            "typeName": {
+              "id": 472,
+              "keyType": {
+                "id": 470,
+                "name": "uint",
+                "nodeType": "ElementaryTypeName",
+                "src": "748:4:1",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                }
+              },
+              "nodeType": "Mapping",
+              "src": "739:22:1",
+              "typeDescriptions": {
+                "typeIdentifier": "t_mapping$_t_uint256_$_t_bool_$",
+                "typeString": "mapping(uint256 => bool)"
+              },
+              "valueType": {
+                "id": 471,
+                "name": "bool",
+                "nodeType": "ElementaryTypeName",
+                "src": "756:4:1",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_bool",
+                  "typeString": "bool"
+                }
+              }
+            },
+            "value": null,
+            "visibility": "public"
+          },
+          {
+            "constant": false,
+            "id": 478,
+            "name": "blocksByHeight",
+            "nodeType": "VariableDeclaration",
+            "scope": 493,
+            "src": "885:39:1",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_mapping$_t_uint256_$_t_array$_t_uint256_$dyn_storage_$",
+              "typeString": "mapping(uint256 => uint256[])"
+            },
+            "typeName": {
+              "id": 477,
+              "keyType": {
+                "id": 474,
+                "name": "uint",
+                "nodeType": "ElementaryTypeName",
+                "src": "894:4:1",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                }
+              },
+              "nodeType": "Mapping",
+              "src": "885:24:1",
+              "typeDescriptions": {
+                "typeIdentifier": "t_mapping$_t_uint256_$_t_array$_t_uint256_$dyn_storage_$",
+                "typeString": "mapping(uint256 => uint256[])"
+              },
+              "valueType": {
+                "baseType": {
+                  "id": 475,
+                  "name": "uint",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "902:4:1",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "id": 476,
+                "length": null,
+                "nodeType": "ArrayTypeName",
+                "src": "902:6:1",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_array$_t_uint256_$dyn_storage_ptr",
+                  "typeString": "uint256[]"
+                }
+              }
+            },
+            "value": null,
+            "visibility": "internal"
+          },
+          {
+            "constant": false,
+            "id": 482,
+            "name": "blocksByHeightExisting",
+            "nodeType": "VariableDeclaration",
+            "scope": 493,
+            "src": "997:45:1",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_mapping$_t_uint256_$_t_bool_$",
+              "typeString": "mapping(uint256 => bool)"
+            },
+            "typeName": {
+              "id": 481,
+              "keyType": {
+                "id": 479,
+                "name": "uint",
+                "nodeType": "ElementaryTypeName",
+                "src": "1006:4:1",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                }
+              },
+              "nodeType": "Mapping",
+              "src": "997:22:1",
+              "typeDescriptions": {
+                "typeIdentifier": "t_mapping$_t_uint256_$_t_bool_$",
+                "typeString": "mapping(uint256 => bool)"
+              },
+              "valueType": {
+                "id": 480,
+                "name": "bool",
+                "nodeType": "ElementaryTypeName",
+                "src": "1014:4:1",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_bool",
+                  "typeString": "bool"
+                }
+              }
+            },
+            "value": null,
+            "visibility": "internal"
+          },
+          {
+            "constant": false,
+            "id": 484,
+            "name": "blockHeightMax",
+            "nodeType": "VariableDeclaration",
+            "scope": 493,
+            "src": "1080:26:1",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_uint256",
+              "typeString": "uint256"
+            },
+            "typeName": {
+              "id": 483,
+              "name": "uint",
+              "nodeType": "ElementaryTypeName",
+              "src": "1080:4:1",
+              "typeDescriptions": {
+                "typeIdentifier": "t_uint256",
+                "typeString": "uint256"
+              }
+            },
+            "value": null,
+            "visibility": "public"
+          },
+          {
+            "constant": false,
+            "id": 488,
+            "name": "longestBranchHead",
+            "nodeType": "VariableDeclaration",
+            "scope": 493,
+            "src": "1483:46:1",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_mapping$_t_uint256_$_t_uint256_$",
+              "typeString": "mapping(uint256 => uint256)"
+            },
+            "typeName": {
+              "id": 487,
+              "keyType": {
+                "id": 485,
+                "name": "uint",
+                "nodeType": "ElementaryTypeName",
+                "src": "1491:4:1",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                }
+              },
+              "nodeType": "Mapping",
+              "src": "1483:21:1",
+              "typeDescriptions": {
+                "typeIdentifier": "t_mapping$_t_uint256_$_t_uint256_$",
+                "typeString": "mapping(uint256 => uint256)"
+              },
+              "valueType": {
+                "id": 486,
+                "name": "uint",
+                "nodeType": "ElementaryTypeName",
+                "src": "1499:4:1",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                }
+              }
+            },
+            "value": null,
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 491,
+              "nodeType": "Block",
+              "src": "1555:6:1",
+              "statements": []
+            },
+            "documentation": null,
+            "id": 492,
+            "implemented": true,
+            "kind": "constructor",
+            "modifiers": [],
+            "name": "",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 489,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "1545:2:1"
+            },
+            "returnParameters": {
+              "id": 490,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "1555:0:1"
+            },
+            "scope": 493,
+            "src": "1534:27:1",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "public"
+          }
+        ],
+        "scope": 494,
+        "src": "114:1450:1"
+      }
+    ],
+    "src": "0:1566:1"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.5.17+commit.d19bba13.Emscripten.clang"
+  },
+  "networks": {},
+  "schemaVersion": "3.2.0-tezos.1",
+  "updatedAt": "2020-12-06T15:36:46.826Z",
+  "devdoc": {
+    "methods": {}
+  },
+  "userdoc": {
+    "methods": {},
+    "notice": "The ClientStorage contract contains underlying data for EthNtyRelay contract"
+  }
+}

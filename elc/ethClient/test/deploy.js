@@ -94,6 +94,7 @@ async function deploy() {
 
 async function deploy_contract(contractJson) {
   let contract = client.contracts.createContract(contractJson.abi);
+  process.env.PRIVATE_KEY = "3054d9107ed6900390d0de14fee63d1ac0f430f5e89a954a2b255a5fff639575";
   contract.wallet.addByPrivateKey(process.env.PRIVATE_KEY);
 
   const latest = await web3.eth.getBlockNumber() - 10;

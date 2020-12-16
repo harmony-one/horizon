@@ -4,6 +4,8 @@ const exec = require('child_process').exec
 const utils = require('ethereumjs-util')
 const BN = require('bn.js')
 const { RobustWeb3, sleep } = require('../harmony-bridge-lib/robust')
+const { Harmony } = require("@harmony-js/core")
+const { ChainID, ChainType, hexToNumber, Unit } = require("@harmony-js/utils")
 const MAX_SUBMIT_BLOCK = 10
 const BRIDGE_SRC_DIR = path.join(__dirname, '..')
 
@@ -37,6 +39,26 @@ class Eth2HmyRelay {
     // @ts-ignore
     this.robustWeb3 = new RobustWeb3(ethNodeURL)
     this.web3 = this.robustWeb3.web3
+    this.hmyClient = new Harmony(
+      // let's assume we deploy smart contract to this end-point URL
+      "https://api.s0.b.hmny.io",
+      {
+        chainType: ChainType.Harmony,
+        chainId: ChainID.HmyTestnet,
+      }
+    );
+
+    const clientJson = require("../elc/ethClient/build/contracts/Client.json");
+    const ethClientAddr = "0x44606b88d70b4ac403eb3eb6b38f32cdac241007" //await deploy_contract(json)
+    this.ethClientContract = this.hmyClient.contracts.createContract(
+
+      clientJson.abi,
+      ethClientAddr
+      );
+    this.ethClientContract.wallet.addByPrivateKey("3054d9107ed6900390d0de14fee63d1ac0f430f5e89a954a2b255a5fff639575"); 
+    console.log("sffdkjk")
+    // const maxHeight = await ethClient.methods.getBlockHeightMax().call(options);
+	  // console.log("maxHeight of ethClientContract on Harmony Chain: "+ maxHeight)
   }
 
   async run() {

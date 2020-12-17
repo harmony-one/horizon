@@ -9,6 +9,7 @@ const { ChainID, ChainType, hexToNumber, Unit } = require("@harmony-js/utils")
 const MAX_SUBMIT_BLOCK = 10
 const BRIDGE_SRC_DIR = path.join(__dirname, '..')
 
+
 function execute(command, _callback) {
   return new Promise((resolve) =>
     exec(command, (error, stdout, _stderr) => {
@@ -56,25 +57,31 @@ class Eth2HmyRelay {
       ethClientAddr
       );
     this.ethClientContract.wallet.addByPrivateKey("3054d9107ed6900390d0de14fee63d1ac0f430f5e89a954a2b255a5fff639575"); 
-    console.log("sffdkjk")
-    // const maxHeight = await ethClient.methods.getBlockHeightMax().call(options);
-	  // console.log("maxHeight of ethClientContract on Harmony Chain: "+ maxHeight)
+    console.log("eth to hmy relayer initialised")
+    
   }
 
   async run() {
     const robustWeb3 = this.robustWeb3
+    const options = { gasPrice: 1000000000, gasLimit: 6721900 };
+
     while (true) {
       let clientBlockNumber
       let chainBlockNumber
       try {
+        
         // Even retry 10 times ethClientContract.last_block_number could still fail
         // Return back to loop to avoid crash eth2hmy-relay.
+
+        const maxHeight = await this.ethClientContract.methods.getBlockHeightMax().call(options);
+        console.log(" EthClientContract block Number on Harmony Chain: "+ maxHeight)
+    
         // clientBlockNumber = (
         //   await this.ethClientContract.last_block_number()
         // ).toNumber()
         // console.log('Client block number is ' + clientBlockNumber)
         chainBlockNumber = await robustWeb3.getBlockNumber()
-        console.log('Chain block number is ' + chainBlockNumber)
+        console.log('Ethereum Chain block number is ' + chainBlockNumber)
       } catch (e) {
         console.log(e)
         continue

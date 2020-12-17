@@ -37,20 +37,26 @@ async function EthashTest() {
     EthashSol.link('Keccak512', k512.address);
     const ethashSol = await EthashSol.new();
     D(ethashSol.address);
-    const result = await ethashSol.hashimotoLight(1024*32, cache, testcase.hash, 0, {gas:80000000});
-    D(result);
+    //const result = await ethashSol.hashimotoLight.sendTransaction(1024*32, cache, testcase.hash, 0, {gas:80000000});
+    const result = await ethashSol.hashimotoLight.call(1024*32, cache, testcase.hash, 0, {gas:80000000});
+    return {
+        mix: Buffer.from(result[0].slice(2), 'hex'),
+        hash: Buffer.from(result[1].slice(2), 'hex')
+    }
 }
 
 
 async function main() {
-    /*
     const ethash = new Ethash.default();
     ethash.mkcache(testcase.cacheSize, testcase.seed);
     const result = ethash.run(testcase.hash, testcase.nonce, 1024*32);
     D(result.mix.equals(testcase.want.digest));
     D(result.hash.equals(testcase.want.result));
-    D(result);*/
-    await EthashTest();
+    D(result);
+    const resultSol = await EthashTest();
+    D(resultSol.mix.equals(testcase.want.digest));
+    D(resultSol.hash.equals(testcase.want.result));
+    D(resultSol);
 }
 
 module.exports = function (result) {

@@ -211,7 +211,18 @@ library Keccak512 {
         return result;
    }
 
-   function sha3_512(bytes memory data) pure public returns(bytes memory) {
+    address constant KECCAK512 = address(uint160(0x10001));
+    function keccak512(bytes memory data) view private returns(bytes memory) {
+        (bool success, bytes memory hash) = KECCAK512.staticcall(data);
+        require(success, string(hash));
+        return hash;
+    }
+
+   function sha3_512(bytes memory data) view public returns(bytes memory) {
+       return keccak512(data);
+   }
+
+   function _sha3_512(bytes memory data) pure public returns(bytes memory) {
        require(data.length == 40 || data.length == 64, "sha512 only support 64 or 40 bytes");
        uint dataWords = data.length / 8;
        uint[9] memory M;

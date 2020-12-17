@@ -6,6 +6,8 @@ const BN = require('bn.js')
 const { RobustWeb3, sleep } = require('../harmony-bridge-lib/robust')
 const { Harmony } = require("@harmony-js/core")
 const { ChainID, ChainType, hexToNumber, Unit } = require("@harmony-js/utils")
+const rlp = require("rlp");
+const Web3 = require("web3");
 const MAX_SUBMIT_BLOCK = 10
 const BRIDGE_SRC_DIR = path.join(__dirname, '..')
 
@@ -19,6 +21,34 @@ function execute(command, _callback) {
       resolve(stdout)
     })
   )
+}
+
+function toHexString(byteArray) {
+  let s = '0x';
+  byteArray.forEach(function (byte) {
+      s += ('0' + (byte & 0xFF).toString(16)).slice(-2);
+  });
+  return s;
+}
+
+function encodeBlock(blockHeader) {
+  return toHexString(rlp.encode([
+          blockHeader.parentHash,
+          blockHeader.sha3Uncles,
+          blockHeader.miner,
+          blockHeader.stateRoot,
+          blockHeader.transactionsRoot,
+          blockHeader.receiptsRoot,
+          blockHeader.logsBloom,
+          Web3.utils.toBN(blockHeader.difficulty),
+          blockHeader.number,
+          blockHeader.gasLimit,
+          blockHeader.gasUsed,
+          blockHeader.timestamp,
+          blockHeader.extraData,
+          blockHeader.mixHash,
+          blockHeader.nonce
+      ]))
 }
 
 //eth2near
@@ -64,7 +94,6 @@ class Eth2HmyRelay {
   }
 
   async run() {
-    const robustWeb3 = this.robustWeb3
     const options = { gasPrice: 1000000000, gasLimit: 6721900 };
 
     while (true) {
@@ -79,7 +108,7 @@ class Eth2HmyRelay {
         clientBlockNumber = parseInt(maxHeight)
         console.log(" EthClientContract block Number on Harmony Chain: "+ clientBlockNumber)
             
-        chainBlockNumber = await robustWeb3.getBlockNumber()
+        chainBlockNumber = await this.robustWeb3.getBlockNumber()
         console.log(' Ethereum Chain block number is ' + chainBlockNumber)
       } catch (e) {
         console.log(e)
@@ -110,7 +139,6 @@ class Eth2HmyRelay {
       console.log()
 
       if (clientBlockNumber < chainBlockNumber) {
-        console.log('here')
         try {
           // Submit add_block txns
           let blockPromises = []
@@ -124,15 +152,15 @@ class Eth2HmyRelay {
           }
  
           for (let i = clientBlockNumber + 1; i <= endBlock; i++) {                            
-              var nextBlock = await web3.eth.getBlock(i);     
-              nextBlockHex = encodeBlock(nextBlock)
+              var nextBlock = await this.robustWeb3.getBlock(i);     
+              const nextBlockHex = encodeBlock(nextBlock)
       
-              response = await ethClient.methods.addBlockHeader(nextBlockHex).send(options);
+              const response = await this.ethClientContract.methods.addBlockHeader(nextBlockHex).send(options);
               if (response.transaction.receipt != null && response.transaction.receipt.status == "0x1") {
                 
-                console.log("Contract " + json.contractName + " call successfully, block_header added: "+ i)
+                console.log("EthClientContract call successful, block_header added: "+ i)
               } else {
-                console.log("Contract " + json.contractName + " call failed to add block_header: "+ i)      
+                console.log("EthClientContract call failed to add block_header: "+ i)      
               }           
           }
           console.log(

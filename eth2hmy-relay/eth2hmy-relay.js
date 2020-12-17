@@ -21,6 +21,7 @@ function execute(command, _callback) {
   )
 }
 
+//eth2near
 function web3BlockToRlp(blockData) {
   // difficulty is only used and make sense in PoW network
   blockData.difficulty = parseInt(blockData.difficulty || '0', 10)
@@ -36,7 +37,8 @@ function web3BlockToRlp(blockData) {
 
 class Eth2HmyRelay {
   initialize() {
-    let ethNodeURL = "http://localhost:9545"
+    let ethNodeURL = "wss://ropsten.infura.io/ws/v3/03f8907457e847d7b14aa072355c8d03"
+    //let ethNodeURL = "http://localhost:9545"
     // @ts-ignore
     this.robustWeb3 = new RobustWeb3(ethNodeURL)
     this.web3 = this.robustWeb3.web3
@@ -70,46 +72,45 @@ class Eth2HmyRelay {
       let chainBlockNumber
       try {
         
-        // Even retry 10 times ethClientContract.last_block_number could still fail
+        // Even retry 10 times ethClientContract.getBlockHeightMax() could still fail
         // Return back to loop to avoid crash eth2hmy-relay.
 
         const maxHeight = await this.ethClientContract.methods.getBlockHeightMax().call(options);
-        console.log(" EthClientContract block Number on Harmony Chain: "+ maxHeight)
-    
-        // clientBlockNumber = (
-        //   await this.ethClientContract.last_block_number()
-        // ).toNumber()
-        // console.log('Client block number is ' + clientBlockNumber)
+        clientBlockNumber = parseInt(maxHeight)
+        console.log(" EthClientContract block Number on Harmony Chain: "+ clientBlockNumber)
+            
         chainBlockNumber = await robustWeb3.getBlockNumber()
-        console.log('Ethereum Chain block number is ' + chainBlockNumber)
+        console.log(' Ethereum Chain block number is ' + chainBlockNumber)
       } catch (e) {
         console.log(e)
         continue
       }
 
-      // Backtrack if chain switched the fork.
-      while (true) {
-        try {
-          const chainBlock = await robustWeb3.getBlock(clientBlockNumber)
-          const chainBlockHash = chainBlock.hash
-          const clientHashes = await this.ethClientContract.known_hashes(
-            clientBlockNumber
-          )
-          if (clientHashes.find((x) => x === chainBlockHash)) {
-            break
-          } else {
-            console.log(
-              `Block ${chainBlockHash} height: ${clientBlockNumber} is not known to the client. Backtracking.`
-            )
-            clientBlockNumber -= 1
-          }
-        } catch (e) {
-          console.log(e)
-          continue
-        }
-      }
+      // // Backtrack if chain switched the fork.
+      // while (true) {
+      //   try {
+      //     const chainBlock = await robustWeb3.getBlock(clientBlockNumber)
+      //     const chainBlockHash = chainBlock.hash
+      //     const clientHashes = await this.ethClientContract.known_hashes(
+      //       clientBlockNumber
+      //     )
+      //     if (clientHashes.find((x) => x === chainBlockHash)) {
+      //       break
+      //     } else {
+      //       console.log(
+      //         `Block ${chainBlockHash} height: ${clientBlockNumber} is not known to the client. Backtracking.`
+      //       )
+      //       clientBlockNumber -= 1
+      //     }
+      //   } catch (e) {
+      //     console.log(e)
+      //     continue
+      //   }
+      // }
+      console.log()
 
       if (clientBlockNumber < chainBlockNumber) {
+        console.log('here')
         try {
           // Submit add_block txns
           let blockPromises = []
@@ -121,34 +122,23 @@ class Eth2HmyRelay {
             // Initially, do not add block concurrently
             endBlock = clientBlockNumber + 1
           }
-          for (let i = clientBlockNumber + 1; i <= endBlock; i++) {
-            blockPromises.push(this.getParseBlock(i))
+ 
+          for (let i = clientBlockNumber + 1; i <= endBlock; i++) {                            
+              var nextBlock = await web3.eth.getBlock(i);     
+              nextBlockHex = encodeBlock(nextBlock)
+      
+              response = await ethClient.methods.addBlockHeader(nextBlockHex).send(options);
+              if (response.transaction.receipt != null && response.transaction.receipt.status == "0x1") {
+                
+                console.log("Contract " + json.contractName + " call successfully, block_header added: "+ i)
+              } else {
+                console.log("Contract " + json.contractName + " call failed to add block_header: "+ i)      
+              }           
           }
-          let blocks = await Promise.all(blockPromises)
           console.log(
-            `Got and parsed block ${clientBlockNumber + 1} to block ${endBlock}`
-          )
+            `Successfully added block_headers ${clientBlockNumber + 1} to block ${endBlock}`
+          )      
 
-          let txHashes = []
-          for (let i = clientBlockNumber + 1, j = 0; i <= endBlock; i++, j++) {
-            txHashes.push(await this.submitBlock(blocks[j], i))
-          }
-
-          console.log(
-            `Submit txn to add block ${
-              clientBlockNumber + 1
-            } to block ${endBlock}`
-          )
-
-          // Wait add_block txns commit
-          // await Promise.all(
-          //   txHashes.map((txHash) =>
-          //     txnStatus(this.ethClientContract.account, txHash, 10, 2000)
-          //   )
-          // )
-          console.log(
-            `Success added block ${clientBlockNumber + 1} to block ${endBlock}`
-          )
         } catch (e) {
           console.log(e)
         }
@@ -158,6 +148,7 @@ class Eth2HmyRelay {
     }
   }
 
+  //eth2near
   async getParseBlock(blockNumber) {
     try {
       const blockRlp = this.web3.utils.bytesToHex(
@@ -177,6 +168,10 @@ class Eth2HmyRelay {
     }
   }
 
+  // eth2near 
+  // need to use the below code eventually to extract merkle proofs , dag entries and send
+  // along with block_header info for verifying block_headers on harmony_chain(validating block's POW)
+  // this.submitBlock(getParseBlock(blockNumber))
   async submitBlock(block, blockNumber) {
     const h512s = block.elements
       .filter((_, index) => index % 2 === 0)

@@ -5,6 +5,14 @@ const tokenConfig = require("../tokenConfig.json")
 const { GetProof } = require('eth-proof');
 const { toHex, toBuffer, encode } = require('eth-util-lite');
 
+process.env.ETH_NODE_URL='https://ropsten.infura.io/v3/ef2ba412bbaf499191f98908f9229490'
+process.env.ETH_ADMIN_PRIVATE_KEY='07d9f43f2301d2caade36698d92487aba590cdeefa71ccc1f3ba65f92e22c25f'
+process.env.ETH_USER_PRIVATE_KEY='07d9f43f2301d2caade36698d92487aba590cdeefa71ccc1f3ba65f92e22c25f'
+process.env.ETH_GAS_LIMIT=4712388
+process.env.ETH_GAS_PRICE_MULTIPLER=2
+
+
+// Eth contracts
 class EthBridge {
     constructor(tokenAddress, bridgeAddress) {
         const web3 = new Web3(process.env.ETH_NODE_URL)

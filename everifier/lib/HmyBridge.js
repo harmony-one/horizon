@@ -6,6 +6,15 @@ const tokenConfig = require("../tokenConfig.json")
 
 const TokenMapReqEventSig = '0x78591F651C27EEF63481B7FD779E44C2426CBE82C7050FE9BC90B6707EFBC3D3'
 
+process.env.HMY_NODE_URL='https://api.s0.b.hmny.io'
+process.env.PRIVATE_KEY='3054d9107ed6900390d0de14fee63d1ac0f430f5e89a954a2b255a5fff639575'
+process.env.PRIVATE_KEY_USER='3054d9107ed6900390d0de14fee63d1ac0f430f5e89a954a2b255a5fff639575'
+process.env.GAS_LIMIT=6721900
+process.env.GAS_PRICE=1000000000
+process.env.PROOF_NODE_URL = 'https://ropsten.infura.io/v3/ef2ba412bbaf499191f98908f9229490'
+
+
+//Hmy Contracts
 class HmyBridge {
     constructor(bridgeAddress, tokenAddress) {
         let hmy = getHmy()

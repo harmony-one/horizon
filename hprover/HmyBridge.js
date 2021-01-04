@@ -1,0 +1,1 @@
+../lib/src/lib/HmyBridge.js

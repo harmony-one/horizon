@@ -1,23 +1,39 @@
 pragma solidity ^0.6.2;
+pragma experimental ABIEncoderV2;
 
 import "./binary.sol";
 import "./keccak512.sol";
+import "openzeppelin-solidity/contracts/cryptography/MerkleProof.sol";
+import "./Prime.sol";
 
-contract Ethash {
+import "./MerkelRoot.sol"; // npm run merkelInit
 
-    event Printf(string fmt, bytes dataEnocde);
+contract Ethash is MerkelRoots {
     using LittleEndian for bytes;
     using Keccak512 for bytes;
+    using Prime for uint256;
 
     uint32 constant hashWords = 16;
     uint32 constant hashBytes = 64;
     uint32 constant datasetParents = 256;
     uint32 constant mixBytes = 128;         // Width of mix
 	uint32 constant loopAccesses = 64;      // Number of accesses in hashimoto loop
+    uint256 constant MAX256 = 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff;
 
-    uint256 constant U32_MAX = 0xffffffff;
+    uint256 constant DATASET_BYTES_INIT = 1073741824;
+    uint256 constant DATASET_BYTES_GROWTH = 8388608; // 2 ^ 23
+    uint256 constant EPOCH_LENGTH = 30000; 
 
     constructor() public {}
+
+    function getFullSize(uint256 epoc) private pure returns(uint256) {
+        uint256 sz = DATASET_BYTES_INIT + (DATASET_BYTES_GROWTH) * epoc;
+        sz -= mixBytes;
+        while (!(sz / mixBytes).probablyPrime(2)) {
+            sz -= 2 * mixBytes;
+        }
+        return sz;
+    }
     // fnv is an algorithm inspired by the FNV hash, which in some cases is used as
     // a non-associative substitute for XOR. Note that we multiply the prime with
     // the full 32-bit input, in contrast with the FNV-1 spec which multiplies the
@@ -26,194 +42,12 @@ contract Ethash {
         return a*0x01000193 ^ b;
     }
 
-    function fastFnv(uint256 a, uint256 b) pure internal  returns (uint256) {
-        uint256 a0 = (a*0x01000193)&U32_MAX;
-        uint256 a1 = (a&(U32_MAX<<32)*(0x01000193<<32))&(U32_MAX<<32);
-        uint256 a2 = (a&(U32_MAX<<64)*(0x01000193<<64))&(U32_MAX<<64);
-        uint256 a3 = (a&(U32_MAX<<96)*(0x01000193<<96))&(U32_MAX<<96);
-        uint256 a4 = (a&(U32_MAX<<128)*(0x01000193<<128))&(U32_MAX<<128);
-        uint256 a5 = (a&(U32_MAX<<160)*(0x01000193<<160))&(U32_MAX<<160);
-        uint256 a6 = (a&(U32_MAX<<192)*(0x01000193<<192))&(U32_MAX<<192);
-        uint256 a7 = (a&(U32_MAX<<224)*(0x01000193<<224))&(U32_MAX<<224);
-        return (a0|a1|a2|a3|a4|a5|a6|a7)^b;
-    }
-
     // fnvHash mixes in data into mix using the ethash fnv method.
-    function fnvHash(uint32[] memory mix, uint32[] memory data, uint32 offset) pure internal  {
-        /*
-        if(mix.length == 16)
-            return fnvHash16(mix, data, offset);
-        if(mix.length == 32)
-            return fnvHash32(mix, data, offset);
-        revert("fnvHash");
-        */
-        for(uint32 i = 0; i < mix.length; i++) {
-            mix[i] = mix[i]*0x01000193 ^ data[i+offset];
-        }
-    }
-
-    // fnvHash mixes in data into mix using the ethash fnv method.
-    function fnvHash16(uint32[] memory mix, uint32[] memory data, uint32 offset) pure internal  {
-        //uint256 gas = gasleft();
+    function fnvHash32(uint32[] memory mix, uint32[] memory data) pure internal  {
         assembly{
             let mixOffset := add(mix, 0x20)
             let mixValue := mload(mixOffset)
-            let dataOffset := add(data, add(mul(offset, 0x20), 0x20))
-            let dataValue := mload(dataOffset)
-
-            // fnv = return ((v1*0x01000193) ^ v2) & 0xFFFFFFFF;
-            let fnvValue := and(xor(mul(mixValue,0x01000193),dataValue),0xFFFFFFFF)
-            mstore(mixOffset,fnvValue)
-
-            // ---- 1
-            dataOffset := add(dataOffset,0x20)
-            dataValue   := mload(dataOffset)
-            mixOffset := add(mixOffset,0x20)
-            mixValue  := mload(mixOffset)
-            fnvValue := and(xor(mul(mixValue,0x01000193),dataValue),0xFFFFFFFF)
-            mstore(mixOffset,fnvValue)
-
-            // ---- 2
-            dataOffset := add(dataOffset,0x20)
-            dataValue   := mload(dataOffset)
-            mixOffset := add(mixOffset,0x20)
-            mixValue  := mload(mixOffset)
-            fnvValue := and(xor(mul(mixValue,0x01000193),dataValue),0xFFFFFFFF)
-            mstore(mixOffset,fnvValue)
-
-            // ---- 3
-            dataOffset := add(dataOffset,0x20)
-            dataValue   := mload(dataOffset)
-            mixOffset := add(mixOffset,0x20)
-            mixValue  := mload(mixOffset)
-            fnvValue := and(xor(mul(mixValue,0x01000193),dataValue),0xFFFFFFFF)
-            mstore(mixOffset,fnvValue)
-
-            // ---- 4
-            dataOffset := add(dataOffset,0x20)
-            dataValue   := mload(dataOffset)
-            mixOffset := add(mixOffset,0x20)
-            mixValue  := mload(mixOffset)
-            fnvValue := and(xor(mul(mixValue,0x01000193),dataValue),0xFFFFFFFF)
-            mstore(mixOffset,fnvValue)
-
-            // ---- 5
-            dataOffset := add(dataOffset,0x20)
-            dataValue   := mload(dataOffset)
-            mixOffset := add(mixOffset,0x20)
-            mixValue  := mload(mixOffset)
-            fnvValue := and(xor(mul(mixValue,0x01000193),dataValue),0xFFFFFFFF)
-            mstore(mixOffset,fnvValue)
-
-            // ---- 6
-            dataOffset := add(dataOffset,0x20)
-            dataValue   := mload(dataOffset)
-            mixOffset := add(mixOffset,0x20)
-            mixValue  := mload(mixOffset)
-            fnvValue := and(xor(mul(mixValue,0x01000193),dataValue),0xFFFFFFFF)
-            mstore(mixOffset,fnvValue)
-
-            // ---- 7
-            dataOffset := add(dataOffset,0x20)
-            dataValue   := mload(dataOffset)
-            mixOffset := add(mixOffset,0x20)
-            mixValue  := mload(mixOffset)
-            fnvValue := and(xor(mul(mixValue,0x01000193),dataValue),0xFFFFFFFF)
-            mstore(mixOffset,fnvValue)
-
-            // ---- 1
-            dataOffset := add(dataOffset,0x20)
-            dataValue   := mload(dataOffset)
-            mixOffset := add(mixOffset,0x20)
-            mixValue  := mload(mixOffset)
-            fnvValue := and(xor(mul(mixValue,0x01000193),dataValue),0xFFFFFFFF)
-            mstore(mixOffset,fnvValue)
-
-            // ---- 1
-            dataOffset := add(dataOffset,0x20)
-            dataValue   := mload(dataOffset)
-            mixOffset := add(mixOffset,0x20)
-            mixValue  := mload(mixOffset)
-            fnvValue := and(xor(mul(mixValue,0x01000193),dataValue),0xFFFFFFFF)
-            mstore(mixOffset,fnvValue)
-
-            // ---- 1
-            dataOffset := add(dataOffset,0x20)
-            dataValue   := mload(dataOffset)
-            mixOffset := add(mixOffset,0x20)
-            mixValue  := mload(mixOffset)
-            fnvValue := and(xor(mul(mixValue,0x01000193),dataValue),0xFFFFFFFF)
-            mstore(mixOffset,fnvValue)
-
-            // ---- 1
-            dataOffset := add(dataOffset,0x20)
-            dataValue   := mload(dataOffset)
-            mixOffset := add(mixOffset,0x20)
-            mixValue  := mload(mixOffset)
-            fnvValue := and(xor(mul(mixValue,0x01000193),dataValue),0xFFFFFFFF)
-            mstore(mixOffset,fnvValue)
-
-            // ---- 1
-            dataOffset := add(dataOffset,0x20)
-            dataValue   := mload(dataOffset)
-            mixOffset := add(mixOffset,0x20)
-            mixValue  := mload(mixOffset)
-            fnvValue := and(xor(mul(mixValue,0x01000193),dataValue),0xFFFFFFFF)
-            mstore(mixOffset,fnvValue)
-
-            // ---- 1
-            dataOffset := add(dataOffset,0x20)
-            dataValue   := mload(dataOffset)
-            mixOffset := add(mixOffset,0x20)
-            mixValue  := mload(mixOffset)
-            fnvValue := and(xor(mul(mixValue,0x01000193),dataValue),0xFFFFFFFF)
-            mstore(mixOffset,fnvValue)
-
-            // ---- 1
-            dataOffset := add(dataOffset,0x20)
-            dataValue   := mload(dataOffset)
-            mixOffset := add(mixOffset,0x20)
-            mixValue  := mload(mixOffset)
-            fnvValue := and(xor(mul(mixValue,0x01000193),dataValue),0xFFFFFFFF)
-            mstore(mixOffset,fnvValue)
-
-            // ---- 1
-            dataOffset := add(dataOffset,0x20)
-            dataValue   := mload(dataOffset)
-            mixOffset := add(mixOffset,0x20)
-            mixValue  := mload(mixOffset)
-            fnvValue := and(xor(mul(mixValue,0x01000193),dataValue),0xFFFFFFFF)
-            mstore(mixOffset,fnvValue)
-        }
-        /*
-        mix[0] = mix[0]*0x01000193 ^ data[offset];
-        mix[1] = mix[1]*0x01000193 ^ data[offset+1];
-        mix[2] = mix[2]*0x01000193 ^ data[offset+2];
-        mix[3] = mix[3]*0x01000193 ^ data[offset+3];
-        mix[4] = mix[4]*0x01000193 ^ data[offset+4];
-        mix[5] = mix[5]*0x01000193 ^ data[offset+5];
-        mix[6] = mix[6]*0x01000193 ^ data[offset+6];
-        mix[7] = mix[7]*0x01000193 ^ data[offset+7];
-        mix[8] = mix[8]*0x01000193 ^ data[offset+8];
-        mix[9] = mix[9]*0x01000193 ^ data[offset+9];
-        mix[10] = mix[10]*0x01000193 ^ data[offset+10];
-        mix[11] = mix[11]*0x01000193 ^ data[offset+11];
-        mix[12] = mix[12]*0x01000193 ^ data[offset+12];
-        mix[13] = mix[13]*0x01000193 ^ data[offset+13];
-        mix[14] = mix[14]*0x01000193 ^ data[offset+14];
-        mix[15] = mix[15]*0x01000193 ^ data[offset+15];
-        */
-
-        //uint256 consume = gas - gasleft();
-        //emit Printf("gas fnv16: %d", abi.encode(consume));
-    }
-
-    // fnvHash mixes in data into mix using the ethash fnv method.
-    function fnvHash32(uint32[] memory mix, uint32[] memory data, uint32 offset) pure internal  {
-        assembly{
-            let mixOffset := add(mix, 0x20)
-            let mixValue := mload(mixOffset)
-            let dataOffset := add(data, add(mul(offset, 0x20), 0x20))
+            let dataOffset := add(data, 0x20)
             let dataValue := mload(dataOffset)
 
             // fnv = return ((v1*0x01000193) ^ v2) & 0xFFFFFFFF;
@@ -468,199 +302,12 @@ contract Ethash {
             mstore(mixOffset,fnvValue)
         }
     }
-
-    // generateDatasetItem combines data from 256 pseudorandomly selected cache nodes,
-    // and hashes that to compute a single dataset node.
-    function generateDatasetItem(uint32[] memory cache, uint32 index) /*view*/ internal returns(bytes memory) {
-        // Calculate the number of theoretical rows (we use one buffer nonetheless)
-        uint32 rows = uint32(cache.length / hashWords);
-
-        // Initialize the mix
-        bytes memory mix = new bytes(hashBytes);
-        mix.PutUint32(0, cache[(index%rows)*hashWords]^index);
-        for (uint32 i = 1; i < hashWords; i++) {
-            mix.PutUint32(i*4, cache[(index%rows)*hashWords+uint32(i)]);
-        }
-
-        mix = mix.sha3_512();
-
-        // Convert the mix to uint32s to avoid constant bit shifting
-        uint32[] memory intMix = new uint32[](hashWords);
-        for (uint32 i = 0; i < intMix.length; i++) {
-            intMix[i] = mix.Uint32(i*4);
-        }
-        // fnv it with a lot of random cache nodes based on index
-        for (uint32 i = 0; i < datasetParents; i++) {
-            uint32 parent = fnv(index^i, intMix[i%16]) % rows;
-            uint256 gas = gasleft();
-            //fnvHash(intMix, cache ,parent*hashWords);
-            {
-                uint32[] memory mix = intMix;
-                uint32[] memory data = cache;
-                uint32 offset = parent*hashWords;
-                assembly{
-                    let mixOffset := add(mix, 0x20)
-                    let mixValue := mload(mixOffset)
-                    let dataOffset := add(data, add(mul(offset, 0x20), 0x20))
-                    let dataValue := mload(dataOffset)
-
-                    // fnv = return ((v1*0x01000193) ^ v2) & 0xFFFFFFFF;
-                    let fnvValue := and(xor(mul(mixValue,0x01000193),dataValue),0xFFFFFFFF)
-                    mstore(mixOffset,fnvValue)
-
-                    // ---- 1
-                    dataOffset := add(dataOffset,0x20)
-                    dataValue   := mload(dataOffset)
-                    mixOffset := add(mixOffset,0x20)
-                    mixValue  := mload(mixOffset)
-                    fnvValue := and(xor(mul(mixValue,0x01000193),dataValue),0xFFFFFFFF)
-                    mstore(mixOffset,fnvValue)
-
-                    // ---- 2
-                    dataOffset := add(dataOffset,0x20)
-                    dataValue   := mload(dataOffset)
-                    mixOffset := add(mixOffset,0x20)
-                    mixValue  := mload(mixOffset)
-                    fnvValue := and(xor(mul(mixValue,0x01000193),dataValue),0xFFFFFFFF)
-                    mstore(mixOffset,fnvValue)
-
-                    // ---- 3
-                    dataOffset := add(dataOffset,0x20)
-                    dataValue   := mload(dataOffset)
-                    mixOffset := add(mixOffset,0x20)
-                    mixValue  := mload(mixOffset)
-                    fnvValue := and(xor(mul(mixValue,0x01000193),dataValue),0xFFFFFFFF)
-                    mstore(mixOffset,fnvValue)
-
-                    // ---- 4
-                    dataOffset := add(dataOffset,0x20)
-                    dataValue   := mload(dataOffset)
-                    mixOffset := add(mixOffset,0x20)
-                    mixValue  := mload(mixOffset)
-                    fnvValue := and(xor(mul(mixValue,0x01000193),dataValue),0xFFFFFFFF)
-                    mstore(mixOffset,fnvValue)
-
-                    // ---- 5
-                    dataOffset := add(dataOffset,0x20)
-                    dataValue   := mload(dataOffset)
-                    mixOffset := add(mixOffset,0x20)
-                    mixValue  := mload(mixOffset)
-                    fnvValue := and(xor(mul(mixValue,0x01000193),dataValue),0xFFFFFFFF)
-                    mstore(mixOffset,fnvValue)
-
-                    // ---- 6
-                    dataOffset := add(dataOffset,0x20)
-                    dataValue   := mload(dataOffset)
-                    mixOffset := add(mixOffset,0x20)
-                    mixValue  := mload(mixOffset)
-                    fnvValue := and(xor(mul(mixValue,0x01000193),dataValue),0xFFFFFFFF)
-                    mstore(mixOffset,fnvValue)
-
-                    // ---- 7
-                    dataOffset := add(dataOffset,0x20)
-                    dataValue   := mload(dataOffset)
-                    mixOffset := add(mixOffset,0x20)
-                    mixValue  := mload(mixOffset)
-                    fnvValue := and(xor(mul(mixValue,0x01000193),dataValue),0xFFFFFFFF)
-                    mstore(mixOffset,fnvValue)
-
-                    // ---- 1
-                    dataOffset := add(dataOffset,0x20)
-                    dataValue   := mload(dataOffset)
-                    mixOffset := add(mixOffset,0x20)
-                    mixValue  := mload(mixOffset)
-                    fnvValue := and(xor(mul(mixValue,0x01000193),dataValue),0xFFFFFFFF)
-                    mstore(mixOffset,fnvValue)
-
-                    // ---- 1
-                    dataOffset := add(dataOffset,0x20)
-                    dataValue   := mload(dataOffset)
-                    mixOffset := add(mixOffset,0x20)
-                    mixValue  := mload(mixOffset)
-                    fnvValue := and(xor(mul(mixValue,0x01000193),dataValue),0xFFFFFFFF)
-                    mstore(mixOffset,fnvValue)
-
-                    // ---- 1
-                    dataOffset := add(dataOffset,0x20)
-                    dataValue   := mload(dataOffset)
-                    mixOffset := add(mixOffset,0x20)
-                    mixValue  := mload(mixOffset)
-                    fnvValue := and(xor(mul(mixValue,0x01000193),dataValue),0xFFFFFFFF)
-                    mstore(mixOffset,fnvValue)
-
-                    // ---- 1
-                    dataOffset := add(dataOffset,0x20)
-                    dataValue   := mload(dataOffset)
-                    mixOffset := add(mixOffset,0x20)
-                    mixValue  := mload(mixOffset)
-                    fnvValue := and(xor(mul(mixValue,0x01000193),dataValue),0xFFFFFFFF)
-                    mstore(mixOffset,fnvValue)
-
-                    // ---- 1
-                    dataOffset := add(dataOffset,0x20)
-                    dataValue   := mload(dataOffset)
-                    mixOffset := add(mixOffset,0x20)
-                    mixValue  := mload(mixOffset)
-                    fnvValue := and(xor(mul(mixValue,0x01000193),dataValue),0xFFFFFFFF)
-                    mstore(mixOffset,fnvValue)
-
-                    // ---- 1
-                    dataOffset := add(dataOffset,0x20)
-                    dataValue   := mload(dataOffset)
-                    mixOffset := add(mixOffset,0x20)
-                    mixValue  := mload(mixOffset)
-                    fnvValue := and(xor(mul(mixValue,0x01000193),dataValue),0xFFFFFFFF)
-                    mstore(mixOffset,fnvValue)
-
-                    // ---- 1
-                    dataOffset := add(dataOffset,0x20)
-                    dataValue   := mload(dataOffset)
-                    mixOffset := add(mixOffset,0x20)
-                    mixValue  := mload(mixOffset)
-                    fnvValue := and(xor(mul(mixValue,0x01000193),dataValue),0xFFFFFFFF)
-                    mstore(mixOffset,fnvValue)
-
-                    // ---- 1
-                    dataOffset := add(dataOffset,0x20)
-                    dataValue   := mload(dataOffset)
-                    mixOffset := add(mixOffset,0x20)
-                    mixValue  := mload(mixOffset)
-                    fnvValue := and(xor(mul(mixValue,0x01000193),dataValue),0xFFFFFFFF)
-                    mstore(mixOffset,fnvValue)
-                }
-            }
-        }
-        // Flatten the uint32 mix into a binary one and return
-        for (uint32 i = 0; i < intMix.length; i++) {
-            mix.PutUint32(i*4, intMix[i]);
-        }
-        return mix.sha3_512();
-    }
-
-    function lookup(uint32[] memory cache, uint32 index) /*view*/ private returns(uint32[] memory) {
-        bytes memory rawData = generateDatasetItem(cache, index);
-		uint32[] memory data = new uint32[](rawData.length/4);
-		for (uint32 i = 0; i < data.length; i++) {
-			data[i] = rawData.Uint32(i*4);
-		}
-		return data;
-	}
-
-    function copy(uint32[] memory dst, uint32 dstOffset, uint32[] memory src, uint32 srcOffset) pure private {
-        uint32 dstmin = uint32(dst.length) - dstOffset;
-        uint32 srcmin = uint32(src.length) - srcOffset;
-        uint32 min = dstmin > srcmin ? srcmin : dstmin;
-        for(uint32 i = 0; i < min; i++) {
-            dst[dstOffset + i] = src[srcOffset + i];
-        }
-    }
-
 
     // hashimoto aggregates data from the full dataset in order to produce our final
     // value for a particular header hash and nonce.
-    function hashimoto(bytes32 hash, uint64 nonce, uint64 size, uint32[] memory cache) /*view*/ private returns(bytes32, bytes32) {
+    function hashimoto(bytes32 hash, uint64 nonce, uint64 size, bytes32[4][loopAccesses] memory cache, bytes32 rootHash, bytes32[][loopAccesses] memory proofs) pure private returns(bytes32, bytes32) {
         // Calculate the number of theoretical rows (we use one buffer nonetheless)
-        uint32 rows = uint32(size) / mixBytes;
+        uint32 rows = uint32(size / mixBytes);
 
         // Combine header+nonce into a 64 byte seed
         bytes memory seed = new bytes(40);
@@ -678,14 +325,28 @@ contract Ethash {
         // Mix in random dataset nodes
         uint32[] memory temp = new uint32[](mix.length);
 
-        for (uint32 i = 0; i < loopAccesses; i++) { // Each loop consumes around 4236935 gas.
-                                                    // Each loop have 2 keccak512 calculation.
+        bytes32 root = rootHash;
+        for (uint32 i = 0; i < loopAccesses; i++) {
             uint32 parent = fnv(i^seedHead, mix[i%mix.length]) % rows;
-            for (uint32 j = 0; j < mixBytes/hashBytes; j++) {
-                uint32[] memory data = lookup(cache, 2*parent+j);
-                copy(temp, j*hashWords, data, 0);
+            //bytes32[4] memory dag = cache[2*parent];
+            bytes32[4] memory dag = cache[i];
+            uint256 dagIndex = 2*parent;
+            bytes32[] memory proof = proofs[i];
+            bytes32 leafHash = keccak256(abi.encodePacked(dagIndex, dag));
+            MerkleProof.verify(proof, root, leafHash);
+            for (uint32 j = 0; j < dag.length; j++) {
+                uint32 k = j*8;
+                uint256 data = uint256(dag[j]);
+                temp[k] = LittleEndian.reverse(uint32(data>>(7*32)));
+                temp[k+1] = LittleEndian.reverse(uint32(data>> (6*32)));
+                temp[k+2] = LittleEndian.reverse(uint32(data>> (5*32)));
+                temp[k+3] = LittleEndian.reverse(uint32(data>> (4*32)));
+                temp[k+4] = LittleEndian.reverse(uint32(data>> (3*32)));
+                temp[k+5] = LittleEndian.reverse(uint32(data>> (2*32)));
+                temp[k+6] = LittleEndian.reverse(uint32(data>> (1*32)));
+                temp[k+7] = LittleEndian.reverse(uint32(data>> (0*32)));
             }
-            fnvHash32(mix, temp, 0);
+            fnvHash32(mix, temp);
         }
 
         // Compress mix
@@ -706,10 +367,13 @@ contract Ethash {
         return (bytes32(digest), keccak256(abi.encodePacked(seed, digest)));
     }
 
-    // hashimotoLight aggregates data from the full dataset (using only a small
-    // in-memory cache) in order to produce our final value for a particular header
-    // hash and nonce.
-    function hashimotoLight(uint64 size, uint32[] memory cache, bytes32 hash, uint64 nonce) /*view*/ public returns (bytes32, bytes32) {
-        return hashimoto(hash, nonce, size, cache);
+    function verifyEthash(bytes32 hash, uint64 nonce, uint64 number, bytes32[4][loopAccesses] memory cache, bytes32[][loopAccesses] memory proofs, uint difficulty, uint mixHash) public pure returns(bool) {
+        uint256 epoch = number/EPOCH_LENGTH;
+        bytes32 rootHash = getRootHash(uint64(epoch));
+        uint256 size = getFullSize(epoch);
+        (bytes32 mix, bytes32 _diff) = hashimoto(hash, nonce, uint64(size), cache, rootHash, proofs);
+        uint256 target = MAX256/difficulty; // target = (2**256)/difficult;
+        target += (MAX256%difficulty+1)/difficulty;
+        return mix == bytes32(mixHash) && difficulty > 1 && target > uint256(_diff);
     }
 }

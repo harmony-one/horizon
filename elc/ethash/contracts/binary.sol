@@ -2,7 +2,7 @@ pragma solidity ^0.6.2;
 
 library LittleEndian {
     using LittleEndian for bytes;
-    function reverse(uint32 num) pure private returns (uint32) {
+    function reverse(uint32 num) pure internal returns (uint32) {
         return (num>>24) | (num>>8)&0xff00 | (num<<8)&0xff0000 | (num<<24)&0xff000000;
     }
     function PutUint32(bytes memory dst, uint32 offset, uint32 data) pure internal {

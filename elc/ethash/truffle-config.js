@@ -18,10 +18,28 @@
  *
  */
 
-// const infuraKey = "fj4jll3k.....";
-//
-// const fs = require('fs');
-// const mnemonic = fs.readFileSync(".secret").toString().trim();
+const { TruffleProvider } = require('@harmony-js/core')
+
+//Testnet
+const testnet_mnemonic = process.env.TESTNET_MNEMONIC
+const testnet_private_key = process.env.TESTNET_PRIVATE_KEY
+const testnet_url = process.env.TESTNET_0_URL
+
+//Mainnet
+const mainnet_mnemonic = process.env.MAINNET_MNEMONIC
+const mainnet_private_key = process.env.MAINNET_PRIVATE_KEY
+const mainnet_url = process.env.MAINNET_0_URL;
+
+//GAS - Currently using same GAS accross all environments
+gasLimit = process.env.GAS_LIMIT
+gasPrice = process.env.GAS_PRICE
+
+
+// huobi
+var HDWalletProvider = require("@truffle/hdwallet-provider");
+const ETH_NODE_URL = 'https://http-testnet.hecochain.com'
+//const ETH_NODE_URL = 'https://ropsten.infura.io/v3/ef2ba412bbaf499191f98908f9229490'
+const PRIKEY = "38242392357b4318aa70216c28138c9f103b462baa72cd946170e4aa21eb7279"
 
 module.exports = {
   /**
@@ -35,6 +53,46 @@ module.exports = {
    */
 
   networks: {
+    testnet: {
+      network_id: '2', // Any network (default: none)
+      provider: () => {
+        const truffleProvider = new TruffleProvider(
+          testnet_url,
+          { memonic: testnet_mnemonic },
+          { shardID: 0, chainId: 2 },
+          { gasLimit: gasLimit, gasPrice: gasPrice},
+        );
+        const newAcc = truffleProvider.addByPrivateKey(testnet_private_key);
+        truffleProvider.setSigner(newAcc);
+        return truffleProvider;
+      },
+    },
+    httest: {
+      provider: function () {
+        // mnemonic表示MetaMask的助记词。 "ropsten.infura.io/v3/33..."表示Infura上的项目id
+        return new HDWalletProvider(PRIKEY, ETH_NODE_URL);   // 1表示第二个账户(从0开始)
+      },
+      network_id: "*",  // match any network
+      gas: 8000000,
+      confirmations: 2,    // # of confs to wait between deployments. (default: 0)
+      timeoutBlocks: 200,  // # of blocks before a deployment times out  (minimum/default: 50)
+      skipDryRun: true,     // Skip dry run before migrations? (default: false for public nets )
+      networkCheckTimeout: 100000000
+    },
+    mainnet: {
+      network_id: '1', // Any network (default: none)
+      provider: () => {
+        const truffleProvider = new TruffleProvider(
+          mainnet_url,
+          { memonic: mainnet_mnemonic },
+          { shardID: 0, chainId: 1 },
+          { gasLimit: gasLimit, gasPrice: gasPrice },
+        );
+        const newAcc = truffleProvider.addByPrivateKey(mainnet_private_key);
+        truffleProvider.setSigner(newAcc);
+        return truffleProvider;
+      },
+    },
     // Useful for private networks ganache-cli or geth
     local: {
        //provider: () => new HDWalletProvider(mnemonic, `https://network.io`),
@@ -56,7 +114,7 @@ module.exports = {
 
   // Set default mocha options here, use special reporters etc.
   mocha: {
-    // timeout: 100000
+     timeout: 1000000
   },
 
   // Configure your compilers

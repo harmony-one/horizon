@@ -1,4 +1,4 @@
-const { MerkelDB } = require('./mmp.js');
+const { MerkelDB } = require('./MmapDB.js');
 const { Keccak } = require('sha3');
 const Ethash = require('@ethereumjs/ethash');
 const EthashUtil = require('@ethereumjs/ethash/dist/util');

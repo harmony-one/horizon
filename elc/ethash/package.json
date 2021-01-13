@@ -1,6 +1,9 @@
 {
+   "scripts": {
+    "libInit": "tar -zxf ethereumjs-ethash-dist.tar.gz -C node_modules/@ethereumjs/ethash"
+  },
   "dependencies": {
-    "@ethereumjs/ethash": "^1.0.0",
+    "@ethereumjs/ethash": "1.0.0",
     "openzeppelin-solidity": "^3.3.0",
     "randombytes": "^2.1.0",
     "sha3": "^2.1.3"

@@ -3,8 +3,8 @@ pragma experimental ABIEncoderV2;
 
 import "./binary.sol";
 import "./keccak512.sol";
-import "openzeppelin-solidity/contracts/cryptography/MerkleProof.sol";
 import "./Prime.sol";
+import "openzeppelin-solidity/contracts/cryptography/MerkleProof.sol";
 
 import "./MerkelRoot.sol"; // npm run merkelInit
 

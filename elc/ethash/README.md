@@ -6,3 +6,4 @@
 5. test keccak512: `truffle --network=develop exec tools/keccak512.js`
 6. test light client: `truffle --network=develop exec tools/client.js`
 
+> When running `truffle --network=develop exec tools/client.js` for the first time, the merkel tree needs to be generated, which can take several hours.

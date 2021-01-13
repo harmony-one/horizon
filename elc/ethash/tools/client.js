@@ -80,13 +80,13 @@ function verifyHeader(ethash, header, fullSize) {
     return a;
 }
 
-function writeCache(cache){
+function writeCache(epoch, cache){
     const fcache = cache.map(val=>val.toString('hex'));
-    fs.writeFileSync("./cache", JSON.stringify(fcache));
+    fs.writeFileSync(`./cache-${epoch}`, JSON.stringify(fcache));
 }
 
-function loadCache() {
-    if(!fs.existsSync("./cache")) return undefined;
+function loadCache(epoch) {
+    if(!fs.existsSync(`./cache-${epoch}`)) return undefined;
     const data = fs.readFileSync("cache");
     const fcache = JSON.parse(data);
     return fcache.map(el=>Buffer.from(el, 'hex'));
@@ -108,14 +108,14 @@ async function main() {
     const seed = EthashUtil.getSeed(Buffer.alloc(32), 0, epoch);
     //const ethash = merkel.ethash;
     D("make cache...")
-    ethash.cache = loadCache();
+    ethash.cache = loadCache(epoch);
     if(!ethash.cache){
         ethash.mkcache(cacheSize, seed);
-        writeCache(ethash.cache);
+        writeCache(epoch, ethash.cache);
     }
     D("cacheSize:", cacheSize, "fullSize:", fullSize);
     const result = verifyHeader(ethash, header, fullSize);
-    const merkel = new MerkleTree(`tredb-index-${fullSize}.db`,seed, cacheSize, fullSize, ethash);
+    const merkel = new MerkleTree(`tredb-index-${epoch}.db`,seed, cacheSize, fullSize, ethash);
     const proofs = getProof(merkel, header, result.indexes.filter((_,i)=>i&1^1));
     const cacheU32 = [];
     for(let i = 0; i < result.indexes.length/2; i++){

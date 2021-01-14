@@ -76,7 +76,14 @@ contract RainbowOnes is ProvethVerifier,Ownable {
             recipient != address(0),
             "Locker/recipient is a zero address"
         );
-        require(ThisSideLocked[address(token)] != address(0), "bridge isn't exist");
+        // the below line should be uncommented once eb.handleHmyProof(proof) succeeds in deploy.js
+        //unable to get merkle-proofs from harmony,  "hmy_getReceipt" json rpc method does not exist 
+        // note that for uni- directional eth to harmony bridge eth proofs validated on harmony bridge verifier contracts is enough.
+        // also note that currently every time tokens are locked on eth , proofs are handled on harmony and only then tokens are minted.
+
+        //  the below line is really about hrc20 token creation acknowledgement that is truly mapped to erc20 token.
+        
+        // require(ThisSideLocked[address(token)] != address(0), "bridge isn't exist");
         token.transferFrom(msg.sender, address(this), amount);
         emit Locked(address(token), msg.sender, amount, recipient);
     }

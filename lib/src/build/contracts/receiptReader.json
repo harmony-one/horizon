@@ -1,25 +1,25 @@
 {
   "contractName": "receiptReader",
   "abi": [],
-  "metadata": "{\"compiler\":{\"version\":\"0.5.17+commit.d19bba13\"},\"language\":\"Solidity\",\"output\":{\"abi\":[],\"devdoc\":{\"methods\":{}},\"userdoc\":{\"methods\":{}}},\"settings\":{\"compilationTarget\":{\"/media/harsha/home/workspace/horizon/everifier/contracts/MPTSolidity/ReceiptTraversal.sol\":\"receiptReader\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"/media/harsha/home/workspace/horizon/everifier/contracts/MPTSolidity/RLPReader.sol\":{\"keccak256\":\"0x383e82e56641440097f7337c539796c75e3c28a487c0ade06f3b3ab50e99acb5\",\"urls\":[\"bzz-raw://98571c745aad9c91d754cef32e1ec99ddef30508565e9d5e2411ca3d9fed7db1\",\"dweb:/ipfs/QmapvJVDaA8yYpqjjRiFtiB3GmkUkQnJxQhqLtTtuckYoD\"]},\"/media/harsha/home/workspace/horizon/everifier/contracts/MPTSolidity/ReceiptTraversal.sol\":{\"keccak256\":\"0xd703cc2d8d41148117bbe4466d4cc83c676ad62e4e76766d66919246124f4e0a\",\"urls\":[\"bzz-raw://1b2f268fe809b1d851aee34a0a6ffaf450a966687201e60f274b3663b553a266\",\"dweb:/ipfs/QmXtF5UC9jwJ3mh1rY4GgxybRh3nTSDiLhyQoykzVPiFNs\"]}},\"version\":1}",
-  "bytecode": "0x6080604052348015600f57600080fd5b50603e80601d6000396000f3fe6080604052600080fdfea265627a7a723158202cd409e7a28e8004dd12e415c6ecacd24f87954232091543604360426e4e355464736f6c63430005110032",
-  "deployedBytecode": "0x6080604052600080fdfea265627a7a723158202cd409e7a28e8004dd12e415c6ecacd24f87954232091543604360426e4e355464736f6c63430005110032",
-  "sourceMap": "52:1023:3:-;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;52:1023:3;;;;;;;",
-  "deployedSourceMap": "52:1023:3:-;;;;;",
+  "metadata": "{\"compiler\":{\"version\":\"0.5.17+commit.d19bba13\"},\"language\":\"Solidity\",\"output\":{\"abi\":[],\"devdoc\":{\"methods\":{}},\"userdoc\":{\"methods\":{}}},\"settings\":{\"compilationTarget\":{\"/media/harsha/home/workspace/horizon/lib/src/contracts/verifier/MPTSolidity/ReceiptTraversal.sol\":\"receiptReader\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"/media/harsha/home/workspace/horizon/lib/src/contracts/verifier/MPTSolidity/RLPReader.sol\":{\"keccak256\":\"0x383e82e56641440097f7337c539796c75e3c28a487c0ade06f3b3ab50e99acb5\",\"urls\":[\"bzz-raw://98571c745aad9c91d754cef32e1ec99ddef30508565e9d5e2411ca3d9fed7db1\",\"dweb:/ipfs/QmapvJVDaA8yYpqjjRiFtiB3GmkUkQnJxQhqLtTtuckYoD\"]},\"/media/harsha/home/workspace/horizon/lib/src/contracts/verifier/MPTSolidity/ReceiptTraversal.sol\":{\"keccak256\":\"0xd703cc2d8d41148117bbe4466d4cc83c676ad62e4e76766d66919246124f4e0a\",\"urls\":[\"bzz-raw://1b2f268fe809b1d851aee34a0a6ffaf450a966687201e60f274b3663b553a266\",\"dweb:/ipfs/QmXtF5UC9jwJ3mh1rY4GgxybRh3nTSDiLhyQoykzVPiFNs\"]}},\"version\":1}",
+  "bytecode": "0x6080604052348015600f57600080fd5b50603e80601d6000396000f3fe6080604052600080fdfea265627a7a72315820d9cb3b1f30eaadb35b78b11636c3f56fa6144e7690bb3c646331a8af62898df664736f6c63430005110032",
+  "deployedBytecode": "0x6080604052600080fdfea265627a7a72315820d9cb3b1f30eaadb35b78b11636c3f56fa6144e7690bb3c646331a8af62898df664736f6c63430005110032",
+  "sourceMap": "52:1023:4:-;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;52:1023:4;;;;;;;",
+  "deployedSourceMap": "52:1023:4:-;;;;;",
   "source": "pragma solidity ^0.5.0;\n\nimport \"./RLPReader.sol\";\n\ncontract receiptReader {\n    using RLPReader for RLPReader.RLPItem;\n\tusing RLPReader for bytes;\n// KILL WARNING\n/*\n\tfunction traverse(bytes memory rlpdata) pure public {\n        RLPReader.RLPItem memory stacks = rlpdata.toRlpItem();\n        RLPReader.RLPItem[] memory receipt = stacks.toList();\n        bytes memory PostStateOrStatus = receipt[0].toBytes();\n        uint CumulativeGasUsed = receipt[1].toUint();\n        bytes memory Bloom = receipt[2].toBytes();\n        RLPReader.RLPItem[] memory Logs = receipt[3].toList();\n        for(uint i = 0; i < Logs.length; i++) {\n            RLPReader.RLPItem[] memory rlpLog = Logs[i].toList();\n            address Address = rlpLog[0].toAddress(); // TODO: if is erc20 contract address\n            RLPReader.RLPItem[] memory Topics = rlpLog[1].toList(); // TODO: if is lock event\n            for(uint j = 0; j < Topics.length; j++) {\n                bytes32 Hash = bytes32(Topics[j].toUint());\n            }\n            bytes memory Data = rlpLog[2].toBytes();\n        }\n\t}\n*/\n}",
-  "sourcePath": "/media/harsha/home/workspace/horizon/everifier/contracts/MPTSolidity/ReceiptTraversal.sol",
+  "sourcePath": "/media/harsha/home/workspace/horizon/lib/src/contracts/verifier/MPTSolidity/ReceiptTraversal.sol",
   "ast": {
-    "absolutePath": "/media/harsha/home/workspace/horizon/everifier/contracts/MPTSolidity/ReceiptTraversal.sol",
+    "absolutePath": "/media/harsha/home/workspace/horizon/lib/src/contracts/verifier/MPTSolidity/ReceiptTraversal.sol",
     "exportedSymbols": {
       "receiptReader": [
-        1453
+        1490
       ]
     },
-    "id": 1454,
+    "id": 1491,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 1445,
+        "id": 1482,
         "literals": [
           "solidity",
           "^",
@@ -27,16 +27,16 @@
           ".0"
         ],
         "nodeType": "PragmaDirective",
-        "src": "0:23:3"
+        "src": "0:23:4"
       },
       {
-        "absolutePath": "/media/harsha/home/workspace/horizon/everifier/contracts/MPTSolidity/RLPReader.sol",
+        "absolutePath": "/media/harsha/home/workspace/horizon/lib/src/contracts/verifier/MPTSolidity/RLPReader.sol",
         "file": "./RLPReader.sol",
-        "id": 1446,
+        "id": 1483,
         "nodeType": "ImportDirective",
-        "scope": 1454,
-        "sourceUnit": 1444,
-        "src": "25:25:3",
+        "scope": 1491,
+        "sourceUnit": 1481,
+        "src": "25:25:4",
         "symbolAliases": [],
         "unitAlias": ""
       },
@@ -46,63 +46,63 @@
         "contractKind": "contract",
         "documentation": null,
         "fullyImplemented": true,
-        "id": 1453,
+        "id": 1490,
         "linearizedBaseContracts": [
-          1453
+          1490
         ],
         "name": "receiptReader",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
-            "id": 1449,
+            "id": 1486,
             "libraryName": {
               "contractScope": null,
-              "id": 1447,
+              "id": 1484,
               "name": "RLPReader",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 1443,
-              "src": "87:9:3",
+              "referencedDeclaration": 1480,
+              "src": "87:9:4",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_RLPReader_$1443",
+                "typeIdentifier": "t_contract$_RLPReader_$1480",
                 "typeString": "library RLPReader"
               }
             },
             "nodeType": "UsingForDirective",
-            "src": "81:38:3",
+            "src": "81:38:4",
             "typeName": {
               "contractScope": null,
-              "id": 1448,
+              "id": 1485,
               "name": "RLPReader.RLPItem",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 873,
-              "src": "101:17:3",
+              "referencedDeclaration": 910,
+              "src": "101:17:4",
               "typeDescriptions": {
-                "typeIdentifier": "t_struct$_RLPItem_$873_storage_ptr",
+                "typeIdentifier": "t_struct$_RLPItem_$910_storage_ptr",
                 "typeString": "struct RLPReader.RLPItem"
               }
             }
           },
           {
-            "id": 1452,
+            "id": 1489,
             "libraryName": {
               "contractScope": null,
-              "id": 1450,
+              "id": 1487,
               "name": "RLPReader",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 1443,
-              "src": "127:9:3",
+              "referencedDeclaration": 1480,
+              "src": "127:9:4",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_RLPReader_$1443",
+                "typeIdentifier": "t_contract$_RLPReader_$1480",
                 "typeString": "library RLPReader"
               }
             },
             "nodeType": "UsingForDirective",
-            "src": "121:26:3",
+            "src": "121:26:4",
             "typeName": {
-              "id": 1451,
+              "id": 1488,
               "name": "bytes",
               "nodeType": "ElementaryTypeName",
-              "src": "141:5:3",
+              "src": "141:5:4",
               "typeDescriptions": {
                 "typeIdentifier": "t_bytes_storage_ptr",
                 "typeString": "bytes"
@@ -110,18 +110,18 @@
             }
           }
         ],
-        "scope": 1454,
-        "src": "52:1023:3"
+        "scope": 1491,
+        "src": "52:1023:4"
       }
     ],
-    "src": "0:1075:3"
+    "src": "0:1075:4"
   },
   "legacyAST": {
     "attributes": {
-      "absolutePath": "/media/harsha/home/workspace/horizon/everifier/contracts/MPTSolidity/ReceiptTraversal.sol",
+      "absolutePath": "/media/harsha/home/workspace/horizon/lib/src/contracts/verifier/MPTSolidity/ReceiptTraversal.sol",
       "exportedSymbols": {
         "receiptReader": [
-          1453
+          1490
         ]
       }
     },
@@ -135,24 +135,24 @@
             ".0"
           ]
         },
-        "id": 1445,
+        "id": 1482,
         "name": "PragmaDirective",
-        "src": "0:23:3"
+        "src": "0:23:4"
       },
       {
         "attributes": {
-          "SourceUnit": 1444,
-          "absolutePath": "/media/harsha/home/workspace/horizon/everifier/contracts/MPTSolidity/RLPReader.sol",
+          "SourceUnit": 1481,
+          "absolutePath": "/media/harsha/home/workspace/horizon/lib/src/contracts/verifier/MPTSolidity/RLPReader.sol",
           "file": "./RLPReader.sol",
-          "scope": 1454,
+          "scope": 1491,
           "symbolAliases": [
             null
           ],
           "unitAlias": ""
         },
-        "id": 1446,
+        "id": 1483,
         "name": "ImportDirective",
-        "src": "25:25:3"
+        "src": "25:25:4"
       },
       {
         "attributes": {
@@ -166,10 +166,10 @@
           "documentation": null,
           "fullyImplemented": true,
           "linearizedBaseContracts": [
-            1453
+            1490
           ],
           "name": "receiptReader",
-          "scope": 1454
+          "scope": 1491
         },
         "children": [
           {
@@ -178,28 +178,28 @@
                 "attributes": {
                   "contractScope": null,
                   "name": "RLPReader",
-                  "referencedDeclaration": 1443,
+                  "referencedDeclaration": 1480,
                   "type": "library RLPReader"
                 },
-                "id": 1447,
+                "id": 1484,
                 "name": "UserDefinedTypeName",
-                "src": "87:9:3"
+                "src": "87:9:4"
               },
               {
                 "attributes": {
                   "contractScope": null,
                   "name": "RLPReader.RLPItem",
-                  "referencedDeclaration": 873,
+                  "referencedDeclaration": 910,
                   "type": "struct RLPReader.RLPItem"
                 },
-                "id": 1448,
+                "id": 1485,
                 "name": "UserDefinedTypeName",
-                "src": "101:17:3"
+                "src": "101:17:4"
               }
             ],
-            "id": 1449,
+            "id": 1486,
             "name": "UsingForDirective",
-            "src": "81:38:3"
+            "src": "81:38:4"
           },
           {
             "children": [
@@ -207,36 +207,36 @@
                 "attributes": {
                   "contractScope": null,
                   "name": "RLPReader",
-                  "referencedDeclaration": 1443,
+                  "referencedDeclaration": 1480,
                   "type": "library RLPReader"
                 },
-                "id": 1450,
+                "id": 1487,
                 "name": "UserDefinedTypeName",
-                "src": "127:9:3"
+                "src": "127:9:4"
               },
               {
                 "attributes": {
                   "name": "bytes",
                   "type": "bytes"
                 },
-                "id": 1451,
+                "id": 1488,
                 "name": "ElementaryTypeName",
-                "src": "141:5:3"
+                "src": "141:5:4"
               }
             ],
-            "id": 1452,
+            "id": 1489,
             "name": "UsingForDirective",
-            "src": "121:26:3"
+            "src": "121:26:4"
           }
         ],
-        "id": 1453,
+        "id": 1490,
         "name": "ContractDefinition",
-        "src": "52:1023:3"
+        "src": "52:1023:4"
       }
     ],
-    "id": 1454,
+    "id": 1491,
     "name": "SourceUnit",
-    "src": "0:1075:3"
+    "src": "0:1075:4"
   },
   "compiler": {
     "name": "solc",
@@ -244,7 +244,7 @@
   },
   "networks": {},
   "schemaVersion": "3.3.3",
-  "updatedAt": "2021-01-02T20:12:10.973Z",
+  "updatedAt": "2021-01-14T22:02:39.236Z",
   "devdoc": {
     "methods": {}
   },

@@ -148,31 +148,31 @@
       "type": "function"
     }
   ],
-  "metadata": "{\"compiler\":{\"version\":\"0.5.17+commit.d19bba13\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"previousOwner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"OwnershipTransferred\",\"type\":\"event\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"blockHash\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"receiptsHash\",\"type\":\"bytes32\"}],\"name\":\"FeedReeipts\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"name\":\"Receipts\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"blockHash\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"receiptsHash\",\"type\":\"bytes32\"}],\"name\":\"VerifyReceiptsHash\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"isOwner\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[],\"name\":\"renounceOwnership\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"transferOwnership\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"methods\":{\"isOwner()\":{\"details\":\"Returns true if the caller is the current owner.\"},\"owner()\":{\"details\":\"Returns the address of the current owner.\"},\"renounceOwnership()\":{\"details\":\"Leaves the contract without owner. It will not be possible to call `onlyOwner` functions anymore. Can only be called by the current owner.     * NOTE: Renouncing ownership will leave the contract without an owner, thereby removing any functionality that is only available to the owner.\"},\"transferOwnership(address)\":{\"details\":\"Transfers ownership of the contract to a new account (`newOwner`). Can only be called by the current owner.\"}}},\"userdoc\":{\"methods\":{}}},\"settings\":{\"compilationTarget\":{\"/media/harsha/home/workspace/horizon/everifier/contracts/LightClient.sol\":\"LightClientTrust\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"/media/harsha/home/workspace/horizon/everifier/contracts/LightClient.sol\":{\"keccak256\":\"0x66da7d9e60d6501e1ddbcf842219f848e285cb9a58856bbff9915bc843f3a7be\",\"urls\":[\"bzz-raw://91720fad2a3f265491f504c6b0c1a3375089c686ae11f263338df00f2f983b1e\",\"dweb:/ipfs/QmVkjCZACvDLqmKdKKKmZvFxtJVAeQoRspv2qbpSpczzCX\"]},\"@openzeppelin/contracts//ownership/Ownable.sol\":{\"keccak256\":\"0x6fb9d7889769d7cc161225f9ef7a90e468ba9788b253816f8d8b6894d3472c24\",\"urls\":[\"bzz-raw://cf4c00fc3c37cc5acf0c82ec6fd97bab67d72c2567fdc0ebf023d9c09b30a08e\",\"dweb:/ipfs/Qmb7TChG6DsEDX7LooJ4vmxot19f7VXX8S1zUGPeJTWbwZ\"]},\"@openzeppelin/contracts/GSN/Context.sol\":{\"keccak256\":\"0x90a3995645af7562d84b9d69363ffa5ae7217714ab61e951bf7bc450f40e4061\",\"urls\":[\"bzz-raw://216ef9d6b614db4eb46970b4e84903f2534a45572dd30a79f0041f1a5830f436\",\"dweb:/ipfs/QmNPrJ4MWKUAWzKXpUqeyKRUfosaoANZAqXgvepdrCwZAG\"]}},\"version\":1}",
-  "bytecode": "0x608060405234801561001057600080fd5b5060006100246001600160e01b0361007316565b600080546001600160a01b0319166001600160a01b0383169081178255604051929350917f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0908290a350610077565b3390565b610432806100866000396000f3fe608060405234801561001057600080fd5b506004361061007d5760003560e01c80638da5cb5b1161005b5780638da5cb5b146100f25780638f32d59b1461011657806397df3bc71461011e578063f2fde38b146101415761007d565b806329e141af14610082578063335b9aec146100b9578063715018a6146100e8575b600080fd5b6100a56004803603604081101561009857600080fd5b5080359060200135610167565b604080519115158252519081900360200190f35b6100d6600480360360208110156100cf57600080fd5b503561017b565b60408051918252519081900360200190f35b6100f061018d565b005b6100fa610230565b604080516001600160a01b039092168252519081900360200190f35b6100a561023f565b6100f06004803603604081101561013457600080fd5b5080359060200135610263565b6100f06004803603602081101561015757600080fd5b50356001600160a01b03166102ce565b600091825260016020526040909120541490565b60016020526000908152604090205481565b61019561023f565b6101e6576040805162461bcd60e51b815260206004820181905260248201527f4f776e61626c653a2063616c6c6572206973206e6f7420746865206f776e6572604482015290519081900360640190fd5b600080546040516001600160a01b03909116907f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0908390a3600080546001600160a01b0319169055565b6000546001600160a01b031690565b600080546001600160a01b0316610254610333565b6001600160a01b031614905090565b61026b61023f565b6102bc576040805162461bcd60e51b815260206004820181905260248201527f4f776e61626c653a2063616c6c6572206973206e6f7420746865206f776e6572604482015290519081900360640190fd5b60009182526001602052604090912055565b6102d661023f565b610327576040805162461bcd60e51b815260206004820181905260248201527f4f776e61626c653a2063616c6c6572206973206e6f7420746865206f776e6572604482015290519081900360640190fd5b61033081610337565b50565b3390565b6001600160a01b03811661037c5760405162461bcd60e51b81526004018080602001828103825260268152602001806103d86026913960400191505060405180910390fd5b600080546040516001600160a01b03808516939216917f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e091a3600080546001600160a01b0319166001600160a01b039290921691909117905556fe4f776e61626c653a206e6577206f776e657220697320746865207a65726f2061646472657373a265627a7a7231582010f22bbbe7a81e5a247dd1fa35614f145b98e140e747fdd52f71b99b2cf1f6b864736f6c63430005110032",
-  "deployedBytecode": "0x608060405234801561001057600080fd5b506004361061007d5760003560e01c80638da5cb5b1161005b5780638da5cb5b146100f25780638f32d59b1461011657806397df3bc71461011e578063f2fde38b146101415761007d565b806329e141af14610082578063335b9aec146100b9578063715018a6146100e8575b600080fd5b6100a56004803603604081101561009857600080fd5b5080359060200135610167565b604080519115158252519081900360200190f35b6100d6600480360360208110156100cf57600080fd5b503561017b565b60408051918252519081900360200190f35b6100f061018d565b005b6100fa610230565b604080516001600160a01b039092168252519081900360200190f35b6100a561023f565b6100f06004803603604081101561013457600080fd5b5080359060200135610263565b6100f06004803603602081101561015757600080fd5b50356001600160a01b03166102ce565b600091825260016020526040909120541490565b60016020526000908152604090205481565b61019561023f565b6101e6576040805162461bcd60e51b815260206004820181905260248201527f4f776e61626c653a2063616c6c6572206973206e6f7420746865206f776e6572604482015290519081900360640190fd5b600080546040516001600160a01b03909116907f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0908390a3600080546001600160a01b0319169055565b6000546001600160a01b031690565b600080546001600160a01b0316610254610333565b6001600160a01b031614905090565b61026b61023f565b6102bc576040805162461bcd60e51b815260206004820181905260248201527f4f776e61626c653a2063616c6c6572206973206e6f7420746865206f776e6572604482015290519081900360640190fd5b60009182526001602052604090912055565b6102d661023f565b610327576040805162461bcd60e51b815260206004820181905260248201527f4f776e61626c653a2063616c6c6572206973206e6f7420746865206f776e6572604482015290519081900360640190fd5b61033081610337565b50565b3390565b6001600160a01b03811661037c5760405162461bcd60e51b81526004018080602001828103825260268152602001806103d86026913960400191505060405180910390fd5b600080546040516001600160a01b03808516939216917f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e091a3600080546001600160a01b0319166001600160a01b039290921691909117905556fe4f776e61626c653a206e6577206f776e657220697320746865207a65726f2061646472657373a265627a7a7231582010f22bbbe7a81e5a247dd1fa35614f145b98e140e747fdd52f71b99b2cf1f6b864736f6c63430005110032",
-  "sourceMap": "411:428:0:-;;;467:33;8:9:-1;5:2;;;30:1;27;20:12;5:2;-1:-1;698:17:6;718:12;-1:-1:-1;;;;;718:10:6;:12;:::i;:::-;740:6;:18;;-1:-1:-1;;;;;;740:18:6;-1:-1:-1;;;;;740:18:6;;;;;;;773:43;;740:18;;-1:-1:-1;740:18:6;773:43;;740:6;;773:43;664:159;411:428:0;;788:96:7;867:10;788:96;:::o;411:428:0:-;;;;;;;",
-  "deployedSourceMap": "411:428:0:-;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;411:428:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;552:149;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;-1:-1;552:149:0;;;;;;;:::i;:::-;;;;;;;;;;;;;;;;;;505:41;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;-1:-1;505:41:0;;:::i;:::-;;;;;;;;;;;;;;;;1684:137:6;;;:::i;:::-;;899:77;;;:::i;:::-;;;;-1:-1:-1;;;;;899:77:6;;;;;;;;;;;;;;1250:92;;;:::i;707:130:0:-;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;-1:-1;707:130:0;;;;;;;:::i;1970:107:6:-;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;-1:-1;1970:107:6;-1:-1:-1;;;;;1970:107:6;;:::i;552:149:0:-;636:4;659:19;;;:8;:19;;;;;;;:35;;552:149::o;505:41::-;;;;;;;;;;;;;:::o;1684:137:6:-;1103:9;:7;:9::i;:::-;1095:54;;;;;-1:-1:-1;;;1095:54:6;;;;;;;;;;;;;;;;;;;;;;;;;;;;;1782:1;1766:6;;1745:40;;-1:-1:-1;;;;;1766:6:6;;;;1745:40;;1782:1;;1745:40;1812:1;1795:19;;-1:-1:-1;;;;;;1795:19:6;;;1684:137::o;899:77::-;937:7;963:6;-1:-1:-1;;;;;963:6:6;899:77;:::o;1250:92::-;1290:4;1329:6;;-1:-1:-1;;;;;1329:6:6;1313:12;:10;:12::i;:::-;-1:-1:-1;;;;;1313:22:6;;1306:29;;1250:92;:::o;707:130:0:-;1103:9:6;:7;:9::i;:::-;1095:54;;;;;-1:-1:-1;;;1095:54:6;;;;;;;;;;;;;;;;;;;;;;;;;;;;;796:19:0;;;;:8;:19;;;;;;:34;707:130::o;1970:107:6:-;1103:9;:7;:9::i;:::-;1095:54;;;;;-1:-1:-1;;;1095:54:6;;;;;;;;;;;;;;;;;;;;;;;;;;;;;2042:28;2061:8;2042:18;:28::i;:::-;1970:107;:::o;788:96:7:-;867:10;788:96;:::o;2178:225:6:-;-1:-1:-1;;;;;2251:22:6;;2243:73;;;;-1:-1:-1;;;2243:73:6;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;2352:6;;;2331:38;;-1:-1:-1;;;;;2331:38:6;;;;2352:6;;;2331:38;;;2379:6;:17;;-1:-1:-1;;;;;;2379:17:6;-1:-1:-1;;;;;2379:17:6;;;;;;;;;;2178:225::o",
+  "metadata": "{\"compiler\":{\"version\":\"0.5.17+commit.d19bba13\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"previousOwner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"OwnershipTransferred\",\"type\":\"event\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"blockHash\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"receiptsHash\",\"type\":\"bytes32\"}],\"name\":\"FeedReeipts\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"name\":\"Receipts\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"blockHash\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"receiptsHash\",\"type\":\"bytes32\"}],\"name\":\"VerifyReceiptsHash\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"isOwner\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[],\"name\":\"renounceOwnership\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"transferOwnership\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"methods\":{\"isOwner()\":{\"details\":\"Returns true if the caller is the current owner.\"},\"owner()\":{\"details\":\"Returns the address of the current owner.\"},\"renounceOwnership()\":{\"details\":\"Leaves the contract without owner. It will not be possible to call `onlyOwner` functions anymore. Can only be called by the current owner.     * NOTE: Renouncing ownership will leave the contract without an owner, thereby removing any functionality that is only available to the owner.\"},\"transferOwnership(address)\":{\"details\":\"Transfers ownership of the contract to a new account (`newOwner`). Can only be called by the current owner.\"}}},\"userdoc\":{\"methods\":{}}},\"settings\":{\"compilationTarget\":{\"/media/harsha/home/workspace/horizon/lib/src/contracts/verifier/LightClient.sol\":\"LightClientTrust\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"/media/harsha/home/workspace/horizon/lib/src/contracts/verifier/LightClient.sol\":{\"keccak256\":\"0x66da7d9e60d6501e1ddbcf842219f848e285cb9a58856bbff9915bc843f3a7be\",\"urls\":[\"bzz-raw://91720fad2a3f265491f504c6b0c1a3375089c686ae11f263338df00f2f983b1e\",\"dweb:/ipfs/QmVkjCZACvDLqmKdKKKmZvFxtJVAeQoRspv2qbpSpczzCX\"]},\"@openzeppelin/contracts//ownership/Ownable.sol\":{\"keccak256\":\"0x6fb9d7889769d7cc161225f9ef7a90e468ba9788b253816f8d8b6894d3472c24\",\"urls\":[\"bzz-raw://cf4c00fc3c37cc5acf0c82ec6fd97bab67d72c2567fdc0ebf023d9c09b30a08e\",\"dweb:/ipfs/Qmb7TChG6DsEDX7LooJ4vmxot19f7VXX8S1zUGPeJTWbwZ\"]},\"@openzeppelin/contracts/GSN/Context.sol\":{\"keccak256\":\"0x90a3995645af7562d84b9d69363ffa5ae7217714ab61e951bf7bc450f40e4061\",\"urls\":[\"bzz-raw://216ef9d6b614db4eb46970b4e84903f2534a45572dd30a79f0041f1a5830f436\",\"dweb:/ipfs/QmNPrJ4MWKUAWzKXpUqeyKRUfosaoANZAqXgvepdrCwZAG\"]}},\"version\":1}",
+  "bytecode": "0x608060405234801561001057600080fd5b5060006100246001600160e01b0361007316565b600080546001600160a01b0319166001600160a01b0383169081178255604051929350917f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0908290a350610077565b3390565b610432806100866000396000f3fe608060405234801561001057600080fd5b506004361061007d5760003560e01c80638da5cb5b1161005b5780638da5cb5b146100f25780638f32d59b1461011657806397df3bc71461011e578063f2fde38b146101415761007d565b806329e141af14610082578063335b9aec146100b9578063715018a6146100e8575b600080fd5b6100a56004803603604081101561009857600080fd5b5080359060200135610167565b604080519115158252519081900360200190f35b6100d6600480360360208110156100cf57600080fd5b503561017b565b60408051918252519081900360200190f35b6100f061018d565b005b6100fa610230565b604080516001600160a01b039092168252519081900360200190f35b6100a561023f565b6100f06004803603604081101561013457600080fd5b5080359060200135610263565b6100f06004803603602081101561015757600080fd5b50356001600160a01b03166102ce565b600091825260016020526040909120541490565b60016020526000908152604090205481565b61019561023f565b6101e6576040805162461bcd60e51b815260206004820181905260248201527f4f776e61626c653a2063616c6c6572206973206e6f7420746865206f776e6572604482015290519081900360640190fd5b600080546040516001600160a01b03909116907f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0908390a3600080546001600160a01b0319169055565b6000546001600160a01b031690565b600080546001600160a01b0316610254610333565b6001600160a01b031614905090565b61026b61023f565b6102bc576040805162461bcd60e51b815260206004820181905260248201527f4f776e61626c653a2063616c6c6572206973206e6f7420746865206f776e6572604482015290519081900360640190fd5b60009182526001602052604090912055565b6102d661023f565b610327576040805162461bcd60e51b815260206004820181905260248201527f4f776e61626c653a2063616c6c6572206973206e6f7420746865206f776e6572604482015290519081900360640190fd5b61033081610337565b50565b3390565b6001600160a01b03811661037c5760405162461bcd60e51b81526004018080602001828103825260268152602001806103d86026913960400191505060405180910390fd5b600080546040516001600160a01b03808516939216917f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e091a3600080546001600160a01b0319166001600160a01b039290921691909117905556fe4f776e61626c653a206e6577206f776e657220697320746865207a65726f2061646472657373a265627a7a72315820ce1e48fa834c5bdfc1881060a5e0300908a1c4508a4cc215af4f83d425ff107c64736f6c63430005110032",
+  "deployedBytecode": "0x608060405234801561001057600080fd5b506004361061007d5760003560e01c80638da5cb5b1161005b5780638da5cb5b146100f25780638f32d59b1461011657806397df3bc71461011e578063f2fde38b146101415761007d565b806329e141af14610082578063335b9aec146100b9578063715018a6146100e8575b600080fd5b6100a56004803603604081101561009857600080fd5b5080359060200135610167565b604080519115158252519081900360200190f35b6100d6600480360360208110156100cf57600080fd5b503561017b565b60408051918252519081900360200190f35b6100f061018d565b005b6100fa610230565b604080516001600160a01b039092168252519081900360200190f35b6100a561023f565b6100f06004803603604081101561013457600080fd5b5080359060200135610263565b6100f06004803603602081101561015757600080fd5b50356001600160a01b03166102ce565b600091825260016020526040909120541490565b60016020526000908152604090205481565b61019561023f565b6101e6576040805162461bcd60e51b815260206004820181905260248201527f4f776e61626c653a2063616c6c6572206973206e6f7420746865206f776e6572604482015290519081900360640190fd5b600080546040516001600160a01b03909116907f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0908390a3600080546001600160a01b0319169055565b6000546001600160a01b031690565b600080546001600160a01b0316610254610333565b6001600160a01b031614905090565b61026b61023f565b6102bc576040805162461bcd60e51b815260206004820181905260248201527f4f776e61626c653a2063616c6c6572206973206e6f7420746865206f776e6572604482015290519081900360640190fd5b60009182526001602052604090912055565b6102d661023f565b610327576040805162461bcd60e51b815260206004820181905260248201527f4f776e61626c653a2063616c6c6572206973206e6f7420746865206f776e6572604482015290519081900360640190fd5b61033081610337565b50565b3390565b6001600160a01b03811661037c5760405162461bcd60e51b81526004018080602001828103825260268152602001806103d86026913960400191505060405180910390fd5b600080546040516001600160a01b03808516939216917f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e091a3600080546001600160a01b0319166001600160a01b039290921691909117905556fe4f776e61626c653a206e6577206f776e657220697320746865207a65726f2061646472657373a265627a7a72315820ce1e48fa834c5bdfc1881060a5e0300908a1c4508a4cc215af4f83d425ff107c64736f6c63430005110032",
+  "sourceMap": "411:428:1:-;;;467:33;8:9:-1;5:2;;;30:1;27;20:12;5:2;-1:-1;698:17:6;718:12;-1:-1:-1;;;;;718:10:6;:12;:::i;:::-;740:6;:18;;-1:-1:-1;;;;;;740:18:6;-1:-1:-1;;;;;740:18:6;;;;;;;773:43;;740:18;;-1:-1:-1;740:18:6;773:43;;740:6;;773:43;664:159;411:428:1;;788:96:7;867:10;788:96;:::o;411:428:1:-;;;;;;;",
+  "deployedSourceMap": "411:428:1:-;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;411:428:1;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;552:149;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;-1:-1;552:149:1;;;;;;;:::i;:::-;;;;;;;;;;;;;;;;;;505:41;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;-1:-1;505:41:1;;:::i;:::-;;;;;;;;;;;;;;;;1684:137:6;;;:::i;:::-;;899:77;;;:::i;:::-;;;;-1:-1:-1;;;;;899:77:6;;;;;;;;;;;;;;1250:92;;;:::i;707:130:1:-;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;-1:-1;707:130:1;;;;;;;:::i;1970:107:6:-;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;-1:-1;1970:107:6;-1:-1:-1;;;;;1970:107:6;;:::i;552:149:1:-;636:4;659:19;;;:8;:19;;;;;;;:35;;552:149::o;505:41::-;;;;;;;;;;;;;:::o;1684:137:6:-;1103:9;:7;:9::i;:::-;1095:54;;;;;-1:-1:-1;;;1095:54:6;;;;;;;;;;;;;;;;;;;;;;;;;;;;;1782:1;1766:6;;1745:40;;-1:-1:-1;;;;;1766:6:6;;;;1745:40;;1782:1;;1745:40;1812:1;1795:19;;-1:-1:-1;;;;;;1795:19:6;;;1684:137::o;899:77::-;937:7;963:6;-1:-1:-1;;;;;963:6:6;899:77;:::o;1250:92::-;1290:4;1329:6;;-1:-1:-1;;;;;1329:6:6;1313:12;:10;:12::i;:::-;-1:-1:-1;;;;;1313:22:6;;1306:29;;1250:92;:::o;707:130:1:-;1103:9:6;:7;:9::i;:::-;1095:54;;;;;-1:-1:-1;;;1095:54:6;;;;;;;;;;;;;;;;;;;;;;;;;;;;;796:19:1;;;;:8;:19;;;;;;:34;707:130::o;1970:107:6:-;1103:9;:7;:9::i;:::-;1095:54;;;;;-1:-1:-1;;;1095:54:6;;;;;;;;;;;;;;;;;;;;;;;;;;;;;2042:28;2061:8;2042:18;:28::i;:::-;1970:107;:::o;788:96:7:-;867:10;788:96;:::o;2178:225:6:-;-1:-1:-1;;;;;2251:22:6;;2243:73;;;;-1:-1:-1;;;2243:73:6;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;2352:6;;;2331:38;;-1:-1:-1;;;;;2331:38:6;;;;2352:6;;;2331:38;;;2379:6;:17;;-1:-1:-1;;;;;;2379:17:6;-1:-1:-1;;;;;2379:17:6;;;;;;;;;;2178:225::o",
   "source": "pragma solidity ^0.5.0;\n\nimport \"@openzeppelin/contracts//ownership/Ownable.sol\";\n\ninterface ILightClient {\n    function VerifyReceiptsHash(bytes32 blockHash, bytes32 receiptsHash) external returns(bool);\n}\n\ncontract LightClientUnsafe is ILightClient {\n    function VerifyReceiptsHash(bytes32 blockHash, bytes32 receiptsHash) public returns(bool) {\n        blockHash;receiptsHash;\n        return true;\n    }\n}\n\ncontract LightClientTrust is ILightClient,Ownable {\n    constructor() Ownable() public {}\n    mapping(bytes32=>bytes32) public Receipts;\n    function VerifyReceiptsHash(bytes32 blockHash, bytes32 receiptsHash) public returns(bool) {\n        return Receipts[blockHash] == receiptsHash;\n    }\n\n    function FeedReeipts(bytes32 blockHash, bytes32 receiptsHash) public onlyOwner {\n        Receipts[blockHash] = receiptsHash;\n    }\n}",
-  "sourcePath": "/media/harsha/home/workspace/horizon/everifier/contracts/LightClient.sol",
+  "sourcePath": "/media/harsha/home/workspace/horizon/lib/src/contracts/verifier/LightClient.sol",
   "ast": {
-    "absolutePath": "/media/harsha/home/workspace/horizon/everifier/contracts/LightClient.sol",
+    "absolutePath": "/media/harsha/home/workspace/horizon/lib/src/contracts/verifier/LightClient.sol",
     "exportedSymbols": {
       "ILightClient": [
-        12
+        49
       ],
       "LightClientTrust": [
-        78
+        115
       ],
       "LightClientUnsafe": [
-        31
+        68
       ]
     },
-    "id": 79,
+    "id": 116,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 1,
+        "id": 38,
         "literals": [
           "solidity",
           "^",
@@ -180,16 +180,16 @@
           ".0"
         ],
         "nodeType": "PragmaDirective",
-        "src": "0:23:0"
+        "src": "0:23:1"
       },
       {
         "absolutePath": "@openzeppelin/contracts//ownership/Ownable.sol",
         "file": "@openzeppelin/contracts//ownership/Ownable.sol",
-        "id": 2,
+        "id": 39,
         "nodeType": "ImportDirective",
-        "scope": 79,
-        "sourceUnit": 2468,
-        "src": "25:56:0",
+        "scope": 116,
+        "sourceUnit": 2455,
+        "src": "25:56:1",
         "symbolAliases": [],
         "unitAlias": ""
       },
@@ -199,9 +199,9 @@
         "contractKind": "interface",
         "documentation": null,
         "fullyImplemented": false,
-        "id": 12,
+        "id": 49,
         "linearizedBaseContracts": [
-          12
+          49
         ],
         "name": "ILightClient",
         "nodeType": "ContractDefinition",
@@ -209,23 +209,23 @@
           {
             "body": null,
             "documentation": null,
-            "id": 11,
+            "id": 48,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "VerifyReceiptsHash",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 7,
+              "id": 44,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 4,
+                  "id": 41,
                   "name": "blockHash",
                   "nodeType": "VariableDeclaration",
-                  "scope": 11,
-                  "src": "140:17:0",
+                  "scope": 48,
+                  "src": "140:17:1",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -233,10 +233,10 @@
                     "typeString": "bytes32"
                   },
                   "typeName": {
-                    "id": 3,
+                    "id": 40,
                     "name": "bytes32",
                     "nodeType": "ElementaryTypeName",
-                    "src": "140:7:0",
+                    "src": "140:7:1",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bytes32",
                       "typeString": "bytes32"
@@ -247,11 +247,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 6,
+                  "id": 43,
                   "name": "receiptsHash",
                   "nodeType": "VariableDeclaration",
-                  "scope": 11,
-                  "src": "159:20:0",
+                  "scope": 48,
+                  "src": "159:20:1",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -259,10 +259,10 @@
                     "typeString": "bytes32"
                   },
                   "typeName": {
-                    "id": 5,
+                    "id": 42,
                     "name": "bytes32",
                     "nodeType": "ElementaryTypeName",
-                    "src": "159:7:0",
+                    "src": "159:7:1",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bytes32",
                       "typeString": "bytes32"
@@ -272,19 +272,19 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "139:41:0"
+              "src": "139:41:1"
             },
             "returnParameters": {
-              "id": 10,
+              "id": 47,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 9,
+                  "id": 46,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 11,
-                  "src": "198:4:0",
+                  "scope": 48,
+                  "src": "198:4:1",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -292,10 +292,10 @@
                     "typeString": "bool"
                   },
                   "typeName": {
-                    "id": 8,
+                    "id": 45,
                     "name": "bool",
                     "nodeType": "ElementaryTypeName",
-                    "src": "198:4:0",
+                    "src": "198:4:1",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bool",
                       "typeString": "bool"
@@ -305,17 +305,17 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "197:6:0"
+              "src": "197:6:1"
             },
-            "scope": 12,
-            "src": "112:92:0",
+            "scope": 49,
+            "src": "112:92:1",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "external"
           }
         ],
-        "scope": 79,
-        "src": "83:123:0"
+        "scope": 116,
+        "src": "83:123:1"
       },
       {
         "baseContracts": [
@@ -323,89 +323,89 @@
             "arguments": null,
             "baseName": {
               "contractScope": null,
-              "id": 13,
+              "id": 50,
               "name": "ILightClient",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 12,
-              "src": "238:12:0",
+              "referencedDeclaration": 49,
+              "src": "238:12:1",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_ILightClient_$12",
+                "typeIdentifier": "t_contract$_ILightClient_$49",
                 "typeString": "contract ILightClient"
               }
             },
-            "id": 14,
+            "id": 51,
             "nodeType": "InheritanceSpecifier",
-            "src": "238:12:0"
+            "src": "238:12:1"
           }
         ],
         "contractDependencies": [
-          12
+          49
         ],
         "contractKind": "contract",
         "documentation": null,
         "fullyImplemented": true,
-        "id": 31,
+        "id": 68,
         "linearizedBaseContracts": [
-          31,
-          12
+          68,
+          49
         ],
         "name": "LightClientUnsafe",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
             "body": {
-              "id": 29,
+              "id": 66,
               "nodeType": "Block",
-              "src": "347:60:0",
+              "src": "347:60:1",
               "statements": [
                 {
                   "expression": {
                     "argumentTypes": null,
-                    "id": 23,
+                    "id": 60,
                     "name": "blockHash",
                     "nodeType": "Identifier",
                     "overloadedDeclarations": [],
-                    "referencedDeclaration": 16,
-                    "src": "357:9:0",
+                    "referencedDeclaration": 53,
+                    "src": "357:9:1",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bytes32",
                       "typeString": "bytes32"
                     }
                   },
-                  "id": 24,
+                  "id": 61,
                   "nodeType": "ExpressionStatement",
-                  "src": "357:9:0"
+                  "src": "357:9:1"
                 },
                 {
                   "expression": {
                     "argumentTypes": null,
-                    "id": 25,
+                    "id": 62,
                     "name": "receiptsHash",
                     "nodeType": "Identifier",
                     "overloadedDeclarations": [],
-                    "referencedDeclaration": 18,
-                    "src": "367:12:0",
+                    "referencedDeclaration": 55,
+                    "src": "367:12:1",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bytes32",
                       "typeString": "bytes32"
                     }
                   },
-                  "id": 26,
+                  "id": 63,
                   "nodeType": "ExpressionStatement",
-                  "src": "367:12:0"
+                  "src": "367:12:1"
                 },
                 {
                   "expression": {
                     "argumentTypes": null,
                     "hexValue": "74727565",
-                    "id": 27,
+                    "id": 64,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": true,
                     "kind": "bool",
                     "lValueRequested": false,
                     "nodeType": "Literal",
-                    "src": "396:4:0",
+                    "src": "396:4:1",
                     "subdenomination": null,
                     "typeDescriptions": {
                       "typeIdentifier": "t_bool",
@@ -413,31 +413,31 @@
                     },
                     "value": "true"
                   },
-                  "functionReturnParameters": 22,
-                  "id": 28,
+                  "functionReturnParameters": 59,
+                  "id": 65,
                   "nodeType": "Return",
-                  "src": "389:11:0"
+                  "src": "389:11:1"
                 }
               ]
             },
             "documentation": null,
-            "id": 30,
+            "id": 67,
             "implemented": true,
             "kind": "function",
             "modifiers": [],
             "name": "VerifyReceiptsHash",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 19,
+              "id": 56,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 16,
+                  "id": 53,
                   "name": "blockHash",
                   "nodeType": "VariableDeclaration",
-                  "scope": 30,
-                  "src": "285:17:0",
+                  "scope": 67,
+                  "src": "285:17:1",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -445,10 +445,10 @@
                     "typeString": "bytes32"
                   },
                   "typeName": {
-                    "id": 15,
+                    "id": 52,
                     "name": "bytes32",
                     "nodeType": "ElementaryTypeName",
-                    "src": "285:7:0",
+                    "src": "285:7:1",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bytes32",
                       "typeString": "bytes32"
@@ -459,11 +459,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 18,
+                  "id": 55,
                   "name": "receiptsHash",
                   "nodeType": "VariableDeclaration",
-                  "scope": 30,
-                  "src": "304:20:0",
+                  "scope": 67,
+                  "src": "304:20:1",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -471,10 +471,10 @@
                     "typeString": "bytes32"
                   },
                   "typeName": {
-                    "id": 17,
+                    "id": 54,
                     "name": "bytes32",
                     "nodeType": "ElementaryTypeName",
-                    "src": "304:7:0",
+                    "src": "304:7:1",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bytes32",
                       "typeString": "bytes32"
@@ -484,19 +484,19 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "284:41:0"
+              "src": "284:41:1"
             },
             "returnParameters": {
-              "id": 22,
+              "id": 59,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 21,
+                  "id": 58,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 30,
-                  "src": "341:4:0",
+                  "scope": 67,
+                  "src": "341:4:1",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -504,10 +504,10 @@
                     "typeString": "bool"
                   },
                   "typeName": {
-                    "id": 20,
+                    "id": 57,
                     "name": "bool",
                     "nodeType": "ElementaryTypeName",
-                    "src": "341:4:0",
+                    "src": "341:4:1",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bool",
                       "typeString": "bool"
@@ -517,17 +517,17 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "340:6:0"
+              "src": "340:6:1"
             },
-            "scope": 31,
-            "src": "257:150:0",
+            "scope": 68,
+            "src": "257:150:1",
             "stateMutability": "nonpayable",
-            "superFunction": 11,
+            "superFunction": 48,
             "visibility": "public"
           }
         ],
-        "scope": 79,
-        "src": "208:201:0"
+        "scope": 116,
+        "src": "208:201:1"
       },
       {
         "baseContracts": [
@@ -535,116 +535,116 @@
             "arguments": null,
             "baseName": {
               "contractScope": null,
-              "id": 32,
+              "id": 69,
               "name": "ILightClient",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 12,
-              "src": "440:12:0",
+              "referencedDeclaration": 49,
+              "src": "440:12:1",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_ILightClient_$12",
+                "typeIdentifier": "t_contract$_ILightClient_$49",
                 "typeString": "contract ILightClient"
               }
             },
-            "id": 33,
+            "id": 70,
             "nodeType": "InheritanceSpecifier",
-            "src": "440:12:0"
+            "src": "440:12:1"
           },
           {
             "arguments": null,
             "baseName": {
               "contractScope": null,
-              "id": 34,
+              "id": 71,
               "name": "Ownable",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 2467,
-              "src": "453:7:0",
+              "referencedDeclaration": 2454,
+              "src": "453:7:1",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_Ownable_$2467",
+                "typeIdentifier": "t_contract$_Ownable_$2454",
                 "typeString": "contract Ownable"
               }
             },
-            "id": 35,
+            "id": 72,
             "nodeType": "InheritanceSpecifier",
-            "src": "453:7:0"
+            "src": "453:7:1"
           }
         ],
         "contractDependencies": [
-          12,
-          2467,
-          2494
+          49,
+          2454,
+          2481
         ],
         "contractKind": "contract",
         "documentation": null,
         "fullyImplemented": true,
-        "id": 78,
+        "id": 115,
         "linearizedBaseContracts": [
-          78,
-          2467,
-          2494,
-          12
+          115,
+          2454,
+          2481,
+          49
         ],
         "name": "LightClientTrust",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
             "body": {
-              "id": 40,
+              "id": 77,
               "nodeType": "Block",
-              "src": "498:2:0",
+              "src": "498:2:1",
               "statements": []
             },
             "documentation": null,
-            "id": 41,
+            "id": 78,
             "implemented": true,
             "kind": "constructor",
             "modifiers": [
               {
                 "arguments": [],
-                "id": 38,
+                "id": 75,
                 "modifierName": {
                   "argumentTypes": null,
-                  "id": 37,
+                  "id": 74,
                   "name": "Ownable",
                   "nodeType": "Identifier",
                   "overloadedDeclarations": [],
-                  "referencedDeclaration": 2467,
-                  "src": "481:7:0",
+                  "referencedDeclaration": 2454,
+                  "src": "481:7:1",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_type$_t_contract$_Ownable_$2467_$",
+                    "typeIdentifier": "t_type$_t_contract$_Ownable_$2454_$",
                     "typeString": "type(contract Ownable)"
                   }
                 },
                 "nodeType": "ModifierInvocation",
-                "src": "481:9:0"
+                "src": "481:9:1"
               }
             ],
             "name": "",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 36,
+              "id": 73,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "478:2:0"
+              "src": "478:2:1"
             },
             "returnParameters": {
-              "id": 39,
+              "id": 76,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "498:0:0"
+              "src": "498:0:1"
             },
-            "scope": 78,
-            "src": "467:33:0",
+            "scope": 115,
+            "src": "467:33:1",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "public"
           },
           {
             "constant": false,
-            "id": 45,
+            "id": 82,
             "name": "Receipts",
             "nodeType": "VariableDeclaration",
-            "scope": 78,
-            "src": "505:41:0",
+            "scope": 115,
+            "src": "505:41:1",
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
@@ -652,28 +652,28 @@
               "typeString": "mapping(bytes32 => bytes32)"
             },
             "typeName": {
-              "id": 44,
+              "id": 81,
               "keyType": {
-                "id": 42,
+                "id": 79,
                 "name": "bytes32",
                 "nodeType": "ElementaryTypeName",
-                "src": "513:7:0",
+                "src": "513:7:1",
                 "typeDescriptions": {
                   "typeIdentifier": "t_bytes32",
                   "typeString": "bytes32"
                 }
               },
               "nodeType": "Mapping",
-              "src": "505:25:0",
+              "src": "505:25:1",
               "typeDescriptions": {
                 "typeIdentifier": "t_mapping$_t_bytes32_$_t_bytes32_$",
                 "typeString": "mapping(bytes32 => bytes32)"
               },
               "valueType": {
-                "id": 43,
+                "id": 80,
                 "name": "bytes32",
                 "nodeType": "ElementaryTypeName",
-                "src": "522:7:0",
+                "src": "522:7:1",
                 "typeDescriptions": {
                   "typeIdentifier": "t_bytes32",
                   "typeString": "bytes32"
@@ -685,9 +685,9 @@
           },
           {
             "body": {
-              "id": 60,
+              "id": 97,
               "nodeType": "Block",
-              "src": "642:59:0",
+              "src": "642:59:1",
               "statements": [
                 {
                   "expression": {
@@ -696,7 +696,7 @@
                       "typeIdentifier": "t_bytes32",
                       "typeString": "bytes32"
                     },
-                    "id": 58,
+                    "id": 95,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -705,26 +705,26 @@
                       "argumentTypes": null,
                       "baseExpression": {
                         "argumentTypes": null,
-                        "id": 54,
+                        "id": 91,
                         "name": "Receipts",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 45,
-                        "src": "659:8:0",
+                        "referencedDeclaration": 82,
+                        "src": "659:8:1",
                         "typeDescriptions": {
                           "typeIdentifier": "t_mapping$_t_bytes32_$_t_bytes32_$",
                           "typeString": "mapping(bytes32 => bytes32)"
                         }
                       },
-                      "id": 56,
+                      "id": 93,
                       "indexExpression": {
                         "argumentTypes": null,
-                        "id": 55,
+                        "id": 92,
                         "name": "blockHash",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 47,
-                        "src": "668:9:0",
+                        "referencedDeclaration": 84,
+                        "src": "668:9:1",
                         "typeDescriptions": {
                           "typeIdentifier": "t_bytes32",
                           "typeString": "bytes32"
@@ -735,7 +735,7 @@
                       "isPure": false,
                       "lValueRequested": false,
                       "nodeType": "IndexAccess",
-                      "src": "659:19:0",
+                      "src": "659:19:1",
                       "typeDescriptions": {
                         "typeIdentifier": "t_bytes32",
                         "typeString": "bytes32"
@@ -745,48 +745,48 @@
                     "operator": "==",
                     "rightExpression": {
                       "argumentTypes": null,
-                      "id": 57,
+                      "id": 94,
                       "name": "receiptsHash",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 49,
-                      "src": "682:12:0",
+                      "referencedDeclaration": 86,
+                      "src": "682:12:1",
                       "typeDescriptions": {
                         "typeIdentifier": "t_bytes32",
                         "typeString": "bytes32"
                       }
                     },
-                    "src": "659:35:0",
+                    "src": "659:35:1",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bool",
                       "typeString": "bool"
                     }
                   },
-                  "functionReturnParameters": 53,
-                  "id": 59,
+                  "functionReturnParameters": 90,
+                  "id": 96,
                   "nodeType": "Return",
-                  "src": "652:42:0"
+                  "src": "652:42:1"
                 }
               ]
             },
             "documentation": null,
-            "id": 61,
+            "id": 98,
             "implemented": true,
             "kind": "function",
             "modifiers": [],
             "name": "VerifyReceiptsHash",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 50,
+              "id": 87,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 47,
+                  "id": 84,
                   "name": "blockHash",
                   "nodeType": "VariableDeclaration",
-                  "scope": 61,
-                  "src": "580:17:0",
+                  "scope": 98,
+                  "src": "580:17:1",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -794,10 +794,10 @@
                     "typeString": "bytes32"
                   },
                   "typeName": {
-                    "id": 46,
+                    "id": 83,
                     "name": "bytes32",
                     "nodeType": "ElementaryTypeName",
-                    "src": "580:7:0",
+                    "src": "580:7:1",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bytes32",
                       "typeString": "bytes32"
@@ -808,11 +808,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 49,
+                  "id": 86,
                   "name": "receiptsHash",
                   "nodeType": "VariableDeclaration",
-                  "scope": 61,
-                  "src": "599:20:0",
+                  "scope": 98,
+                  "src": "599:20:1",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -820,10 +820,10 @@
                     "typeString": "bytes32"
                   },
                   "typeName": {
-                    "id": 48,
+                    "id": 85,
                     "name": "bytes32",
                     "nodeType": "ElementaryTypeName",
-                    "src": "599:7:0",
+                    "src": "599:7:1",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bytes32",
                       "typeString": "bytes32"
@@ -833,19 +833,19 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "579:41:0"
+              "src": "579:41:1"
             },
             "returnParameters": {
-              "id": 53,
+              "id": 90,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 52,
+                  "id": 89,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 61,
-                  "src": "636:4:0",
+                  "scope": 98,
+                  "src": "636:4:1",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -853,10 +853,10 @@
                     "typeString": "bool"
                   },
                   "typeName": {
-                    "id": 51,
+                    "id": 88,
                     "name": "bool",
                     "nodeType": "ElementaryTypeName",
-                    "src": "636:4:0",
+                    "src": "636:4:1",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bool",
                       "typeString": "bool"
@@ -866,24 +866,24 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "635:6:0"
+              "src": "635:6:1"
             },
-            "scope": 78,
-            "src": "552:149:0",
+            "scope": 115,
+            "src": "552:149:1",
             "stateMutability": "nonpayable",
-            "superFunction": 11,
+            "superFunction": 48,
             "visibility": "public"
           },
           {
             "body": {
-              "id": 76,
+              "id": 113,
               "nodeType": "Block",
-              "src": "786:51:0",
+              "src": "786:51:1",
               "statements": [
                 {
                   "expression": {
                     "argumentTypes": null,
-                    "id": 74,
+                    "id": 111,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -892,26 +892,26 @@
                       "argumentTypes": null,
                       "baseExpression": {
                         "argumentTypes": null,
-                        "id": 70,
+                        "id": 107,
                         "name": "Receipts",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 45,
-                        "src": "796:8:0",
+                        "referencedDeclaration": 82,
+                        "src": "796:8:1",
                         "typeDescriptions": {
                           "typeIdentifier": "t_mapping$_t_bytes32_$_t_bytes32_$",
                           "typeString": "mapping(bytes32 => bytes32)"
                         }
                       },
-                      "id": 72,
+                      "id": 109,
                       "indexExpression": {
                         "argumentTypes": null,
-                        "id": 71,
+                        "id": 108,
                         "name": "blockHash",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 63,
-                        "src": "805:9:0",
+                        "referencedDeclaration": 100,
+                        "src": "805:9:1",
                         "typeDescriptions": {
                           "typeIdentifier": "t_bytes32",
                           "typeString": "bytes32"
@@ -922,7 +922,7 @@
                       "isPure": false,
                       "lValueRequested": true,
                       "nodeType": "IndexAccess",
-                      "src": "796:19:0",
+                      "src": "796:19:1",
                       "typeDescriptions": {
                         "typeIdentifier": "t_bytes32",
                         "typeString": "bytes32"
@@ -932,67 +932,67 @@
                     "operator": "=",
                     "rightHandSide": {
                       "argumentTypes": null,
-                      "id": 73,
+                      "id": 110,
                       "name": "receiptsHash",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 65,
-                      "src": "818:12:0",
+                      "referencedDeclaration": 102,
+                      "src": "818:12:1",
                       "typeDescriptions": {
                         "typeIdentifier": "t_bytes32",
                         "typeString": "bytes32"
                       }
                     },
-                    "src": "796:34:0",
+                    "src": "796:34:1",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bytes32",
                       "typeString": "bytes32"
                     }
                   },
-                  "id": 75,
+                  "id": 112,
                   "nodeType": "ExpressionStatement",
-                  "src": "796:34:0"
+                  "src": "796:34:1"
                 }
               ]
             },
             "documentation": null,
-            "id": 77,
+            "id": 114,
             "implemented": true,
             "kind": "function",
             "modifiers": [
               {
                 "arguments": null,
-                "id": 68,
+                "id": 105,
                 "modifierName": {
                   "argumentTypes": null,
-                  "id": 67,
+                  "id": 104,
                   "name": "onlyOwner",
                   "nodeType": "Identifier",
                   "overloadedDeclarations": [],
-                  "referencedDeclaration": 2400,
-                  "src": "776:9:0",
+                  "referencedDeclaration": 2387,
+                  "src": "776:9:1",
                   "typeDescriptions": {
                     "typeIdentifier": "t_modifier$__$",
                     "typeString": "modifier ()"
                   }
                 },
                 "nodeType": "ModifierInvocation",
-                "src": "776:9:0"
+                "src": "776:9:1"
               }
             ],
             "name": "FeedReeipts",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 66,
+              "id": 103,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 63,
+                  "id": 100,
                   "name": "blockHash",
                   "nodeType": "VariableDeclaration",
-                  "scope": 77,
-                  "src": "728:17:0",
+                  "scope": 114,
+                  "src": "728:17:1",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1000,10 +1000,10 @@
                     "typeString": "bytes32"
                   },
                   "typeName": {
-                    "id": 62,
+                    "id": 99,
                     "name": "bytes32",
                     "nodeType": "ElementaryTypeName",
-                    "src": "728:7:0",
+                    "src": "728:7:1",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bytes32",
                       "typeString": "bytes32"
@@ -1014,11 +1014,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 65,
+                  "id": 102,
                   "name": "receiptsHash",
                   "nodeType": "VariableDeclaration",
-                  "scope": 77,
-                  "src": "747:20:0",
+                  "scope": 114,
+                  "src": "747:20:1",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1026,10 +1026,10 @@
                     "typeString": "bytes32"
                   },
                   "typeName": {
-                    "id": 64,
+                    "id": 101,
                     "name": "bytes32",
                     "nodeType": "ElementaryTypeName",
-                    "src": "747:7:0",
+                    "src": "747:7:1",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bytes32",
                       "typeString": "bytes32"
@@ -1039,39 +1039,39 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "727:41:0"
+              "src": "727:41:1"
             },
             "returnParameters": {
-              "id": 69,
+              "id": 106,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "786:0:0"
+              "src": "786:0:1"
             },
-            "scope": 78,
-            "src": "707:130:0",
+            "scope": 115,
+            "src": "707:130:1",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "public"
           }
         ],
-        "scope": 79,
-        "src": "411:428:0"
+        "scope": 116,
+        "src": "411:428:1"
       }
     ],
-    "src": "0:839:0"
+    "src": "0:839:1"
   },
   "legacyAST": {
     "attributes": {
-      "absolutePath": "/media/harsha/home/workspace/horizon/everifier/contracts/LightClient.sol",
+      "absolutePath": "/media/harsha/home/workspace/horizon/lib/src/contracts/verifier/LightClient.sol",
       "exportedSymbols": {
         "ILightClient": [
-          12
+          49
         ],
         "LightClientTrust": [
-          78
+          115
         ],
         "LightClientUnsafe": [
-          31
+          68
         ]
       }
     },
@@ -1085,24 +1085,24 @@
             ".0"
           ]
         },
-        "id": 1,
+        "id": 38,
         "name": "PragmaDirective",
-        "src": "0:23:0"
+        "src": "0:23:1"
       },
       {
         "attributes": {
-          "SourceUnit": 2468,
+          "SourceUnit": 2455,
           "absolutePath": "@openzeppelin/contracts//ownership/Ownable.sol",
           "file": "@openzeppelin/contracts//ownership/Ownable.sol",
-          "scope": 79,
+          "scope": 116,
           "symbolAliases": [
             null
           ],
           "unitAlias": ""
         },
-        "id": 2,
+        "id": 39,
         "name": "ImportDirective",
-        "src": "25:56:0"
+        "src": "25:56:1"
       },
       {
         "attributes": {
@@ -1116,10 +1116,10 @@
           "documentation": null,
           "fullyImplemented": false,
           "linearizedBaseContracts": [
-            12
+            49
           ],
           "name": "ILightClient",
-          "scope": 79
+          "scope": 116
         },
         "children": [
           {
@@ -1133,7 +1133,7 @@
                 null
               ],
               "name": "VerifyReceiptsHash",
-              "scope": 12,
+              "scope": 49,
               "stateMutability": "nonpayable",
               "superFunction": null,
               "visibility": "external"
@@ -1145,7 +1145,7 @@
                     "attributes": {
                       "constant": false,
                       "name": "blockHash",
-                      "scope": 11,
+                      "scope": 48,
                       "stateVariable": false,
                       "storageLocation": "default",
                       "type": "bytes32",
@@ -1158,20 +1158,20 @@
                           "name": "bytes32",
                           "type": "bytes32"
                         },
-                        "id": 3,
+                        "id": 40,
                         "name": "ElementaryTypeName",
-                        "src": "140:7:0"
+                        "src": "140:7:1"
                       }
                     ],
-                    "id": 4,
+                    "id": 41,
                     "name": "VariableDeclaration",
-                    "src": "140:17:0"
+                    "src": "140:17:1"
                   },
                   {
                     "attributes": {
                       "constant": false,
                       "name": "receiptsHash",
-                      "scope": 11,
+                      "scope": 48,
                       "stateVariable": false,
                       "storageLocation": "default",
                       "type": "bytes32",
@@ -1184,19 +1184,19 @@
                           "name": "bytes32",
                           "type": "bytes32"
                         },
-                        "id": 5,
+                        "id": 42,
                         "name": "ElementaryTypeName",
-                        "src": "159:7:0"
+                        "src": "159:7:1"
                       }
                     ],
-                    "id": 6,
+                    "id": 43,
                     "name": "VariableDeclaration",
-                    "src": "159:20:0"
+                    "src": "159:20:1"
                   }
                 ],
-                "id": 7,
+                "id": 44,
                 "name": "ParameterList",
-                "src": "139:41:0"
+                "src": "139:41:1"
               },
               {
                 "children": [
@@ -1204,7 +1204,7 @@
                     "attributes": {
                       "constant": false,
                       "name": "",
-                      "scope": 11,
+                      "scope": 48,
                       "stateVariable": false,
                       "storageLocation": "default",
                       "type": "bool",
@@ -1217,44 +1217,44 @@
                           "name": "bool",
                           "type": "bool"
                         },
-                        "id": 8,
+                        "id": 45,
                         "name": "ElementaryTypeName",
-                        "src": "198:4:0"
+                        "src": "198:4:1"
                       }
                     ],
-                    "id": 9,
+                    "id": 46,
                     "name": "VariableDeclaration",
-                    "src": "198:4:0"
+                    "src": "198:4:1"
                   }
                 ],
-                "id": 10,
+                "id": 47,
                 "name": "ParameterList",
-                "src": "197:6:0"
+                "src": "197:6:1"
               }
             ],
-            "id": 11,
+            "id": 48,
             "name": "FunctionDefinition",
-            "src": "112:92:0"
+            "src": "112:92:1"
           }
         ],
-        "id": 12,
+        "id": 49,
         "name": "ContractDefinition",
-        "src": "83:123:0"
+        "src": "83:123:1"
       },
       {
         "attributes": {
           "contractDependencies": [
-            12
+            49
           ],
           "contractKind": "contract",
           "documentation": null,
           "fullyImplemented": true,
           "linearizedBaseContracts": [
-            31,
-            12
+            68,
+            49
           ],
           "name": "LightClientUnsafe",
-          "scope": 79
+          "scope": 116
         },
         "children": [
           {
@@ -1266,17 +1266,17 @@
                 "attributes": {
                   "contractScope": null,
                   "name": "ILightClient",
-                  "referencedDeclaration": 12,
+                  "referencedDeclaration": 49,
                   "type": "contract ILightClient"
                 },
-                "id": 13,
+                "id": 50,
                 "name": "UserDefinedTypeName",
-                "src": "238:12:0"
+                "src": "238:12:1"
               }
             ],
-            "id": 14,
+            "id": 51,
             "name": "InheritanceSpecifier",
-            "src": "238:12:0"
+            "src": "238:12:1"
           },
           {
             "attributes": {
@@ -1288,9 +1288,9 @@
                 null
               ],
               "name": "VerifyReceiptsHash",
-              "scope": 31,
+              "scope": 68,
               "stateMutability": "nonpayable",
-              "superFunction": 11,
+              "superFunction": 48,
               "visibility": "public"
             },
             "children": [
@@ -1300,7 +1300,7 @@
                     "attributes": {
                       "constant": false,
                       "name": "blockHash",
-                      "scope": 30,
+                      "scope": 67,
                       "stateVariable": false,
                       "storageLocation": "default",
                       "type": "bytes32",
@@ -1313,20 +1313,20 @@
                           "name": "bytes32",
                           "type": "bytes32"
                         },
-                        "id": 15,
+                        "id": 52,
                         "name": "ElementaryTypeName",
-                        "src": "285:7:0"
+                        "src": "285:7:1"
                       }
                     ],
-                    "id": 16,
+                    "id": 53,
                     "name": "VariableDeclaration",
-                    "src": "285:17:0"
+                    "src": "285:17:1"
                   },
                   {
                     "attributes": {
                       "constant": false,
                       "name": "receiptsHash",
-                      "scope": 30,
+                      "scope": 67,
                       "stateVariable": false,
                       "storageLocation": "default",
                       "type": "bytes32",
@@ -1339,19 +1339,19 @@
                           "name": "bytes32",
                           "type": "bytes32"
                         },
-                        "id": 17,
+                        "id": 54,
                         "name": "ElementaryTypeName",
-                        "src": "304:7:0"
+                        "src": "304:7:1"
                       }
                     ],
-                    "id": 18,
+                    "id": 55,
                     "name": "VariableDeclaration",
-                    "src": "304:20:0"
+                    "src": "304:20:1"
                   }
                 ],
-                "id": 19,
+                "id": 56,
                 "name": "ParameterList",
-                "src": "284:41:0"
+                "src": "284:41:1"
               },
               {
                 "children": [
@@ -1359,7 +1359,7 @@
                     "attributes": {
                       "constant": false,
                       "name": "",
-                      "scope": 30,
+                      "scope": 67,
                       "stateVariable": false,
                       "storageLocation": "default",
                       "type": "bool",
@@ -1372,19 +1372,19 @@
                           "name": "bool",
                           "type": "bool"
                         },
-                        "id": 20,
+                        "id": 57,
                         "name": "ElementaryTypeName",
-                        "src": "341:4:0"
+                        "src": "341:4:1"
                       }
                     ],
-                    "id": 21,
+                    "id": 58,
                     "name": "VariableDeclaration",
-                    "src": "341:4:0"
+                    "src": "341:4:1"
                   }
                 ],
-                "id": 22,
+                "id": 59,
                 "name": "ParameterList",
-                "src": "340:6:0"
+                "src": "340:6:1"
               },
               {
                 "children": [
@@ -1396,18 +1396,18 @@
                           "overloadedDeclarations": [
                             null
                           ],
-                          "referencedDeclaration": 16,
+                          "referencedDeclaration": 53,
                           "type": "bytes32",
                           "value": "blockHash"
                         },
-                        "id": 23,
+                        "id": 60,
                         "name": "Identifier",
-                        "src": "357:9:0"
+                        "src": "357:9:1"
                       }
                     ],
-                    "id": 24,
+                    "id": 61,
                     "name": "ExpressionStatement",
-                    "src": "357:9:0"
+                    "src": "357:9:1"
                   },
                   {
                     "children": [
@@ -1417,22 +1417,22 @@
                           "overloadedDeclarations": [
                             null
                           ],
-                          "referencedDeclaration": 18,
+                          "referencedDeclaration": 55,
                           "type": "bytes32",
                           "value": "receiptsHash"
                         },
-                        "id": 25,
+                        "id": 62,
                         "name": "Identifier",
-                        "src": "367:12:0"
+                        "src": "367:12:1"
                       }
                     ],
-                    "id": 26,
+                    "id": 63,
                     "name": "ExpressionStatement",
-                    "src": "367:12:0"
+                    "src": "367:12:1"
                   },
                   {
                     "attributes": {
-                      "functionReturnParameters": 22
+                      "functionReturnParameters": 59
                     },
                     "children": [
                       {
@@ -1448,48 +1448,48 @@
                           "type": "bool",
                           "value": "true"
                         },
-                        "id": 27,
+                        "id": 64,
                         "name": "Literal",
-                        "src": "396:4:0"
+                        "src": "396:4:1"
                       }
                     ],
-                    "id": 28,
+                    "id": 65,
                     "name": "Return",
-                    "src": "389:11:0"
+                    "src": "389:11:1"
                   }
                 ],
-                "id": 29,
+                "id": 66,
                 "name": "Block",
-                "src": "347:60:0"
+                "src": "347:60:1"
               }
             ],
-            "id": 30,
+            "id": 67,
             "name": "FunctionDefinition",
-            "src": "257:150:0"
+            "src": "257:150:1"
           }
         ],
-        "id": 31,
+        "id": 68,
         "name": "ContractDefinition",
-        "src": "208:201:0"
+        "src": "208:201:1"
       },
       {
         "attributes": {
           "contractDependencies": [
-            12,
-            2467,
-            2494
+            49,
+            2454,
+            2481
           ],
           "contractKind": "contract",
           "documentation": null,
           "fullyImplemented": true,
           "linearizedBaseContracts": [
-            78,
-            2467,
-            2494,
-            12
+            115,
+            2454,
+            2481,
+            49
           ],
           "name": "LightClientTrust",
-          "scope": 79
+          "scope": 116
         },
         "children": [
           {
@@ -1501,17 +1501,17 @@
                 "attributes": {
                   "contractScope": null,
                   "name": "ILightClient",
-                  "referencedDeclaration": 12,
+                  "referencedDeclaration": 49,
                   "type": "contract ILightClient"
                 },
-                "id": 32,
+                "id": 69,
                 "name": "UserDefinedTypeName",
-                "src": "440:12:0"
+                "src": "440:12:1"
               }
             ],
-            "id": 33,
+            "id": 70,
             "name": "InheritanceSpecifier",
-            "src": "440:12:0"
+            "src": "440:12:1"
           },
           {
             "attributes": {
@@ -1522,17 +1522,17 @@
                 "attributes": {
                   "contractScope": null,
                   "name": "Ownable",
-                  "referencedDeclaration": 2467,
+                  "referencedDeclaration": 2454,
                   "type": "contract Ownable"
                 },
-                "id": 34,
+                "id": 71,
                 "name": "UserDefinedTypeName",
-                "src": "453:7:0"
+                "src": "453:7:1"
               }
             ],
-            "id": 35,
+            "id": 72,
             "name": "InheritanceSpecifier",
-            "src": "453:7:0"
+            "src": "453:7:1"
           },
           {
             "attributes": {
@@ -1541,7 +1541,7 @@
               "isConstructor": true,
               "kind": "constructor",
               "name": "",
-              "scope": 78,
+              "scope": 115,
               "stateMutability": "nonpayable",
               "superFunction": null,
               "visibility": "public"
@@ -1554,9 +1554,9 @@
                   ]
                 },
                 "children": [],
-                "id": 36,
+                "id": 73,
                 "name": "ParameterList",
-                "src": "478:2:0"
+                "src": "478:2:1"
               },
               {
                 "attributes": {
@@ -1565,9 +1565,9 @@
                   ]
                 },
                 "children": [],
-                "id": 39,
+                "id": 76,
                 "name": "ParameterList",
-                "src": "498:0:0"
+                "src": "498:0:1"
               },
               {
                 "attributes": {
@@ -1582,18 +1582,18 @@
                       "overloadedDeclarations": [
                         null
                       ],
-                      "referencedDeclaration": 2467,
+                      "referencedDeclaration": 2454,
                       "type": "type(contract Ownable)",
                       "value": "Ownable"
                     },
-                    "id": 37,
+                    "id": 74,
                     "name": "Identifier",
-                    "src": "481:7:0"
+                    "src": "481:7:1"
                   }
                 ],
-                "id": 38,
+                "id": 75,
                 "name": "ModifierInvocation",
-                "src": "481:9:0"
+                "src": "481:9:1"
               },
               {
                 "attributes": {
@@ -1602,20 +1602,20 @@
                   ]
                 },
                 "children": [],
-                "id": 40,
+                "id": 77,
                 "name": "Block",
-                "src": "498:2:0"
+                "src": "498:2:1"
               }
             ],
-            "id": 41,
+            "id": 78,
             "name": "FunctionDefinition",
-            "src": "467:33:0"
+            "src": "467:33:1"
           },
           {
             "attributes": {
               "constant": false,
               "name": "Receipts",
-              "scope": 78,
+              "scope": 115,
               "stateVariable": true,
               "storageLocation": "default",
               "type": "mapping(bytes32 => bytes32)",
@@ -1633,28 +1633,28 @@
                       "name": "bytes32",
                       "type": "bytes32"
                     },
-                    "id": 42,
+                    "id": 79,
                     "name": "ElementaryTypeName",
-                    "src": "513:7:0"
+                    "src": "513:7:1"
                   },
                   {
                     "attributes": {
                       "name": "bytes32",
                       "type": "bytes32"
                     },
-                    "id": 43,
+                    "id": 80,
                     "name": "ElementaryTypeName",
-                    "src": "522:7:0"
+                    "src": "522:7:1"
                   }
                 ],
-                "id": 44,
+                "id": 81,
                 "name": "Mapping",
-                "src": "505:25:0"
+                "src": "505:25:1"
               }
             ],
-            "id": 45,
+            "id": 82,
             "name": "VariableDeclaration",
-            "src": "505:41:0"
+            "src": "505:41:1"
           },
           {
             "attributes": {
@@ -1666,9 +1666,9 @@
                 null
               ],
               "name": "VerifyReceiptsHash",
-              "scope": 78,
+              "scope": 115,
               "stateMutability": "nonpayable",
-              "superFunction": 11,
+              "superFunction": 48,
               "visibility": "public"
             },
             "children": [
@@ -1678,7 +1678,7 @@
                     "attributes": {
                       "constant": false,
                       "name": "blockHash",
-                      "scope": 61,
+                      "scope": 98,
                       "stateVariable": false,
                       "storageLocation": "default",
                       "type": "bytes32",
@@ -1691,20 +1691,20 @@
                           "name": "bytes32",
                           "type": "bytes32"
                         },
-                        "id": 46,
+                        "id": 83,
                         "name": "ElementaryTypeName",
-                        "src": "580:7:0"
+                        "src": "580:7:1"
                       }
                     ],
-                    "id": 47,
+                    "id": 84,
                     "name": "VariableDeclaration",
-                    "src": "580:17:0"
+                    "src": "580:17:1"
                   },
                   {
                     "attributes": {
                       "constant": false,
                       "name": "receiptsHash",
-                      "scope": 61,
+                      "scope": 98,
                       "stateVariable": false,
                       "storageLocation": "default",
                       "type": "bytes32",
@@ -1717,19 +1717,19 @@
                           "name": "bytes32",
                           "type": "bytes32"
                         },
-                        "id": 48,
+                        "id": 85,
                         "name": "ElementaryTypeName",
-                        "src": "599:7:0"
+                        "src": "599:7:1"
                       }
                     ],
-                    "id": 49,
+                    "id": 86,
                     "name": "VariableDeclaration",
-                    "src": "599:20:0"
+                    "src": "599:20:1"
                   }
                 ],
-                "id": 50,
+                "id": 87,
                 "name": "ParameterList",
-                "src": "579:41:0"
+                "src": "579:41:1"
               },
               {
                 "children": [
@@ -1737,7 +1737,7 @@
                     "attributes": {
                       "constant": false,
                       "name": "",
-                      "scope": 61,
+                      "scope": 98,
                       "stateVariable": false,
                       "storageLocation": "default",
                       "type": "bool",
@@ -1750,25 +1750,25 @@
                           "name": "bool",
                           "type": "bool"
                         },
-                        "id": 51,
+                        "id": 88,
                         "name": "ElementaryTypeName",
-                        "src": "636:4:0"
+                        "src": "636:4:1"
                       }
                     ],
-                    "id": 52,
+                    "id": 89,
                     "name": "VariableDeclaration",
-                    "src": "636:4:0"
+                    "src": "636:4:1"
                   }
                 ],
-                "id": 53,
+                "id": 90,
                 "name": "ParameterList",
-                "src": "635:6:0"
+                "src": "635:6:1"
               },
               {
                 "children": [
                   {
                     "attributes": {
-                      "functionReturnParameters": 53
+                      "functionReturnParameters": 90
                     },
                     "children": [
                       {
@@ -1802,13 +1802,13 @@
                                   "overloadedDeclarations": [
                                     null
                                   ],
-                                  "referencedDeclaration": 45,
+                                  "referencedDeclaration": 82,
                                   "type": "mapping(bytes32 => bytes32)",
                                   "value": "Receipts"
                                 },
-                                "id": 54,
+                                "id": 91,
                                 "name": "Identifier",
-                                "src": "659:8:0"
+                                "src": "659:8:1"
                               },
                               {
                                 "attributes": {
@@ -1816,18 +1816,18 @@
                                   "overloadedDeclarations": [
                                     null
                                   ],
-                                  "referencedDeclaration": 47,
+                                  "referencedDeclaration": 84,
                                   "type": "bytes32",
                                   "value": "blockHash"
                                 },
-                                "id": 55,
+                                "id": 92,
                                 "name": "Identifier",
-                                "src": "668:9:0"
+                                "src": "668:9:1"
                               }
                             ],
-                            "id": 56,
+                            "id": 93,
                             "name": "IndexAccess",
-                            "src": "659:19:0"
+                            "src": "659:19:1"
                           },
                           {
                             "attributes": {
@@ -1835,33 +1835,33 @@
                               "overloadedDeclarations": [
                                 null
                               ],
-                              "referencedDeclaration": 49,
+                              "referencedDeclaration": 86,
                               "type": "bytes32",
                               "value": "receiptsHash"
                             },
-                            "id": 57,
+                            "id": 94,
                             "name": "Identifier",
-                            "src": "682:12:0"
+                            "src": "682:12:1"
                           }
                         ],
-                        "id": 58,
+                        "id": 95,
                         "name": "BinaryOperation",
-                        "src": "659:35:0"
+                        "src": "659:35:1"
                       }
                     ],
-                    "id": 59,
+                    "id": 96,
                     "name": "Return",
-                    "src": "652:42:0"
+                    "src": "652:42:1"
                   }
                 ],
-                "id": 60,
+                "id": 97,
                 "name": "Block",
-                "src": "642:59:0"
+                "src": "642:59:1"
               }
             ],
-            "id": 61,
+            "id": 98,
             "name": "FunctionDefinition",
-            "src": "552:149:0"
+            "src": "552:149:1"
           },
           {
             "attributes": {
@@ -1870,7 +1870,7 @@
               "isConstructor": false,
               "kind": "function",
               "name": "FeedReeipts",
-              "scope": 78,
+              "scope": 115,
               "stateMutability": "nonpayable",
               "superFunction": null,
               "visibility": "public"
@@ -1882,7 +1882,7 @@
                     "attributes": {
                       "constant": false,
                       "name": "blockHash",
-                      "scope": 77,
+                      "scope": 114,
                       "stateVariable": false,
                       "storageLocation": "default",
                       "type": "bytes32",
@@ -1895,20 +1895,20 @@
                           "name": "bytes32",
                           "type": "bytes32"
                         },
-                        "id": 62,
+                        "id": 99,
                         "name": "ElementaryTypeName",
-                        "src": "728:7:0"
+                        "src": "728:7:1"
                       }
                     ],
-                    "id": 63,
+                    "id": 100,
                     "name": "VariableDeclaration",
-                    "src": "728:17:0"
+                    "src": "728:17:1"
                   },
                   {
                     "attributes": {
                       "constant": false,
                       "name": "receiptsHash",
-                      "scope": 77,
+                      "scope": 114,
                       "stateVariable": false,
                       "storageLocation": "default",
                       "type": "bytes32",
@@ -1921,19 +1921,19 @@
                           "name": "bytes32",
                           "type": "bytes32"
                         },
-                        "id": 64,
+                        "id": 101,
                         "name": "ElementaryTypeName",
-                        "src": "747:7:0"
+                        "src": "747:7:1"
                       }
                     ],
-                    "id": 65,
+                    "id": 102,
                     "name": "VariableDeclaration",
-                    "src": "747:20:0"
+                    "src": "747:20:1"
                   }
                 ],
-                "id": 66,
+                "id": 103,
                 "name": "ParameterList",
-                "src": "727:41:0"
+                "src": "727:41:1"
               },
               {
                 "attributes": {
@@ -1942,9 +1942,9 @@
                   ]
                 },
                 "children": [],
-                "id": 69,
+                "id": 106,
                 "name": "ParameterList",
-                "src": "786:0:0"
+                "src": "786:0:1"
               },
               {
                 "attributes": {
@@ -1957,18 +1957,18 @@
                       "overloadedDeclarations": [
                         null
                       ],
-                      "referencedDeclaration": 2400,
+                      "referencedDeclaration": 2387,
                       "type": "modifier ()",
                       "value": "onlyOwner"
                     },
-                    "id": 67,
+                    "id": 104,
                     "name": "Identifier",
-                    "src": "776:9:0"
+                    "src": "776:9:1"
                   }
                 ],
-                "id": 68,
+                "id": 105,
                 "name": "ModifierInvocation",
-                "src": "776:9:0"
+                "src": "776:9:1"
               },
               {
                 "children": [
@@ -2001,13 +2001,13 @@
                                   "overloadedDeclarations": [
                                     null
                                   ],
-                                  "referencedDeclaration": 45,
+                                  "referencedDeclaration": 82,
                                   "type": "mapping(bytes32 => bytes32)",
                                   "value": "Receipts"
                                 },
-                                "id": 70,
+                                "id": 107,
                                 "name": "Identifier",
-                                "src": "796:8:0"
+                                "src": "796:8:1"
                               },
                               {
                                 "attributes": {
@@ -2015,18 +2015,18 @@
                                   "overloadedDeclarations": [
                                     null
                                   ],
-                                  "referencedDeclaration": 63,
+                                  "referencedDeclaration": 100,
                                   "type": "bytes32",
                                   "value": "blockHash"
                                 },
-                                "id": 71,
+                                "id": 108,
                                 "name": "Identifier",
-                                "src": "805:9:0"
+                                "src": "805:9:1"
                               }
                             ],
-                            "id": 72,
+                            "id": 109,
                             "name": "IndexAccess",
-                            "src": "796:19:0"
+                            "src": "796:19:1"
                           },
                           {
                             "attributes": {
@@ -2034,43 +2034,43 @@
                               "overloadedDeclarations": [
                                 null
                               ],
-                              "referencedDeclaration": 65,
+                              "referencedDeclaration": 102,
                               "type": "bytes32",
                               "value": "receiptsHash"
                             },
-                            "id": 73,
+                            "id": 110,
                             "name": "Identifier",
-                            "src": "818:12:0"
+                            "src": "818:12:1"
                           }
                         ],
-                        "id": 74,
+                        "id": 111,
                         "name": "Assignment",
-                        "src": "796:34:0"
+                        "src": "796:34:1"
                       }
                     ],
-                    "id": 75,
+                    "id": 112,
                     "name": "ExpressionStatement",
-                    "src": "796:34:0"
+                    "src": "796:34:1"
                   }
                 ],
-                "id": 76,
+                "id": 113,
                 "name": "Block",
-                "src": "786:51:0"
+                "src": "786:51:1"
               }
             ],
-            "id": 77,
+            "id": 114,
             "name": "FunctionDefinition",
-            "src": "707:130:0"
+            "src": "707:130:1"
           }
         ],
-        "id": 78,
+        "id": 115,
         "name": "ContractDefinition",
-        "src": "411:428:0"
+        "src": "411:428:1"
       }
     ],
-    "id": 79,
+    "id": 116,
     "name": "SourceUnit",
-    "src": "0:839:0"
+    "src": "0:839:1"
   },
   "compiler": {
     "name": "solc",
@@ -2078,7 +2078,7 @@
   },
   "networks": {},
   "schemaVersion": "3.3.3",
-  "updatedAt": "2021-01-02T20:12:10.956Z",
+  "updatedAt": "2021-01-14T22:02:39.218Z",
   "devdoc": {
     "methods": {
       "isOwner()": {

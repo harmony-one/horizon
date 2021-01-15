@@ -34,7 +34,7 @@ const Web3 = require("web3");
 var web3 = new Web3("wss://ropsten.infura.io/ws/v3/03f8907457e847d7b14aa072355c8d03");
 
 json = ClientJson
-ethClientAddr = "0x44606b88d70b4ac403eb3eb6b38f32cdac241007" //await deploy_contract(json)
+ethClientAddr = "0x44606b88d70b4ac403eb3eb6b38f32cdac241007" //from the line await deploy_contract(json) in ethClient/test/deploy.js
 
 const ethClient = client.contracts.createContract(
 json.abi,

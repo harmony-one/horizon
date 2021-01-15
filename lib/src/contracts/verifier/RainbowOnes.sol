@@ -47,8 +47,8 @@ contract RainbowOnes is ProvethVerifier,Ownable {
         return (LockedTokenList.length, MintTokenList.length);
     }
 
-    function changeLightClient(ILightClient newClient) public onlyOwner {
-        lightclient = newClient;
+    function changeLightClient(address newClientAddress) public onlyOwner {
+        lightclient =  ILightClient(newClientAddress);
     }
 
     function bandBridgeSide(address otherSide) public onlyOwner {

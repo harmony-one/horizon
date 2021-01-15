@@ -82,7 +82,7 @@ class Eth2HmyRelay {
     );
 
     const clientJson = require("../elc/ethClient/build/contracts/Client.json");
-    const ethClientAddr = "0x44606b88d70b4ac403eb3eb6b38f32cdac241007" //await deploy_contract(json)
+    const ethClientAddr = "0x44606b88d70b4ac403eb3eb6b38f32cdac241007" //await deploy_contract(json) in elc/ethClient/test/deploy.js
     this.ethClientContract = this.hmyClient.contracts.createContract(
 
       clientJson.abi,

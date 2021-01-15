@@ -68,7 +68,7 @@
         "id": 39,
         "nodeType": "ImportDirective",
         "scope": 116,
-        "sourceUnit": 2455,
+        "sourceUnit": 2457,
         "src": "25:56:1",
         "symbolAliases": [],
         "unitAlias": ""
@@ -436,10 +436,10 @@
               "id": 71,
               "name": "Ownable",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 2454,
+              "referencedDeclaration": 2456,
               "src": "453:7:1",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_Ownable_$2454",
+                "typeIdentifier": "t_contract$_Ownable_$2456",
                 "typeString": "contract Ownable"
               }
             },
@@ -450,8 +450,8 @@
         ],
         "contractDependencies": [
           49,
-          2454,
-          2481
+          2456,
+          2483
         ],
         "contractKind": "contract",
         "documentation": null,
@@ -459,8 +459,8 @@
         "id": 115,
         "linearizedBaseContracts": [
           115,
-          2454,
-          2481,
+          2456,
+          2483,
           49
         ],
         "name": "LightClientTrust",
@@ -487,10 +487,10 @@
                   "name": "Ownable",
                   "nodeType": "Identifier",
                   "overloadedDeclarations": [],
-                  "referencedDeclaration": 2454,
+                  "referencedDeclaration": 2456,
                   "src": "481:7:1",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_type$_t_contract$_Ownable_$2454_$",
+                    "typeIdentifier": "t_type$_t_contract$_Ownable_$2456_$",
                     "typeString": "type(contract Ownable)"
                   }
                 },
@@ -849,7 +849,7 @@
                   "name": "onlyOwner",
                   "nodeType": "Identifier",
                   "overloadedDeclarations": [],
-                  "referencedDeclaration": 2387,
+                  "referencedDeclaration": 2389,
                   "src": "776:9:1",
                   "typeDescriptions": {
                     "typeIdentifier": "t_modifier$__$",
@@ -971,7 +971,7 @@
       },
       {
         "attributes": {
-          "SourceUnit": 2455,
+          "SourceUnit": 2457,
           "absolutePath": "@openzeppelin/contracts//ownership/Ownable.sol",
           "file": "@openzeppelin/contracts//ownership/Ownable.sol",
           "scope": 116,
@@ -1356,16 +1356,16 @@
         "attributes": {
           "contractDependencies": [
             49,
-            2454,
-            2481
+            2456,
+            2483
           ],
           "contractKind": "contract",
           "documentation": null,
           "fullyImplemented": true,
           "linearizedBaseContracts": [
             115,
-            2454,
-            2481,
+            2456,
+            2483,
             49
           ],
           "name": "LightClientTrust",
@@ -1402,7 +1402,7 @@
                 "attributes": {
                   "contractScope": null,
                   "name": "Ownable",
-                  "referencedDeclaration": 2454,
+                  "referencedDeclaration": 2456,
                   "type": "contract Ownable"
                 },
                 "id": 71,
@@ -1462,7 +1462,7 @@
                       "overloadedDeclarations": [
                         null
                       ],
-                      "referencedDeclaration": 2454,
+                      "referencedDeclaration": 2456,
                       "type": "type(contract Ownable)",
                       "value": "Ownable"
                     },
@@ -1837,7 +1837,7 @@
                       "overloadedDeclarations": [
                         null
                       ],
-                      "referencedDeclaration": 2387,
+                      "referencedDeclaration": 2389,
                       "type": "modifier ()",
                       "value": "onlyOwner"
                     },
@@ -1958,7 +1958,7 @@
   },
   "networks": {},
   "schemaVersion": "3.3.3",
-  "updatedAt": "2021-01-14T22:02:39.219Z",
+  "updatedAt": "2021-01-15T20:51:14.082Z",
   "devdoc": {
     "methods": {}
   },

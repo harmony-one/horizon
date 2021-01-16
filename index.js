@@ -2,6 +2,8 @@
 const path = require('path')
 const os = require('os')
 const { program } = require('commander')
+const { execSync } = require('child_process')
+
 
 // const { CleanCommand } = require('./commands/clean')
 // const { PrepareCommand } = require('./commands/prepare')
@@ -290,7 +292,7 @@ program.version('0.1.0')
 
 // Maintainer commands.
 
-const startCommand = program.command('start')
+// const startCommand = program.command('start')
 
 // startCommand.command('harmony-node').action(StartLocalHarmonyNodeCommand.execute)
 
@@ -299,19 +301,7 @@ const startCommand = program.command('start')
 //   ['daemon']
 // )
 
-BridgeConfig.addOptions(
-  startCommand
-    .command('eth2hmy-relay')
-    .action(StartEth2HmyRelayCommand.execute),
-  [
-    'harmony-master-account',
-    'harmony-master-sk',
-    'harmony-client-account',
-    'harmony-network-id',
-    'harmony-node-url',
-    'daemon',
-  ]
-)
+
 
 // BridgeConfig.addOptions(
 //   startCommand
@@ -344,6 +334,109 @@ BridgeConfig.addOptions(
 //   ]
 // )
 
+async function executeCommand(command) {
+  try {
+    execSync(command,  {stdio: 'inherit'})
+   
+  } catch (err) {
+    console.log('Error calling command: ', err)
+  }
+}
+
+async function compileAllContracts(){
+  console.log("compile client contract code")
+  let cmd = `cd ./elc/ethClient/ && pwd &&  truffle compile`
+  executeCommand(cmd)
+  
+  console.log("compile Bridge and verifier contractts")
+  cmd = `cd ./lib/src/ && pwd &&  truffle compile`
+  executeCommand(cmd)
+  
+}
+
+ BridgeConfig.addOptions(
+  program
+    .command('compile-all-contracts')
+    .description(
+      'Compiles Ethereum client, Harmony client, Everifier, Hverifier contracts, EBridge, HBridge contracts.. '
+    )
+    .action(compileAllContracts),
+  [
+     
+
+  ]
+)
+
+async function deployElc(){
+  executeCommand('node ./elc/ethClient/test/deploy.js')    
+}
+
+BridgeConfig.addOptions(
+  program
+    .command('deploy-elc')
+    .description(
+      'Deploys and initializes Ethereum client contract on Harmony chain'
+    )
+    .action(deployElc),
+  [
+ 
+  ]
+)
+
+async function deployBridgesVerifiers(){
+  executeCommand('node ./lib/src/scripts/deploy.js')    
+}
+BridgeConfig.addOptions(
+  program
+    .command('deploy-bridges-and-verifiers')
+    .description(
+      'Deploys and initializes ETH-Bridge HMY-Bridge Everifier Hverifier contracts'
+    )
+    .action(deployBridgesVerifiers),
+  [
+ 
+  ]
+)
+
+BridgeConfig.addOptions(
+  program
+    .command('start-eth2hmy-relay')
+    .description(
+      'start ethereum to hmy relayer'
+    )
+    .action(StartEth2HmyRelayCommand.execute),    
+  [  
+    'daemon',
+  ]
+)
+
+
+async function transferERC(){
+  executeCommand('node ./lib/src/scripts/end2end.js')    
+}
+BridgeConfig.addOptions(
+  program
+    .command('transfer-eth-erc20-to-harmony')
+    .description(
+      'Deploys and initializes ETH-Bridge HMY-Bridge Everifier Hverifier contracts'
+    )
+    //can add support for all the below options later on and control more with the command itself
+    .option('--amount <amount>', 'Amount of ERC20 tokens to transfer')
+    .option(
+      '--eth-sender-sk <eth_sender_sk>',
+      'The secret key of the Ethereum account that will be sending ERC20 token.'
+    )
+    .option(
+      '--harmony-receiver-account <harmony_receiver_account>',
+      'The account on Harmony blockchain that will be receiving the minted HRC  token.'
+    )
+    .action(transferERC),
+  [
+ 
+  ]
+)
+
+
 const stopCommand = program.command('stop')
 
 stopCommand.command('all').action(StopManagedProcessCommand.execute)
@@ -358,174 +451,8 @@ stopCommand.command('hmy2eth-relay').action(StopManagedProcessCommand.execute)
 
 stopCommand.command('bridge-watchdog').action(StopManagedProcessCommand.execute)
 
-// BridgeConfig.addOptions(
-//   program
-//     .command('init-harmony-contracts')
-//     .description(
-//       'Deploys and initializes Harmony Client and Harmony Prover contracts to NEAR blockchain.'
-//     )
-//     .action(InitHarmonyContracts.execute),
-//   [
-//     'harmony-network-id',
-//     'harmony-node-url',
-//     'eth-node-url',
-//     'harmony-master-account',
-//     'harmony-master-sk',
-//     'harmony-client-account',
-//     'harmony-client-sk',
-//     'harmony-client-contract-path',
-//     'harmony-client-init-balance',
-//     'harmony-client-validate-ethash',
-//     'harmony-client-trusted-signer',
-//     'harmony-prover-account',
-//     'harmony-prover-sk',
-//     'harmony-prover-contract-path',
-//     'harmony-prover-init-balance',
-//   ]
-// )
 
-// BridgeConfig.addOptions(
-//   program
-//     .command('init-eth-ed25519')
-//     .description(
-//       'Deploys and initializes ED25519 Solidity contract. It replaces missing precompile.'
-//     )
-//     .action(InitEthEd25519.execute),
-//   [
-//     'eth-node-url',
-//     'eth-master-sk',
-//     'eth-ed25519-abi-path',
-//     'eth-ed25519-bin-path',
-//     'eth-gas-multiplier',
-//   ]
-// )
 
-// BridgeConfig.addOptions(
-//   program
-//     .command('init-eth-client')
-//     .description('Deploys and initializes EthClient.')
-//     .action(InitEthClient.execute),
-//   [
-//     'eth-node-url',
-//     'eth-master-sk',
-//     'eth-client-abi-path',
-//     'eth-client-bin-path',
-//     'eth-ed25519-address',
-//     'eth-client-lock-eth-amount',
-//     'eth-client-lock-duration',
-//     'eth-client-replace-duration',
-//     'eth-gas-multiplier',
-//   ]
-// )
-
-// BridgeConfig.addOptions(
-//   program
-//     .command('init-eth-prover')
-//     .description('Deploys and initializes EthProver.')
-//     .action(InitEthProver.execute),
-//   [
-//     'eth-node-url',
-//     'eth-master-sk',
-//     'eth-prover-abi-path',
-//     'eth-prover-bin-path',
-//     'eth-client-address',
-//     'eth-gas-multiplier',
-//   ]
-// )
-
-// // User commands.
-
-// BridgeConfig.addOptions(
-//   program
-//     .command('init-harmony-token-factory')
-//     .description(
-//       'Deploys and initializes token factory to NEAR blockchain. Requires locker on Ethereum side.'
-//     )
-//     .action(InitHarmonyTokenFactory.execute),
-//   [
-//     'harmony-token-factory-account',
-//     'harmony-token-factory-sk',
-//     'harmony-token-factory-contract-path',
-//     'harmony-token-factory-init-balance',
-//     'eth-locker-address',
-//   ]
-// )
-
-// BridgeConfig.addOptions(
-//   program
-//     .command('deploy-token <token_name> <token_address>')
-//     .description('Deploys and initializes token on NEAR.')
-//     .action(DeployToken.execute),
-//   ['harmony-token-factory-account']
-// )
-
-// BridgeConfig.addOptions(
-//   program
-//     .command('init-eth-locker')
-//     .description(
-//       'Deploys and initializes locker contract on Ethereum blockchain. Requires mintable fungible token on Harmony side.'
-//     )
-//     .action(InitEthLocker.execute),
-//   [
-//     'eth-node-url',
-//     'eth-master-sk',
-//     'eth-locker-abi-path',
-//     'eth-locker-bin-path',
-//     'eth-erc20-address',
-//     'harmony-token-factory-account',
-//     'eth-prover-address',
-//     'eth-gas-multiplier',
-//   ]
-// )
-
-// BridgeConfig.addOptions(
-//   program
-//     .command('init-eth-erc20')
-//     .description(
-//       'Deploys and initializes ERC20 contract on Ethereum blockchain.'
-//     )
-//     .action(InitEthErc20.execute),
-//   [
-//     'eth-node-url',
-//     'eth-master-sk',
-//     'eth-erc20-abi-path',
-//     'eth-erc20-bin-path',
-//     'eth-gas-multiplier',
-//   ]
-// )
-
-// BridgeConfig.addOptions(
-//   program
-//     .command('transfer-eth-erc20-to-harmony')
-//     .action(TransferETHERC20ToHarmony.execute)
-//     .option('--amount <amount>', 'Amount of ERC20 tokens to transfer')
-//     .option(
-//       '--eth-sender-sk <eth_sender_sk>',
-//       'The secret key of the Ethereum account that will be sending ERC20 token.'
-//     )
-//     .option(
-//       '--harmony-receiver-account <harmony_receiver_account>',
-//       'The account on NEAR blockchain that will be receiving the minted token.'
-//     )
-//     .option(
-//       '--token-name <token_name>',
-//       'Specific ERC20 token that is already bound by `deploy-token`.'
-//     ),
-//   [
-//     'eth-node-url',
-//     'eth-erc20-address',
-//     'eth-erc20-abi-path',
-//     'eth-locker-address',
-//     'eth-locker-abi-path',
-//     'harmony-node-url',
-//     'harmony-network-id',
-//     'harmony-token-factory-account',
-//     'harmony-client-account',
-//     'harmony-master-account',
-//     'harmony-master-sk',
-//     'eth-gas-multiplier',
-//   ]
-// )
 
 // BridgeConfig.addOptions(
 //   program

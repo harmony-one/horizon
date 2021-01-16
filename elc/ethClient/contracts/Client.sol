@@ -173,7 +173,9 @@ contract Client is ClientStorage, IClient {
         return bytes32(blocks[uint(blockHash)].receiptsRoot);
     }
 
-    function VerifyReceiptsHash(bytes32 blockHash, bytes32 receiptsHash) external view returns (bool) {
+    function VerifyReceiptsHash(bytes32 blockHash, bytes32 receiptsHash) external view returns (bool) {        
+        //isBlockHashSafe() call can be added here checking if the the currentblockNo > receiptHashBlockNumber + confirmations
+        //the above gives a chance to relayer to backtrack if chain switched the fork.
         return bytes32(blocks[uint(blockHash)].receiptsRoot) == receiptsHash;
     }
 

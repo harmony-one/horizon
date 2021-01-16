@@ -8,7 +8,7 @@ const { Harmony } = require("@harmony-js/core")
 const { ChainID, ChainType, hexToNumber, Unit } = require("@harmony-js/utils")
 const rlp = require("rlp");
 const Web3 = require("web3");
-const MAX_SUBMIT_BLOCK = 10
+const MAX_SUBMIT_BLOCK = 50
 const BRIDGE_SRC_DIR = path.join(__dirname, '..')
 
 
@@ -82,7 +82,7 @@ class Eth2HmyRelay {
     );
 
     const clientJson = require("../elc/ethClient/build/contracts/Client.json");
-    const ethClientAddr = "0x44606b88d70b4ac403eb3eb6b38f32cdac241007" //await deploy_contract(json) in elc/ethClient/test/deploy.js
+    const ethClientAddr = "0x4a7f0a457f077f7d4dcc249935308e50924e1981" //await deploy_contract(json) in elc/ethClient/test/deploy.js
     this.ethClientContract = this.hmyClient.contracts.createContract(
 
       clientJson.abi,

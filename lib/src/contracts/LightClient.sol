@@ -2,6 +2,8 @@ pragma solidity ^0.5.0;
 
 import "@openzeppelin/contracts//ownership/Ownable.sol";
 
+// only the interface code from the current file is used in the bridge contract(RainbowOnes.sol)
+// contract code deployed from elc/ethClient is actually set using changeLightClient method in RainbowOnes.sol. 
 interface ILightClient {
     function VerifyReceiptsHash(bytes32 blockHash, bytes32 receiptsHash) external returns(bool);
 }

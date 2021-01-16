@@ -384,7 +384,7 @@ BridgeConfig.addOptions(
 )
 
 async function deployBridgesVerifiers(){
-  executeCommand('node ./lib/src/scripts/deploy.js')    
+  executeCommand('cd ./lib/src && pwd && node scripts/deploy.js')    
 }
 BridgeConfig.addOptions(
   program

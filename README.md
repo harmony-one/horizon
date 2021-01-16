@@ -38,3 +38,37 @@ Horizon - a trustless harmony to ethereum bridge
 4. Bridge smart contract on Ethereum invokes HLC and HVerifier to verify the proof-of-burn and unlocks ERC20 (equivalent amount)
 
 <img src="assets/hmy2eth.png" alt="drawing" width="600"/>
+
+## Setup and Run 
+## Easiest way is to use existing setup (already deployed) client and verifier, bridge contracts  on ethereum ropsten and harmony testnet, 
+1. Clone this repo (node_modules, configuration included)
+
+2. cd horizon && ./index.js start-eth2hmy-relay  
+ //starts eth to hmy relay
+
+3. ./index.js transfer-eth-erc20-to-harmony     
+ //sample script that does Ethereum to Harmony asset transfer described above  
+
+
+
+## For development, redeployment/setup of your own contracts.
+1. Clone this repo 
+
+2. node_modules already included but if needed run 'npm install' in folders 'horizon, elc/ethClient, lib/src'
+
+3. ./index.js --help shows detailed description of each command, run each command one by one in below order
+
+4. ./index.js compile-all-contracts
+
+5. ./index.js deploy-elc
+
+6. ./index.js deploy-bridges-and-verifiers
+
+7. ./index.js start-eth2hmy-relay
+
+8. ./index.js transfer-eth-erc20-to-harmony
+
+
+Note: after step 5 and before step 6, please paste the ethClientAddr in eth2hmy-relay/eth2hmy-relay.js(line no: 85) and lib/src/lib/HmyBridge.js (line no: 68) 
+
+Note: ./index.js is the cli and will be eventually replaced by a cool name like 'horizon-bridge', every single component has its own README.md. for eg: elc has its own README.md and scripts to deploy and even test, however its best to use cli(./index.js) as the cli commands are simplified and they can even execute a series of shell commands.

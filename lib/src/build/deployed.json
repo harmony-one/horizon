@@ -1,5 +1,6 @@
 {
-    "ercToken": "0x6B96C707a93201D3eeb7473A55d34108fC2Eb8c1",
-    "ethBridge": "0x5204b6ED20D9C6d3C6400291400aE1eDe433fe72",
-    "hmyBridge": "0x29139772b31aa77656c4d201438e6d953c2bfc27"
+    "ercToken": "0x240e7fddcBb1Cdcdf063605b72a831F02634e399",
+    "ethBridge": "0xbBc5B5E98Ac5A24a75e01faE82b2C157dfD85c84",
+    "hmyBridge": "0xcb76967ef27b7cd91313784f8303957f6ae9c871",
+    "hrcToken": "0xa1973f2e8f4e38bc1776b49d32cc8f035b66fafe"
 }

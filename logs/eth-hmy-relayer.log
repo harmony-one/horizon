@@ -1,0 +1,165 @@
+harsha@thinkpad:/media/harsha/home/workspace/horizon$ ./index.js start-eth2hmy-relay
+ 
+ connecting to Ethereum chain to get block_headers: wss://ropsten.infura.io/ws/v3/03f8907457e847d7b14aa072355c8d03
+ 
+ connecting to Harmony chain to relay eth block_headers: https://api.s0.b.hmny.io
+ 
+ eth to hmy relayer initialised 
+
+Starting eth2hmy-relay...
+ EthClientContract block Number on Harmony Chain: 9481879
+ Ethereum Chain block number is 9481933
+
+EthClientContract call successful, block_header added: 9481880
+EthClientContract call successful, block_header added: 9481881
+EthClientContract call successful, block_header added: 9481882
+EthClientContract call successful, block_header added: 9481883
+EthClientContract call successful, block_header added: 9481884
+EthClientContract call successful, block_header added: 9481885
+EthClientContract call successful, block_header added: 9481886
+EthClientContract call successful, block_header added: 9481887
+EthClientContract call successful, block_header added: 9481888
+EthClientContract call successful, block_header added: 9481889
+EthClientContract call successful, block_header added: 9481890
+EthClientContract call successful, block_header added: 9481891
+EthClientContract call successful, block_header added: 9481892
+EthClientContract call successful, block_header added: 9481893
+EthClientContract call successful, block_header added: 9481894
+EthClientContract call successful, block_header added: 9481895
+EthClientContract call successful, block_header added: 9481896
+EthClientContract call successful, block_header added: 9481897
+EthClientContract call successful, block_header added: 9481898
+EthClientContract call successful, block_header added: 9481899
+EthClientContract call successful, block_header added: 9481900
+EthClientContract call successful, block_header added: 9481901
+EthClientContract call successful, block_header added: 9481902
+EthClientContract call successful, block_header added: 9481903
+EthClientContract call successful, block_header added: 9481904
+EthClientContract call successful, block_header added: 9481905
+EthClientContract call successful, block_header added: 9481906
+EthClientContract call successful, block_header added: 9481907
+EthClientContract call successful, block_header added: 9481908
+EthClientContract call successful, block_header added: 9481909
+EthClientContract call successful, block_header added: 9481910
+EthClientContract call successful, block_header added: 9481911
+EthClientContract call successful, block_header added: 9481912
+EthClientContract call successful, block_header added: 9481913
+EthClientContract call successful, block_header added: 9481914
+EthClientContract call successful, block_header added: 9481915
+EthClientContract call successful, block_header added: 9481916
+EthClientContract call successful, block_header added: 9481917
+EthClientContract call successful, block_header added: 9481918
+EthClientContract call successful, block_header added: 9481919
+EthClientContract call successful, block_header added: 9481920
+EthClientContract call successful, block_header added: 9481921
+EthClientContract call successful, block_header added: 9481922
+EthClientContract call successful, block_header added: 9481923
+EthClientContract call successful, block_header added: 9481924
+EthClientContract call successful, block_header added: 9481925
+EthClientContract call successful, block_header added: 9481926
+EthClientContract call successful, block_header added: 9481927
+EthClientContract call successful, block_header added: 9481928
+EthClientContract call successful, block_header added: 9481929
+Successfully added block_headers 9481880 to block 9481929
+ EthClientContract block Number on Harmony Chain: 9481929
+ Ethereum Chain block number is 9481965
+
+EthClientContract call successful, block_header added: 9481930
+EthClientContract call successful, block_header added: 9481931
+EthClientContract call successful, block_header added: 9481932
+EthClientContract call successful, block_header added: 9481933
+EthClientContract call successful, block_header added: 9481934
+EthClientContract call successful, block_header added: 9481935
+EthClientContract call successful, block_header added: 9481936
+EthClientContract call successful, block_header added: 9481937
+EthClientContract call successful, block_header added: 9481938
+EthClientContract call successful, block_header added: 9481939
+EthClientContract call successful, block_header added: 9481940
+EthClientContract call successful, block_header added: 9481941
+EthClientContract call successful, block_header added: 9481942
+EthClientContract call successful, block_header added: 9481943
+EthClientContract call successful, block_header added: 9481944
+EthClientContract call successful, block_header added: 9481945
+EthClientContract call successful, block_header added: 9481946
+EthClientContract call successful, block_header added: 9481947
+EthClientContract call successful, block_header added: 9481948
+EthClientContract call successful, block_header added: 9481949
+EthClientContract call successful, block_header added: 9481950
+EthClientContract call successful, block_header added: 9481951
+EthClientContract call successful, block_header added: 9481952
+EthClientContract call successful, block_header added: 9481953
+EthClientContract call successful, block_header added: 9481954
+EthClientContract call successful, block_header added: 9481955
+EthClientContract call successful, block_header added: 9481956
+EthClientContract call successful, block_header added: 9481957
+EthClientContract call successful, block_header added: 9481958
+EthClientContract call successful, block_header added: 9481959
+EthClientContract call successful, block_header added: 9481960
+EthClientContract call successful, block_header added: 9481961
+EthClientContract call successful, block_header added: 9481962
+EthClientContract call successful, block_header added: 9481963
+EthClientContract call successful, block_header added: 9481964
+EthClientContract call successful, block_header added: 9481965
+Successfully added block_headers 9481930 to block 9481965
+ EthClientContract block Number on Harmony Chain: 9481965
+ Ethereum Chain block number is 9482001
+
+EthClientContract call successful, block_header added: 9481966
+EthClientContract call successful, block_header added: 9481967
+EthClientContract call successful, block_header added: 9481968
+EthClientContract call successful, block_header added: 9481969
+EthClientContract call successful, block_header added: 9481970
+EthClientContract call successful, block_header added: 9481971
+EthClientContract call successful, block_header added: 9481972
+EthClientContract call successful, block_header added: 9481973
+EthClientContract call successful, block_header added: 9481974
+EthClientContract call successful, block_header added: 9481975
+EthClientContract call successful, block_header added: 9481976
+EthClientContract call successful, block_header added: 9481977
+EthClientContract call successful, block_header added: 9481978
+
+
+EthClientContract call successful, block_header added: 9481979
+EthClientContract call successful, block_header added: 9481980
+EthClientContract call successful, block_header added: 9481981
+EthClientContract call successful, block_header added: 9481982
+EthClientContract call successful, block_header added: 9481983
+EthClientContract call successful, block_header added: 9481984
+EthClientContract call successful, block_header added: 9481985
+EthClientContract call successful, block_header added: 9481986
+EthClientContract call successful, block_header added: 9481987
+EthClientContract call successful, block_header added: 9481988
+EthClientContract call successful, block_header added: 9481989
+EthClientContract call successful, block_header added: 9481990
+EthClientContract call successful, block_header added: 9481991
+EthClientContract call successful, block_header added: 9481992
+EthClientContract call successful, block_header added: 9481993
+EthClientContract call successful, block_header added: 9481994
+EthClientContract call successful, block_header added: 9481995
+EthClientContract call successful, block_header added: 9481996
+EthClientContract call successful, block_header added: 9481997
+EthClientContract call successful, block_header added: 9481998
+EthClientContract call successful, block_header added: 9481999
+EthClientContract call successful, block_header added: 9482000
+EthClientContract call successful, block_header added: 9482001
+Successfully added block_headers 9481966 to block 9482001
+ EthClientContract block Number on Harmony Chain: 9482001
+ Ethereum Chain block number is 9482033
+
+EthClientContract call successful, block_header added: 9482002
+EthClientContract call successful, block_header added: 9482003
+EthClientContract call successful, block_header added: 9482004
+EthClientContract call successful, block_header added: 9482005
+EthClientContract call successful, block_header added: 9482006
+EthClientContract call successful, block_header added: 9482007
+EthClientContract call successful, block_header added: 9482008
+EthClientContract call successful, block_header added: 9482009
+EthClientContract call successful, block_header added: 9482010
+EthClientContract call successful, block_header added: 9482011
+EthClientContract call successful, block_header added: 9482012
+EthClientContract call successful, block_header added: 9482013
+EthClientContract call successful, block_header added: 9482014
+EthClientContract call successful, block_header added: 9482015
+EthClientContract call successful, block_header added: 9482016
+EthClientContract call successful, block_header added: 9482017
+

@@ -1,0 +1,50 @@
+harsha@thinkpad:/media/harsha/home/workspace/horizon$ ./index.js transfer-eth-erc20-to-harmony
+ 
+ initialise EthBridge.js with erc token Address: 0x240e7fddcBb1Cdcdf063605b72a831F02634e399
+ 
+ initialise EthBridge.js with bridgeAddress: 0xbBc5B5E98Ac5A24a75e01faE82b2C157dfD85c84
+ 
+ connecting to Ethereum chain: https://ropsten.infura.io/v3/ef2ba412bbaf499191f98908f9229490
+ 
+ initialise HmyBridge.js with bridgeAddress: 0xcb76967ef27b7cd91313784f8303957f6ae9c871
+ 
+ initialise HmyBridge.js with hrc tokenAddress:  0xa1973f2e8f4e38bc1776b49d32cc8f035b66fafe
+ 
+ connecting to Harmony chain: https://api.s0.b.hmny.io
+ 
+ ELC contract address on Harmony chain: 0x8824f1a1c3b368ff6e8deaf5d0bfc9d760c416e6
+ 
+ ====================== Lock in Ethereum ==========================
+ 
+ initial erc20 balance:  3000000000000000000
+ 
+ balance after minting some erc20 token:  4000000000000000000
+ 
+ approving erc20 token so it can be locked 
+ 
+ locking token on ETH chain
+ 
+ lock token tx hash on ETH chain:  0xe31cb2b20e1caf377f05dad27e5ec406706f9d0f4434e915a6c01107f97e589b
+ 
+ final erc20 balance after token lock:  3000000000000000000
+ 
+ send erc20 token lock tx hash to EProver and receive proof-of-lock
+ 
+ ====================== Mint on Harmony ==========================
+ 
+ initial hrc20 balance:  1000000000000000000
+ 
+ wait till block hash of transaction in block no: 9482017 is recorded on eth client contract on hmy chain  
+ EthClientContract block Number on Harmony Chain: 9481986 tx blockNumber: 9482017
+ EthClientContract block Number on Harmony Chain: 9482004 tx blockNumber: 9482017
+ EthClientContract block Number on Harmony Chain: 9482005 tx blockNumber: 9482017
+ EthClientContract block Number on Harmony Chain: 9482005 tx blockNumber: 9482017
+ EthClientContract block Number on Harmony Chain: 9482016 tx blockNumber: 9482017
+ EthClientContract block Number on Harmony Chain: 9482017 tx blockNumber: 9482017
+ 
+ send the proof-of-lock to bridge smart contract( invokes ELC and EVerifier)  on Harmony
+ 
+ verified the proof-of-lock and mint HRC20 (equivalent amount) txHash on HMY chain: 0x7b6cf6b3b849aa4c071f4713936963326479d5edecbde69a74d38835f0568078
+ 
+ after hrc20 balance:  2000000000000000000
+1000000000000000000 amount transfer from erc20 to hrc20 succesfful 

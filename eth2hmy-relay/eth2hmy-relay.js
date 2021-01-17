@@ -72,9 +72,10 @@ class Eth2HmyRelay {
     // @ts-ignore
     this.robustWeb3 = new RobustWeb3(ethNodeURL)
     this.web3 = this.robustWeb3.web3
+    let hmyNodeURL = "https://api.s0.b.hmny.io"
     this.hmyClient = new Harmony(
-      // let's assume we deploy smart contract to this end-point URL
-      "https://api.s0.b.hmny.io",
+      // let's assume we deploy smart contracts to this end-point URL
+      hmyNodeURL,
       {
         chainType: ChainType.Harmony,
         chainId: ChainID.HmyTestnet,
@@ -89,8 +90,10 @@ class Eth2HmyRelay {
       ethClientAddr
       );
     this.ethClientContract.wallet.addByPrivateKey("3054d9107ed6900390d0de14fee63d1ac0f430f5e89a954a2b255a5fff639575"); 
-    console.log("eth to hmy relayer initialised")
     
+    console.log(" \n connecting to Ethereum chain to get block_headers: "+ ethNodeURL)
+    console.log(" \n connecting to Harmony chain to relay eth block_headers: "+ hmyNodeURL)
+    console.log(" \n eth to hmy relayer initialised \n")
   }
 
   async run() {

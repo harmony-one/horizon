@@ -1,0 +1,1 @@
+{"version":3,"file":"net.d.ts","sourceRoot":"","sources":["../../src/rpcMethod/net.ts"],"names":[],"mappings":"AAAA;;;;GAIG;AAEH,eAAO,MAAM,eAAe,EAAE,MAAe,CAAC;AAE9C,eAAO,MAAM,eAAe,EAAE,MAA+C,CAAC;AAiB9E,eAAO,MAAM,UAAU,YAAmB,GAAG,WAAW,GAAG,WAAW,GAAG,iBAUxE,CAAC;AAEF,wBAAgB,iBAAiB,CAAC,GAAG,GAAG,EAAE,GAAG,EAAE,GAAG,GAAG,CAUpD"}

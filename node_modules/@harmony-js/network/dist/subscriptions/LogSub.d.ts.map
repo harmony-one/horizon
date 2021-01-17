@@ -1,0 +1,1 @@
+{"version":3,"file":"LogSub.d.ts","sourceRoot":"","sources":["../../src/subscriptions/LogSub.ts"],"names":[],"mappings":"AAAA;;;GAGG;AAEH,OAAO,EAAE,SAAS,EAAE,MAAM,wBAAwB,CAAC;AACnD,OAAO,EAAE,kBAAkB,EAAE,MAAM,gBAAgB,CAAC;AAGpD,qBAAa,MAAO,SAAQ,kBAAkB;gBAChC,OAAO,EAAE,GAAG,EAAE,SAAS,EAAE,SAAS,EAAE,OAAO,GAAE,MAAU;IAK7D,UAAU;IAkChB,qBAAqB,CAAC,gBAAgB,EAAE,GAAG;CAW5C"}

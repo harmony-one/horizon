@@ -1,0 +1,1 @@
+{"version":3,"file":"SyncingSub.d.ts","sourceRoot":"","sources":["../../src/subscriptions/SyncingSub.ts"],"names":[],"mappings":"AAAA;;;;GAIG;AAEH,OAAO,EAAE,SAAS,EAAE,MAAM,wBAAwB,CAAC;AACnD,OAAO,EAAE,kBAAkB,EAAE,MAAM,gBAAgB,CAAC;AAEpD,qBAAa,OAAQ,SAAQ,kBAAkB;IAC7C,SAAS,EAAE,OAAO,GAAG,IAAI,CAAC;gBACd,SAAS,EAAE,SAAS,EAAE,OAAO,GAAE,MAAU;IAMrD,qBAAqB,CAAC,gBAAgB,EAAE,GAAG;CAoB5C"}

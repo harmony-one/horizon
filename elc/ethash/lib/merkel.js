@@ -125,7 +125,7 @@ class MerkleTree {
       for(let i = 0; i < layer.elemsNums; i+=2){
         if(i % 128 == 0 && Date.now() - startTime > 10000){ D("NextLayer", i, layer.elemsNums); startTime = Date.now();}
         const elem1 = this.treedb.getElem(elements, i);
-        const elem2 = i+1 < layer.elemsNums ? this.treedb.getElem(elements, i+1) : undefined;
+        const elem2 = i+1 < elements.elemsNums ? this.treedb.getElem(elements, i+1) : undefined;
         const elemHash = this.combinedHash(elem1, elem2);
         const nextIndex = Math.floor(i/2);
         const targetSlice = this.treedb.getElem(layer, nextIndex);
@@ -177,11 +177,14 @@ class MerkleTree {
   
     getPairElement (idx, layer) {
       const pairIdx = idx % 2 === 0 ? idx + 1 : idx - 1;
-      return pairIdx < layer.elemsNums ? this.treedb.getElem(layer, pairIdx) : undefined;
+      const elem = pairIdx < layer.elemsNums ? this.treedb.getElem(layer, pairIdx) : undefined;
+      return elem;
+      /*
       const elem = this.treedb.getElem(layer, pairIdx);
       if(elem.length === 0 || elem.equals(this.treedb.EMPTY))
         return null;
       return elem;
+      */
     }
 
     bufArrToHexArr (arr) {

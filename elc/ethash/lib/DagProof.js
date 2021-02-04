@@ -5,8 +5,8 @@ const {MerkleTree} = require('./merkel.js');
 const fs = require('fs');
 const path = require('path');
 
-const cacheName = epoch=>`./dag/${epoch}/cache`;
-const dagName = epoch=>`./dag/${epoch}/dag`;
+const dagDir = epoch=>`./dag/${epoch}`;
+const cacheName = epoch=>`${dagDir(epoch)}/cache`;
 
 function writeCache(name, cache){
     const fcache = cache.map(val=>val.toString('hex'));
@@ -36,12 +36,12 @@ class DagProof {
             ethash.mkcache(cacheSize, seed);
             writeCache(cacheFile, ethash.cache);
         }
-        const dagMerkelFile = dagName(epoch);
+        const dagMerkelDir = dagDir(epoch);
         const fullSize = EthashUtil.getFullSize(epoch);
         this.ethash = ethash;
         this.epoch = epoch;
         this.fullSize = fullSize;
-        this.merkel = new MerkleTree(dagMerkelFile, seed, cacheSize, fullSize, ethash);
+        this.merkel = new MerkleTree(dagMerkelDir, seed, cacheSize, fullSize, ethash);
     }
 
     verifyHeader(header) {
@@ -80,7 +80,7 @@ class DagProof {
             ];
         })
         return {dagData, root, proofs};;
-  }
+    }
 }
 
 module.exports = {DagProof}

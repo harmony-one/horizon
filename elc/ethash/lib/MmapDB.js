@@ -5,19 +5,21 @@ const D = console.log;
 class MmapDB {
     PROT = mmap.PROT_WRITE | mmap.PROT_READ
     FLAG = mmap.MAP_SHARED
-    BUFMAX=1024*1024*1024
+    BUFMAX=1024*1024*1024 // shoud be 2*1024*1024*1024-1
     METASIZE = 4096;
-    constructor(name) {
+    constructor(dir) {
+        this.dir = dir;
+        const name = `${dir}/meta`;
         const flag = fs.existsSync(name) ? "r+" : "w+";
         this.fd = fs.openSync(name, flag);
         const info = fs.fstatSync(this.fd);
         if(info.size < this.METASIZE)
             fs.ftruncateSync(this.fd, this.METASIZE);
-        this.meta = this._mmap(this.METASIZE, 0);
+        this.meta = this._mmap(this.fd, 0, this.METASIZE);
     }
 
-    _mmap(size,offset) {
-        return mmap.map(size, this.PROT, this.FLAG, this.fd, offset);
+    _mmap(fd, offset, size) {
+        return mmap.map(size, this.PROT, this.FLAG, fd, offset);
     }
 
     init(size) {
@@ -32,14 +34,29 @@ class MmapDB {
         let remains = dataAlign;
         let offset = metaAlign;
         while(remains > this.BUFMAX){
-            const buf = this._mmap(this.BUFMAX, offset);
+            const buf = this._mmap(this.fd, offset, this.BUFMAX);
             offset += this.BUFMAX;
             remains -= this.BUFMAX;
             this.bufs.push(buf);
         }
         const bugOff = 2*mmap.PAGESIZE;
-        const buf = this._mmap(remains + bugOff, offset-bugOff);
+        const buf = this._mmap(this.fd, offset-bugOff, remains + bugOff);
         this.bufs.push(buf.slice(bugOff));
+    }
+
+    getMmapBuffer(name, size) {
+        const pageAlign = size=>Math.ceil(size/mmap.PAGESIZE)*mmap.PAGESIZE;
+        const alignSize = pageAlign(size);
+        const flag = fs.existsSync(name) ? "r+" : "w+";
+        const fd = fs.openSync(name, flag);
+        const info = fs.fstatSync(fd);
+        if(info.size < alignSize)
+            fs.ftruncateSync(fd, alignSize);
+        if(!this.mbufs) this.mbufs = [];
+        const mbuf = this._mmap(fd, 0, alignSize);
+        mbuf.slice(-1)[0]=0xa;
+        this.mbufs.push(mbuf.slice(0, size));
+        return mbuf;
     }
 
     slice(starts, ends) {
@@ -65,18 +82,10 @@ class MerkelDB extends MmapDB{
     }
 
     init(layersInfo){
-        const totalElems = layersInfo.reduce((a,b)=>a+b,0);
-        super.init(totalElems*this.HASH_SIZE);
-
-        let startNums = 0;
         this.layers = layersInfo.map((layerNums,depth) => {
-            const start = startNums*this.HASH_SIZE;
-            startNums += layerNums;
-            const end = startNums*this.HASH_SIZE;
-            const layer = this.slice(start, end);
-            layer.elemsNums = layerNums;
-            layer.depth = depth;
-            return layer;
+            const size = layerNums*this.HASH_SIZE;
+            const layer = this.getMmapBuffer(`${this.dir}/layer_${depth}`, size);
+            return {layer, elemsNums:layerNums, depth};
         });
     }
 
@@ -89,13 +98,17 @@ class MerkelDB extends MmapDB{
     }
 
     getElem(layer, index){
+        if(index >= layer.elemsNums) throw `exceed layers elemsNums: ${index} >= ${layer.elemsNums}`;
         let start = index*this.HASH_SIZE;
+        return layer.layer.slice(start, start+this.HASH_SIZE);
+        /*
         for(let i = 0; i < layer.length; i++) {
             const buf = layer[i];
             if(start < buf.length) return buf.slice(start, start+this.HASH_SIZE);
             start -= buf.length;
         }
         throw `exceed range ${layer.depth} ${layer.elemsNums} ${layer[0].length} ${layer.reduce((a,b)=>a+b.length, 0)} ${index}`;
+        */
     }
 }
 

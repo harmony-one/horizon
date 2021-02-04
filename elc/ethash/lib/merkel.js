@@ -1,14 +1,7 @@
 const { MerkelDB } = require('./MmapDB.js');
 const { Keccak } = require('sha3');
-const Ethash = require('@ethereumjs/ethash');
-const EthashUtil = require('@ethereumjs/ethash/dist/util');
 
 const Web3Eth = require('web3-eth');
-const { BlockHeader } = require('@ethereumjs/block');
-const { BN,TWO_POW256 } = require('ethereumjs-util');
-
-const EthUrl='https://mainnet.infura.io/v3/ef2ba412bbaf499191f98908f9229490';
-const eth = new Web3Eth(EthUrl);
 
 const D = console.log;
 
@@ -55,28 +48,22 @@ class MerkleTree {
         dag.cacheSize = meta.header.dag.cacheSize;
         dag.fullSize = meta.header.dag.fullSize;
       }
-
       const layersNum = [dag.fullSize/this.ELEM_SIZE];
       while(layersNum[0] > 1) {
         const size = layersNum[0];
         layersNum.unshift(Math.ceil(size/2))
       }
       this.treedb.init(layersNum);
-
-      //const ethash = new Ethash.default();
-      //D("mkcache...")
-      //ethash.mkcache(dag.cacheSize, dag.seed);
-      //D("mkcache done")
       if(!meta.header) {
         D("init database")
         const depth = layersNum.length;
-        D("depth:", depth);
+        D("merkel depth:", depth);
         const leafLayer = this.treedb.getLayer(depth-1);
         let startTime = Date.now();
         const LoopN = dag.fullSize/this.ELEM_SIZE;
         //console.warn("skip some data, just for debug")
         for(let i = 0; i < LoopN; i++){
-          if(i % 128 == 0 && Date.now() - startTime > 10000){ D("leafLayer", i); startTime = Date.now();}
+          if(i % 128 == 0 && Date.now() - startTime > 10000){ D(`leafLayer: ${i}/${LoopN}`); startTime = Date.now();}
           const buf1 = ethash.calcDatasetItem(2*i, []);
           const buf2 = ethash.calcDatasetItem(2*i+1, []);
           const bufIndex = Buffer.alloc(32);
@@ -96,11 +83,7 @@ class MerkleTree {
         meta.save();
       }
       this.ethash = ethash;
-      this.layers = [...this.treedb.getLayers()].reverse(); // leafLayer...rootLayer
-      return;
-      this.layers.forEach((val, idx)=>{
-        D("layers:", idx, val.length, val.reduce((a,b)=>a+b.length, 0));
-      })
+      this.layersReverse = [...this.treedb.getLayers()].reverse(); // leafLayer...rootLayer
     }
   
     getLayers (elements, depth) {
@@ -120,15 +103,15 @@ class MerkleTree {
       }
     }
   
-    getNextLayer (elements, layer) {
+    getNextLayer (lowerLayer, layer) {
       let startTime = Date.now();
-      for(let i = 0; i < layer.elemsNums; i+=2){
+      for(let i = 0; i < layer.elemsNums; i++){
         if(i % 128 == 0 && Date.now() - startTime > 10000){ D("NextLayer", i, layer.elemsNums); startTime = Date.now();}
-        const elem1 = this.treedb.getElem(elements, i);
-        const elem2 = i+1 < elements.elemsNums ? this.treedb.getElem(elements, i+1) : undefined;
+        const index = 2*i;
+        const elem1 = this.treedb.getElem(lowerLayer, index);
+        const elem2 = index+1 < lowerLayer.elemsNums ? this.treedb.getElem(lowerLayer, index+1) : undefined;
         const elemHash = this.combinedHash(elem1, elem2);
-        const nextIndex = Math.floor(i/2);
-        const targetSlice = this.treedb.getElem(layer, nextIndex);
+        const targetSlice = this.treedb.getElem(layer, i);
         elemHash.copy(targetSlice);
       }
       return layer;
@@ -141,8 +124,8 @@ class MerkleTree {
     }
   
     getRoot () { // --
-      //return this.layers[this.layers.length - 1][0];
-      const layer = this.layers[this.layers.length - 1];
+      //return this.layersReverse[this.layersReverse.length - 1][0];
+      const layer = this.layersReverse[this.layersReverse.length - 1];
       return this.treedb.getElem(layer, 0);
     }
   
@@ -156,7 +139,7 @@ class MerkleTree {
       if (idx === -1) {
         throw new Error('Element does not exist in Merkle tree');
       }
-      return this.layers.reduce((proof, layer) => {
+      return this.layersReverse.reduce((proof, layer) => {
         const pairElement = this.getPairElement(idx, layer);
   
         if (pairElement) {
@@ -177,14 +160,7 @@ class MerkleTree {
   
     getPairElement (idx, layer) {
       const pairIdx = idx % 2 === 0 ? idx + 1 : idx - 1;
-      const elem = pairIdx < layer.elemsNums ? this.treedb.getElem(layer, pairIdx) : undefined;
-      return elem;
-      /*
-      const elem = this.treedb.getElem(layer, pairIdx);
-      if(elem.length === 0 || elem.equals(this.treedb.EMPTY))
-        return null;
-      return elem;
-      */
+      return pairIdx < layer.elemsNums ? this.treedb.getElem(layer, pairIdx) : undefined;
     }
 
     bufArrToHexArr (arr) {
@@ -206,95 +182,6 @@ class MerkleTree {
     }
 }
 
-//const MerkleProof = artifacts.require("MerkleProof");
-
-function fromRPC(blockParams){
-  const {
-      parentHash,
-      sha3Uncles,
-      miner,
-      stateRoot,
-      transactionsRoot,
-      receiptRoot,
-      receiptsRoot,
-      logsBloom,
-      difficulty,
-      number,
-      gasLimit,
-      gasUsed,
-      timestamp,
-      extraData,
-      mixHash,
-      nonce,
-  } = blockParams
-  
-  return BlockHeader.fromHeaderData({
-      parentHash,
-      uncleHash: sha3Uncles,
-      coinbase: miner,
-      stateRoot,
-      transactionsTrie: transactionsRoot,
-      receiptTrie: receiptRoot || receiptsRoot,
-      bloom: logsBloom,
-      difficulty:web3.utils.toHex(difficulty),
-      number:web3.utils.toHex(number),
-      gasLimit: web3.utils.toHex(gasLimit),
-      gasUsed:web3.utils.toHex(gasUsed),
-      timestamp:web3.utils.toHex(timestamp),
-      extraData,
-      mixHash,
-      nonce,
-  });
-}
-
-function verifyHeader(ethash, header, fullSize) {
-  const headerHash = ethash.headerHash(header.raw())
-  const { difficulty, mixHash, nonce } = header
-  const a = ethash.run(headerHash, nonce, fullSize)
-  const result = new BN(a.hash)
-  if (!(a.mix.equals(mixHash) && TWO_POW256.div(difficulty).cmp(result) === 1)) throw "ethash local wrong!";
-  return a;
-}
-
-function getProof(merkel, header, indexes) {
-  const epoch = EthashUtil.getEpoc(header.number);
-  const cacheSize = EthashUtil.getCacheSize(epoch);
-  const fullSize = EthashUtil.getFullSize(epoch);
-  const seed = EthashUtil.getSeed(Buffer.alloc(32), 0, epoch);
-  /*
-  const N = 129;//16*1024*1024/128;
-  const cacheSize = 128*N;//16*1024*1024;
-  const fullSize = cacheSize;
-  const seed = Buffer.alloc(32);*/
-  //const ethash = new Ethash.default();
-  //const cache = ethash.mkcache(cacheSize, seed);
-  D("epoch:", epoch);
-  D("seed:", seed.toString('hex'));
-  D("cacheSize:", cacheSize, "totalSize:", fullSize);
-  //D(cache[0].length, cache.slice(-1)[0].length);
-    //const merkel = new MerkleTree(`tredb-${fullSize}.db`,seed, cacheSize, fullSize);
-    D("root:");
-    const root = merkel.getHexRoot();
-    D(root);
-
-
-    //const result = verifyHeader(ethash, header, fullSize);
-    const result = {indexes};
-    D("----------------proof:", result.indexes.length);
-    const proofs = [];
-    result.indexes.forEach(index => {
-      const proof = merkel.getProof(index);
-      proofs.push(proof);
-    });
-    D(proofs.length);
-    return {root, proofs};
-    //return;
-    //const c = await MerkleProof.new();
-    //const r = await c.batchVerify.sendTransaction(proofs, root, leafs, {gas:80000000});
-    //D(r);
-}
-
 module.exports = {
-  MerkleTree,
-  getProof
+  MerkleTree
 }

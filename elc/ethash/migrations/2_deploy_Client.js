@@ -14,6 +14,6 @@ module.exports = async function(deployer) {
   Client.link('Keccak512', keccak512Sol.address);
   const merkelSol = await MerkleProof.deployed();
   Client.link('MerkleProof', merkelSol.address);
-  const initHeader = await getBlockByNumber(11601333);
+  const initHeader = await getBlockByNumber(387*30000);
   await deployer.deploy(Client, initHeader.serialize());
 };

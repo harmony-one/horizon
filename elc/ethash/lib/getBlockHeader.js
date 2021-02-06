@@ -2,11 +2,6 @@ const { BlockHeader } = require('@ethereumjs/block');
 const Web3Eth = require('web3-eth');
 const { BN } = require('ethereumjs-util');
 
-const EthUrl='https://mainnet.infura.io/v3/ef2ba412bbaf499191f98908f9229490';
-const eth = new Web3Eth(EthUrl);
-
-// web3.eth.getBlock
-
 const toHex = num => '0x'+(new BN(num)).toString('hex');
 
 function fromRPC(blockParams){
@@ -49,7 +44,8 @@ function fromRPC(blockParams){
     });
 }
 
-function getBlockByNumber(blockNo) {
+function getBlockByNumber(url, blockNo) {
+    const eth = new Web3Eth(url);
     return eth.getBlock(blockNo).then(fromRPC);
 }
 

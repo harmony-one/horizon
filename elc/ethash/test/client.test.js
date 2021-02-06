@@ -1,27 +1,25 @@
 const ClientSol = artifacts.require("Client");
-const EthashUtil = require('@ethereumjs/ethash/dist/util');
-const { getBlockByNumber } = require("../lib/getBlockHeader.js");
-const { DagProof } = require("../lib/DagProof.js");
 
-const TestCount = 1;
+const TestCount = 15;
+const StartBlock = 11610000;
+
+function getBlockProof(blockNo) {
+    return require(`./data/blocks/block_${blockNo}.json`);
+}
 
 describe("LightClient test", async accounts => {
     it(`add ${TestCount} blocks`, async () => {
-        const clientSol = await ClientSol.deployed();
-        for(let i = 0; i < TestCount; i++){
+        const initBlock = getBlockProof(StartBlock);
+        const clientSol = await ClientSol.new(initBlock.header_rlp);
+        for(let i = StartBlock+1; i <= StartBlock+TestCount; i++) {
+            console.log(i);
             const lastBlockNo = await clientSol.getBlockHeightMax();
             const newBlockNo = lastBlockNo.toNumber()+1;
-            const header = await getBlockByNumber(newBlockNo);
-            const epoch = EthashUtil.getEpoc(header.number);
-            const dagProof = new DagProof(epoch);
-            const proofs = dagProof.getProof(header);
-            const rlpHeader = header.serialize();
-            await clientSol.addBlockHeader(rlpHeader, proofs.dagData, proofs.proofs, {gas:5000000});
-            
+            assert.equal(i, newBlockNo);
+            const proofs = getBlockProof(i);
+            await clientSol.addBlockHeader(proofs.header_rlp, proofs.elements, proofs.merkle_proofs, {gas:5000000});
             const blockNo = await clientSol.getBlockHeightMax();
             assert.equal(blockNo.toNumber(), newBlockNo);
-            //const result = await clientSol.addBlockHeader.call(rlpHeader, proofs.dagData, proofs.proofs, {gas:8000000});
-            //assert.equal(result, true);
         }
     });
   });

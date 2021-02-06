@@ -1,8 +1,6 @@
 const { MerkelDB } = require('./MmapDB.js');
 const { Keccak } = require('sha3');
 
-const Web3Eth = require('web3-eth');
-
 const D = console.log;
 
 function sha3(str) {
@@ -12,49 +10,54 @@ function sha3(str) {
 }
 
 class MetaInfo {
-  MAGIC="DAGPROOF"
-  constructor(buf){
-    this.buf = buf;
-    this.load();
+  VERSION="0.0.1"
+  constructor(meta){
+    this.meta = meta;
   }
-  load() {
-    const buf = this.buf;
-    const magic = buf.slice(0, 8);
-    if(magic.toString() == this.MAGIC){
-      const jsonSize = buf.slice(8, 16).readUInt32LE();
-      this.header = JSON.parse(buf.slice(16, 16+jsonSize));
+  getDagInfo() {
+    const meta = this.meta;
+    if(meta && meta.version == this.VERSION){
+      return {
+        seed: Buffer.from(meta.dag.seed, 'hex'),
+        cacheSize: meta.dag.cacheSize,
+        fullSize: meta.dag.fullSize,
+      }
     }
   }
-  save() {
-    const buf = this.buf;
-    if(!this.header) throw "wrong";
-    const jsonStr = JSON.stringify(this.header);
-    if(jsonStr.length > 4080) throw "too long";
-    buf.slice(16).write(jsonStr);
-    buf.slice(8,16).writeUInt32LE(jsonStr.length);
-    buf.slice(0, 8).write(this.MAGIC);
+
+  setDagInfo(dag) {
+    return {
+      dag:{
+        ...dag,
+        seed: dag.seed.toString('hex')
+      },
+      version:this.VERSION
+    }
   }
+
 }
 
 class MerkleTree {
     ELEM_SIZE=128;
-    constructor(name, seed, cacheSize, fullSize, ethash){
+    constructor(dirname, seed, cacheSize, fullSize, ethash){
       const dag = {seed, cacheSize, fullSize}
-      this.treedb = new MerkelDB(name);
-      const header = this.treedb.header();
-      const meta = new MetaInfo(header);
-      if(meta.header) {
-        dag.seed = Buffer.from(meta.header.dag.seed, 'hex');
-        dag.cacheSize = meta.header.dag.cacheSize;
-        dag.fullSize = meta.header.dag.fullSize;
+
+      this.treedb = new MerkelDB(dirname);
+      const meta = new MetaInfo(this.treedb.META());
+      const dagInfo = meta.getDagInfo();
+      if(dagInfo) {
+        dag.seed = dagInfo.seed;
+        dag.cacheSize = dagInfo.cacheSize;
+        dag.fullSize = dagInfo.fullSize;
       }
+
       const layersNum = [dag.fullSize/this.ELEM_SIZE];
       while(layersNum[0] > 1) {
         const size = layersNum[0];
         layersNum.unshift(Math.ceil(size/2))
       }
       this.treedb.init(layersNum);
-      if(!meta.header) {
+      if(!dagInfo) {
         D("init database")
         const depth = layersNum.length;
         D("merkel depth:", depth);
@@ -73,14 +76,7 @@ class MerkleTree {
           elem.copy(elemSlice);
         }
         this.getLayers(leafLayer, depth-1);
-        meta.header = {
-          dag:{
-            seed: seed.toString('hex'),
-            cacheSize,
-            fullSize
-          }
-        }
-        meta.save();
+        this.treedb.saveMeta(meta.setDagInfo(dag));
       }
       this.ethash = ethash;
       this.layersReverse = [...this.treedb.getLayers()].reverse(); // leafLayer...rootLayer

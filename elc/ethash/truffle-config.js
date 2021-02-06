@@ -67,18 +67,6 @@ module.exports = {
         return truffleProvider;
       },
     },
-    httest: {
-      provider: function () {
-        // mnemonic表示MetaMask的助记词。 "ropsten.infura.io/v3/33..."表示Infura上的项目id
-        return new HDWalletProvider(PRIKEY, ETH_NODE_URL);   // 1表示第二个账户(从0开始)
-      },
-      network_id: "*",  // match any network
-      gas: 8000000,
-      confirmations: 2,    // # of confs to wait between deployments. (default: 0)
-      timeoutBlocks: 200,  // # of blocks before a deployment times out  (minimum/default: 50)
-      skipDryRun: true,     // Skip dry run before migrations? (default: false for public nets )
-      networkCheckTimeout: 100000000
-    },
     mainnet: {
       network_id: '1', // Any network (default: none)
       provider: () => {

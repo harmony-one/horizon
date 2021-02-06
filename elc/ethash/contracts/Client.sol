@@ -105,7 +105,7 @@ contract Client is ClientStorage, Ethash {
     }
 
 	//uint32 constant loopAccesses = 64;      // Number of accesses in hashimoto loop
-    function addBlockHeader(bytes memory _rlpHeader, bytes32[4][loopAccesses] memory cache, bytes32[][loopAccesses] memory proofs) public payable returns (bool) {
+    function addBlockHeader(bytes memory _rlpHeader, bytes32[4][loopAccesses] memory cache, bytes32[][loopAccesses] memory proofs) public returns (bool) {
         // Calculate block header hash
         uint blockHash = EthCommon.calcBlockHeaderHash(_rlpHeader);
         // Check block existing

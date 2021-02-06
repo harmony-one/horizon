@@ -1,6 +1,6 @@
 const Prime = artifacts.require("Prime");
-const CacheSize = require("./CacheSize.json");
-const FullSize = require("./FullSzie.json");
+const CacheSize = require("./data/CacheSize.json");
+const FullSize = require("./data/FullSzie.json");
 const MixBytes = 128;
 const HashBytes = 64;
 

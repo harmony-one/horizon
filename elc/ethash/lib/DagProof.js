@@ -65,7 +65,7 @@ class DagProof {
         const merkel = this.merkel;
         const root = merkel.getHexRoot();
         const proofs = [];
-        result.indexes.forEach(index => {
+        result.indexes.forEach(index => {   // TODO: There is a lot of duplicate data that needs to be optimized
             const proof = merkel.getProof(index);
             proofs.push(proof);
         });
@@ -80,6 +80,10 @@ class DagProof {
             ];
         })
         return {dagData, root, proofs};;
+    }
+
+    static existsEpoch(epoch) {
+        return fs.existsSync(dagDir(epoch));
     }
 }
 

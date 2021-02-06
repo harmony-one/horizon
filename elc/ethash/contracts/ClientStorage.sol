@@ -28,9 +28,9 @@ pragma solidity ^0.6.2;
     mapping (uint => bool) public finalizedBlocks;
 
     // Valid relayed blocks for a block height, in the form: blockNumber => blockHeaderHash[]
-    mapping (uint => uint[]) blocksByHeight;
+    mapping (uint => uint[]) public blocksByHeight;
     // Block height existing map, in the form: blockNumber => bool
-    mapping (uint => bool) blocksByHeightExisting;
+    mapping (uint => bool) public blocksByHeightExisting;
 
     // Max block height stored
     uint public blockHeightMax;

@@ -44,7 +44,7 @@ truffle test
 ## Tools
 > Run `source .env` if you haven't run it.
 ### `tools/proofDump.js`
-1. Generate DAG merkel tree
+1. Generate DAG merkel tree  
     Generates a DAG merkel tree for the specified Epoch. The DAG merkel tree is in `./dag/<epoch>` directory.
     ```
     node tools/proofDump.js --dag --epoch=<epoch number>

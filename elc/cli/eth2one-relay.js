@@ -38,9 +38,9 @@ async function main() {
     const dagProof = new DagProof(epoch);
     const proofs = dagProof.getProof(header);
     const rlpHeader = header.serialize();
-    await clientSol.addBlockHeader(rlpHeader, proofs.dagData, proofs.proofs, {gas:5000000});
+    a = await clientSol.addBlockHeader(rlpHeader, proofs.dagData, proofs.proofs, {gas:5000000});
     const blockNo = await clientSol.getBlockHeightMax();
-    console.log("new block number:", blockNo.toString());
+    console.log("new block number:", blockNo.toString(), a);
 }
 
 module.exports = function (result) {

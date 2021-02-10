@@ -81,7 +81,8 @@ async function main(){
             header_rlp: _toHex(rlpHeader),
             merkle_root: _toHex(proofs.root),
             elements: proofs.dagData.map(elems=>elems.map(_toHex)),
-            merkle_proofs: proofs.proofs.map(proofs=>proofs.map(_toHex)),
+            merkle_proofs: proofs.proofs.map(_toHex),
+            proofIndexes: proofs.proofIndexes.map(_toHex),
         }
         const dumpFile = `block_${blockNo}.json`;
         fs.writeFileSync(dumpFile, JSON.stringify(proofJson));

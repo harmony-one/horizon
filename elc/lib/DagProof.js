@@ -60,16 +60,38 @@ class DagProof {
         if(epoch != this.epoch) throw `wrong epoch! ${epoch} ${this.epoch}`;
 
         const result = this.verifyHeader(header);
+        console.log(result.indexes);
         result.indexes = result.indexes.filter((_,i)=>i&1^1);
 
         const merkel = this.merkel;
         const root = merkel.getHexRoot();
+        const proofMaps = {};
         const proofs = [];
+        const proofIndexes = [];
+        const PUSH = (proof, _io)=>{
+            const ret = Buffer.alloc(proof.length*2);
+            proof.forEach((p,i)=>{
+                let index;
+                const key = p.toString('hex');
+                if(proofMaps.hasOwnProperty(key)){
+                    index = proofMaps[key];
+                }else{
+                    index = proofs.push(p);
+                    proofMaps[key] = index;
+                }
+                ret.writeUInt16BE(index, i*2);
+            })
+            return ret;
+        }
         result.indexes.forEach(index => {   // TODO: There is a lot of duplicate data that needs to be optimized
-            const proof = merkel.getProof(index);
-            proofs.push(proof);
+            const proof = merkel.getProof(index/2);
+            if(proof.length == 2){
+                console.log(index, proof.map(e=>e.toString('hex')));
+            }
+            proofIndexes.push(PUSH(proof, index));
         });
 
+        
         const ethash = this.ethash;
         const dagData = result.indexes.map(index=>{
             const data1 = ethash.calcDatasetItem(index);
@@ -79,7 +101,7 @@ class DagProof {
                 data2.slice(0,32),data2.slice(32,64),
             ];
         })
-        return {dagData, root, proofs};;
+        return {dagData, root, proofs, proofIndexes};;
     }
 
     static existsEpoch(epoch) {

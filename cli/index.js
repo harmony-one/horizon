@@ -65,7 +65,7 @@ Dag_CMD
     }
   });
 
-const ETHRelay_CMD = program.command('ethRelay').description('etherum block relay cli');
+const ETHRelay_CMD = program.command('ethRelay').description('ethereum block relay cli');
 ETHRelay_CMD
 .command('getBlockHeader <ethUrl> <number/hash>')
 .description('get block header')

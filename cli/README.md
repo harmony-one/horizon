@@ -7,7 +7,7 @@ CLI is a utility that provides a command-line interface to all the components to
 
 ## ELC(Ethereum Ligth Client) CLI
 > Before using the CLI, fill in the private key into `.env` and execute `source .env`.
-1. `node index.js ELC deploy` deploy ELC contract to harmony network.
+1. `node index.js ELC deploy` deploy ELC contract to Harmony network.
 2. `node index.js ELC status` display last block of ELC.
 
 ## Ethereum Block Relay CLI
@@ -17,3 +17,7 @@ CLI is a utility that provides a command-line interface to all the components to
 
 ## Ethereum Receipt Prove CLI
 1. `node index.js EProve proof` get the proof data of the receipt of the transaction.
+
+## Ethereum Receipt Verifier CLI
+1. `node index.js EVerifier deploy` deploy EVerifier library contract to Harmony network.
+2. `node index.js EVerifier verify` verify receipt MPT proof vai everifier contract, return receipt.

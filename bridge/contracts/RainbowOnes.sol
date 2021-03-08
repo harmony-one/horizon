@@ -83,7 +83,8 @@ contract RainbowOnes is Ownable {
         emit Locked(address(token), msg.sender, amount, recipient);
     }
 
-    function ExecProof(bytes32 blockHash, bytes32 rootHash, bytes calldata mptkey, bytes calldata proof) external {
+    function ExecProof(uint256 blockNo, bytes32 rootHash, bytes calldata mptkey, bytes calldata proof) external {
+        bytes32 blockHash = bytes32(lightclient.blocksByHeight(blockNo, 0));
         require(lightclient.VerifyReceiptsHash(blockHash, rootHash), "wrong receipt hash");
         bytes32 receiptHash = keccak256(abi.encodePacked(blockHash, rootHash, mptkey));
         require(spentReceipt[receiptHash] == false, "double spent!");

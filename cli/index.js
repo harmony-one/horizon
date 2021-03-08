@@ -2,7 +2,7 @@ const { program } = require('commander');
 const { genearateDagMTreeRange } = require('./ethashProof/DagMtreeEpoch');
 const { getHeaderProof, parseRlpHeader, getBlock } = require('./ethashProof/BlockProof');
 const { blockRelayLoop } = require('./eth2hmy-relay/elcRelay');
-const { deployELC, statsuELC } = require('./elc/elcContract');
+const { deployELC, statusELC } = require('./elc/contract');
 const { merkelRootSol } = require('./ethashProof/MerkelRootSol');
 const { EProve } = require('../eprover');
 const { deployEVerifier, MPTProof } = require('./everifier/contract');
@@ -111,7 +111,7 @@ CMD_ELC
 .command('status <hmyUrl> <ELC_address>')
 .description('relay eth block header to elc on hmy')
 .action(async (hmyUrl, elcAddress) => {
-  await statsuELC(hmyUrl, elcAddress);
+  await statusELC(hmyUrl, elcAddress);
 });
 
 const CMD_EProve = program.command('EProve').description('ethereum receipt prove cli')

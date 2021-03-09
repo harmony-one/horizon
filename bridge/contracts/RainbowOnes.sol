@@ -3,17 +3,10 @@ pragma solidity ^0.6.2;
 import { ILightClient } from "./LightClient.sol";
 import { EVerifier, RLPReader } from "../../everifier/contracts/EVerifier.sol";
 import { IERC20 } from "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
-import { ERC20PresetMinterPauser } from "openzeppelin-solidity/contracts/presets/ERC20PresetMinterPauser.sol";
 import { ERC20 } from "openzeppelin-solidity/contracts/token/ERC20/ERC20.sol";
 import { SafeERC20 } from "openzeppelin-solidity/contracts/token/ERC20/SafeERC20.sol";
 import { Ownable } from "openzeppelin-solidity/contracts/access/Ownable.sol";
-
-
-contract BridgedToken is ERC20PresetMinterPauser {
-    constructor(string memory name, string memory symbol, uint8 decimals) ERC20PresetMinterPauser(name,symbol) public {
-        _setupDecimals(decimals);
-    }
-}
+import { BridgedToken } from "./BridgedToken.sol";
 
 contract RainbowOnes is Ownable {
     using RLPReader for RLPReader.RLPItem;
@@ -53,11 +46,11 @@ contract RainbowOnes is Ownable {
         lightclient = newClient;
     }
 
-    function bandBridgeSide(address otherSide) external onlyOwner {
+    function Bind(address otherSide) external onlyOwner {
         otherSideBridge = otherSide;
     }
 
-    function CreateRainbow(ERC20 thisSideToken) external returns(address) {
+    function RainbowMap(ERC20 thisSideToken) external returns(address) {
         require(TxMapped[address(thisSideToken)] == address(0), "rainbow is exists");
         ERC20 tokenDetail = thisSideToken;
         emit TokenMapReq(address(thisSideToken), tokenDetail.decimals(), tokenDetail.name(), tokenDetail.symbol());

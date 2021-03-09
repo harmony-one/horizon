@@ -6,6 +6,7 @@ CLI is a utility that provides a command-line interface to all the components to
 2. `node index.js dagProve blockProof` which accepts block number to calculate all necessary information in order to prove the block
 
 ## ELC(Ethereum Ligth Client) CLI
+> Before using the CLI, fill in the private key into `.env` and execute `source .env`.
 1. `node index.js ELC deploy` deploy ELC contract to harmony network.
 2. `node index.js ELC status` display last block of ELC.
 
@@ -13,3 +14,6 @@ CLI is a utility that provides a command-line interface to all the components to
 > Before using the CLI, fill in the private key into `.env` and execute `source .env`.
 1. `node index.js ethRelay getBlockHeader` get block header from ethereum.
 2. `node index.js ethRelay relay` constantly relay blocks from Ethereum to Harmony.
+
+## Ethereum Receipt Prove CLI
+1. `node index.js EProve proof` get the proof data of the receipt of the transaction.

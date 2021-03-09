@@ -4,6 +4,7 @@ const { getHeaderProof, parseRlpHeader, getBlock } = require('./ethashProof/Bloc
 const { blockRelayLoop } = require('./eth2hmy-relay/elcRelay');
 const { deployELC, statsuELC } = require('./elc/elcContract');
 const { merkelRootSol } = require('./ethashProof/MerkelRootSol');
+const { EProve } = require('../eprover');
 const fs = require('fs');
 
 program.description("Horizon Trustless Bridge CLI");
@@ -65,7 +66,7 @@ Dag_CMD
     }
   });
 
-const ETHRelay_CMD = program.command('ethRelay').description('etherum block relay cli');
+const ETHRelay_CMD = program.command('ethRelay').description('ethereum block relay cli');
 ETHRelay_CMD
 .command('getBlockHeader <ethUrl> <number/hash>')
 .description('get block header')
@@ -110,6 +111,25 @@ CMD_ELC
 .description('relay eth block header to elc on hmy')
 .action(async (hmyUrl, elcAddress) => {
   await statsuELC(hmyUrl, elcAddress);
+});
+
+const CMD_EProve = program.command('EProve').description('ethereum receipt prove cli')
+
+CMD_EProve
+.command('proof <ethUrl> <tx_hash>')
+.description('get receipt proof of a transaction from ethereum')
+.option('-o,--output <OUTPUT>', 'output file')
+.action(async (ethUrl, txHash, options) => {
+  const ep = new EProve(ethUrl);
+  const proof = await ep.receiptProof(txHash);
+  const keys = Object.keys(proof);
+  const out = {};
+  keys.forEach(key => out[key] = '0x'+proof[key].toString('hex'));
+  if(options.output){
+    fs.writeFileSync(options.output, JSON.stringify(out));
+  }else{
+    console.log(out);
+  }
 });
 
 program.parse(process.argv);

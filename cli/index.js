@@ -5,6 +5,7 @@ const { blockRelayLoop } = require('./eth2hmy-relay/elcRelay');
 const { deployELC, statsuELC } = require('./elc/elcContract');
 const { merkelRootSol } = require('./ethashProof/MerkelRootSol');
 const { EProve } = require('../eprover');
+const { deployEVerifier, MPTProof } = require('./everifier/contract');
 const fs = require('fs');
 
 program.description("Horizon Trustless Bridge CLI");
@@ -90,9 +91,9 @@ ETHRelay_CMD
 const CMD_ELC = program.command('ELC').description('ethereum ligth client cli')
 CMD_ELC
 .command('deploy <hmyUrl>')
-.description('relay eth block header to elc on hmy')
+.description('deploy ELC contract on hmy')
 .option('-u,--url <eth url>', 'ethereum node RPC url')
-.option('-b,--block <number/hash>', 'block number or hash')
+.option('-b,--block <number/hash>', 'init block number or hash')
 .option('-H --header <rlpBlockHeader>', 'hexadecimal string of rlp block header')
 .action(async (hmyUrl, options) => {
   let header;
@@ -131,5 +132,34 @@ CMD_EProve
     console.log(out);
   }
 });
+
+
+const CMD_EVerifier = program.command('EVerifier').description('ethereum receipt verify cli');
+
+CMD_EVerifier
+.command('verify <ethUrl> <tx_hash> <hmyUrl> <contract address>')
+.description('verify receipt MPT proof vai everifier contract, return receipt')
+.option('-o,--output <OUTPUT>', 'output file')
+.option('-t --type <output format>', 'output format: json/rlp', 'json')
+.action(async (ethUrl, txHash, hmyUrl, evAddress, options) => {
+  const ep = new EProve(ethUrl);
+  const proof = await ep.receiptProof(txHash);
+  const receiptObj = await MPTProof(hmyUrl, evAddress, proof);
+  const out = options.type == 'json' ? receiptObj.toJson() : receiptObj.toHex();
+  if(options.output){
+    fs.writeFileSync(options.output, out);
+  }else{
+    console.log(out);
+  }
+});
+
+CMD_EVerifier
+.command('deploy <hmyUrl>')
+.description('deploy EVerifier library contract on hmy')
+.action(async (hmyUrl) => {
+  const contract = await deployEVerifier(hmyUrl);
+  console.log("EVerifier:", contract.options.address);
+});
+
 
 program.parse(process.argv);

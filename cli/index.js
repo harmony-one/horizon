@@ -210,7 +210,6 @@ CMD_Bridge
 .description('cross transfer HRC20 from hmy back to eth')
 .action(async (hmyUrl, hmyAddress, ethUrl, ethAddress, token, receipt, amount) => {
   const {hmyBridge, ethBridge} = await tokenBack(hmyUrl, hmyAddress, ethUrl, ethAddress, token, receipt, amount);
-  
   const pair = await hmyBridge.TokenPair(token, false);
   const ethTokenInfo = await tokenStatus(ethBridge.web3, pair[0], ethBridge.web3.address);
   console.log("ethereum token:", ethTokenInfo);

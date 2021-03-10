@@ -45,7 +45,8 @@ class Bridge {
     async TokenPair(token, isTx=true) {
         const method = isTx?'TxMapped':'RxMappedInv';
         const result = await this.contract.methods[method](token).call();
-        return [token, result];
+        const pair = [token, result];
+        return isTx?pair:pair.reverse();
     }
 
     // src: src Bridge

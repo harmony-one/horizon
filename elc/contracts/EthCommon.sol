@@ -6,8 +6,8 @@
 
 pragma solidity ^0.6.2;
 
-import "./RLPReader.sol";
-import "./RLPEncode.sol";
+import "../../lib/contracts/RLPReader.sol";
+import "../../lib/contracts/RLPEncode.sol";
 
 
 library EthCommon {

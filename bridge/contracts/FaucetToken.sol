@@ -7,7 +7,8 @@ contract FaucetToken is ERC20 {
         _setupDecimals(decimals);
     }
     function mint() public returns (bool) {
-        _mint(msg.sender, 10000e18);
+        uint256 UNIT = 10**uint256(decimals());
+        _mint(msg.sender, 10000*UNIT);
         return true;
     }
 }

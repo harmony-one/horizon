@@ -2,10 +2,16 @@ const { program } = require('commander');
 const { genearateDagMTreeRange } = require('./ethashProof/DagMtreeEpoch');
 const { getHeaderProof, parseRlpHeader, getBlock } = require('./ethashProof/BlockProof');
 const { blockRelayLoop } = require('./eth2hmy-relay/elcRelay');
-const { deployELC, statsuELC } = require('./elc/elcContract');
+const { deployELC, statusELC } = require('./elc/contract');
 const { merkelRootSol } = require('./ethashProof/MerkelRootSol');
 const { EProve } = require('../eprover');
 const { deployEVerifier, MPTProof } = require('./everifier/contract');
+const {
+  deployBridges,
+  tokenMap, tokenTo, tokenBack,
+  tokenStatus, deployFaucet,
+  ChangeLightClient, deployFakeLightClient
+} = require('./bridge/contract');
 const fs = require('fs');
 
 program.description("Horizon Trustless Bridge CLI");
@@ -111,7 +117,7 @@ CMD_ELC
 .command('status <hmyUrl> <ELC_address>')
 .description('relay eth block header to elc on hmy')
 .action(async (hmyUrl, elcAddress) => {
-  await statsuELC(hmyUrl, elcAddress);
+  await statusELC(hmyUrl, elcAddress);
 });
 
 const CMD_EProve = program.command('EProve').description('ethereum receipt prove cli')
@@ -161,5 +167,83 @@ CMD_EVerifier
   console.log("EVerifier:", contract.options.address);
 });
 
+
+const CMD_Bridge = program.command('Bridge').description('bridge cli');
+
+CMD_Bridge
+.command('deploy <ethUrl> <hmyUrl>')
+.description('deploy bridge contract on ethereum and harmony and then bind these')
+.action(async (ethUrl, hmyUrl) => {
+  const {ethBridge, hmyBridge} = await deployBridges(ethUrl, hmyUrl);
+  console.log("ethereum bridge address:", ethBridge.contract._address);
+  console.log("harmony bridge address:", hmyBridge.contract._address);
+});
+
+CMD_Bridge
+.command('map <ethUrl> <ethBridge> <hmyUrl> <hmyBridge> <token>')
+.description('map ERC20 to HRC20')
+.action(async (ethUrl, ethAddress, hmyUrl, hmyAddress, token) => {
+  const {ethBridge, hmyBridge} = await tokenMap(ethUrl, ethAddress, hmyUrl, hmyAddress, token);
+  
+  const pair = await ethBridge.TokenPair(token);
+  const ethTokenInfo = await tokenStatus(ethBridge.web3, pair[0], ethBridge.web3.address);
+  console.log("ethereum token:", ethTokenInfo);
+  const hmyTokenInfo = await tokenStatus(hmyBridge.web3, pair[1], hmyBridge.web3.address);
+  console.log("harmony token:", hmyTokenInfo);
+});
+
+CMD_Bridge
+.command('crossTo <ethUrl> <ethBridge> <hmyUrl> <hmyBridge> <token> <receipt> <amount>')
+.description('cross transfer ERC20 from eth to hmy')
+.action(async (ethUrl, ethAddress, hmyUrl, hmyAddress, token, receipt, amount) => {
+  const {ethBridge, hmyBridge} = await tokenTo(ethUrl, ethAddress, hmyUrl, hmyAddress, token, receipt, amount);
+  
+  const pair = await ethBridge.TokenPair(token);
+  const ethTokenInfo = await tokenStatus(ethBridge.web3, pair[0], ethBridge.web3.address);
+  console.log("ethereum token:", ethTokenInfo);
+  const hmyTokenInfo = await tokenStatus(hmyBridge.web3, pair[1], hmyBridge.web3.address);
+  console.log("harmony token:", hmyTokenInfo);
+});
+
+CMD_Bridge
+.command('crossBack <hmyUrl> <hmyBridge> <ethUrl> <ethBridge> <token> <receipt> <amount>')
+.description('cross transfer HRC20 from hmy back to eth')
+.action(async (hmyUrl, hmyAddress, ethUrl, ethAddress, token, receipt, amount) => {
+  const {hmyBridge, ethBridge} = await tokenBack(hmyUrl, hmyAddress, ethUrl, ethAddress, token, receipt, amount);
+  const pair = await hmyBridge.TokenPair(token, false);
+  const ethTokenInfo = await tokenStatus(ethBridge.web3, pair[0], ethBridge.web3.address);
+  console.log("ethereum token:", ethTokenInfo);
+  const hmyTokenInfo = await tokenStatus(hmyBridge.web3, pair[1], hmyBridge.web3.address);
+  console.log("harmony token:", hmyTokenInfo);
+});
+
+CMD_Bridge
+.command('deployFaucet <rpcUrl>')
+.description('deploy a faucet token')
+.option('-m,--mint', "mint 10000 token to account")
+.action(async (rpcUrl, options) => {
+  const faucet = await deployFaucet(rpcUrl);
+  if(options.mint) {
+    await faucet.mint();
+  }
+  const faucetTokenInfo = await tokenStatus(faucet.web3, faucet.contract._address, faucet.web3.address);
+  console.log(faucetTokenInfo);
+});
+
+CMD_Bridge
+.command('change <rpcUrl> <bridgeAddress> <ligthClient>')
+.description('change light client')
+.action(async (rpcUrl, bridgeAddress, clientAddress) => {
+  await ChangeLightClient(rpcUrl, bridgeAddress, clientAddress);
+  console.log("done");
+})
+
+CMD_Bridge
+.command('deployFakeClient <rpcUrl>')
+.description('deploy a fake light client for testing')
+.action(async (rpcUrl, options) => {
+  const fakeClient = await deployFakeLightClient(rpcUrl);
+  console.log(fakeClient);
+})
 
 program.parse(process.argv);

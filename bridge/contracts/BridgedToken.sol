@@ -1,9 +1,13 @@
 pragma solidity ^0.6.2;
 
-import {ERC20PresetMinterPauser} from "openzeppelin-solidity/contracts/presets/ERC20PresetMinterPauser.sol";
+import "openzeppelin-solidity/contracts/token/ERC20/ERC20Burnable.sol";
+import { Ownable } from "openzeppelin-solidity/contracts/access/Ownable.sol";
 
-contract BridgedToken is ERC20PresetMinterPauser {
-    constructor(string memory name, string memory symbol, uint8 decimals) ERC20PresetMinterPauser(name,symbol) public{
+contract BridgedToken is ERC20Burnable,Ownable {
+    constructor(string memory name, string memory symbol, uint8 decimals) ERC20(name,symbol) public {
         _setupDecimals(decimals);
+    }
+    function mint(address to, uint256 amount) external onlyOwner {
+        _mint(to, amount);
     }
 }

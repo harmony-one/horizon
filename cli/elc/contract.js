@@ -19,7 +19,7 @@ function printBlock(block) {
     console.log(blockFormat);
 }
 
-async function statsuELC(hmyUrl, elcAddress) {
+async function statusELC(hmyUrl, elcAddress) {
     const hmyWeb3 = new HmyWeb3(hmyUrl);
     const ELC = hmyWeb3.ContractAt(Client.abi, elcAddress);
     const elcMethods = ELC.methods;
@@ -40,4 +40,4 @@ async function statsuELC(hmyUrl, elcAddress) {
 }
 
 
-module.exports = {deployELC, statsuELC};
+module.exports = {deployELC, statusELC};

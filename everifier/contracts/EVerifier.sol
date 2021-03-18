@@ -1,6 +1,6 @@
 pragma solidity ^0.6.2;
 
-import "./RLPReader.sol";
+import "../../lib/contracts/RLPReader.sol";
 
 library EVerifier {
     using RLPReader for RLPReader.RLPItem;

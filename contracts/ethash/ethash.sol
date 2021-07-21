@@ -493,8 +493,14 @@ contract Ethash is MerkelRoots {
         uint256 epoch = number / EPOCH_LENGTH;
         bytes32 rootHash = getRootHash(uint64(epoch));
         uint256 size = getFullSize(epoch);
-        (bytes32 mix, bytes32 _diff) =
-            hashimoto(hash, nonce, uint64(size), cache, rootHash, proofs);
+        (bytes32 mix, bytes32 _diff) = hashimoto(
+            hash,
+            nonce,
+            uint64(size),
+            cache,
+            rootHash,
+            proofs
+        );
         uint256 target = MAX256 / difficulty; // target = (2**256)/difficult;
         target += ((MAX256 % difficulty) + 1) / difficulty;
         return

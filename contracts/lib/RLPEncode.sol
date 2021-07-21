@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.7;
 
-
 /**
  * @title RLPEncode
  * @dev A simple RLP encoding library.
@@ -17,7 +16,11 @@ library RLPEncode {
      * @param self The byte string to encode.
      * @return The RLP encoded string in bytes.
      */
-    function encodeBytes(bytes memory self) internal pure returns (bytes memory) {
+    function encodeBytes(bytes memory self)
+        internal
+        pure
+        returns (bytes memory)
+    {
         bytes memory encoded;
         if (self.length == 1 && uint8(self[0]) <= 128) {
             encoded = self;
@@ -32,7 +35,11 @@ library RLPEncode {
      * @param self The list of RLP encoded byte strings.
      * @return The RLP encoded list of items in bytes.
      */
-    function encodeList(bytes[] memory self) internal pure returns (bytes memory) {
+    function encodeList(bytes[] memory self)
+        internal
+        pure
+        returns (bytes memory)
+    {
         bytes memory list = flatten(self);
         return concat(encodeLength(list.length, 192), list);
     }
@@ -42,11 +49,15 @@ library RLPEncode {
      * @param self The string to encode.
      * @return The RLP encoded string in bytes.
      */
-    function encodeString(string memory self) internal pure returns (bytes memory) {
+    function encodeString(string memory self)
+        internal
+        pure
+        returns (bytes memory)
+    {
         return encodeBytes(bytes(self));
     }
 
-    /** 
+    /**
      * @dev RLP encodes an address.
      * @param self The address to encode.
      * @return The RLP encoded address in bytes.
@@ -55,32 +66,35 @@ library RLPEncode {
         bytes memory inputBytes;
         assembly {
             let m := mload(0x40)
-            mstore(add(m, 20), xor(0x140000000000000000000000000000000000000000, self))
+            mstore(
+                add(m, 20),
+                xor(0x140000000000000000000000000000000000000000, self)
+            )
             mstore(0x40, add(m, 52))
             inputBytes := m
         }
         return encodeBytes(inputBytes);
     }
 
-    /** 
+    /**
      * @dev RLP encodes a uint.
      * @param self The uint to encode.
      * @return The RLP encoded uint in bytes.
      */
-    function encodeUint(uint self) internal pure returns (bytes memory) {
+    function encodeUint(uint256 self) internal pure returns (bytes memory) {
         return encodeBytes(toBinary(self));
     }
 
-    /** 
+    /**
      * @dev RLP encodes an int.
      * @param self The int to encode.
      * @return The RLP encoded int in bytes.
      */
-    function encodeInt(int self) internal pure returns (bytes memory) {
-        return encodeUint(uint(self));
+    function encodeInt(int256 self) internal pure returns (bytes memory) {
+        return encodeUint(uint256(self));
     }
 
-    /** 
+    /**
      * @dev RLP encodes a bool.
      * @param self The bool to encode.
      * @return The RLP encoded bool in bytes.
@@ -90,7 +104,6 @@ library RLPEncode {
         encoded[0] = (self ? bytes1(0x01) : bytes1(0x80));
         return encoded;
     }
-
 
     /*
      * Private functions
@@ -102,14 +115,18 @@ library RLPEncode {
      * @param offset 128 if item is string, 192 if item is list.
      * @return RLP encoded bytes.
      */
-    function encodeLength(uint len, uint offset) private pure returns (bytes memory) {
+    function encodeLength(uint256 len, uint256 offset)
+        private
+        pure
+        returns (bytes memory)
+    {
         bytes memory encoded;
         if (len < 56) {
             encoded = new bytes(1);
             encoded[0] = bytes32(len + offset)[31];
         } else {
-            uint lenLen;
-            uint i = 1;
+            uint256 lenLen;
+            uint256 i = 1;
             while (len / i != 0) {
                 lenLen++;
                 i *= 256;
@@ -117,8 +134,8 @@ library RLPEncode {
 
             encoded = new bytes(lenLen + 1);
             encoded[0] = bytes32(lenLen + offset + 55)[31];
-            for(i = 1; i <= lenLen; i++) {
-                encoded[i] = bytes32((len / (256**(lenLen-i))) % 256)[31];
+            for (i = 1; i <= lenLen; i++) {
+                encoded[i] = bytes32((len / (256**(lenLen - i))) % 256)[31];
             }
         }
         return encoded;
@@ -130,19 +147,19 @@ library RLPEncode {
      * @param _x The integer to encode.
      * @return RLP encoded bytes.
      */
-    function toBinary(uint _x) private pure returns (bytes memory) {
+    function toBinary(uint256 _x) private pure returns (bytes memory) {
         bytes memory b = new bytes(32);
-        assembly { 
-            mstore(add(b, 32), _x) 
+        assembly {
+            mstore(add(b, 32), _x)
         }
-        uint i = 0;
+        uint256 i = 0;
         for (; i < 32; i++) {
             if (b[i] != 0) {
                 break;
             }
         }
         bytes memory res = new bytes(32 - i);
-        for (uint j = 0; j < res.length; j++) {
+        for (uint256 j = 0; j < res.length; j++) {
             res[j] = b[i++];
         }
         return res;
@@ -155,12 +172,16 @@ library RLPEncode {
      * @param _src Source location.
      * @param _len Length of memory to copy.
      */
-    function memcpy(uint _dest, uint _src, uint _len) private pure {
-        uint dest = _dest;
-        uint src = _src;
-        uint len = _len;
+    function memcpy(
+        uint256 _dest,
+        uint256 _src,
+        uint256 _len
+    ) private pure {
+        uint256 dest = _dest;
+        uint256 src = _src;
+        uint256 len = _len;
 
-        for(; len >= 32; len -= 32) {
+        for (; len >= 32; len -= 32) {
             assembly {
                 mstore(dest, mload(src))
             }
@@ -168,7 +189,7 @@ library RLPEncode {
             src += 32;
         }
 
-        uint mask = 256 ** (32 - len) - 1;
+        uint256 mask = 256**(32 - len) - 1;
         assembly {
             let srcpart := and(mload(src), not(mask))
             let destpart := and(mload(dest), mask)
@@ -187,21 +208,25 @@ library RLPEncode {
             return new bytes(0);
         }
 
-        uint len;
-        uint i = 0;
+        uint256 len;
+        uint256 i = 0;
         for (; i < _list.length; i++) {
             len += _list[i].length;
         }
 
         bytes memory flattened = new bytes(len);
-        uint flattenedPtr;
-        assembly { flattenedPtr := add(flattened, 0x20) }
+        uint256 flattenedPtr;
+        assembly {
+            flattenedPtr := add(flattened, 0x20)
+        }
 
-        for(i = 0; i < _list.length; i++) {
+        for (i = 0; i < _list.length; i++) {
             bytes memory item = _list[i];
-            
-            uint listPtr;
-            assembly { listPtr := add(item, 0x20)}
+
+            uint256 listPtr;
+            assembly {
+                listPtr := add(item, 0x20)
+            }
 
             memcpy(flattenedPtr, listPtr, item.length);
             flattenedPtr += _list[i].length;
@@ -217,7 +242,11 @@ library RLPEncode {
      * @param _postBytes Second byte string.
      * @return Both byte string combined.
      */
-    function concat(bytes memory _preBytes, bytes memory _postBytes) private pure returns (bytes memory) {
+    function concat(bytes memory _preBytes, bytes memory _postBytes)
+        private
+        pure
+        returns (bytes memory)
+    {
         bytes memory tempBytes;
 
         assembly {
@@ -253,10 +282,13 @@ library RLPEncode {
                 mstore(mc, mload(cc))
             }
 
-            mstore(0x40, and(
-              add(add(end, iszero(add(length, mload(_preBytes)))), 31),
-              not(31)
-            ))
+            mstore(
+                0x40,
+                and(
+                    add(add(end, iszero(add(length, mload(_preBytes)))), 31),
+                    not(31)
+                )
+            )
         }
 
         return tempBytes;

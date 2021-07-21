@@ -10,10 +10,9 @@ pragma solidity ^0.7;
 import "./lib/RLPReader.sol";
 import "./lib/RLPEncode.sol";
 
-
 library EthereumParser {
     using RLPReader for bytes;
-    using RLPReader for uint;
+    using RLPReader for uint256;
     using RLPReader for RLPReader.RLPItem;
     using RLPReader for RLPReader.Iterator;
 
@@ -21,31 +20,34 @@ library EthereumParser {
     using RLPEncode for bytes[];
 
     struct BlockHeader {
-        uint parentHash;
-        uint sha3Uncles;
+        uint256 parentHash;
+        uint256 sha3Uncles;
         address miner;
-        uint stateRoot;
-        uint transactionsRoot;
-        uint receiptsRoot;
+        uint256 stateRoot;
+        uint256 transactionsRoot;
+        uint256 receiptsRoot;
         bytes logsBloom;
-        uint difficulty;
-        uint number;
-        uint gasLimit;
-        uint gasUsed;
-        uint timestamp;
+        uint256 difficulty;
+        uint256 number;
+        uint256 gasLimit;
+        uint256 gasUsed;
+        uint256 timestamp;
         bytes extraData;
-        uint mixHash;
-        uint nonce;
+        uint256 mixHash;
+        uint256 nonce;
     }
-
 
     /**
      * Parse RLP-encoded block header into BlockHeader data structure
      *  @param _rlpHeader: RLP-encoded block header with data fields order as defined in the BlockHeader struct
      **/
-    function parseBlockHeader(bytes memory _rlpHeader) pure internal returns (BlockHeader memory header) {    
+    function parseBlockHeader(bytes memory _rlpHeader)
+        internal
+        pure
+        returns (BlockHeader memory header)
+    {
         RLPReader.Iterator memory it = _rlpHeader.toRlpItem().iterator();
-        uint idx;
+        uint256 idx;
         while (it.hasNext()) {
             if (idx == 0) header.parentHash = it.next().toUint();
             else if (idx == 1) header.sha3Uncles = it.next().toUint();
@@ -69,29 +71,37 @@ library EthereumParser {
         return header;
     }
 
-    function calcBlockHeaderHash(bytes memory _rlpHeader) pure internal returns (uint){
-        return uint(keccak256(_rlpHeader));
+    function calcBlockHeaderHash(bytes memory _rlpHeader)
+        internal
+        pure
+        returns (uint256)
+    {
+        return uint256(keccak256(_rlpHeader));
     }
 
-    function calcBlockSealHash(bytes memory _rlpHeader) pure internal returns (uint){
+    function calcBlockSealHash(bytes memory _rlpHeader)
+        internal
+        pure
+        returns (uint256)
+    {
         bytes[] memory rlpFields = new bytes[](13);
         RLPReader.Iterator memory it = _rlpHeader.toRlpItem().iterator();
-        uint idx = 0;
+        uint256 idx = 0;
         while (it.hasNext() && idx < 13) {
             rlpFields[idx] = it.next().toRlpBytes();
             idx++;
         }
 
         bytes memory toSealRlpData = rlpFields.encodeList();
-        return uint(keccak256(toSealRlpData));
+        return uint256(keccak256(toSealRlpData));
     }
 
     struct Transaction {
-        uint nonce;
-        uint gasPrice;
-        uint gas;
+        uint256 nonce;
+        uint256 gasPrice;
+        uint256 gas;
         address to;
-        uint value;
+        uint256 value;
         bytes input;
         uint8 v;
         bytes32 r;
@@ -99,11 +109,15 @@ library EthereumParser {
     }
 
     /**
-   * @param _rlpTx: RLP-encoded tx with data fields order as defined in the Tx struct
-   **/
-    function parseTx(bytes memory _rlpTx) pure internal returns (Transaction memory trans){
+     * @param _rlpTx: RLP-encoded tx with data fields order as defined in the Tx struct
+     **/
+    function parseTx(bytes memory _rlpTx)
+        internal
+        pure
+        returns (Transaction memory trans)
+    {
         RLPReader.Iterator memory it = _rlpTx.toRlpItem().iterator();
-        uint idx;
+        uint256 idx;
         while (it.hasNext()) {
             if (idx == 0) trans.nonce = it.next().toUint();
             else if (idx == 1) trans.gasPrice = it.next().toUint();
@@ -119,5 +133,4 @@ library EthereumParser {
         }
         return trans;
     }
-
 }

@@ -42,8 +42,8 @@ contract HarmonyLightClientStorage {
         currentMMRTree = new MMRWrapper();
     }
 
-	function finalizeEpoch(uint256 epoch) public {
-		epochMMRTrees[epoch] = currentMMRTree;
-		currentMMRTree = new MMRWrapper();
-	}
+    function finalizeEpoch(uint256 epoch) public {
+        epochMMRTrees[epoch] = currentMMRTree;
+        currentMMRTree = new MMRWrapper();
+    }
 }

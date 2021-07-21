@@ -68,15 +68,19 @@ library MPT {
         bytes memory node = data.proof[data.proofIndex];
 
         if (data.keyIndex >= data.key.length) {
-            bytes memory item =
-                RLPReader.toRlpItem(node).toList()[16].toBytes();
+            bytes memory item = RLPReader
+            .toRlpItem(node)
+            .toList()[16]
+            .toBytes();
             if (keccak256(item) == keccak256(data.expectedValue)) {
                 return true;
             }
         } else {
             uint256 index = uint256(uint8(data.key[data.keyIndex]));
-            bytes memory _newExpectedRoot =
-                RLPReader.toRlpItem(node).toList()[index].toBytes();
+            bytes memory _newExpectedRoot = RLPReader
+            .toRlpItem(node)
+            .toList()[index]
+            .toBytes();
 
             if (!(_newExpectedRoot.length == 0)) {
                 data.expectedRoot = b2b32(_newExpectedRoot);
@@ -106,8 +110,12 @@ library MPT {
             // leaf even
             uint256 length = nodekey.length - 1;
             bytes memory actualKey = sliceTransform(nodekey, 33, length, false);
-            bytes memory restKey =
-                sliceTransform(data.key, 32 + data.keyIndex, length, false);
+            bytes memory restKey = sliceTransform(
+                data.key,
+                32 + data.keyIndex,
+                length,
+                false
+            );
             if (keccak256(data.expectedValue) == keccak256(nodevalue)) {
                 if (keccak256(actualKey) == keccak256(restKey)) return true;
                 if (keccak256(expandKeyEven(actualKey)) == keccak256(restKey))
@@ -115,15 +123,18 @@ library MPT {
             }
         } else if (prefix == 3) {
             // leaf odd
-            bytes memory actualKey =
-                sliceTransform(nodekey, 32, nodekey.length, true);
-            bytes memory restKey =
-                sliceTransform(
-                    data.key,
-                    32 + data.keyIndex,
-                    data.key.length - data.keyIndex,
-                    false
-                );
+            bytes memory actualKey = sliceTransform(
+                nodekey,
+                32,
+                nodekey.length,
+                true
+            );
+            bytes memory restKey = sliceTransform(
+                data.key,
+                32 + data.keyIndex,
+                data.key.length - data.keyIndex,
+                false
+            );
             if (keccak256(data.expectedValue) == keccak256(nodevalue)) {
                 if (keccak256(actualKey) == keccak256(restKey)) return true;
                 if (keccak256(expandKeyOdd(actualKey)) == keccak256(restKey))
@@ -132,15 +143,18 @@ library MPT {
         } else if (prefix == 0) {
             // extension even
             uint256 extensionLength = nodekey.length - 1;
-            bytes memory shared_nibbles =
-                sliceTransform(nodekey, 33, extensionLength, false);
-            bytes memory restKey =
-                sliceTransform(
-                    data.key,
-                    32 + data.keyIndex,
-                    extensionLength,
-                    false
-                );
+            bytes memory shared_nibbles = sliceTransform(
+                nodekey,
+                33,
+                extensionLength,
+                false
+            );
+            bytes memory restKey = sliceTransform(
+                data.key,
+                32 + data.keyIndex,
+                extensionLength,
+                false
+            );
             if (
                 keccak256(shared_nibbles) == keccak256(restKey) ||
                 keccak256(expandKeyEven(shared_nibbles)) == keccak256(restKey)
@@ -153,15 +167,18 @@ library MPT {
         } else if (prefix == 1) {
             // extension odd
             uint256 extensionLength = nodekey.length;
-            bytes memory shared_nibbles =
-                sliceTransform(nodekey, 32, extensionLength, true);
-            bytes memory restKey =
-                sliceTransform(
-                    data.key,
-                    32 + data.keyIndex,
-                    extensionLength,
-                    false
-                );
+            bytes memory shared_nibbles = sliceTransform(
+                nodekey,
+                32,
+                extensionLength,
+                true
+            );
+            bytes memory restKey = sliceTransform(
+                data.key,
+                32 + data.keyIndex,
+                extensionLength,
+                false
+            );
             if (
                 keccak256(shared_nibbles) == keccak256(restKey) ||
                 keccak256(expandKeyEven(shared_nibbles)) == keccak256(restKey)

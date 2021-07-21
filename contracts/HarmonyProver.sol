@@ -11,49 +11,53 @@ import "./lib/ECVerify.sol";
 import "./lib/MPT.sol";
 
 interface IHarmonyProver {
-    function lightClient() view external returns (address _lightClient);
+    function lightClient() external view returns (address _lightClient);
 
-    function verifyTrieProof(MPT.MerkleProof memory data) pure external returns (bool);
+    function verifyTrieProof(MPT.MerkleProof memory data)
+        external
+        pure
+        returns (bool);
 
-    function verifyHeader(
-        HarmonyParser.BlockHeader memory header
-    ) view external returns (bool valid, string memory reason);
+    function verifyHeader(HarmonyParser.BlockHeader memory header)
+        external
+        view
+        returns (bool valid, string memory reason);
 
     function verifyTransaction(
         HarmonyParser.BlockHeader memory header,
         MPT.MerkleProof memory txdata
-    ) view external returns (bool valid, string memory reason);
+    ) external view returns (bool valid, string memory reason);
 
     function verifyReceipt(
         HarmonyParser.BlockHeader memory header,
         MPT.MerkleProof memory receiptdata
-    ) view external returns (bool valid, string memory reason);
+    ) external view returns (bool valid, string memory reason);
 
     function verifyAccount(
         HarmonyParser.BlockHeader memory header,
         MPT.MerkleProof memory accountdata
-    ) view external returns (bool valid, string memory reason);
+    ) external view returns (bool valid, string memory reason);
 
     function verifyLog(
         MPT.MerkleProof memory receiptdata,
         bytes memory logdata,
         uint256 logIndex
-    ) view external returns (bool valid, string memory reason);
+    ) external view returns (bool valid, string memory reason);
 
     function verifyTransactionAndStatus(
         HarmonyParser.BlockHeader memory header,
         MPT.MerkleProof memory receiptdata
-    ) view external returns (bool valid, string memory reason);
+    ) external view returns (bool valid, string memory reason);
 
     function verifyCode(
         HarmonyParser.BlockHeader memory header,
         MPT.MerkleProof memory accountdata
-    ) view external returns (bool valid, string memory reason);
+    ) external view returns (bool valid, string memory reason);
 
     function verifyStorage(
         MPT.MerkleProof memory accountProof,
         MPT.MerkleProof memory storageProof
-    ) view external returns (bool valid, string memory reason);
+    ) external view returns (bool valid, string memory reason);
 }
 
 contract HarmonyProver is IHarmonyProver {
@@ -140,8 +144,8 @@ contract HarmonyProver is IHarmonyProver {
         bytes memory logdata,
         uint256 logIndex
     ) public pure override returns (bool valid, string memory reason) {
-        HarmonyParser.TransactionReceiptTrie memory receipt =
-            HarmonyParser.toReceipt(receiptdata.expectedValue);
+        HarmonyParser.TransactionReceiptTrie memory receipt = HarmonyParser
+        .toReceipt(receiptdata.expectedValue);
 
         if (
             keccak256(logdata) ==
@@ -166,8 +170,9 @@ contract HarmonyProver is IHarmonyProver {
         MPT.MerkleProof memory accountProof,
         MPT.MerkleProof memory storageProof
     ) public pure override returns (bool valid, string memory reason) {
-        HarmonyParser.Account memory account =
-            HarmonyParser.toAccount(accountProof.expectedValue);
+        HarmonyParser.Account memory account = HarmonyParser.toAccount(
+            accountProof.expectedValue
+        );
 
         if (account.storageRoot != storageProof.expectedRoot)
             return (false, "verifyStorage - different trie roots");
@@ -182,9 +187,12 @@ contract HarmonyProver is IHarmonyProver {
         MPT.MerkleProof memory txdata,
         uint256 chainId
     ) public pure returns (address sender) {
-        HarmonyParser.Transaction memory transaction =
-            HarmonyParser.toTransaction(txdata.expectedValue);
-        bytes memory txraw = HarmonyParser.getTransactionRaw(transaction, chainId);
+        HarmonyParser.Transaction memory transaction = HarmonyParser
+        .toTransaction(txdata.expectedValue);
+        bytes memory txraw = HarmonyParser.getTransactionRaw(
+            transaction,
+            chainId
+        );
 
         bytes32 message_hash = keccak256(txraw);
         sender = ECVerify.ecverify(
@@ -235,11 +243,9 @@ contract HarmonyProver is IHarmonyProver {
         return HarmonyParser.getLog(log);
     }
 
-    function getReceiptRlpData(HarmonyParser.TransactionReceiptTrie memory receipt)
-        public
-        pure
-        returns (bytes memory data)
-    {
+    function getReceiptRlpData(
+        HarmonyParser.TransactionReceiptTrie memory receipt
+    ) public pure returns (bytes memory data) {
         return HarmonyParser.getReceiptRlpData(receipt);
     }
 

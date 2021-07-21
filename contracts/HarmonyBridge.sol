@@ -7,9 +7,7 @@ import "./lib/RLPReader.sol";
 import {EthereumProver} from "./EthereumProver.sol";
 import {IERC20} from "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
 import {ERC20} from "openzeppelin-solidity/contracts/token/ERC20/ERC20.sol";
-import {
-    SafeERC20
-} from "openzeppelin-solidity/contracts/token/ERC20/SafeERC20.sol";
+import {SafeERC20} from "openzeppelin-solidity/contracts/token/ERC20/SafeERC20.sol";
 import {Ownable} from "openzeppelin-solidity/contracts/access/Ownable.sol";
 import {BridgedToken} from "./BridgedToken.sol";
 
@@ -66,7 +64,10 @@ contract HarmonyBridge is Ownable {
         return (TxTokens.length, RxTokens.length);
     }
 
-    function changeLightClient(EthereumLightClient newClient) external onlyOwner {
+    function changeLightClient(EthereumLightClient newClient)
+        external
+        onlyOwner
+    {
         lightclient = newClient;
     }
 
@@ -124,8 +125,9 @@ contract HarmonyBridge is Ownable {
             lightclient.VerifyReceiptsHash(blockHash, rootHash),
             "wrong receipt hash"
         );
-        bytes32 receiptHash =
-            keccak256(abi.encodePacked(blockHash, rootHash, mptkey));
+        bytes32 receiptHash = keccak256(
+            abi.encodePacked(blockHash, rootHash, mptkey)
+        );
         require(spentReceipt[receiptHash] == false, "double spent!");
         bytes memory rlpdata = EthereumProver.MPTProof(rootHash, mptkey, proof); // double spending check
         spentReceipt[receiptHash] = true;
@@ -181,8 +183,10 @@ contract HarmonyBridge is Ownable {
     function onBurnEvent(bytes32[] memory topics, bytes memory Data) private {
         address token = address(uint160(uint256(topics[1])));
         //address sender = address(uint160(uint256(topics[2])));
-        (uint256 amount, address recipient) =
-            abi.decode(Data, (uint256, address));
+        (uint256 amount, address recipient) = abi.decode(
+            Data,
+            (uint256, address)
+        );
         IERC20 lockedToken = TxMappedInv[token];
         lockedToken.safeTransfer(recipient, amount);
     }
@@ -190,8 +194,10 @@ contract HarmonyBridge is Ownable {
     function onLockEvent(bytes32[] memory topics, bytes memory Data) private {
         address token = address(uint160(uint256(topics[1])));
         //address sender = address(uint160(uint256(topics[2])));
-        (uint256 amount, address recipient) =
-            abi.decode(Data, (uint256, address));
+        (uint256 amount, address recipient) = abi.decode(
+            Data,
+            (uint256, address)
+        );
         BridgedToken mintToken = RxMapped[token];
         require(address(mintToken) != address(0));
         mintToken.mint(recipient, amount);
@@ -207,11 +213,16 @@ contract HarmonyBridge is Ownable {
             "bridge already exist"
         );
         uint8 decimals = uint8(uint256(topics[2]));
-        (string memory name, string memory symbol) =
-            abi.decode(Data, (string, string));
+        (string memory name, string memory symbol) = abi.decode(
+            Data,
+            (string, string)
+        );
         bytes32 salt = bytes32(uint256(uint160(tokenReq)));
-        BridgedToken mintAddress =
-            new BridgedToken{salt: salt}(name, symbol, decimals);
+        BridgedToken mintAddress = new BridgedToken{salt: salt}(
+            name,
+            symbol,
+            decimals
+        );
         RxMappedInv[address(mintAddress)] = tokenReq;
         RxMapped[tokenReq] = mintAddress;
         RxTokens.push(mintAddress);

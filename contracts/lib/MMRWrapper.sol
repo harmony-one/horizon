@@ -6,7 +6,7 @@ import "./RLPReader.sol";
 
 contract MMRWrapper {
     using RLPReader for RLPReader.RLPItem;
-	using RLPReader for bytes;
+    using RLPReader for bytes;
     using MMR for MMR.Tree;
 
     MMR.Tree mTree;
@@ -14,7 +14,7 @@ contract MMRWrapper {
     function append(bytes memory data) public {
         mTree.append(data);
     }
-    
+
     function appendHash(bytes32 data) public {
         mTree.appendHash(data);
     }
@@ -53,7 +53,7 @@ contract MMRWrapper {
     }
 
     function addTree(bytes32[] memory itemHashes, uint256 width) public {
-        for(uint i = 0; i < itemHashes.length; i++) {
+        for (uint256 i = 0; i < itemHashes.length; i++) {
             mTree.updateTree(itemHashes[i]);
         }
         mTree.updateRoot(width);

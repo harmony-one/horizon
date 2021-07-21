@@ -4,48 +4,45 @@ pragma solidity ^0.7;
 /**
  * The ClientStorage contract contains underlying data for EthNtyRelay contract
  */
- contract EthereumLightClientStorage {
- 	struct StoredBlockHeader {
- 		uint parentHash;
- 		uint stateRoot;
- 		uint transactionsRoot;
- 		uint receiptsRoot;
- 		uint number;
- 		uint difficulty;
- 		uint time;
- 		uint hash;
- 	}
+contract EthereumLightClientStorage {
+    struct StoredBlockHeader {
+        uint256 parentHash;
+        uint256 stateRoot;
+        uint256 transactionsRoot;
+        uint256 receiptsRoot;
+        uint256 number;
+        uint256 difficulty;
+        uint256 time;
+        uint256 hash;
+    }
 
- 	// The first block header hash
- 	uint public firstBlock;
+    // The first block header hash
+    uint256 public firstBlock;
 
     // Blocks data, in the form: blockHeaderHash => BlockHeader
-    mapping (uint => StoredBlockHeader) public blocks;
+    mapping(uint256 => StoredBlockHeader) public blocks;
     // Block existing map, in the form: blockHeaderHash => bool
-    mapping (uint => bool) public blockExisting;
+    mapping(uint256 => bool) public blockExisting;
     // Blocks in 'Verified' state
-    mapping (uint => bool) public verifiedBlocks;
+    mapping(uint256 => bool) public verifiedBlocks;
     // Blocks in 'Finalized' state
-    mapping (uint => bool) public finalizedBlocks;
+    mapping(uint256 => bool) public finalizedBlocks;
 
     // Valid relayed blocks for a block height, in the form: blockNumber => blockHeaderHash[]
-    mapping (uint => uint[]) public blocksByHeight;
+    mapping(uint256 => uint256[]) public blocksByHeight;
     // Block height existing map, in the form: blockNumber => bool
-    mapping (uint => bool) public blocksByHeightExisting;
+    mapping(uint256 => bool) public blocksByHeightExisting;
 
     // Max block height stored
-    uint public blockHeightMax;
+    uint256 public blockHeightMax;
 
- 	// Block header hash that points to longest chain head
- 	// (please note that 'longest' chain is based on total difficulty)
- 	// uint public longestChainHead;
+    // Block header hash that points to longest chain head
+    // (please note that 'longest' chain is based on total difficulty)
+    // uint public longestChainHead;
 
-	 // Longest branch head of each checkpoint, in the form: (checkpoint block hash) => (head block hash)
-	 // (note that 'longest branch' means the branch which has biggest cumulative difficulty from checkpoint)
-	 mapping(uint => uint) public longestBranchHead;
+    // Longest branch head of each checkpoint, in the form: (checkpoint block hash) => (head block hash)
+    // (note that 'longest branch' means the branch which has biggest cumulative difficulty from checkpoint)
+    mapping(uint256 => uint256) public longestBranchHead;
 
- 	constructor() public {
-
- 	}
- }
-
+    constructor() public {}
+}

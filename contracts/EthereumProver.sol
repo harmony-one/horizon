@@ -38,8 +38,7 @@ library EthereumProver {
         assembly {
             b := byte(0, mload(memPtr))
         }
-        return
-            b == 0x80; /* empty byte string */
+        return b == 0x80; /* empty byte string */
     }
 
     function decodeNibbles(
@@ -204,8 +203,11 @@ library EthereumProver {
                     node[0].toBytes()
                 );
 
-                uint256 prefixLength =
-                    sharedPrefixLength(mptKeyOffset, mptKey, nodeKey);
+                uint256 prefixLength = sharedPrefixLength(
+                    mptKeyOffset,
+                    mptKey,
+                    nodeKey
+                );
                 mptKeyOffset += prefixLength;
 
                 if (prefixLength < nodeKey.length) {

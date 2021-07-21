@@ -154,10 +154,14 @@ library HarmonyParser {
             if (idx == 0) header.parentHash = bytes32(it.next().toUint());
             else if (idx == 1) header.miner = it.next().toAddress();
             else if (idx == 2) header.stateRoot = bytes32(it.next().toUint());
-            else if (idx == 3) header.transactionsRoot = bytes32(it.next().toUint());
-            else if (idx == 4) header.receiptsRoot = bytes32(it.next().toUint());
-            else if (idx == 5) header.outgoingReceiptsRoot = bytes32(it.next().toUint());
-            else if (idx == 6) header.incomingReceiptsRoot = bytes32(it.next().toUint());
+            else if (idx == 3)
+                header.transactionsRoot = bytes32(it.next().toUint());
+            else if (idx == 4)
+                header.receiptsRoot = bytes32(it.next().toUint());
+            else if (idx == 5)
+                header.outgoingReceiptsRoot = bytes32(it.next().toUint());
+            else if (idx == 6)
+                header.incomingReceiptsRoot = bytes32(it.next().toUint());
             else if (idx == 7) header.logsBloom = it.next().toBytes();
             else if (idx == 8) header.number = it.next().toUint();
             else if (idx == 9) header.gasLimit = it.next().toUint();

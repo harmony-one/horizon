@@ -6,7 +6,10 @@ import "./HarmonyParser.sol";
 
 interface IHarmonyLightClient {
     // function blockHashes(uint64 blockNumber) external view returns (bytes32);
-    function getConfirmedBlockHash(uint256 number) view external returns (bytes32 hash);
+    function getConfirmedBlockHash(uint256 number)
+        external
+        view
+        returns (bytes32 hash);
 }
 
 contract HarmonyLightClient is IHarmonyLightClient {
@@ -17,7 +20,9 @@ contract HarmonyLightClient is IHarmonyLightClient {
     bytes public sig;
 
     function addBlock(bytes memory rlpHeader, bytes memory keys) public {
-        HarmonyParser.BlockHeader memory header = HarmonyParser.toBlockHeader(rlpHeader);
+        HarmonyParser.BlockHeader memory header = HarmonyParser.toBlockHeader(
+            rlpHeader
+        );
         mmrRoot = header.mmrRoot;
         blockHash = uint256(keccak256(rlpHeader));
         blockHash1 = keccak256(rlpHeader);

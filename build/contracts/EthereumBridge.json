@@ -1,0 +1,143 @@
+{
+  "contractName": "EthereumBridge",
+  "abi": [],
+  "metadata": "{\"compiler\":{\"version\":\"0.7.3+commit.9bfce1f6\"},\"language\":\"Solidity\",\"output\":{\"abi\":[],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"project:/contracts/EthereumBridge.sol\":\"EthereumBridge\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"project:/contracts/EthereumBridge.sol\":{\"keccak256\":\"0xb01d186b17035368958fb4e397018554cc5fbdd7cbdcfd7fb882eaceca5ad257\",\"license\":\"UNLICENSED\",\"urls\":[\"bzz-raw://40f6d5fe11bf37bca0195221928121b4ec3f4c4fc2fdb1a85c95860c98843073\",\"dweb:/ipfs/QmR2BJwiYi8zxrd9y643fiv7aDTPcVQQWtuZN6AJGzFFwA\"]}},\"version\":1}",
+  "bytecode": "0x6080604052348015600f57600080fd5b50603f80601d6000396000f3fe6080604052600080fdfea2646970667358221220cd32265d051b3c644e62b0dec8fb6af36f4d01f087cfe7dbc689e772f1b6d50564736f6c63430007030033",
+  "deployedBytecode": "0x6080604052600080fdfea2646970667358221220cd32265d051b3c644e62b0dec8fb6af36f4d01f087cfe7dbc689e772f1b6d50564736f6c63430007030033",
+  "immutableReferences": {},
+  "generatedSources": [],
+  "deployedGeneratedSources": [],
+  "sourceMap": "96:32:11:-:0;;;;;;;;;;;;;;;;;;;",
+  "deployedSourceMap": "96:32:11:-:0;;;;;",
+  "source": "// SPDX-License-Identifier: UNLICENSED\npragma solidity ^0.7;\npragma experimental ABIEncoderV2;\n\ncontract EthereumBridge {\n    \n}",
+  "sourcePath": "/Users/gupadhyaya/go/src/github.com/harmony-one/horizon/contracts/EthereumBridge.sol",
+  "ast": {
+    "absolutePath": "project:/contracts/EthereumBridge.sol",
+    "exportedSymbols": {
+      "EthereumBridge": [
+        2178
+      ]
+    },
+    "id": 2179,
+    "license": "UNLICENSED",
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 2176,
+        "literals": [
+          "solidity",
+          "^",
+          "0.7"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "39:21:11"
+      },
+      {
+        "id": 2177,
+        "literals": [
+          "experimental",
+          "ABIEncoderV2"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "61:33:11"
+      },
+      {
+        "abstract": false,
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "fullyImplemented": true,
+        "id": 2178,
+        "linearizedBaseContracts": [
+          2178
+        ],
+        "name": "EthereumBridge",
+        "nodeType": "ContractDefinition",
+        "nodes": [],
+        "scope": 2179,
+        "src": "96:32:11"
+      }
+    ],
+    "src": "39:89:11"
+  },
+  "legacyAST": {
+    "attributes": {
+      "absolutePath": "project:/contracts/EthereumBridge.sol",
+      "exportedSymbols": {
+        "EthereumBridge": [
+          2178
+        ]
+      },
+      "license": "UNLICENSED"
+    },
+    "children": [
+      {
+        "attributes": {
+          "literals": [
+            "solidity",
+            "^",
+            "0.7"
+          ]
+        },
+        "id": 2176,
+        "name": "PragmaDirective",
+        "src": "39:21:11"
+      },
+      {
+        "attributes": {
+          "literals": [
+            "experimental",
+            "ABIEncoderV2"
+          ]
+        },
+        "id": 2177,
+        "name": "PragmaDirective",
+        "src": "61:33:11"
+      },
+      {
+        "attributes": {
+          "abstract": false,
+          "baseContracts": [
+            null
+          ],
+          "contractDependencies": [
+            null
+          ],
+          "contractKind": "contract",
+          "fullyImplemented": true,
+          "linearizedBaseContracts": [
+            2178
+          ],
+          "name": "EthereumBridge",
+          "nodes": [
+            null
+          ],
+          "scope": 2179
+        },
+        "id": 2178,
+        "name": "ContractDefinition",
+        "src": "96:32:11"
+      }
+    ],
+    "id": 2179,
+    "name": "SourceUnit",
+    "src": "39:89:11"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.7.3+commit.9bfce1f6.Emscripten.clang"
+  },
+  "networks": {},
+  "schemaVersion": "3.4.1",
+  "updatedAt": "2021-07-21T20:39:02.124Z",
+  "devdoc": {
+    "kind": "dev",
+    "methods": {},
+    "version": 1
+  },
+  "userdoc": {
+    "kind": "user",
+    "methods": {},
+    "version": 1
+  }
+}

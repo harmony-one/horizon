@@ -4,8 +4,8 @@ const rlp = require("rlp");
 const Web3 = require("web3");
 const bigInt = require("big-integer");
 const { ChainID, ChainType, hexToNumber } = require("@harmony-js/utils");
-const web3 = new Web3(new Web3.providers.HttpProvider(process.env.TESTNET_URL));
-const hmy = new Harmony(process.env.TESTNET_URL, {
+const web3 = new Web3(new Web3.providers.HttpProvider(process.env.LOCALNET));
+const hmy = new Harmony(process.env.LOCALNET, {
   chainType: ChainType.Harmony,
   chainId: Number(process.env.HMY_CHAIN_ID),
 });

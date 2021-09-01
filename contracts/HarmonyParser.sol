@@ -149,6 +149,10 @@ library HarmonyParser {
         returns (BlockHeader memory header)
     {
         RLPReader.Iterator memory it = rlpHeader.toRlpItem().iterator();
+        // skip two dummy header fields
+        it.next();
+        it.next();
+        it = it.next().iterator();
         uint256 idx;
         while (it.hasNext()) {
             if (idx == 0) header.parentHash = bytes32(it.next().toUint());

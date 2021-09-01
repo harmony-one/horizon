@@ -21,15 +21,19 @@ contract EthereumLightClientStorage {
 
     // Blocks data, in the form: blockHeaderHash => BlockHeader
     mapping(uint256 => StoredBlockHeader) public blocks;
+
     // Block existing map, in the form: blockHeaderHash => bool
     mapping(uint256 => bool) public blockExisting;
+
     // Blocks in 'Verified' state
     mapping(uint256 => bool) public verifiedBlocks;
+
     // Blocks in 'Finalized' state
     mapping(uint256 => bool) public finalizedBlocks;
 
     // Valid relayed blocks for a block height, in the form: blockNumber => blockHeaderHash[]
     mapping(uint256 => uint256[]) public blocksByHeight;
+
     // Block height existing map, in the form: blockNumber => bool
     mapping(uint256 => bool) public blocksByHeightExisting;
 

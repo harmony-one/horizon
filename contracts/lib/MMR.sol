@@ -228,8 +228,11 @@ library MMR {
             "Received invalid number of peaks"
         );
         return
+            // keccak256(
+            //     abi.encodePacked(size, keccak256(abi.encodePacked(size, peaks)))
+            // );
             keccak256(
-                abi.encodePacked(size, keccak256(abi.encodePacked(size, peaks)))
+                abi.encodePacked(peaks)
             );
     }
 
@@ -328,15 +331,25 @@ library MMR {
         bytes32[] memory peaks,
         bytes32[] memory siblings
     ) public pure returns (bool) {
+        bytes32 value32;
+
+        assembly {
+            value32 := mload(add(value, 32))
+        }
         uint256 size = getSize(width);
         require(size >= index, "Index is out of range");
         // Check the root equals the peak bagging hash
         require(
             root ==
+                // keccak256(
+                //     abi.encodePacked(
+                //         size,
+                //         keccak256(abi.encodePacked(size, peaks))
+                //     )
+                // ),
                 keccak256(
                     abi.encodePacked(
-                        size,
-                        keccak256(abi.encodePacked(size, peaks))
+                        peaks
                     )
                 ),
             "Invalid root hash from the peaks"
@@ -347,9 +360,9 @@ library MMR {
         bytes32 targetPeak;
         uint256[] memory peakIndexes = getPeakIndexes(width);
         for (uint256 i = 0; i < peakIndexes.length; i++) {
-            if (peakIndexes[i] >= index) {
+            if (peakIndexes[i]-1 >= index) {
                 targetPeak = peaks[i];
-                cursor = peakIndexes[i];
+                cursor = peakIndexes[i]-1;
                 break;
             }
         }
@@ -368,8 +381,8 @@ library MMR {
                 break;
             } else {
                 // On the parent node. Go left or right
-                (left, right) = getChildren(cursor);
-                cursor = index > left ? right : left;
+                (left, right) = getChildren(cursor+1);
+                cursor = index > (left-1) ? (right-1) : (left-1);
                 continue;
             }
         }
@@ -381,7 +394,7 @@ library MMR {
             cursor = path[height];
             if (height == 0) {
                 // cursor is on the leaf
-                node = hashLeaf(cursor, keccak256(value));
+                node = value32;//hashLeaf(cursor, keccak256(value));
             } else if (cursor - 1 == path[height - 1]) {
                 // cursor is on a parent and a sibling is on the left
                 node = hashBranch(siblings[height - 1], node);
@@ -419,7 +432,8 @@ library MMR {
         pure
         returns (bytes32)
     {
-        return keccak256(abi.encodePacked(index, dataHash));
+        // return keccak256(abi.encodePacked(index, dataHash));
+        return keccak256(abi.encodePacked(dataHash));
     }
 
     /**

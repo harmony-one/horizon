@@ -206,36 +206,36 @@
       "type": "function"
     }
   ],
-  "metadata": "{\"compiler\":{\"version\":\"0.7.3+commit.9bfce1f6\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"blockExisting\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"blockHeightMax\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"blocks\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"parentHash\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"stateRoot\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"transactionsRoot\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"receiptsRoot\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"number\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"difficulty\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"time\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"hash\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"blocksByHeight\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"blocksByHeightExisting\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"finalizedBlocks\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"firstBlock\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"longestBranchHead\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"verifiedBlocks\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"notice\":\"The ClientStorage contract contains underlying data for EthNtyRelay contract\",\"version\":1}},\"settings\":{\"compilationTarget\":{\"project:/contracts/EthereumLightClientStorage.sol\":\"EthereumLightClientStorage\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"project:/contracts/EthereumLightClientStorage.sol\":{\"keccak256\":\"0xdfa38bf11736026bd3d2c648d952de3d0b6be83a6238896f3149b449199ac58c\",\"license\":\"UNLICENSED\",\"urls\":[\"bzz-raw://e2d260f87bb09559fe973888ce4703b2aef34868d7c916693639843ab0cad544\",\"dweb:/ipfs/QmaywGiEKnra7thq6wfjDwh2nr9ktGfV2KTLBb6tyxy6EA\"]}},\"version\":1}",
-  "bytecode": "0x608060405234801561001057600080fd5b506102fe806100206000396000f3fe608060405234801561001057600080fd5b50600436106100935760003560e01c8063a8b00a3411610066578063a8b00a3414610123578063b1d3e15914610140578063d072e8d71461015d578063dbad417c14610165578063f25b3f991461018257610093565b8063231b0268146100985780633c6c6b73146100b257806341e63749146100d557806392947cc014610106575b600080fd5b6100a06101e0565b60408051918252519081900360200190f35b6100a0600480360360408110156100c857600080fd5b50803590602001356101e6565b6100f2600480360360208110156100eb57600080fd5b5035610214565b604080519115158252519081900360200190f35b6100a06004803603602081101561011c57600080fd5b5035610229565b6100f26004803603602081101561013957600080fd5b503561023b565b6100f26004803603602081101561015657600080fd5b5035610250565b6100a0610265565b6100f26004803603602081101561017b57600080fd5b503561026b565b61019f6004803603602081101561019857600080fd5b5035610280565b604080519889526020890197909752878701959095526060870193909352608086019190915260a085015260c084015260e083015251908190036101000190f35b60005481565b600560205281600052604060002081815481106101ff57fe5b90600052602060002001600091509150505481565b60026020526000908152604090205460ff1681565b60086020526000908152604090205481565b60046020526000908152604090205460ff1681565b60036020526000908152604090205460ff1681565b60075481565b60066020526000908152604090205460ff1681565b6001602052806000526040600020600091509050806000015490806001015490806002015490806003015490806004015490806005015490806006015490806007015490508856fea2646970667358221220edf1f221c78c96e9329a119b60be35a180648d5c7baa0c70405978ea9162826864736f6c63430007030033",
-  "deployedBytecode": "0x608060405234801561001057600080fd5b50600436106100935760003560e01c8063a8b00a3411610066578063a8b00a3414610123578063b1d3e15914610140578063d072e8d71461015d578063dbad417c14610165578063f25b3f991461018257610093565b8063231b0268146100985780633c6c6b73146100b257806341e63749146100d557806392947cc014610106575b600080fd5b6100a06101e0565b60408051918252519081900360200190f35b6100a0600480360360408110156100c857600080fd5b50803590602001356101e6565b6100f2600480360360208110156100eb57600080fd5b5035610214565b604080519115158252519081900360200190f35b6100a06004803603602081101561011c57600080fd5b5035610229565b6100f26004803603602081101561013957600080fd5b503561023b565b6100f26004803603602081101561015657600080fd5b5035610250565b6100a0610265565b6100f26004803603602081101561017b57600080fd5b503561026b565b61019f6004803603602081101561019857600080fd5b5035610280565b604080519889526020890197909752878701959095526060870193909352608086019190915260a085015260c084015260e083015251908190036101000190f35b60005481565b600560205281600052604060002081815481106101ff57fe5b90600052602060002001600091509150505481565b60026020526000908152604090205460ff1681565b60086020526000908152604090205481565b60046020526000908152604090205460ff1681565b60036020526000908152604090205460ff1681565b60075481565b60066020526000908152604090205460ff1681565b6001602052806000526040600020600091509050806000015490806001015490806002015490806003015490806004015490806005015490806006015490806007015490508856fea2646970667358221220edf1f221c78c96e9329a119b60be35a180648d5c7baa0c70405978ea9162826864736f6c63430007030033",
+  "metadata": "{\"compiler\":{\"version\":\"0.7.3+commit.9bfce1f6\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"blockExisting\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"blockHeightMax\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"blocks\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"parentHash\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"stateRoot\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"transactionsRoot\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"receiptsRoot\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"number\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"difficulty\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"time\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"hash\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"blocksByHeight\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"blocksByHeightExisting\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"finalizedBlocks\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"firstBlock\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"longestBranchHead\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"verifiedBlocks\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"notice\":\"The ClientStorage contract contains underlying data for EthNtyRelay contract\",\"version\":1}},\"settings\":{\"compilationTarget\":{\"project:/contracts/EthereumLightClientStorage.sol\":\"EthereumLightClientStorage\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"project:/contracts/EthereumLightClientStorage.sol\":{\"keccak256\":\"0x218a60373fd92e2a6f153b0ba805dd9761f85b2bc5621b803e4850cf38f48610\",\"license\":\"UNLICENSED\",\"urls\":[\"bzz-raw://65067737cac04e145f528ce52a07c2741723c11cfd6840e347551ee41858ccdc\",\"dweb:/ipfs/Qmbg5nGmwDrXhkzkFu43HX8tF3ref1Tee77xiq5pqZJMXa\"]}},\"version\":1}",
+  "bytecode": "0x608060405234801561001057600080fd5b506102fe806100206000396000f3fe608060405234801561001057600080fd5b50600436106100935760003560e01c8063a8b00a3411610066578063a8b00a3414610123578063b1d3e15914610140578063d072e8d71461015d578063dbad417c14610165578063f25b3f991461018257610093565b8063231b0268146100985780633c6c6b73146100b257806341e63749146100d557806392947cc014610106575b600080fd5b6100a06101e0565b60408051918252519081900360200190f35b6100a0600480360360408110156100c857600080fd5b50803590602001356101e6565b6100f2600480360360208110156100eb57600080fd5b5035610214565b604080519115158252519081900360200190f35b6100a06004803603602081101561011c57600080fd5b5035610229565b6100f26004803603602081101561013957600080fd5b503561023b565b6100f26004803603602081101561015657600080fd5b5035610250565b6100a0610265565b6100f26004803603602081101561017b57600080fd5b503561026b565b61019f6004803603602081101561019857600080fd5b5035610280565b604080519889526020890197909752878701959095526060870193909352608086019190915260a085015260c084015260e083015251908190036101000190f35b60005481565b600560205281600052604060002081815481106101ff57fe5b90600052602060002001600091509150505481565b60026020526000908152604090205460ff1681565b60086020526000908152604090205481565b60046020526000908152604090205460ff1681565b60036020526000908152604090205460ff1681565b60075481565b60066020526000908152604090205460ff1681565b6001602052806000526040600020600091509050806000015490806001015490806002015490806003015490806004015490806005015490806006015490806007015490508856fea264697066735822122005f02e42a8750dc014fd2d3bd89d6a86554b4d90b9a081f6276c382b04bca4bc64736f6c63430007030033",
+  "deployedBytecode": "0x608060405234801561001057600080fd5b50600436106100935760003560e01c8063a8b00a3411610066578063a8b00a3414610123578063b1d3e15914610140578063d072e8d71461015d578063dbad417c14610165578063f25b3f991461018257610093565b8063231b0268146100985780633c6c6b73146100b257806341e63749146100d557806392947cc014610106575b600080fd5b6100a06101e0565b60408051918252519081900360200190f35b6100a0600480360360408110156100c857600080fd5b50803590602001356101e6565b6100f2600480360360208110156100eb57600080fd5b5035610214565b604080519115158252519081900360200190f35b6100a06004803603602081101561011c57600080fd5b5035610229565b6100f26004803603602081101561013957600080fd5b503561023b565b6100f26004803603602081101561015657600080fd5b5035610250565b6100a0610265565b6100f26004803603602081101561017b57600080fd5b503561026b565b61019f6004803603602081101561019857600080fd5b5035610280565b604080519889526020890197909752878701959095526060870193909352608086019190915260a085015260c084015260e083015251908190036101000190f35b60005481565b600560205281600052604060002081815481106101ff57fe5b90600052602060002001600091509150505481565b60026020526000908152604090205460ff1681565b60086020526000908152604090205481565b60046020526000908152604090205460ff1681565b60036020526000908152604090205460ff1681565b60075481565b60066020526000908152604090205460ff1681565b6001602052806000526040600020600091509050806000015490806001015490806002015490806003015490806004015490806005015490806006015490806007015490508856fea264697066735822122005f02e42a8750dc014fd2d3bd89d6a86554b4d90b9a081f6276c382b04bca4bc64736f6c63430007030033",
   "immutableReferences": {},
   "generatedSources": [],
   "deployedGeneratedSources": [],
-  "sourceMap": "150:1585:13:-:0;;;1710:23;;;;;;;;;;150:1585;;;;;;",
-  "deployedSourceMap": "150:1585:13:-:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;480:25;;;:::i;:::-;;;;;;;;;;;;;;;;1017:51;;;;;;;;;;;;;;;;-1:-1:-1;1017:51:13;;;;;;;:::i;697:45::-;;;;;;;;;;;;;;;;-1:-1:-1;697:45:13;;:::i;:::-;;;;;;;;;;;;;;;;;;1651:52;;;;;;;;;;;;;;;;-1:-1:-1;1651:52:13;;:::i;869:47::-;;;;;;;;;;;;;;;;-1:-1:-1;869:47:13;;:::i;782:46::-;;;;;;;;;;;;;;;;-1:-1:-1;782:46:13;;:::i;1233:29::-;;;:::i;1141:54::-;;;;;;;;;;;;;;;;-1:-1:-1;1141:54:13;;:::i;576:51::-;;;;;;;;;;;;;;;;-1:-1:-1;576:51:13;;:::i;:::-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;480:25;;;;:::o;1017:51::-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::o;697:45::-;;;;;;;;;;;;;;;:::o;1651:52::-;;;;;;;;;;;;;:::o;869:47::-;;;;;;;;;;;;;;;:::o;782:46::-;;;;;;;;;;;;;;;:::o;1233:29::-;;;;:::o;1141:54::-;;;;;;;;;;;;;;;:::o;576:51::-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::o",
-  "source": "// SPDX-License-Identifier: UNLICENSED\npragma solidity ^0.7;\n\n/**\n * The ClientStorage contract contains underlying data for EthNtyRelay contract\n */\ncontract EthereumLightClientStorage {\n    struct StoredBlockHeader {\n        uint256 parentHash;\n        uint256 stateRoot;\n        uint256 transactionsRoot;\n        uint256 receiptsRoot;\n        uint256 number;\n        uint256 difficulty;\n        uint256 time;\n        uint256 hash;\n    }\n\n    // The first block header hash\n    uint256 public firstBlock;\n\n    // Blocks data, in the form: blockHeaderHash => BlockHeader\n    mapping(uint256 => StoredBlockHeader) public blocks;\n    // Block existing map, in the form: blockHeaderHash => bool\n    mapping(uint256 => bool) public blockExisting;\n    // Blocks in 'Verified' state\n    mapping(uint256 => bool) public verifiedBlocks;\n    // Blocks in 'Finalized' state\n    mapping(uint256 => bool) public finalizedBlocks;\n\n    // Valid relayed blocks for a block height, in the form: blockNumber => blockHeaderHash[]\n    mapping(uint256 => uint256[]) public blocksByHeight;\n    // Block height existing map, in the form: blockNumber => bool\n    mapping(uint256 => bool) public blocksByHeightExisting;\n\n    // Max block height stored\n    uint256 public blockHeightMax;\n\n    // Block header hash that points to longest chain head\n    // (please note that 'longest' chain is based on total difficulty)\n    // uint public longestChainHead;\n\n    // Longest branch head of each checkpoint, in the form: (checkpoint block hash) => (head block hash)\n    // (note that 'longest branch' means the branch which has biggest cumulative difficulty from checkpoint)\n    mapping(uint256 => uint256) public longestBranchHead;\n\n    constructor() public {}\n}\n",
+  "sourceMap": "150:1589:12:-:0;;;1714:23;;;;;;;;;;150:1589;;;;;;",
+  "deployedSourceMap": "150:1589:12:-:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;480:25;;;:::i;:::-;;;;;;;;;;;;;;;;1020:51;;;;;;;;;;;;;;;;-1:-1:-1;1020:51:12;;;;;;;:::i;698:45::-;;;;;;;;;;;;;;;;-1:-1:-1;698:45:12;;:::i;:::-;;;;;;;;;;;;;;;;;;1655:52;;;;;;;;;;;;;;;;-1:-1:-1;1655:52:12;;:::i;872:47::-;;;;;;;;;;;;;;;;-1:-1:-1;872:47:12;;:::i;784:46::-;;;;;;;;;;;;;;;;-1:-1:-1;784:46:12;;:::i;1237:29::-;;;:::i;1145:54::-;;;;;;;;;;;;;;;;-1:-1:-1;1145:54:12;;:::i;576:51::-;;;;;;;;;;;;;;;;-1:-1:-1;576:51:12;;:::i;:::-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;480:25;;;;:::o;1020:51::-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::o;698:45::-;;;;;;;;;;;;;;;:::o;1655:52::-;;;;;;;;;;;;;:::o;872:47::-;;;;;;;;;;;;;;;:::o;784:46::-;;;;;;;;;;;;;;;:::o;1237:29::-;;;;:::o;1145:54::-;;;;;;;;;;;;;;;:::o;576:51::-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::o",
+  "source": "// SPDX-License-Identifier: UNLICENSED\npragma solidity ^0.7;\n\n/**\n * The ClientStorage contract contains underlying data for EthNtyRelay contract\n */\ncontract EthereumLightClientStorage {\n    struct StoredBlockHeader {\n        uint256 parentHash;\n        uint256 stateRoot;\n        uint256 transactionsRoot;\n        uint256 receiptsRoot;\n        uint256 number;\n        uint256 difficulty;\n        uint256 time;\n        uint256 hash;\n    }\n\n    // The first block header hash\n    uint256 public firstBlock;\n\n    // Blocks data, in the form: blockHeaderHash => BlockHeader\n    mapping(uint256 => StoredBlockHeader) public blocks;\n\n    // Block existing map, in the form: blockHeaderHash => bool\n    mapping(uint256 => bool) public blockExisting;\n\n    // Blocks in 'Verified' state\n    mapping(uint256 => bool) public verifiedBlocks;\n\n    // Blocks in 'Finalized' state\n    mapping(uint256 => bool) public finalizedBlocks;\n\n    // Valid relayed blocks for a block height, in the form: blockNumber => blockHeaderHash[]\n    mapping(uint256 => uint256[]) public blocksByHeight;\n\n    // Block height existing map, in the form: blockNumber => bool\n    mapping(uint256 => bool) public blocksByHeightExisting;\n\n    // Max block height stored\n    uint256 public blockHeightMax;\n\n    // Block header hash that points to longest chain head\n    // (please note that 'longest' chain is based on total difficulty)\n    // uint public longestChainHead;\n\n    // Longest branch head of each checkpoint, in the form: (checkpoint block hash) => (head block hash)\n    // (note that 'longest branch' means the branch which has biggest cumulative difficulty from checkpoint)\n    mapping(uint256 => uint256) public longestBranchHead;\n\n    constructor() public {}\n}\n",
   "sourcePath": "/Users/gupadhyaya/go/src/github.com/harmony-one/horizon/contracts/EthereumLightClientStorage.sol",
   "ast": {
     "absolutePath": "project:/contracts/EthereumLightClientStorage.sol",
     "exportedSymbols": {
       "EthereumLightClientStorage": [
-        2721
+        2699
       ]
     },
-    "id": 2722,
+    "id": 2700,
     "license": "UNLICENSED",
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 2665,
+        "id": 2643,
         "literals": [
           "solidity",
           "^",
           "0.7"
         ],
         "nodeType": "PragmaDirective",
-        "src": "39:21:13"
+        "src": "39:21:12"
       },
       {
         "abstract": false,
@@ -243,31 +243,31 @@
         "contractDependencies": [],
         "contractKind": "contract",
         "documentation": {
-          "id": 2666,
+          "id": 2644,
           "nodeType": "StructuredDocumentation",
-          "src": "62:87:13",
+          "src": "62:87:12",
           "text": " The ClientStorage contract contains underlying data for EthNtyRelay contract"
         },
         "fullyImplemented": true,
-        "id": 2721,
+        "id": 2699,
         "linearizedBaseContracts": [
-          2721
+          2699
         ],
         "name": "EthereumLightClientStorage",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
             "canonicalName": "EthereumLightClientStorage.StoredBlockHeader",
-            "id": 2683,
+            "id": 2661,
             "members": [
               {
                 "constant": false,
-                "id": 2668,
+                "id": 2646,
                 "mutability": "mutable",
                 "name": "parentHash",
                 "nodeType": "VariableDeclaration",
-                "scope": 2683,
-                "src": "227:18:13",
+                "scope": 2661,
+                "src": "227:18:12",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
@@ -275,10 +275,10 @@
                   "typeString": "uint256"
                 },
                 "typeName": {
-                  "id": 2667,
+                  "id": 2645,
                   "name": "uint256",
                   "nodeType": "ElementaryTypeName",
-                  "src": "227:7:13",
+                  "src": "227:7:12",
                   "typeDescriptions": {
                     "typeIdentifier": "t_uint256",
                     "typeString": "uint256"
@@ -288,12 +288,12 @@
               },
               {
                 "constant": false,
-                "id": 2670,
+                "id": 2648,
                 "mutability": "mutable",
                 "name": "stateRoot",
                 "nodeType": "VariableDeclaration",
-                "scope": 2683,
-                "src": "255:17:13",
+                "scope": 2661,
+                "src": "255:17:12",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
@@ -301,10 +301,10 @@
                   "typeString": "uint256"
                 },
                 "typeName": {
-                  "id": 2669,
+                  "id": 2647,
                   "name": "uint256",
                   "nodeType": "ElementaryTypeName",
-                  "src": "255:7:13",
+                  "src": "255:7:12",
                   "typeDescriptions": {
                     "typeIdentifier": "t_uint256",
                     "typeString": "uint256"
@@ -314,12 +314,12 @@
               },
               {
                 "constant": false,
-                "id": 2672,
+                "id": 2650,
                 "mutability": "mutable",
                 "name": "transactionsRoot",
                 "nodeType": "VariableDeclaration",
-                "scope": 2683,
-                "src": "282:24:13",
+                "scope": 2661,
+                "src": "282:24:12",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
@@ -327,10 +327,10 @@
                   "typeString": "uint256"
                 },
                 "typeName": {
-                  "id": 2671,
+                  "id": 2649,
                   "name": "uint256",
                   "nodeType": "ElementaryTypeName",
-                  "src": "282:7:13",
+                  "src": "282:7:12",
                   "typeDescriptions": {
                     "typeIdentifier": "t_uint256",
                     "typeString": "uint256"
@@ -340,12 +340,12 @@
               },
               {
                 "constant": false,
-                "id": 2674,
+                "id": 2652,
                 "mutability": "mutable",
                 "name": "receiptsRoot",
                 "nodeType": "VariableDeclaration",
-                "scope": 2683,
-                "src": "316:20:13",
+                "scope": 2661,
+                "src": "316:20:12",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
@@ -353,10 +353,10 @@
                   "typeString": "uint256"
                 },
                 "typeName": {
-                  "id": 2673,
+                  "id": 2651,
                   "name": "uint256",
                   "nodeType": "ElementaryTypeName",
-                  "src": "316:7:13",
+                  "src": "316:7:12",
                   "typeDescriptions": {
                     "typeIdentifier": "t_uint256",
                     "typeString": "uint256"
@@ -366,12 +366,12 @@
               },
               {
                 "constant": false,
-                "id": 2676,
+                "id": 2654,
                 "mutability": "mutable",
                 "name": "number",
                 "nodeType": "VariableDeclaration",
-                "scope": 2683,
-                "src": "346:14:13",
+                "scope": 2661,
+                "src": "346:14:12",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
@@ -379,10 +379,10 @@
                   "typeString": "uint256"
                 },
                 "typeName": {
-                  "id": 2675,
+                  "id": 2653,
                   "name": "uint256",
                   "nodeType": "ElementaryTypeName",
-                  "src": "346:7:13",
+                  "src": "346:7:12",
                   "typeDescriptions": {
                     "typeIdentifier": "t_uint256",
                     "typeString": "uint256"
@@ -392,12 +392,12 @@
               },
               {
                 "constant": false,
-                "id": 2678,
+                "id": 2656,
                 "mutability": "mutable",
                 "name": "difficulty",
                 "nodeType": "VariableDeclaration",
-                "scope": 2683,
-                "src": "370:18:13",
+                "scope": 2661,
+                "src": "370:18:12",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
@@ -405,10 +405,10 @@
                   "typeString": "uint256"
                 },
                 "typeName": {
-                  "id": 2677,
+                  "id": 2655,
                   "name": "uint256",
                   "nodeType": "ElementaryTypeName",
-                  "src": "370:7:13",
+                  "src": "370:7:12",
                   "typeDescriptions": {
                     "typeIdentifier": "t_uint256",
                     "typeString": "uint256"
@@ -418,12 +418,12 @@
               },
               {
                 "constant": false,
-                "id": 2680,
+                "id": 2658,
                 "mutability": "mutable",
                 "name": "time",
                 "nodeType": "VariableDeclaration",
-                "scope": 2683,
-                "src": "398:12:13",
+                "scope": 2661,
+                "src": "398:12:12",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
@@ -431,10 +431,10 @@
                   "typeString": "uint256"
                 },
                 "typeName": {
-                  "id": 2679,
+                  "id": 2657,
                   "name": "uint256",
                   "nodeType": "ElementaryTypeName",
-                  "src": "398:7:13",
+                  "src": "398:7:12",
                   "typeDescriptions": {
                     "typeIdentifier": "t_uint256",
                     "typeString": "uint256"
@@ -444,12 +444,12 @@
               },
               {
                 "constant": false,
-                "id": 2682,
+                "id": 2660,
                 "mutability": "mutable",
                 "name": "hash",
                 "nodeType": "VariableDeclaration",
-                "scope": 2683,
-                "src": "420:12:13",
+                "scope": 2661,
+                "src": "420:12:12",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
@@ -457,10 +457,10 @@
                   "typeString": "uint256"
                 },
                 "typeName": {
-                  "id": 2681,
+                  "id": 2659,
                   "name": "uint256",
                   "nodeType": "ElementaryTypeName",
-                  "src": "420:7:13",
+                  "src": "420:7:12",
                   "typeDescriptions": {
                     "typeIdentifier": "t_uint256",
                     "typeString": "uint256"
@@ -471,19 +471,19 @@
             ],
             "name": "StoredBlockHeader",
             "nodeType": "StructDefinition",
-            "scope": 2721,
-            "src": "192:247:13",
+            "scope": 2699,
+            "src": "192:247:12",
             "visibility": "public"
           },
           {
             "constant": false,
             "functionSelector": "231b0268",
-            "id": 2685,
+            "id": 2663,
             "mutability": "mutable",
             "name": "firstBlock",
             "nodeType": "VariableDeclaration",
-            "scope": 2721,
-            "src": "480:25:13",
+            "scope": 2699,
+            "src": "480:25:12",
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
@@ -491,10 +491,10 @@
               "typeString": "uint256"
             },
             "typeName": {
-              "id": 2684,
+              "id": 2662,
               "name": "uint256",
               "nodeType": "ElementaryTypeName",
-              "src": "480:7:13",
+              "src": "480:7:12",
               "typeDescriptions": {
                 "typeIdentifier": "t_uint256",
                 "typeString": "uint256"
@@ -505,44 +505,44 @@
           {
             "constant": false,
             "functionSelector": "f25b3f99",
-            "id": 2689,
+            "id": 2667,
             "mutability": "mutable",
             "name": "blocks",
             "nodeType": "VariableDeclaration",
-            "scope": 2721,
-            "src": "576:51:13",
+            "scope": 2699,
+            "src": "576:51:12",
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
-              "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_StoredBlockHeader_$2683_storage_$",
+              "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_StoredBlockHeader_$2661_storage_$",
               "typeString": "mapping(uint256 => struct EthereumLightClientStorage.StoredBlockHeader)"
             },
             "typeName": {
-              "id": 2688,
+              "id": 2666,
               "keyType": {
-                "id": 2686,
+                "id": 2664,
                 "name": "uint256",
                 "nodeType": "ElementaryTypeName",
-                "src": "584:7:13",
+                "src": "584:7:12",
                 "typeDescriptions": {
                   "typeIdentifier": "t_uint256",
                   "typeString": "uint256"
                 }
               },
               "nodeType": "Mapping",
-              "src": "576:37:13",
+              "src": "576:37:12",
               "typeDescriptions": {
-                "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_StoredBlockHeader_$2683_storage_$",
+                "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_StoredBlockHeader_$2661_storage_$",
                 "typeString": "mapping(uint256 => struct EthereumLightClientStorage.StoredBlockHeader)"
               },
               "valueType": {
-                "id": 2687,
+                "id": 2665,
                 "name": "StoredBlockHeader",
                 "nodeType": "UserDefinedTypeName",
-                "referencedDeclaration": 2683,
-                "src": "595:17:13",
+                "referencedDeclaration": 2661,
+                "src": "595:17:12",
                 "typeDescriptions": {
-                  "typeIdentifier": "t_struct$_StoredBlockHeader_$2683_storage_ptr",
+                  "typeIdentifier": "t_struct$_StoredBlockHeader_$2661_storage_ptr",
                   "typeString": "struct EthereumLightClientStorage.StoredBlockHeader"
                 }
               }
@@ -552,12 +552,12 @@
           {
             "constant": false,
             "functionSelector": "41e63749",
-            "id": 2693,
+            "id": 2671,
             "mutability": "mutable",
             "name": "blockExisting",
             "nodeType": "VariableDeclaration",
-            "scope": 2721,
-            "src": "697:45:13",
+            "scope": 2699,
+            "src": "698:45:12",
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
@@ -565,28 +565,28 @@
               "typeString": "mapping(uint256 => bool)"
             },
             "typeName": {
-              "id": 2692,
+              "id": 2670,
               "keyType": {
-                "id": 2690,
+                "id": 2668,
                 "name": "uint256",
                 "nodeType": "ElementaryTypeName",
-                "src": "705:7:13",
+                "src": "706:7:12",
                 "typeDescriptions": {
                   "typeIdentifier": "t_uint256",
                   "typeString": "uint256"
                 }
               },
               "nodeType": "Mapping",
-              "src": "697:24:13",
+              "src": "698:24:12",
               "typeDescriptions": {
                 "typeIdentifier": "t_mapping$_t_uint256_$_t_bool_$",
                 "typeString": "mapping(uint256 => bool)"
               },
               "valueType": {
-                "id": 2691,
+                "id": 2669,
                 "name": "bool",
                 "nodeType": "ElementaryTypeName",
-                "src": "716:4:13",
+                "src": "717:4:12",
                 "typeDescriptions": {
                   "typeIdentifier": "t_bool",
                   "typeString": "bool"
@@ -598,12 +598,12 @@
           {
             "constant": false,
             "functionSelector": "b1d3e159",
-            "id": 2697,
+            "id": 2675,
             "mutability": "mutable",
             "name": "verifiedBlocks",
             "nodeType": "VariableDeclaration",
-            "scope": 2721,
-            "src": "782:46:13",
+            "scope": 2699,
+            "src": "784:46:12",
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
@@ -611,28 +611,28 @@
               "typeString": "mapping(uint256 => bool)"
             },
             "typeName": {
-              "id": 2696,
+              "id": 2674,
               "keyType": {
-                "id": 2694,
+                "id": 2672,
                 "name": "uint256",
                 "nodeType": "ElementaryTypeName",
-                "src": "790:7:13",
+                "src": "792:7:12",
                 "typeDescriptions": {
                   "typeIdentifier": "t_uint256",
                   "typeString": "uint256"
                 }
               },
               "nodeType": "Mapping",
-              "src": "782:24:13",
+              "src": "784:24:12",
               "typeDescriptions": {
                 "typeIdentifier": "t_mapping$_t_uint256_$_t_bool_$",
                 "typeString": "mapping(uint256 => bool)"
               },
               "valueType": {
-                "id": 2695,
+                "id": 2673,
                 "name": "bool",
                 "nodeType": "ElementaryTypeName",
-                "src": "801:4:13",
+                "src": "803:4:12",
                 "typeDescriptions": {
                   "typeIdentifier": "t_bool",
                   "typeString": "bool"
@@ -644,12 +644,12 @@
           {
             "constant": false,
             "functionSelector": "a8b00a34",
-            "id": 2701,
+            "id": 2679,
             "mutability": "mutable",
             "name": "finalizedBlocks",
             "nodeType": "VariableDeclaration",
-            "scope": 2721,
-            "src": "869:47:13",
+            "scope": 2699,
+            "src": "872:47:12",
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
@@ -657,28 +657,28 @@
               "typeString": "mapping(uint256 => bool)"
             },
             "typeName": {
-              "id": 2700,
+              "id": 2678,
               "keyType": {
-                "id": 2698,
+                "id": 2676,
                 "name": "uint256",
                 "nodeType": "ElementaryTypeName",
-                "src": "877:7:13",
+                "src": "880:7:12",
                 "typeDescriptions": {
                   "typeIdentifier": "t_uint256",
                   "typeString": "uint256"
                 }
               },
               "nodeType": "Mapping",
-              "src": "869:24:13",
+              "src": "872:24:12",
               "typeDescriptions": {
                 "typeIdentifier": "t_mapping$_t_uint256_$_t_bool_$",
                 "typeString": "mapping(uint256 => bool)"
               },
               "valueType": {
-                "id": 2699,
+                "id": 2677,
                 "name": "bool",
                 "nodeType": "ElementaryTypeName",
-                "src": "888:4:13",
+                "src": "891:4:12",
                 "typeDescriptions": {
                   "typeIdentifier": "t_bool",
                   "typeString": "bool"
@@ -690,12 +690,12 @@
           {
             "constant": false,
             "functionSelector": "3c6c6b73",
-            "id": 2706,
+            "id": 2684,
             "mutability": "mutable",
             "name": "blocksByHeight",
             "nodeType": "VariableDeclaration",
-            "scope": 2721,
-            "src": "1017:51:13",
+            "scope": 2699,
+            "src": "1020:51:12",
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
@@ -703,37 +703,37 @@
               "typeString": "mapping(uint256 => uint256[])"
             },
             "typeName": {
-              "id": 2705,
+              "id": 2683,
               "keyType": {
-                "id": 2702,
+                "id": 2680,
                 "name": "uint256",
                 "nodeType": "ElementaryTypeName",
-                "src": "1025:7:13",
+                "src": "1028:7:12",
                 "typeDescriptions": {
                   "typeIdentifier": "t_uint256",
                   "typeString": "uint256"
                 }
               },
               "nodeType": "Mapping",
-              "src": "1017:29:13",
+              "src": "1020:29:12",
               "typeDescriptions": {
                 "typeIdentifier": "t_mapping$_t_uint256_$_t_array$_t_uint256_$dyn_storage_$",
                 "typeString": "mapping(uint256 => uint256[])"
               },
               "valueType": {
                 "baseType": {
-                  "id": 2703,
+                  "id": 2681,
                   "name": "uint256",
                   "nodeType": "ElementaryTypeName",
-                  "src": "1036:7:13",
+                  "src": "1039:7:12",
                   "typeDescriptions": {
                     "typeIdentifier": "t_uint256",
                     "typeString": "uint256"
                   }
                 },
-                "id": 2704,
+                "id": 2682,
                 "nodeType": "ArrayTypeName",
-                "src": "1036:9:13",
+                "src": "1039:9:12",
                 "typeDescriptions": {
                   "typeIdentifier": "t_array$_t_uint256_$dyn_storage_ptr",
                   "typeString": "uint256[]"
@@ -745,12 +745,12 @@
           {
             "constant": false,
             "functionSelector": "dbad417c",
-            "id": 2710,
+            "id": 2688,
             "mutability": "mutable",
             "name": "blocksByHeightExisting",
             "nodeType": "VariableDeclaration",
-            "scope": 2721,
-            "src": "1141:54:13",
+            "scope": 2699,
+            "src": "1145:54:12",
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
@@ -758,28 +758,28 @@
               "typeString": "mapping(uint256 => bool)"
             },
             "typeName": {
-              "id": 2709,
+              "id": 2687,
               "keyType": {
-                "id": 2707,
+                "id": 2685,
                 "name": "uint256",
                 "nodeType": "ElementaryTypeName",
-                "src": "1149:7:13",
+                "src": "1153:7:12",
                 "typeDescriptions": {
                   "typeIdentifier": "t_uint256",
                   "typeString": "uint256"
                 }
               },
               "nodeType": "Mapping",
-              "src": "1141:24:13",
+              "src": "1145:24:12",
               "typeDescriptions": {
                 "typeIdentifier": "t_mapping$_t_uint256_$_t_bool_$",
                 "typeString": "mapping(uint256 => bool)"
               },
               "valueType": {
-                "id": 2708,
+                "id": 2686,
                 "name": "bool",
                 "nodeType": "ElementaryTypeName",
-                "src": "1160:4:13",
+                "src": "1164:4:12",
                 "typeDescriptions": {
                   "typeIdentifier": "t_bool",
                   "typeString": "bool"
@@ -791,12 +791,12 @@
           {
             "constant": false,
             "functionSelector": "d072e8d7",
-            "id": 2712,
+            "id": 2690,
             "mutability": "mutable",
             "name": "blockHeightMax",
             "nodeType": "VariableDeclaration",
-            "scope": 2721,
-            "src": "1233:29:13",
+            "scope": 2699,
+            "src": "1237:29:12",
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
@@ -804,10 +804,10 @@
               "typeString": "uint256"
             },
             "typeName": {
-              "id": 2711,
+              "id": 2689,
               "name": "uint256",
               "nodeType": "ElementaryTypeName",
-              "src": "1233:7:13",
+              "src": "1237:7:12",
               "typeDescriptions": {
                 "typeIdentifier": "t_uint256",
                 "typeString": "uint256"
@@ -818,12 +818,12 @@
           {
             "constant": false,
             "functionSelector": "92947cc0",
-            "id": 2716,
+            "id": 2694,
             "mutability": "mutable",
             "name": "longestBranchHead",
             "nodeType": "VariableDeclaration",
-            "scope": 2721,
-            "src": "1651:52:13",
+            "scope": 2699,
+            "src": "1655:52:12",
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
@@ -831,28 +831,28 @@
               "typeString": "mapping(uint256 => uint256)"
             },
             "typeName": {
-              "id": 2715,
+              "id": 2693,
               "keyType": {
-                "id": 2713,
+                "id": 2691,
                 "name": "uint256",
                 "nodeType": "ElementaryTypeName",
-                "src": "1659:7:13",
+                "src": "1663:7:12",
                 "typeDescriptions": {
                   "typeIdentifier": "t_uint256",
                   "typeString": "uint256"
                 }
               },
               "nodeType": "Mapping",
-              "src": "1651:27:13",
+              "src": "1655:27:12",
               "typeDescriptions": {
                 "typeIdentifier": "t_mapping$_t_uint256_$_t_uint256_$",
                 "typeString": "mapping(uint256 => uint256)"
               },
               "valueType": {
-                "id": 2714,
+                "id": 2692,
                 "name": "uint256",
                 "nodeType": "ElementaryTypeName",
-                "src": "1670:7:13",
+                "src": "1674:7:12",
                 "typeDescriptions": {
                   "typeIdentifier": "t_uint256",
                   "typeString": "uint256"
@@ -863,48 +863,48 @@
           },
           {
             "body": {
-              "id": 2719,
+              "id": 2697,
               "nodeType": "Block",
-              "src": "1731:2:13",
+              "src": "1735:2:12",
               "statements": []
             },
-            "id": 2720,
+            "id": 2698,
             "implemented": true,
             "kind": "constructor",
             "modifiers": [],
             "name": "",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 2717,
+              "id": 2695,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "1721:2:13"
+              "src": "1725:2:12"
             },
             "returnParameters": {
-              "id": 2718,
+              "id": 2696,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "1731:0:13"
+              "src": "1735:0:12"
             },
-            "scope": 2721,
-            "src": "1710:23:13",
+            "scope": 2699,
+            "src": "1714:23:12",
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "public"
           }
         ],
-        "scope": 2722,
-        "src": "150:1585:13"
+        "scope": 2700,
+        "src": "150:1589:12"
       }
     ],
-    "src": "39:1697:13"
+    "src": "39:1701:12"
   },
   "legacyAST": {
     "attributes": {
       "absolutePath": "project:/contracts/EthereumLightClientStorage.sol",
       "exportedSymbols": {
         "EthereumLightClientStorage": [
-          2721
+          2699
         ]
       },
       "license": "UNLICENSED"
@@ -918,9 +918,9 @@
             "0.7"
           ]
         },
-        "id": 2665,
+        "id": 2643,
         "name": "PragmaDirective",
-        "src": "39:21:13"
+        "src": "39:21:12"
       },
       {
         "attributes": {
@@ -934,25 +934,25 @@
           "contractKind": "contract",
           "fullyImplemented": true,
           "linearizedBaseContracts": [
-            2721
+            2699
           ],
           "name": "EthereumLightClientStorage",
-          "scope": 2722
+          "scope": 2700
         },
         "children": [
           {
             "attributes": {
               "text": " The ClientStorage contract contains underlying data for EthNtyRelay contract"
             },
-            "id": 2666,
+            "id": 2644,
             "name": "StructuredDocumentation",
-            "src": "62:87:13"
+            "src": "62:87:12"
           },
           {
             "attributes": {
               "canonicalName": "EthereumLightClientStorage.StoredBlockHeader",
               "name": "StoredBlockHeader",
-              "scope": 2721,
+              "scope": 2699,
               "visibility": "public"
             },
             "children": [
@@ -961,7 +961,7 @@
                   "constant": false,
                   "mutability": "mutable",
                   "name": "parentHash",
-                  "scope": 2683,
+                  "scope": 2661,
                   "stateVariable": false,
                   "storageLocation": "default",
                   "type": "uint256",
@@ -973,21 +973,21 @@
                       "name": "uint256",
                       "type": "uint256"
                     },
-                    "id": 2667,
+                    "id": 2645,
                     "name": "ElementaryTypeName",
-                    "src": "227:7:13"
+                    "src": "227:7:12"
                   }
                 ],
-                "id": 2668,
+                "id": 2646,
                 "name": "VariableDeclaration",
-                "src": "227:18:13"
+                "src": "227:18:12"
               },
               {
                 "attributes": {
                   "constant": false,
                   "mutability": "mutable",
                   "name": "stateRoot",
-                  "scope": 2683,
+                  "scope": 2661,
                   "stateVariable": false,
                   "storageLocation": "default",
                   "type": "uint256",
@@ -999,21 +999,21 @@
                       "name": "uint256",
                       "type": "uint256"
                     },
-                    "id": 2669,
+                    "id": 2647,
                     "name": "ElementaryTypeName",
-                    "src": "255:7:13"
+                    "src": "255:7:12"
                   }
                 ],
-                "id": 2670,
+                "id": 2648,
                 "name": "VariableDeclaration",
-                "src": "255:17:13"
+                "src": "255:17:12"
               },
               {
                 "attributes": {
                   "constant": false,
                   "mutability": "mutable",
                   "name": "transactionsRoot",
-                  "scope": 2683,
+                  "scope": 2661,
                   "stateVariable": false,
                   "storageLocation": "default",
                   "type": "uint256",
@@ -1025,21 +1025,21 @@
                       "name": "uint256",
                       "type": "uint256"
                     },
-                    "id": 2671,
+                    "id": 2649,
                     "name": "ElementaryTypeName",
-                    "src": "282:7:13"
+                    "src": "282:7:12"
                   }
                 ],
-                "id": 2672,
+                "id": 2650,
                 "name": "VariableDeclaration",
-                "src": "282:24:13"
+                "src": "282:24:12"
               },
               {
                 "attributes": {
                   "constant": false,
                   "mutability": "mutable",
                   "name": "receiptsRoot",
-                  "scope": 2683,
+                  "scope": 2661,
                   "stateVariable": false,
                   "storageLocation": "default",
                   "type": "uint256",
@@ -1051,21 +1051,21 @@
                       "name": "uint256",
                       "type": "uint256"
                     },
-                    "id": 2673,
+                    "id": 2651,
                     "name": "ElementaryTypeName",
-                    "src": "316:7:13"
+                    "src": "316:7:12"
                   }
                 ],
-                "id": 2674,
+                "id": 2652,
                 "name": "VariableDeclaration",
-                "src": "316:20:13"
+                "src": "316:20:12"
               },
               {
                 "attributes": {
                   "constant": false,
                   "mutability": "mutable",
                   "name": "number",
-                  "scope": 2683,
+                  "scope": 2661,
                   "stateVariable": false,
                   "storageLocation": "default",
                   "type": "uint256",
@@ -1077,21 +1077,21 @@
                       "name": "uint256",
                       "type": "uint256"
                     },
-                    "id": 2675,
+                    "id": 2653,
                     "name": "ElementaryTypeName",
-                    "src": "346:7:13"
+                    "src": "346:7:12"
                   }
                 ],
-                "id": 2676,
+                "id": 2654,
                 "name": "VariableDeclaration",
-                "src": "346:14:13"
+                "src": "346:14:12"
               },
               {
                 "attributes": {
                   "constant": false,
                   "mutability": "mutable",
                   "name": "difficulty",
-                  "scope": 2683,
+                  "scope": 2661,
                   "stateVariable": false,
                   "storageLocation": "default",
                   "type": "uint256",
@@ -1103,21 +1103,21 @@
                       "name": "uint256",
                       "type": "uint256"
                     },
-                    "id": 2677,
+                    "id": 2655,
                     "name": "ElementaryTypeName",
-                    "src": "370:7:13"
+                    "src": "370:7:12"
                   }
                 ],
-                "id": 2678,
+                "id": 2656,
                 "name": "VariableDeclaration",
-                "src": "370:18:13"
+                "src": "370:18:12"
               },
               {
                 "attributes": {
                   "constant": false,
                   "mutability": "mutable",
                   "name": "time",
-                  "scope": 2683,
+                  "scope": 2661,
                   "stateVariable": false,
                   "storageLocation": "default",
                   "type": "uint256",
@@ -1129,21 +1129,21 @@
                       "name": "uint256",
                       "type": "uint256"
                     },
-                    "id": 2679,
+                    "id": 2657,
                     "name": "ElementaryTypeName",
-                    "src": "398:7:13"
+                    "src": "398:7:12"
                   }
                 ],
-                "id": 2680,
+                "id": 2658,
                 "name": "VariableDeclaration",
-                "src": "398:12:13"
+                "src": "398:12:12"
               },
               {
                 "attributes": {
                   "constant": false,
                   "mutability": "mutable",
                   "name": "hash",
-                  "scope": 2683,
+                  "scope": 2661,
                   "stateVariable": false,
                   "storageLocation": "default",
                   "type": "uint256",
@@ -1155,19 +1155,19 @@
                       "name": "uint256",
                       "type": "uint256"
                     },
-                    "id": 2681,
+                    "id": 2659,
                     "name": "ElementaryTypeName",
-                    "src": "420:7:13"
+                    "src": "420:7:12"
                   }
                 ],
-                "id": 2682,
+                "id": 2660,
                 "name": "VariableDeclaration",
-                "src": "420:12:13"
+                "src": "420:12:12"
               }
             ],
-            "id": 2683,
+            "id": 2661,
             "name": "StructDefinition",
-            "src": "192:247:13"
+            "src": "192:247:12"
           },
           {
             "attributes": {
@@ -1175,7 +1175,7 @@
               "functionSelector": "231b0268",
               "mutability": "mutable",
               "name": "firstBlock",
-              "scope": 2721,
+              "scope": 2699,
               "stateVariable": true,
               "storageLocation": "default",
               "type": "uint256",
@@ -1187,14 +1187,14 @@
                   "name": "uint256",
                   "type": "uint256"
                 },
-                "id": 2684,
+                "id": 2662,
                 "name": "ElementaryTypeName",
-                "src": "480:7:13"
+                "src": "480:7:12"
               }
             ],
-            "id": 2685,
+            "id": 2663,
             "name": "VariableDeclaration",
-            "src": "480:25:13"
+            "src": "480:25:12"
           },
           {
             "attributes": {
@@ -1202,7 +1202,7 @@
               "functionSelector": "f25b3f99",
               "mutability": "mutable",
               "name": "blocks",
-              "scope": 2721,
+              "scope": 2699,
               "stateVariable": true,
               "storageLocation": "default",
               "type": "mapping(uint256 => struct EthereumLightClientStorage.StoredBlockHeader)",
@@ -1219,29 +1219,29 @@
                       "name": "uint256",
                       "type": "uint256"
                     },
-                    "id": 2686,
+                    "id": 2664,
                     "name": "ElementaryTypeName",
-                    "src": "584:7:13"
+                    "src": "584:7:12"
                   },
                   {
                     "attributes": {
                       "name": "StoredBlockHeader",
-                      "referencedDeclaration": 2683,
+                      "referencedDeclaration": 2661,
                       "type": "struct EthereumLightClientStorage.StoredBlockHeader"
                     },
-                    "id": 2687,
+                    "id": 2665,
                     "name": "UserDefinedTypeName",
-                    "src": "595:17:13"
+                    "src": "595:17:12"
                   }
                 ],
-                "id": 2688,
+                "id": 2666,
                 "name": "Mapping",
-                "src": "576:37:13"
+                "src": "576:37:12"
               }
             ],
-            "id": 2689,
+            "id": 2667,
             "name": "VariableDeclaration",
-            "src": "576:51:13"
+            "src": "576:51:12"
           },
           {
             "attributes": {
@@ -1249,7 +1249,7 @@
               "functionSelector": "41e63749",
               "mutability": "mutable",
               "name": "blockExisting",
-              "scope": 2721,
+              "scope": 2699,
               "stateVariable": true,
               "storageLocation": "default",
               "type": "mapping(uint256 => bool)",
@@ -1266,28 +1266,28 @@
                       "name": "uint256",
                       "type": "uint256"
                     },
-                    "id": 2690,
+                    "id": 2668,
                     "name": "ElementaryTypeName",
-                    "src": "705:7:13"
+                    "src": "706:7:12"
                   },
                   {
                     "attributes": {
                       "name": "bool",
                       "type": "bool"
                     },
-                    "id": 2691,
+                    "id": 2669,
                     "name": "ElementaryTypeName",
-                    "src": "716:4:13"
+                    "src": "717:4:12"
                   }
                 ],
-                "id": 2692,
+                "id": 2670,
                 "name": "Mapping",
-                "src": "697:24:13"
+                "src": "698:24:12"
               }
             ],
-            "id": 2693,
+            "id": 2671,
             "name": "VariableDeclaration",
-            "src": "697:45:13"
+            "src": "698:45:12"
           },
           {
             "attributes": {
@@ -1295,7 +1295,7 @@
               "functionSelector": "b1d3e159",
               "mutability": "mutable",
               "name": "verifiedBlocks",
-              "scope": 2721,
+              "scope": 2699,
               "stateVariable": true,
               "storageLocation": "default",
               "type": "mapping(uint256 => bool)",
@@ -1312,28 +1312,28 @@
                       "name": "uint256",
                       "type": "uint256"
                     },
-                    "id": 2694,
+                    "id": 2672,
                     "name": "ElementaryTypeName",
-                    "src": "790:7:13"
+                    "src": "792:7:12"
                   },
                   {
                     "attributes": {
                       "name": "bool",
                       "type": "bool"
                     },
-                    "id": 2695,
+                    "id": 2673,
                     "name": "ElementaryTypeName",
-                    "src": "801:4:13"
+                    "src": "803:4:12"
                   }
                 ],
-                "id": 2696,
+                "id": 2674,
                 "name": "Mapping",
-                "src": "782:24:13"
+                "src": "784:24:12"
               }
             ],
-            "id": 2697,
+            "id": 2675,
             "name": "VariableDeclaration",
-            "src": "782:46:13"
+            "src": "784:46:12"
           },
           {
             "attributes": {
@@ -1341,7 +1341,7 @@
               "functionSelector": "a8b00a34",
               "mutability": "mutable",
               "name": "finalizedBlocks",
-              "scope": 2721,
+              "scope": 2699,
               "stateVariable": true,
               "storageLocation": "default",
               "type": "mapping(uint256 => bool)",
@@ -1358,28 +1358,28 @@
                       "name": "uint256",
                       "type": "uint256"
                     },
-                    "id": 2698,
+                    "id": 2676,
                     "name": "ElementaryTypeName",
-                    "src": "877:7:13"
+                    "src": "880:7:12"
                   },
                   {
                     "attributes": {
                       "name": "bool",
                       "type": "bool"
                     },
-                    "id": 2699,
+                    "id": 2677,
                     "name": "ElementaryTypeName",
-                    "src": "888:4:13"
+                    "src": "891:4:12"
                   }
                 ],
-                "id": 2700,
+                "id": 2678,
                 "name": "Mapping",
-                "src": "869:24:13"
+                "src": "872:24:12"
               }
             ],
-            "id": 2701,
+            "id": 2679,
             "name": "VariableDeclaration",
-            "src": "869:47:13"
+            "src": "872:47:12"
           },
           {
             "attributes": {
@@ -1387,7 +1387,7 @@
               "functionSelector": "3c6c6b73",
               "mutability": "mutable",
               "name": "blocksByHeight",
-              "scope": 2721,
+              "scope": 2699,
               "stateVariable": true,
               "storageLocation": "default",
               "type": "mapping(uint256 => uint256[])",
@@ -1404,9 +1404,9 @@
                       "name": "uint256",
                       "type": "uint256"
                     },
-                    "id": 2702,
+                    "id": 2680,
                     "name": "ElementaryTypeName",
-                    "src": "1025:7:13"
+                    "src": "1028:7:12"
                   },
                   {
                     "attributes": {
@@ -1418,24 +1418,24 @@
                           "name": "uint256",
                           "type": "uint256"
                         },
-                        "id": 2703,
+                        "id": 2681,
                         "name": "ElementaryTypeName",
-                        "src": "1036:7:13"
+                        "src": "1039:7:12"
                       }
                     ],
-                    "id": 2704,
+                    "id": 2682,
                     "name": "ArrayTypeName",
-                    "src": "1036:9:13"
+                    "src": "1039:9:12"
                   }
                 ],
-                "id": 2705,
+                "id": 2683,
                 "name": "Mapping",
-                "src": "1017:29:13"
+                "src": "1020:29:12"
               }
             ],
-            "id": 2706,
+            "id": 2684,
             "name": "VariableDeclaration",
-            "src": "1017:51:13"
+            "src": "1020:51:12"
           },
           {
             "attributes": {
@@ -1443,7 +1443,7 @@
               "functionSelector": "dbad417c",
               "mutability": "mutable",
               "name": "blocksByHeightExisting",
-              "scope": 2721,
+              "scope": 2699,
               "stateVariable": true,
               "storageLocation": "default",
               "type": "mapping(uint256 => bool)",
@@ -1460,28 +1460,28 @@
                       "name": "uint256",
                       "type": "uint256"
                     },
-                    "id": 2707,
+                    "id": 2685,
                     "name": "ElementaryTypeName",
-                    "src": "1149:7:13"
+                    "src": "1153:7:12"
                   },
                   {
                     "attributes": {
                       "name": "bool",
                       "type": "bool"
                     },
-                    "id": 2708,
+                    "id": 2686,
                     "name": "ElementaryTypeName",
-                    "src": "1160:4:13"
+                    "src": "1164:4:12"
                   }
                 ],
-                "id": 2709,
+                "id": 2687,
                 "name": "Mapping",
-                "src": "1141:24:13"
+                "src": "1145:24:12"
               }
             ],
-            "id": 2710,
+            "id": 2688,
             "name": "VariableDeclaration",
-            "src": "1141:54:13"
+            "src": "1145:54:12"
           },
           {
             "attributes": {
@@ -1489,7 +1489,7 @@
               "functionSelector": "d072e8d7",
               "mutability": "mutable",
               "name": "blockHeightMax",
-              "scope": 2721,
+              "scope": 2699,
               "stateVariable": true,
               "storageLocation": "default",
               "type": "uint256",
@@ -1501,14 +1501,14 @@
                   "name": "uint256",
                   "type": "uint256"
                 },
-                "id": 2711,
+                "id": 2689,
                 "name": "ElementaryTypeName",
-                "src": "1233:7:13"
+                "src": "1237:7:12"
               }
             ],
-            "id": 2712,
+            "id": 2690,
             "name": "VariableDeclaration",
-            "src": "1233:29:13"
+            "src": "1237:29:12"
           },
           {
             "attributes": {
@@ -1516,7 +1516,7 @@
               "functionSelector": "92947cc0",
               "mutability": "mutable",
               "name": "longestBranchHead",
-              "scope": 2721,
+              "scope": 2699,
               "stateVariable": true,
               "storageLocation": "default",
               "type": "mapping(uint256 => uint256)",
@@ -1533,28 +1533,28 @@
                       "name": "uint256",
                       "type": "uint256"
                     },
-                    "id": 2713,
+                    "id": 2691,
                     "name": "ElementaryTypeName",
-                    "src": "1659:7:13"
+                    "src": "1663:7:12"
                   },
                   {
                     "attributes": {
                       "name": "uint256",
                       "type": "uint256"
                     },
-                    "id": 2714,
+                    "id": 2692,
                     "name": "ElementaryTypeName",
-                    "src": "1670:7:13"
+                    "src": "1674:7:12"
                   }
                 ],
-                "id": 2715,
+                "id": 2693,
                 "name": "Mapping",
-                "src": "1651:27:13"
+                "src": "1655:27:12"
               }
             ],
-            "id": 2716,
+            "id": 2694,
             "name": "VariableDeclaration",
-            "src": "1651:52:13"
+            "src": "1655:52:12"
           },
           {
             "attributes": {
@@ -1565,7 +1565,7 @@
                 null
               ],
               "name": "",
-              "scope": 2721,
+              "scope": 2699,
               "stateMutability": "nonpayable",
               "virtual": false,
               "visibility": "public"
@@ -1578,9 +1578,9 @@
                   ]
                 },
                 "children": [],
-                "id": 2717,
+                "id": 2695,
                 "name": "ParameterList",
-                "src": "1721:2:13"
+                "src": "1725:2:12"
               },
               {
                 "attributes": {
@@ -1589,9 +1589,9 @@
                   ]
                 },
                 "children": [],
-                "id": 2718,
+                "id": 2696,
                 "name": "ParameterList",
-                "src": "1731:0:13"
+                "src": "1735:0:12"
               },
               {
                 "attributes": {
@@ -1600,24 +1600,24 @@
                   ]
                 },
                 "children": [],
-                "id": 2719,
+                "id": 2697,
                 "name": "Block",
-                "src": "1731:2:13"
+                "src": "1735:2:12"
               }
             ],
-            "id": 2720,
+            "id": 2698,
             "name": "FunctionDefinition",
-            "src": "1710:23:13"
+            "src": "1714:23:12"
           }
         ],
-        "id": 2721,
+        "id": 2699,
         "name": "ContractDefinition",
-        "src": "150:1585:13"
+        "src": "150:1589:12"
       }
     ],
-    "id": 2722,
+    "id": 2700,
     "name": "SourceUnit",
-    "src": "39:1697:13"
+    "src": "39:1701:12"
   },
   "compiler": {
     "name": "solc",
@@ -1625,7 +1625,7 @@
   },
   "networks": {},
   "schemaVersion": "3.4.1",
-  "updatedAt": "2021-07-21T21:40:45.452Z",
+  "updatedAt": "2021-08-18T20:46:44.631Z",
   "devdoc": {
     "kind": "dev",
     "methods": {},

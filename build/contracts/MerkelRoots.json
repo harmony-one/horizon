@@ -15,15 +15,15 @@
     "absolutePath": "project:/contracts/ethash/MerkelRoot.sol",
     "exportedSymbols": {
       "MerkelRoots": [
-        7867
+        7885
       ]
     },
-    "id": 7868,
+    "id": 7886,
     "license": "UNLICENSED",
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 7824,
+        "id": 7842,
         "literals": [
           "solidity",
           "^",
@@ -33,7 +33,7 @@
         "src": "39:21:24"
       },
       {
-        "id": 7825,
+        "id": 7843,
         "literals": [
           "experimental",
           "ABIEncoderV2"
@@ -47,20 +47,20 @@
         "contractDependencies": [],
         "contractKind": "contract",
         "fullyImplemented": true,
-        "id": 7867,
+        "id": 7885,
         "linearizedBaseContracts": [
-          7867
+          7885
         ],
         "name": "MerkelRoots",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
             "constant": true,
-            "id": 7828,
+            "id": 7846,
             "mutability": "constant",
             "name": "epochStart",
             "nodeType": "VariableDeclaration",
-            "scope": 7867,
+            "scope": 7885,
             "src": "123:32:24",
             "stateVariable": true,
             "storageLocation": "default",
@@ -69,7 +69,7 @@
               "typeString": "uint64"
             },
             "typeName": {
-              "id": 7826,
+              "id": 7844,
               "name": "uint64",
               "nodeType": "ElementaryTypeName",
               "src": "123:6:24",
@@ -80,7 +80,7 @@
             },
             "value": {
               "hexValue": "333837",
-              "id": 7827,
+              "id": 7845,
               "isConstant": false,
               "isLValue": false,
               "isPure": true,
@@ -98,11 +98,11 @@
           },
           {
             "constant": true,
-            "id": 7831,
+            "id": 7849,
             "mutability": "constant",
             "name": "epochEnd",
             "nodeType": "VariableDeclaration",
-            "scope": 7867,
+            "scope": 7885,
             "src": "161:30:24",
             "stateVariable": true,
             "storageLocation": "default",
@@ -111,7 +111,7 @@
               "typeString": "uint64"
             },
             "typeName": {
-              "id": 7829,
+              "id": 7847,
               "name": "uint64",
               "nodeType": "ElementaryTypeName",
               "src": "161:6:24",
@@ -122,7 +122,7 @@
             },
             "value": {
               "hexValue": "333837",
-              "id": 7830,
+              "id": 7848,
               "isConstant": false,
               "isLValue": false,
               "isPure": true,
@@ -140,11 +140,11 @@
           },
           {
             "constant": true,
-            "id": 7834,
+            "id": 7852,
             "mutability": "constant",
             "name": "ROOTS",
             "nodeType": "VariableDeclaration",
-            "scope": 7867,
+            "scope": 7885,
             "src": "197:161:24",
             "stateVariable": true,
             "storageLocation": "default",
@@ -153,7 +153,7 @@
               "typeString": "bytes"
             },
             "typeName": {
-              "id": 7832,
+              "id": 7850,
               "name": "bytes",
               "nodeType": "ElementaryTypeName",
               "src": "197:5:24",
@@ -164,7 +164,7 @@
             },
             "value": {
               "hexValue": "58e6b093463d546aa98c4730e22904d16193f3dd9df36c468c27a58cb9b5a86e",
-              "id": 7833,
+              "id": 7851,
               "isConstant": false,
               "isLValue": false,
               "isPure": true,
@@ -181,22 +181,22 @@
           },
           {
             "body": {
-              "id": 7865,
+              "id": 7883,
               "nodeType": "Block",
               "src": "437:307:24",
               "statements": [
                 {
                   "assignments": [
-                    7842
+                    7860
                   ],
                   "declarations": [
                     {
                       "constant": false,
-                      "id": 7842,
+                      "id": 7860,
                       "mutability": "mutable",
                       "name": "roots",
                       "nodeType": "VariableDeclaration",
-                      "scope": 7865,
+                      "scope": 7883,
                       "src": "447:18:24",
                       "stateVariable": false,
                       "storageLocation": "memory",
@@ -205,7 +205,7 @@
                         "typeString": "bytes"
                       },
                       "typeName": {
-                        "id": 7841,
+                        "id": 7859,
                         "name": "bytes",
                         "nodeType": "ElementaryTypeName",
                         "src": "447:5:24",
@@ -217,13 +217,13 @@
                       "visibility": "internal"
                     }
                   ],
-                  "id": 7844,
+                  "id": 7862,
                   "initialValue": {
-                    "id": 7843,
+                    "id": 7861,
                     "name": "ROOTS",
                     "nodeType": "Identifier",
                     "overloadedDeclarations": [],
-                    "referencedDeclaration": 7834,
+                    "referencedDeclaration": 7852,
                     "src": "468:5:24",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bytes_memory_ptr",
@@ -241,7 +241,7 @@
                           "typeIdentifier": "t_bool",
                           "typeString": "bool"
                         },
-                        "id": 7852,
+                        "id": 7870,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
@@ -251,17 +251,17 @@
                             "typeIdentifier": "t_uint64",
                             "typeString": "uint64"
                           },
-                          "id": 7848,
+                          "id": 7866,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": false,
                           "lValueRequested": false,
                           "leftExpression": {
-                            "id": 7846,
+                            "id": 7864,
                             "name": "epoch",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 7836,
+                            "referencedDeclaration": 7854,
                             "src": "504:5:24",
                             "typeDescriptions": {
                               "typeIdentifier": "t_uint64",
@@ -271,11 +271,11 @@
                           "nodeType": "BinaryOperation",
                           "operator": ">=",
                           "rightExpression": {
-                            "id": 7847,
+                            "id": 7865,
                             "name": "epochStart",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 7828,
+                            "referencedDeclaration": 7846,
                             "src": "513:10:24",
                             "typeDescriptions": {
                               "typeIdentifier": "t_uint64",
@@ -295,17 +295,17 @@
                             "typeIdentifier": "t_uint64",
                             "typeString": "uint64"
                           },
-                          "id": 7851,
+                          "id": 7869,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": false,
                           "lValueRequested": false,
                           "leftExpression": {
-                            "id": 7849,
+                            "id": 7867,
                             "name": "epoch",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 7836,
+                            "referencedDeclaration": 7854,
                             "src": "527:5:24",
                             "typeDescriptions": {
                               "typeIdentifier": "t_uint64",
@@ -315,11 +315,11 @@
                           "nodeType": "BinaryOperation",
                           "operator": "<=",
                           "rightExpression": {
-                            "id": 7850,
+                            "id": 7868,
                             "name": "epochEnd",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 7831,
+                            "referencedDeclaration": 7849,
                             "src": "536:8:24",
                             "typeDescriptions": {
                               "typeIdentifier": "t_uint64",
@@ -340,7 +340,7 @@
                       },
                       {
                         "hexValue": "65706f6368206f7574206f662072616e676521",
-                        "id": 7853,
+                        "id": 7871,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": true,
@@ -366,7 +366,7 @@
                           "typeString": "literal_string \"epoch out of range!\""
                         }
                       ],
-                      "id": 7845,
+                      "id": 7863,
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
@@ -380,7 +380,7 @@
                         "typeString": "function (bool,string memory) pure"
                       }
                     },
-                    "id": 7854,
+                    "id": 7872,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -395,22 +395,22 @@
                       "typeString": "tuple()"
                     }
                   },
-                  "id": 7855,
+                  "id": 7873,
                   "nodeType": "ExpressionStatement",
                   "src": "483:106:24"
                 },
                 {
                   "assignments": [
-                    7857
+                    7875
                   ],
                   "declarations": [
                     {
                       "constant": false,
-                      "id": 7857,
+                      "id": 7875,
                       "mutability": "mutable",
                       "name": "index",
                       "nodeType": "VariableDeclaration",
-                      "scope": 7865,
+                      "scope": 7883,
                       "src": "599:13:24",
                       "stateVariable": false,
                       "storageLocation": "default",
@@ -419,7 +419,7 @@
                         "typeString": "uint256"
                       },
                       "typeName": {
-                        "id": 7856,
+                        "id": 7874,
                         "name": "uint256",
                         "nodeType": "ElementaryTypeName",
                         "src": "599:7:24",
@@ -431,13 +431,13 @@
                       "visibility": "internal"
                     }
                   ],
-                  "id": 7863,
+                  "id": 7881,
                   "initialValue": {
                     "commonType": {
                       "typeIdentifier": "t_uint64",
                       "typeString": "uint64"
                     },
-                    "id": 7862,
+                    "id": 7880,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -447,17 +447,17 @@
                         "typeIdentifier": "t_uint64",
                         "typeString": "uint64"
                       },
-                      "id": 7860,
+                      "id": 7878,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
                       "lValueRequested": false,
                       "leftExpression": {
-                        "id": 7858,
+                        "id": 7876,
                         "name": "epoch",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 7836,
+                        "referencedDeclaration": 7854,
                         "src": "615:5:24",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint64",
@@ -467,11 +467,11 @@
                       "nodeType": "BinaryOperation",
                       "operator": "-",
                       "rightExpression": {
-                        "id": 7859,
+                        "id": 7877,
                         "name": "epochStart",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 7828,
+                        "referencedDeclaration": 7846,
                         "src": "623:10:24",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint64",
@@ -488,7 +488,7 @@
                     "operator": "+",
                     "rightExpression": {
                       "hexValue": "31",
-                      "id": 7861,
+                      "id": 7879,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": true,
@@ -582,50 +582,50 @@
                   "evmVersion": "istanbul",
                   "externalReferences": [
                     {
-                      "declaration": 7839,
+                      "declaration": 7857,
                       "isOffset": false,
                       "isSlot": false,
                       "src": "685:4:24",
                       "valueSize": 1
                     },
                     {
-                      "declaration": 7857,
+                      "declaration": 7875,
                       "isOffset": false,
                       "isSlot": false,
                       "src": "714:5:24",
                       "valueSize": 1
                     },
                     {
-                      "declaration": 7842,
+                      "declaration": 7860,
                       "isOffset": false,
                       "isSlot": false,
                       "src": "703:5:24",
                       "valueSize": 1
                     }
                   ],
-                  "id": 7864,
+                  "id": 7882,
                   "nodeType": "InlineAssembly",
                   "src": "662:76:24"
                 }
               ]
             },
-            "id": 7866,
+            "id": 7884,
             "implemented": true,
             "kind": "function",
             "modifiers": [],
             "name": "getRootHash",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 7837,
+              "id": 7855,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 7836,
+                  "id": 7854,
                   "mutability": "mutable",
                   "name": "epoch",
                   "nodeType": "VariableDeclaration",
-                  "scope": 7866,
+                  "scope": 7884,
                   "src": "386:12:24",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -634,7 +634,7 @@
                     "typeString": "uint64"
                   },
                   "typeName": {
-                    "id": 7835,
+                    "id": 7853,
                     "name": "uint64",
                     "nodeType": "ElementaryTypeName",
                     "src": "386:6:24",
@@ -649,16 +649,16 @@
               "src": "385:14:24"
             },
             "returnParameters": {
-              "id": 7840,
+              "id": 7858,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 7839,
+                  "id": 7857,
                   "mutability": "mutable",
                   "name": "hash",
                   "nodeType": "VariableDeclaration",
-                  "scope": 7866,
+                  "scope": 7884,
                   "src": "423:12:24",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -667,7 +667,7 @@
                     "typeString": "bytes32"
                   },
                   "typeName": {
-                    "id": 7838,
+                    "id": 7856,
                     "name": "bytes32",
                     "nodeType": "ElementaryTypeName",
                     "src": "423:7:24",
@@ -681,14 +681,14 @@
               ],
               "src": "422:14:24"
             },
-            "scope": 7867,
+            "scope": 7885,
             "src": "365:379:24",
             "stateMutability": "pure",
             "virtual": false,
             "visibility": "internal"
           }
         ],
-        "scope": 7868,
+        "scope": 7886,
         "src": "96:650:24"
       }
     ],
@@ -699,7 +699,7 @@
       "absolutePath": "project:/contracts/ethash/MerkelRoot.sol",
       "exportedSymbols": {
         "MerkelRoots": [
-          7867
+          7885
         ]
       },
       "license": "UNLICENSED"
@@ -713,7 +713,7 @@
             "0.7"
           ]
         },
-        "id": 7824,
+        "id": 7842,
         "name": "PragmaDirective",
         "src": "39:21:24"
       },
@@ -724,7 +724,7 @@
             "ABIEncoderV2"
           ]
         },
-        "id": 7825,
+        "id": 7843,
         "name": "PragmaDirective",
         "src": "61:33:24"
       },
@@ -740,10 +740,10 @@
           "contractKind": "contract",
           "fullyImplemented": true,
           "linearizedBaseContracts": [
-            7867
+            7885
           ],
           "name": "MerkelRoots",
-          "scope": 7868
+          "scope": 7886
         },
         "children": [
           {
@@ -751,7 +751,7 @@
               "constant": true,
               "mutability": "constant",
               "name": "epochStart",
-              "scope": 7867,
+              "scope": 7885,
               "stateVariable": true,
               "storageLocation": "default",
               "type": "uint64",
@@ -763,7 +763,7 @@
                   "name": "uint64",
                   "type": "uint64"
                 },
-                "id": 7826,
+                "id": 7844,
                 "name": "ElementaryTypeName",
                 "src": "123:6:24"
               },
@@ -778,12 +778,12 @@
                   "type": "int_const 387",
                   "value": "387"
                 },
-                "id": 7827,
+                "id": 7845,
                 "name": "Literal",
                 "src": "152:3:24"
               }
             ],
-            "id": 7828,
+            "id": 7846,
             "name": "VariableDeclaration",
             "src": "123:32:24"
           },
@@ -792,7 +792,7 @@
               "constant": true,
               "mutability": "constant",
               "name": "epochEnd",
-              "scope": 7867,
+              "scope": 7885,
               "stateVariable": true,
               "storageLocation": "default",
               "type": "uint64",
@@ -804,7 +804,7 @@
                   "name": "uint64",
                   "type": "uint64"
                 },
-                "id": 7829,
+                "id": 7847,
                 "name": "ElementaryTypeName",
                 "src": "161:6:24"
               },
@@ -819,12 +819,12 @@
                   "type": "int_const 387",
                   "value": "387"
                 },
-                "id": 7830,
+                "id": 7848,
                 "name": "Literal",
                 "src": "188:3:24"
               }
             ],
-            "id": 7831,
+            "id": 7849,
             "name": "VariableDeclaration",
             "src": "161:30:24"
           },
@@ -833,7 +833,7 @@
               "constant": true,
               "mutability": "constant",
               "name": "ROOTS",
-              "scope": 7867,
+              "scope": 7885,
               "stateVariable": true,
               "storageLocation": "default",
               "type": "bytes",
@@ -845,7 +845,7 @@
                   "name": "bytes",
                   "type": "bytes"
                 },
-                "id": 7832,
+                "id": 7850,
                 "name": "ElementaryTypeName",
                 "src": "197:5:24"
               },
@@ -859,12 +859,12 @@
                   "token": "string",
                   "type": "literal_string hex\"58e6b093463d546aa98c4730e22904d16193f3dd9df36c468c27a58cb9b5a86e\""
                 },
-                "id": 7833,
+                "id": 7851,
                 "name": "Literal",
                 "src": "228:130:24"
               }
             ],
-            "id": 7834,
+            "id": 7852,
             "name": "VariableDeclaration",
             "src": "197:161:24"
           },
@@ -877,7 +877,7 @@
                 null
               ],
               "name": "getRootHash",
-              "scope": 7867,
+              "scope": 7885,
               "stateMutability": "pure",
               "virtual": false,
               "visibility": "internal"
@@ -890,7 +890,7 @@
                       "constant": false,
                       "mutability": "mutable",
                       "name": "epoch",
-                      "scope": 7866,
+                      "scope": 7884,
                       "stateVariable": false,
                       "storageLocation": "default",
                       "type": "uint64",
@@ -902,17 +902,17 @@
                           "name": "uint64",
                           "type": "uint64"
                         },
-                        "id": 7835,
+                        "id": 7853,
                         "name": "ElementaryTypeName",
                         "src": "386:6:24"
                       }
                     ],
-                    "id": 7836,
+                    "id": 7854,
                     "name": "VariableDeclaration",
                     "src": "386:12:24"
                   }
                 ],
-                "id": 7837,
+                "id": 7855,
                 "name": "ParameterList",
                 "src": "385:14:24"
               },
@@ -923,7 +923,7 @@
                       "constant": false,
                       "mutability": "mutable",
                       "name": "hash",
-                      "scope": 7866,
+                      "scope": 7884,
                       "stateVariable": false,
                       "storageLocation": "default",
                       "type": "bytes32",
@@ -935,17 +935,17 @@
                           "name": "bytes32",
                           "type": "bytes32"
                         },
-                        "id": 7838,
+                        "id": 7856,
                         "name": "ElementaryTypeName",
                         "src": "423:7:24"
                       }
                     ],
-                    "id": 7839,
+                    "id": 7857,
                     "name": "VariableDeclaration",
                     "src": "423:12:24"
                   }
                 ],
-                "id": 7840,
+                "id": 7858,
                 "name": "ParameterList",
                 "src": "422:14:24"
               },
@@ -954,7 +954,7 @@
                   {
                     "attributes": {
                       "assignments": [
-                        7842
+                        7860
                       ]
                     },
                     "children": [
@@ -963,7 +963,7 @@
                           "constant": false,
                           "mutability": "mutable",
                           "name": "roots",
-                          "scope": 7865,
+                          "scope": 7883,
                           "stateVariable": false,
                           "storageLocation": "memory",
                           "type": "bytes",
@@ -975,12 +975,12 @@
                               "name": "bytes",
                               "type": "bytes"
                             },
-                            "id": 7841,
+                            "id": 7859,
                             "name": "ElementaryTypeName",
                             "src": "447:5:24"
                           }
                         ],
-                        "id": 7842,
+                        "id": 7860,
                         "name": "VariableDeclaration",
                         "src": "447:18:24"
                       },
@@ -989,16 +989,16 @@
                           "overloadedDeclarations": [
                             null
                           ],
-                          "referencedDeclaration": 7834,
+                          "referencedDeclaration": 7852,
                           "type": "bytes memory",
                           "value": "ROOTS"
                         },
-                        "id": 7843,
+                        "id": 7861,
                         "name": "Identifier",
                         "src": "468:5:24"
                       }
                     ],
-                    "id": 7844,
+                    "id": 7862,
                     "name": "VariableDeclarationStatement",
                     "src": "447:26:24"
                   },
@@ -1039,7 +1039,7 @@
                               "type": "function (bool,string memory) pure",
                               "value": "require"
                             },
-                            "id": 7845,
+                            "id": 7863,
                             "name": "Identifier",
                             "src": "483:7:24"
                           },
@@ -1076,11 +1076,11 @@
                                       "overloadedDeclarations": [
                                         null
                                       ],
-                                      "referencedDeclaration": 7836,
+                                      "referencedDeclaration": 7854,
                                       "type": "uint64",
                                       "value": "epoch"
                                     },
-                                    "id": 7846,
+                                    "id": 7864,
                                     "name": "Identifier",
                                     "src": "504:5:24"
                                   },
@@ -1089,16 +1089,16 @@
                                       "overloadedDeclarations": [
                                         null
                                       ],
-                                      "referencedDeclaration": 7828,
+                                      "referencedDeclaration": 7846,
                                       "type": "uint64",
                                       "value": "epochStart"
                                     },
-                                    "id": 7847,
+                                    "id": 7865,
                                     "name": "Identifier",
                                     "src": "513:10:24"
                                   }
                                 ],
-                                "id": 7848,
+                                "id": 7866,
                                 "name": "BinaryOperation",
                                 "src": "504:19:24"
                               },
@@ -1121,11 +1121,11 @@
                                       "overloadedDeclarations": [
                                         null
                                       ],
-                                      "referencedDeclaration": 7836,
+                                      "referencedDeclaration": 7854,
                                       "type": "uint64",
                                       "value": "epoch"
                                     },
-                                    "id": 7849,
+                                    "id": 7867,
                                     "name": "Identifier",
                                     "src": "527:5:24"
                                   },
@@ -1134,21 +1134,21 @@
                                       "overloadedDeclarations": [
                                         null
                                       ],
-                                      "referencedDeclaration": 7831,
+                                      "referencedDeclaration": 7849,
                                       "type": "uint64",
                                       "value": "epochEnd"
                                     },
-                                    "id": 7850,
+                                    "id": 7868,
                                     "name": "Identifier",
                                     "src": "536:8:24"
                                   }
                                 ],
-                                "id": 7851,
+                                "id": 7869,
                                 "name": "BinaryOperation",
                                 "src": "527:17:24"
                               }
                             ],
-                            "id": 7852,
+                            "id": 7870,
                             "name": "BinaryOperation",
                             "src": "504:40:24"
                           },
@@ -1163,24 +1163,24 @@
                               "type": "literal_string \"epoch out of range!\"",
                               "value": "epoch out of range!"
                             },
-                            "id": 7853,
+                            "id": 7871,
                             "name": "Literal",
                             "src": "558:21:24"
                           }
                         ],
-                        "id": 7854,
+                        "id": 7872,
                         "name": "FunctionCall",
                         "src": "483:106:24"
                       }
                     ],
-                    "id": 7855,
+                    "id": 7873,
                     "name": "ExpressionStatement",
                     "src": "483:106:24"
                   },
                   {
                     "attributes": {
                       "assignments": [
-                        7857
+                        7875
                       ]
                     },
                     "children": [
@@ -1189,7 +1189,7 @@
                           "constant": false,
                           "mutability": "mutable",
                           "name": "index",
-                          "scope": 7865,
+                          "scope": 7883,
                           "stateVariable": false,
                           "storageLocation": "default",
                           "type": "uint256",
@@ -1201,12 +1201,12 @@
                               "name": "uint256",
                               "type": "uint256"
                             },
-                            "id": 7856,
+                            "id": 7874,
                             "name": "ElementaryTypeName",
                             "src": "599:7:24"
                           }
                         ],
-                        "id": 7857,
+                        "id": 7875,
                         "name": "VariableDeclaration",
                         "src": "599:13:24"
                       },
@@ -1243,11 +1243,11 @@
                                   "overloadedDeclarations": [
                                     null
                                   ],
-                                  "referencedDeclaration": 7836,
+                                  "referencedDeclaration": 7854,
                                   "type": "uint64",
                                   "value": "epoch"
                                 },
-                                "id": 7858,
+                                "id": 7876,
                                 "name": "Identifier",
                                 "src": "615:5:24"
                               },
@@ -1256,16 +1256,16 @@
                                   "overloadedDeclarations": [
                                     null
                                   ],
-                                  "referencedDeclaration": 7828,
+                                  "referencedDeclaration": 7846,
                                   "type": "uint64",
                                   "value": "epochStart"
                                 },
-                                "id": 7859,
+                                "id": 7877,
                                 "name": "Identifier",
                                 "src": "623:10:24"
                               }
                             ],
-                            "id": 7860,
+                            "id": 7878,
                             "name": "BinaryOperation",
                             "src": "615:18:24"
                           },
@@ -1280,17 +1280,17 @@
                               "type": "int_const 1",
                               "value": "1"
                             },
-                            "id": 7861,
+                            "id": 7879,
                             "name": "Literal",
                             "src": "636:1:24"
                           }
                         ],
-                        "id": 7862,
+                        "id": 7880,
                         "name": "BinaryOperation",
                         "src": "615:22:24"
                       }
                     ],
-                    "id": 7863,
+                    "id": 7881,
                     "name": "VariableDeclarationStatement",
                     "src": "599:38:24"
                   },
@@ -1299,21 +1299,21 @@
                       "evmVersion": "istanbul",
                       "externalReferences": [
                         {
-                          "declaration": 7839,
+                          "declaration": 7857,
                           "isOffset": false,
                           "isSlot": false,
                           "src": "685:4:24",
                           "valueSize": 1
                         },
                         {
-                          "declaration": 7857,
+                          "declaration": 7875,
                           "isOffset": false,
                           "isSlot": false,
                           "src": "714:5:24",
                           "valueSize": 1
                         },
                         {
-                          "declaration": 7842,
+                          "declaration": 7860,
                           "isOffset": false,
                           "isSlot": false,
                           "src": "703:5:24",
@@ -1323,27 +1323,27 @@
                       "operations": "{\n    hash := mload(add(roots, mul(index, 0x20)))\n}"
                     },
                     "children": [],
-                    "id": 7864,
+                    "id": 7882,
                     "name": "InlineAssembly",
                     "src": "662:76:24"
                   }
                 ],
-                "id": 7865,
+                "id": 7883,
                 "name": "Block",
                 "src": "437:307:24"
               }
             ],
-            "id": 7866,
+            "id": 7884,
             "name": "FunctionDefinition",
             "src": "365:379:24"
           }
         ],
-        "id": 7867,
+        "id": 7885,
         "name": "ContractDefinition",
         "src": "96:650:24"
       }
     ],
-    "id": 7868,
+    "id": 7886,
     "name": "SourceUnit",
     "src": "39:708:24"
   },
@@ -1353,7 +1353,7 @@
   },
   "networks": {},
   "schemaVersion": "3.4.1",
-  "updatedAt": "2021-07-21T21:40:45.614Z",
+  "updatedAt": "2021-08-17T01:51:56.806Z",
   "devdoc": {
     "kind": "dev",
     "methods": {},

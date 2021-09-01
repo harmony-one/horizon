@@ -3,9 +3,6 @@ pragma solidity ^0.7;
 pragma experimental ABIEncoderV2;
 
 import {SafeMath} from "openzeppelin-solidity/contracts/math/SafeMath.sol";
-// import {BytesLib} from '@summa-tx/bitcoin-spv-sol/contracts/BytesLib.sol';
-// import {BTCUtils} from '@summa-tx/bitcoin-spv-sol/contracts/BTCUtils.sol';
-// import {ValidateSPV} from '@summa-tx/bitcoin-spv-sol/contracts/ValidateSPV.sol';
 import "./EthereumLightClientStorage.sol";
 
 import "./EthereumParser.sol";
@@ -15,68 +12,12 @@ import "./ethash/ethash.sol";
 /// @title Ethereum light client
 contract EthereumLightClient is EthereumLightClientStorage, Ethash {
     using SafeMath for uint256;
-    // using BytesLib for bytes;
-    // using BTCUtils for bytes;
 
     struct HeaderInfo {
         uint256 total_difficulty;
         bytes32 parent_hash;
         uint64 number;
     }
-
-    // // NEAR rainbow
-    // /// Whether client validates the PoW when accepting the header. Should only be set to `false`
-    // /// for debugging, testing, diagnostic purposes when used with Ganache.
-    // bool validate_ethash;
-    // /// The epoch from which the DAG merkle roots start.
-    // uint64 dags_start_epoch;
-    // /// DAG merkle roots for the next several years.
-    // bytes32[] dags_merkle_roots;
-    // /// Hash of the header that has the highest cumulative difficulty. The current head of the
-    // /// canonical chain.
-    // bytes32 best_header_hash;
-    // /// We store the hashes of the blocks for the past `hashes_gc_threshold` headers.
-    // /// Events that happen past this threshold cannot be verified by the client.
-    // /// It is desirable that this number is larger than 7 days worth of headers, which is roughly
-    // /// 40k Ethereum blocks. So this number should be 40k in production.
-    // uint64 hashes_gc_threshold;
-    // /// We store full information about the headers for the past `finalized_gc_threshold` blocks.
-    // /// This is required to be able to adjust the canonical chain when the fork switch happens.
-    // /// The commonly used number is 500 blocks, so this number should be 500 in production.
-    // uint64 finalized_gc_threshold;
-    // /// Number of confirmations that applications can use to consider the transaction safe.
-    // /// For most use cases 25 should be enough, for super safe cases it should be 500.
-    // uint64 num_confirmations;
-    // /// Hashes of the canonical chain mapped to their numbers. Stores up to `hashes_gc_threshold`
-    // /// entries.
-    // /// header number -> header hash
-    // mapping(uint64 => bytes32) public canonical_header_hashes;
-    // /// All known header hashes. Stores up to `finalized_gc_threshold`.
-    // /// header number -> hashes of all headers with this number.
-    // mapping(uint64 => bytes32[]) public all_header_hashes;
-    // /// Known headers. Stores up to `finalized_gc_threshold`.
-    // mapping(uint => EthereumParser.BlockHeader) public headers;
-    // /// Minimal information about the headers, like cumulative difficulty. Stores up to
-    // /// `finalized_gc_threshold`.
-    // mapping(uint => HeaderInfo) public infos;
-
-    // constructor(
-    //     // bool _validate_ethash,
-    //     // uint64 _dags_start_epoch,
-    //     // bytes32[] memory _dags_merkle_roots,
-    //     // bytes32[] memory _first_header,
-    //     // uint64 _hashes_gc_threshold,
-    //     // uint64 _finalized_gc_threshold,
-    //     // uint64 _num_confirmations
-    // ) public {
-    //     // validate_ethash = _validate_ethash;
-    //     // dags_start_epoch = _dags_start_epoch;
-    //     // dags_merkle_roots = _dags_merkle_roots;
-    //     // first_header = _first_header;
-    //     // hashes_gc_threshold = _hashes_gc_threshold;
-    //     // finalized_gc_threshold = _finalized_gc_threshold;
-    //     // num_confirmations = _num_confirmations;
-    // }
 
     uint256 private constant DEFAULT_FINALITY_CONFIRMS = 13;
 
@@ -88,7 +29,7 @@ contract EthereumLightClient is EthereumLightClientStorage, Ethash {
         uint256 blockHash = EthereumParser.calcBlockHeaderHash(_rlpHeader);
         // Parse rlp-encoded block header into structure
         EthereumParser.BlockHeader memory header = EthereumParser
-        .parseBlockHeader(_rlpHeader);
+            .parseBlockHeader(_rlpHeader);
         // Save block header info
         StoredBlockHeader memory storedBlock = StoredBlockHeader({
             parentHash: header.parentHash,
@@ -119,7 +60,7 @@ contract EthereumLightClient is EthereumLightClientStorage, Ethash {
 
         // Parse rlp-encoded block header into structure
         EthereumParser.BlockHeader memory header = EthereumParser
-        .parseBlockHeader(_rlpHeader);
+            .parseBlockHeader(_rlpHeader);
 
         // Check the existence of parent block
         require(

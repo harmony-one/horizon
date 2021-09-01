@@ -32,6 +32,8 @@ contract HarmonyLightClientStorage {
         uint128 stake;
     }
 
+    mapping(uint256 => mapping(uint256 => bytes)) epochShardCommittees;
+
     mapping(uint256 => BlockHeader) public blocks;
     mapping(uint256 => bytes32) blockHashes;
     mapping(uint256 => bytes32) epochBlockHashes;

@@ -4,8 +4,8 @@ const { getHeaderProof, parseRlpHeader, getBlock } = require('./ethashProof/Bloc
 const { blockRelayLoop } = require('./eth2hmy-relay/elcRelay');
 const { deployELC, statusELC } = require('./elc/contract');
 const { merkelRootSol } = require('./ethashProof/MerkelRootSol');
-const { EProve } = require('../eprover');
-const { deployEVerifier, MPTProof } = require('./everifier/contract');
+const { EProver } = require('../scripts/eprover');
+const { deployEVerifier, ValidateMPTProof } = require('./everifier/contract');
 const {
   deployBridges,
   tokenMap, tokenTo, tokenBack,
@@ -120,14 +120,14 @@ CMD_ELC
   await statusELC(hmyUrl, elcAddress);
 });
 
-const CMD_EProve = program.command('EProve').description('ethereum receipt prove cli')
+const CMD_EProver = program.command('EProver').description('ethereum receipt prove cli')
 
-CMD_EProve
+CMD_EProver
 .command('proof <ethUrl> <tx_hash>')
 .description('get receipt proof of a transaction from ethereum')
 .option('-o,--output <OUTPUT>', 'output file')
 .action(async (ethUrl, txHash, options) => {
-  const ep = new EProve(ethUrl);
+  const ep = new EProver(ethUrl);
   const proof = await ep.receiptProof(txHash);
   const keys = Object.keys(proof);
   const out = {};
@@ -148,9 +148,9 @@ CMD_EVerifier
 .option('-o,--output <OUTPUT>', 'output file')
 .option('-t --type <output format>', 'output format: json/rlp', 'json')
 .action(async (ethUrl, txHash, hmyUrl, evAddress, options) => {
-  const ep = new EProve(ethUrl);
+  const ep = new EProver(ethUrl);
   const proof = await ep.receiptProof(txHash);
-  const receiptObj = await MPTProof(hmyUrl, evAddress, proof);
+  const receiptObj = await ValidateMPTProof(hmyUrl, evAddress, proof);
   const out = options.type == 'json' ? receiptObj.toJson() : receiptObj.toHex();
   if(options.output){
     fs.writeFileSync(options.output, out);

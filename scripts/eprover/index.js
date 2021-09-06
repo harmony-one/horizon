@@ -1,2 +1,2 @@
-const {EProve} = require('./txProof');
-module.exports = {EProve}
+const {EProver} = require('./txProof');
+module.exports = {EProver}

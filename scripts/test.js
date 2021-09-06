@@ -50,7 +50,7 @@ async function processMMRProof(err, res) {
   let root = '0x'+proof.root;
   let width = proof.width;
   let index = 12;
-  let value = web3.utils.hexToBytes("0xf2cf39de4d2b723b0cd348f354428597908053fde3ca04baadb88567a940e14e");
+  let value = web3.utils.hexToBytes("0xe40cee5629973020ce841baee9405afb73a215f27ffc1e232a5b665346abb3e6");
   let peaks = [
     "0x1086b6daeb590c506f8fb5f4aec47d861a74d04f7bef7ef4a87abd89f79dd0cf",
     "0x34b52955ac457f63ce8ccd39c0fb9f8ec288350f0e34920eae532f081f69fdc1"
@@ -105,13 +105,13 @@ async function processMMRProof(err, res) {
       jsonrpc: "2.0",
       id: "2",
     },
-    processMMRProof
-    // function (err, res) {
-    //   if (err) throw err;
-    //   let proof = res.result;
-    //   console.log(proof);
+    // processMMRProof
+    function (err, res) {
+      if (err) throw err;
+      let proof = res.result;
+      console.log(proof);
       
-    // }
+    }
   );
 })();
 

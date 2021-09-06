@@ -8,8 +8,8 @@ class HmyBridge extends Bridge {
         const web3 = new HmyWeb3(rpcUrl);
         const contract = web3.ContractAt(BridgeSol.abi, bridgeAddress);
         // const hprove = null; // TODO
-        const { EProve } = require('../../eprover');
-        const hprove = new EProve(rpcUrl); // TODO
+        const { EProver } = require('../../scripts/eprover');
+        const hprove = new EProver(rpcUrl); // TODO
 
         super(web3, contract, hprove);
     }

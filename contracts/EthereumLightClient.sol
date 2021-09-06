@@ -6,7 +6,7 @@ import {SafeMath} from "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "./EthereumLightClientStorage.sol";
 
 import "./EthereumParser.sol";
-import "./EthUtils.sol";
+import "./lib/EthUtils.sol";
 import "./ethash/ethash.sol";
 
 /// @title Ethereum light client

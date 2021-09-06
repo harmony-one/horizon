@@ -1,6 +1,6 @@
 class Bridge {
     // contract: bridge contract
-    // prover: eprove/hprover
+    // prover: eprover/hprover
     constructor(web3, contract, prover) {
         this.web3 = web3;
         this.contract = contract;
@@ -11,14 +11,14 @@ class Bridge {
         return this.prover.receiptProof(txHash)
     }
 
-    execProof(proofData) {
+    ExecProof(proofData) {
         const {hash, root, key, proof} = proofData;
-        const tx = this.contract.methods.ExecProof(hash, root, key, proof);
+        const tx = this.contract.methods.validateAndExecuteProof(hash, root, key, proof);
         return this.web3.sendTx(tx);
     }
 
     Bind(bridgeAddress) {
-        const tx = this.contract.methods.Bind(bridgeAddress);
+        const tx = this.contract.methods.bind(bridgeAddress);
         return this.web3.sendTx(tx);
     }
 
@@ -27,18 +27,18 @@ class Bridge {
         return this.web3.sendTx(tx);
     } 
 
-    RainbowMap(token) {
-        const tx = this.contract.methods.RainbowMap(token);
+    IssueTokenMapReq(token) {
+        const tx = this.contract.methods.issueTokenMapReq(token);
         return this.web3.sendTx(tx);
     }
 
-    RainbowTo(token, to, amount) {
-        const tx = this.contract.methods.RainbowTo(token, to, amount);
+    Deposit(token, to, amount) {
+        const tx = this.contract.methods.deposit(token, to, amount);
         return this.web3.sendTx(tx);
     }
 
-    RainbowBack(token, to, amount) {
-        const tx = this.contract.methods.RainbowBack(token, to, amount);
+    Withdraw(token, to, amount) {
+        const tx = this.contract.methods.withdraw(token, to, amount);
         return this.web3.sendTx(tx);
     }
 
@@ -53,14 +53,14 @@ class Bridge {
     // dest: dest Bridge
     // tx: tx hash on src chain
     static CrossRelay(src, dest, tx) {
-        return src.getProof(tx).then(proof=>dest.execProof(proof));
+        return src.getProof(tx).then(proof=>dest.ExecProof(proof));
     }
 
     // src: src Bridge
     // dest: dest Bridge
     // token: ERC20 address on src chain
     static async TokenMap(src, dest, token) {
-        const mapReq = await src.RainbowMap(token);
+        const mapReq = await src.IssueTokenMapReq(token);
         // wait light client
         const mapAck = await Bridge.CrossRelay(src, dest, mapReq.transactionHash);
         // wait light client
@@ -73,7 +73,7 @@ class Bridge {
     // to: receipt address on dest chain
     // amount: token amount
     static async TokenTo(src, dest, token, to, amount) {
-        const tx = await src.RainbowTo(token, to, amount);
+        const tx = await src.Deposit(token, to, amount);
         // wait light client
         return Bridge.CrossRelay(src, dest, tx.transactionHash);
     }
@@ -84,7 +84,7 @@ class Bridge {
     // to: receipt address on dest chain
     // amount: token amount
     static async TokenBack(src, dest, token, to, amount) {
-        const tx = await src.RainbowBack(token, to, amount);
+        const tx = await src.Withdraw(token, to, amount);
         // wait light client
         return Bridge.CrossRelay(src, dest, tx.transactionHash);
     }

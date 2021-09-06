@@ -131,15 +131,6 @@ library EthereumProver {
         }
     }
 
-    function MPTProof(
-        bytes32 rootHash,
-        bytes memory mptkey,
-        bytes memory proof
-    ) internal pure returns (bytes memory) {
-        RLPReader.RLPItem[] memory stacks = proof.toRlpItem().toList();
-        return validateMPTProof(rootHash, mptkey, stacks);
-    }
-
     /// @dev Validates a Merkle-Patricia-Trie proof.
     ///      If the proof proves the inclusion of some key-value pair in the
     ///      trie, the value is returned. Otherwise, i.e. if the proof proves
@@ -148,15 +139,16 @@ library EthereumProver {
     /// @param rootHash is the Keccak-256 hash of the root node of the MPT.
     /// @param mptKey is the key (consisting of nibbles) of the node whose
     ///        inclusion/exclusion we are proving.
-    /// @param stack is the stack of MPT nodes (starting with the root) that
+    /// @param proof is decoded to stack of MPT nodes (starting with the root) that
     ///        need to be traversed during verification.
     /// @return value whose inclusion is proved or an empty byte array for
     ///         a proof of exclusion
     function validateMPTProof(
         bytes32 rootHash,
         bytes memory mptKey,
-        RLPReader.RLPItem[] memory stack
+        bytes memory proof
     ) internal pure returns (bytes memory value) {
+        RLPReader.RLPItem[] memory stack = proof.toRlpItem().toList();
         mptKey = decodeNibbles(mptKey, 0, 1);
         uint256 mptKeyOffset = 0;
 

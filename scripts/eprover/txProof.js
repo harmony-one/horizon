@@ -8,7 +8,7 @@ function sha3(str) {
     return hash.digest();
 }
 
-class EProve {
+class EProver {
     constructor(ethUrl) {
         this.gp = new GetProof(ethUrl);
     }
@@ -25,4 +25,4 @@ class EProve {
 }
 
 
-module.exports = {EProve}
+module.exports = {EProver}

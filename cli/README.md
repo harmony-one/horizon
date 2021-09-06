@@ -19,7 +19,7 @@ CLI is a utility that provides a command-line interface to all the components to
 2. `node index.js ethRelay relay` constantly relay blocks from Ethereum to Harmony.
 
 ## Ethereum Receipt Prove CLI
-1. `node index.js EProve proof` get the proof data of the receipt of the transaction.
+1. `node index.js EProver proof` get the proof data of the receipt of the transaction.
 
 ## Ethereum Receipt Verifier CLI
 1. `node index.js EVerifier deploy` deploy EVerifier library contract to Harmony network.

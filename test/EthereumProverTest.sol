@@ -2,10 +2,10 @@
 pragma solidity ^0.7;
 pragma experimental ABIEncoderV2;
 
-import {EVerifier} from "../EthereumProver.sol";
+import {EProver} from "../contracts/EthereumProver.sol";
 
-contract EVerifierTest {
-    function MPTProof(bytes32 rootHash, bytes calldata mptkey, bytes calldata proof) pure external returns(bytes memory) {
-        return EVerifier.MPTProof(rootHash, mptkey, proof);
+contract EProverTest {
+    function ValidateMPTProof(bytes32 rootHash, bytes calldata mptkey, bytes calldata proof) pure external returns(bytes memory) {
+        return EProver.validateMPTProof(rootHash, mptkey, proof);
     }
 }

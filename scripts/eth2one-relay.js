@@ -1,4 +1,4 @@
-const ClientSol = artifacts.require("Client");
+const ClientSol = artifacts.require("EthereumLightClient");
 const EthashUtil = require('@ethereumjs/ethash/dist/util');
 const { getBlockByNumber } = require("../lib/getBlockHeader.js");
 const { DagProof } = require("../lib/DagProof.js");

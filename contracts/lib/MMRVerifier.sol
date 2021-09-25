@@ -9,6 +9,14 @@ pragma solidity ^0.7;
  *      And it uses keccak256 for its hash function instead of blake2b
  */
 library MMRVerifier {
+    struct MMRProof {
+        bytes32 root;
+        uint256 width;
+        uint256 index;
+        bytes32[] peaks;
+        bytes32[] siblings;
+    }
+    
     /**
      * @dev It returns true when the given params verifies that the given value exists in the tree or reverts the transaction.
      */
@@ -16,15 +24,15 @@ library MMRVerifier {
         bytes32 root,
         uint256 width,
         uint256 index,
-        bytes memory value,
+        bytes32 value32,
         bytes32[] memory peaks,
         bytes32[] memory siblings
     ) public pure returns (bool) {
-        bytes32 value32;
+        // bytes32 value32;
 
-        assembly {
-            value32 := mload(add(value, 32))
-        }
+        // assembly {
+        //     value32 := mload(add(value, 32))
+        // }
         uint256 size = getSize(width);
         require(size >= index, "Index is out of range");
         // Check the root equals the peak bagging hash

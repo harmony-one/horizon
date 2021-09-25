@@ -1,5 +1,5 @@
 const yargs = require('yargs');
-const ClientSol = artifacts.require("Client");
+const ClientSol = artifacts.require("EthereumLightClient");
 
 const D = console.log;
 

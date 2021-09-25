@@ -50,6 +50,8 @@
     "solium": "^1.2.5",
     "tslib": "^1.10.0",
     "web3": "1.3.4",
-    "yargs": "^16.2.0"
+    "yargs": "^16.2.0",
+    "merkle-patricia-tree": "4.2.1",
+    "@ethereumjs/common": "2.4.0"
   }
 }

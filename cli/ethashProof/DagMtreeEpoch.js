@@ -1,5 +1,4 @@
-const { DagProof } = require('../../eth2hmy-relay');
-
+const { DagProof } = require("../../eth2hmy-relay");
 
 function generateDagMTree(dagPath, epoch) {
     const dagProof = new DagProof(dagPath);
@@ -11,7 +10,7 @@ function genearateDagMTreeRange(dagPath, start, num) {
     start = Number(start);
     num = Number(num);
     const dagProofs = [];
-    for(let i = 0; i < num; i++) {
+    for (let i = 0; i < num; i++) {
         const epoch = start + i;
         console.log("generate epoch:", epoch);
         const proof = generateDagMTree(dagPath, start + i);
@@ -20,4 +19,4 @@ function genearateDagMTreeRange(dagPath, start, num) {
     return dagProofs;
 }
 
-module.exports = {generateDagMTree,genearateDagMTreeRange}
+module.exports = { generateDagMTree, genearateDagMTreeRange };

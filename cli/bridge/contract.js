@@ -1,8 +1,8 @@
 const { Bridge } = require("./bridge");
-const { EthBridge } = require('./ethBridge');
-const { HmyBridge } = require('./hmyBridge');
-const { FaucetERC20, ERC20 } = require('./token');
-const { EthWeb3 } = require('../lib/ethWeb3');
+const { EthBridge } = require("./ethBridge");
+const { HmyBridge } = require("./hmyBridge");
+const { FaucetERC20, ERC20 } = require("./token");
+const { EthWeb3 } = require("../lib/ethWeb3");
 const FakeClient = require("../../bridge/build/contracts/LightClientFake.json");
 
 async function deployBridges(ethUrl, hmyUrl) {
@@ -13,18 +13,32 @@ async function deployBridges(ethUrl, hmyUrl) {
     return { ethBridge, hmyBridge };
 }
 
-async function tokenMap(srcUrl, srcBridgeAddress, destUrl, destBridgeAddress, token) {
+async function tokenMap(
+    srcUrl,
+    srcBridgeAddress,
+    destUrl,
+    destBridgeAddress,
+    token
+) {
     const srcBridge = new EthBridge(srcUrl, srcBridgeAddress);
     const destBridge = new HmyBridge(destUrl, destBridgeAddress);
     await Bridge.TokenMap(srcBridge, destBridge, token);
     return { ethBridge: srcBridge, hmyBridge: destBridge };
 }
 
-async function tokenTo(srcUrl, srcBridgeAddress, destUrl, destBridgeAddress, token, receipt, amount) {
+async function tokenTo(
+    srcUrl,
+    srcBridgeAddress,
+    destUrl,
+    destBridgeAddress,
+    token,
+    receipt,
+    amount
+) {
     const srcBridge = new EthBridge(srcUrl, srcBridgeAddress);
     const destBridge = new HmyBridge(destUrl, destBridgeAddress);
 
-    if(amount > 0) {
+    if (amount > 0) {
         const erc20 = new ERC20(srcBridge.web3, token);
         await erc20.approve(srcBridge.contract._address, amount);
         await Bridge.TokenTo(srcBridge, destBridge, token, receipt, amount);
@@ -32,10 +46,18 @@ async function tokenTo(srcUrl, srcBridgeAddress, destUrl, destBridgeAddress, tok
     return { ethBridge: srcBridge, hmyBridge: destBridge };
 }
 
-async function tokenBack(srcUrl, srcBridgeAddress, destUrl, destBridgeAddress, token, receipt, amount) {
+async function tokenBack(
+    srcUrl,
+    srcBridgeAddress,
+    destUrl,
+    destBridgeAddress,
+    token,
+    receipt,
+    amount
+) {
     const srcBridge = new HmyBridge(srcUrl, srcBridgeAddress);
     const destBridge = new EthBridge(destUrl, destBridgeAddress);
-    if(amount > 0) {
+    if (amount > 0) {
         const erc20 = new ERC20(srcBridge.web3, token);
         await erc20.approve(srcBridge.contract._address, amount);
         await Bridge.TokenBack(srcBridge, destBridge, token, receipt, amount);
@@ -64,12 +86,16 @@ async function tokenStatus(web3, address, user) {
     const token = new ERC20(web3, address);
     const name = await token.name();
     const balance = await token.balanceOf(user);
-    return { token:address, name, account:web3.address, balance };
+    return { token: address, name, account: web3.address, balance };
 }
 
 module.exports = {
     deployBridges,
-    tokenMap, tokenTo, tokenBack,
-    tokenStatus, deployFaucet,
-    ChangeLightClient, deployFakeLightClient
+    tokenMap,
+    tokenTo,
+    tokenBack,
+    tokenStatus,
+    deployFaucet,
+    ChangeLightClient,
+    deployFakeLightClient,
 };

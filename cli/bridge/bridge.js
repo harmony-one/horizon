@@ -8,12 +8,17 @@ class Bridge {
     }
 
     getProof(txHash) {
-        return this.prover.receiptProof(txHash)
+        return this.prover.receiptProof(txHash);
     }
 
     ExecProof(proofData) {
-        const {hash, root, key, proof} = proofData;
-        const tx = this.contract.methods.validateAndExecuteProof(hash, root, key, proof);
+        const { hash, root, key, proof } = proofData;
+        const tx = this.contract.methods.validateAndExecuteProof(
+            hash,
+            root,
+            key,
+            proof
+        );
         return this.web3.sendTx(tx);
     }
 
@@ -25,7 +30,7 @@ class Bridge {
     ChangeLightClient(clientAddress) {
         const tx = this.contract.methods.changeLightClient(clientAddress);
         return this.web3.sendTx(tx);
-    } 
+    }
 
     IssueTokenMapReq(token) {
         const tx = this.contract.methods.issueTokenMapReq(token);
@@ -42,18 +47,18 @@ class Bridge {
         return this.web3.sendTx(tx);
     }
 
-    async TokenPair(token, isTx=true) {
-        const method = isTx?'TxMapped':'RxMappedInv';
+    async TokenPair(token, isTx = true) {
+        const method = isTx ? "TxMapped" : "RxMappedInv";
         const result = await this.contract.methods[method](token).call();
         const pair = [token, result];
-        return isTx?pair:pair.reverse();
+        return isTx ? pair : pair.reverse();
     }
 
     // src: src Bridge
     // dest: dest Bridge
     // tx: tx hash on src chain
     static CrossRelay(src, dest, tx) {
-        return src.getProof(tx).then(proof=>dest.ExecProof(proof));
+        return src.getProof(tx).then((proof) => dest.ExecProof(proof));
     }
 
     // src: src Bridge
@@ -90,5 +95,4 @@ class Bridge {
     }
 }
 
-module.exports = {Bridge}
-
+module.exports = { Bridge };

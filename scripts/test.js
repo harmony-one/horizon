@@ -96,12 +96,12 @@ async function processMMRProof(err, res) {
 }
 
 (async function() {
-  let txnHash = "0xe40cee5629973020ce841baee9405afb73a215f27ffc1e232a5b665346abb3e6";
+  let txnHash = "0xb03f8925206e47fd97243b8c0048e4a09162287fcf8b998053f6081c6e28e975";
   let local = new Web3(new Web3.providers.HttpProvider(process.env.LOCALNET));
   local.currentProvider.send(
     {
       method: "hmyv2_getTxMmrProof",
-      params: [txnHash],
+      params: [txnHash, 54],
       jsonrpc: "2.0",
       id: "2",
     },

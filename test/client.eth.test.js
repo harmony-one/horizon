@@ -1,4 +1,4 @@
-const ClientSol = artifacts.require("Client");
+const ClientSol = artifacts.require("EthereumLightClient");
 
 const TestCount = 15;
 const StartBlock = 11610000;

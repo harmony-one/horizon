@@ -7,95 +7,39 @@ pragma experimental ABIEncoderV2;
 
 import "./HarmonyParser.sol";
 import "./HarmonyLightClient.sol";
+import "./lib/MMRVerifier.sol";
 import "./lib/ECVerify.sol";
 import "./lib/MPT.sol";
 
-interface IHarmonyProver {
-    function lightClient() external view returns (address _lightClient);
-
-    function verifyTrieProof(MPT.MerkleProof memory data)
-        external
-        pure
-        returns (bool);
-
-    function verifyHeader(HarmonyParser.BlockHeader memory header)
-        external
-        view
-        returns (bool valid, string memory reason);
-
-    function verifyTransaction(
-        HarmonyParser.BlockHeader memory header,
-        MPT.MerkleProof memory txdata
-    ) external view returns (bool valid, string memory reason);
-
-    function verifyReceipt(
-        HarmonyParser.BlockHeader memory header,
-        MPT.MerkleProof memory receiptdata
-    ) external view returns (bool valid, string memory reason);
-
-    function verifyAccount(
-        HarmonyParser.BlockHeader memory header,
-        MPT.MerkleProof memory accountdata
-    ) external view returns (bool valid, string memory reason);
-
-    function verifyLog(
-        MPT.MerkleProof memory receiptdata,
-        bytes memory logdata,
-        uint256 logIndex
-    ) external view returns (bool valid, string memory reason);
-
-    function verifyTransactionAndStatus(
-        HarmonyParser.BlockHeader memory header,
-        MPT.MerkleProof memory receiptdata
-    ) external view returns (bool valid, string memory reason);
-
-    function verifyCode(
-        HarmonyParser.BlockHeader memory header,
-        MPT.MerkleProof memory accountdata
-    ) external view returns (bool valid, string memory reason);
-
-    function verifyStorage(
-        MPT.MerkleProof memory accountProof,
-        MPT.MerkleProof memory storageProof
-    ) external view returns (bool valid, string memory reason);
-}
-
-contract HarmonyProver is IHarmonyProver {
+library HarmonyProver {
     using MPT for MPT.MerkleProof;
-
-    HarmonyLightClient public client;
-
-    constructor(address lightClient) public {
-        client = HarmonyLightClient(lightClient);
-    }
-
-    function lightClient() public view override returns (address _lightClient) {
-        return address(client);
-    }
 
     function verifyTrieProof(MPT.MerkleProof memory data)
         public
         pure
-        override
         returns (bool)
     {
         return data.verifyTrieProof();
     }
 
-    function verifyHeader(HarmonyParser.BlockHeader memory header)
-        public
-        view
-        override
-        returns (bool valid, string memory reason)
-    {
-        bytes32 blockHash = keccak256(getBlockRlpData(header));
+    function verifyHeader(
+        HarmonyParser.BlockHeader memory header,
+        MMRVerifier.MMRProof memory proof
+    ) public view returns (bool valid, string memory reason) {
+        bytes32 blockHash = HarmonyParser.getBlockHash(header);
         if (blockHash != header.hash)
             return (false, "Header data or hash invalid");
 
         // Check block hash was registered in light client
-        bytes32 blockHashClient = client.getConfirmedBlockHash(header.number);
-        if (blockHashClient != header.hash)
-            return (false, "Unregistered block hash");
+        valid = MMRVerifier.inclusionProof(
+            proof.root,
+            proof.width,
+            proof.index,
+            blockHash,
+            proof.peaks,
+            proof.siblings
+        );
+        if (!valid) return (false, "verifyHeader - invalid proof");
 
         return (true, "");
     }
@@ -103,7 +47,7 @@ contract HarmonyProver is IHarmonyProver {
     function verifyTransaction(
         HarmonyParser.BlockHeader memory header,
         MPT.MerkleProof memory txdata
-    ) public pure override returns (bool valid, string memory reason) {
+    ) public pure returns (bool valid, string memory reason) {
         if (header.transactionsRoot != txdata.expectedRoot)
             return (false, "verifyTransaction - different trie roots");
 
@@ -116,7 +60,7 @@ contract HarmonyProver is IHarmonyProver {
     function verifyReceipt(
         HarmonyParser.BlockHeader memory header,
         MPT.MerkleProof memory receiptdata
-    ) public pure override returns (bool valid, string memory reason) {
+    ) public pure returns (bool valid, string memory reason) {
         if (header.receiptsRoot != receiptdata.expectedRoot)
             return (false, "verifyReceipt - different trie roots");
 
@@ -129,7 +73,7 @@ contract HarmonyProver is IHarmonyProver {
     function verifyAccount(
         HarmonyParser.BlockHeader memory header,
         MPT.MerkleProof memory accountdata
-    ) public pure override returns (bool valid, string memory reason) {
+    ) public pure returns (bool valid, string memory reason) {
         if (header.stateRoot != accountdata.expectedRoot)
             return (false, "verifyAccount - different trie roots");
 
@@ -143,9 +87,9 @@ contract HarmonyProver is IHarmonyProver {
         MPT.MerkleProof memory receiptdata,
         bytes memory logdata,
         uint256 logIndex
-    ) public pure override returns (bool valid, string memory reason) {
+    ) public pure returns (bool valid, string memory reason) {
         HarmonyParser.TransactionReceiptTrie memory receipt = HarmonyParser
-        .toReceipt(receiptdata.expectedValue);
+            .toReceipt(receiptdata.expectedValue);
 
         if (
             keccak256(logdata) ==
@@ -159,17 +103,17 @@ contract HarmonyProver is IHarmonyProver {
     function verifyTransactionAndStatus(
         HarmonyParser.BlockHeader memory header,
         MPT.MerkleProof memory receiptdata
-    ) external pure override returns (bool valid, string memory reason) {}
+    ) external pure returns (bool valid, string memory reason) {}
 
     function verifyCode(
         HarmonyParser.BlockHeader memory header,
         MPT.MerkleProof memory accountdata
-    ) public pure override returns (bool valid, string memory reason) {}
+    ) public pure returns (bool valid, string memory reason) {}
 
     function verifyStorage(
         MPT.MerkleProof memory accountProof,
         MPT.MerkleProof memory storageProof
-    ) public pure override returns (bool valid, string memory reason) {
+    ) public pure returns (bool valid, string memory reason) {
         HarmonyParser.Account memory account = HarmonyParser.toAccount(
             accountProof.expectedValue
         );
@@ -188,7 +132,7 @@ contract HarmonyProver is IHarmonyProver {
         uint256 chainId
     ) public pure returns (address sender) {
         HarmonyParser.Transaction memory transaction = HarmonyParser
-        .toTransaction(txdata.expectedValue);
+            .toTransaction(txdata.expectedValue);
         bytes memory txraw = HarmonyParser.getTransactionRaw(
             transaction,
             chainId

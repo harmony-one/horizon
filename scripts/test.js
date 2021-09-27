@@ -113,27 +113,27 @@ async function processMMRProof(err, res) {
       
     }
   );
-})();
+});
 
 (async function () {
-  let hash =
-    "0xccafeb5a1350eb361186b1e019515d1c8cc45a7021ff94a20cd342fb90d1a6df";
+  // let hash =
+  //   "0x7e79e06185d57b9b54ab1b579411556cc7631629814a268cb528086eb33e7648";
   let local = new Web3(new Web3.providers.HttpProvider(process.env.LOCALNET));
   local.currentProvider.send(
     {
       method: "hmyv2_getFullHeader",
-      params: ["23"],
+      params: ["20"],
       jsonrpc: "2.0",
       id: "2",
     },
     async function (err, result) {
       if (err) throw err;
       let headerBytes = toRLPHeader(result.result);
-      console.log(headerBytes.toString());
+      console.log(toHexString(headerBytes));
       console.log(web3.utils.keccak256(headerBytes));
     }
   );
-});
+})();
 
 function toHexString(byteArray) {
   return Array.from(byteArray, function (byte) {

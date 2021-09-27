@@ -5,6 +5,7 @@
 .env
 */node_modules
 /old_contracts
+/back
 
 node_modules
 build/contracts

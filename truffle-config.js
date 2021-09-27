@@ -6,22 +6,46 @@ const localnet = process.env.LOCALNET;
 const testnet = process.env.TESTNET;
 const mainnet = process.env.MAINNET;
 
+ETH_NODE_URL=process.env.ETH_NODE_URL;
+
 module.exports = {
   networks: {
-    localnet: {
+    hmy_local: {
       provider: () => new HDWalletProvider(privateKey, localnet),
       network_id: 1666700000,
       skipDryRun: true,
     },
-    testnet: {
+    hmy_test: {
       provider: () => new HDWalletProvider(privateKey, testnet),
       network_id: 1666700000,
       skipDryRun: true,
     },
-    mainnet: {
+    hmy_main: {
       provider: () => new HDWalletProvider(privateKey, mainnet),
       network_id: 1666600000,
       skipDryRun: true,
+    },
+    eth_main:{
+      provider: function () {
+        return new HDWalletProvider(privateKey, ETH_NODE_URL);
+      },
+      network_id: "*",  // match any network
+      gas: 4529340,
+      confirmations: 2,    // # of confs to wait between deployments. (default: 0)
+      timeoutBlocks: 200,  // # of blocks before a deployment times out  (minimum/default: 50)
+      skipDryRun: true,     // Skip dry run before migrations? (default: false for public nets )
+      networkCheckTimeout: 100000000
+    },
+    kovan: {
+      provider: function () {
+        return new HDWalletProvider(privateKey, ETH_NODE_URL);
+      },
+      network_id: "*",  // match any network
+      gas: 4529340,
+      confirmations: 2,    // # of confs to wait between deployments. (default: 0)
+      timeoutBlocks: 200,  // # of blocks before a deployment times out  (minimum/default: 50)
+      skipDryRun: true,     // Skip dry run before migrations? (default: false for public nets )
+      networkCheckTimeout: 100000000
     },
   },
 

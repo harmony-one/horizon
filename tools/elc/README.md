@@ -46,27 +46,27 @@ truffle test
 
 ## Tools
 > Run `source .env` if you haven't run it.
-### `tools/proofDump.js`
+### `./proofDump.js`
 1. Generate DAG merkel tree  
     Generates a DAG merkel tree for the specified Epoch. The DAG merkel tree is in `./dag/<epoch>` directory.
     ```
-    node tools/proofDump.js --dag --epoch=<epoch number>
+    node ./proofDump.js --dag --epoch=<epoch number>
     ```
-    example:`node tools/proofDump.js --dag --epoch=387`
+    example:`node ./proofDump.js --dag --epoch=387`
 > 1. When you generate DAG merkel tree for a new epoch, it usually takes several hours.
 > 2. Each epoch takes up 2GB+ of disk space.
 
 2. Get root of a DAG merkel tree
     ```
-    node tools/proofDump.js --root --epoch=<epoch number>
+    node ./proofDump.js --root --epoch=<epoch number>
     ```
-    example:`node tools/proofDump.js --root --epoch=387`
+    example:`node ./proofDump.js --root --epoch=387`
 
 3. Get proof data of a ETH block
     ```
-    node tools/proofDump.js --proof --block=<ETH BLOCK NUMBER>
+    node ./proofDump.js --proof --block=<ETH BLOCK NUMBER>
     ```
-    example:`node tools/proofDump.js --proof --block=11610001`
+    example:`node ./proofDump.js --proof --block=11610001`
 
 ### `tools/MerkelRootSol.js`
 Generate `MerkelRoot.sol` from `MerkelRoot.json`.
@@ -78,17 +78,17 @@ Generate `MerkelRoot.sol` from `MerkelRoot.json`.
 ### `cli/client.js`
 1. List all methods of the contract
     ```
-    truffle --network=<NETWORK> exec cli/client.js --list
+    truffle --network=<NETWORK> exec ./client.js --list
     ```
 2. Call a method of the contract
     ```
-    truffle --network=<NETWORK> exec cli/client.js [--elc=CONTRACT ADDRESS] --func=<METHOD> [--argv argv1 argv2...] 
+    truffle --network=<NETWORK> exec ./client.js [--elc=CONTRACT ADDRESS] --func=<METHOD> [--argv argv1 argv2...] 
     ```
-    example:`truffle --network=develop exec cli/client.js --func=blocksByHeight --argv 11610000 0`
+    example:`truffle --network=develop exec ./client.js --func=blocksByHeight --argv 11610000 0`
 
 ### `cli/eth2one-relay.js`
 1. Relay a block to the light client contract.
     ```
-    truffle --network=<NETWORK> exec cli/eth2one-relay.js [--elc=CONTRACT ADDRESS] [--block=<ETH BLOCK NUMBER>]
+    truffle --network=<NETWORK> exec ./eth2one-relay.js [--elc=CONTRACT ADDRESS] [--block=<ETH BLOCK NUMBER>]
     ```
-    example:`truffle --network=develop exec cli/eth2one-relay.js`
+    example:`truffle --network=develop exec ./eth2one-relay.js`

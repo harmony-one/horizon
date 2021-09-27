@@ -105,12 +105,7 @@ contract HarmonyLightClient is
         firstBlock.epoch = header.epoch;
         firstBlock.shard = header.shardID;
         firstBlock.time = header.timestamp;
-        bytes32 result;
-        bytes memory source = header.mmrRoot;
-        assembly {
-            result := mload(add(source, 32))
-        }
-        firstBlock.mmrRoot = result;
+        firstBlock.mmrRoot = HarmonyParser.toBytes32(header.mmrRoot);
         firstBlock.hash = header.hash;
         
         epochCheckPointBlockNumbers[header.epoch].push(header.number);
@@ -139,12 +134,7 @@ contract HarmonyLightClient is
         checkPointBlock.epoch = header.epoch;
         checkPointBlock.shard = header.shardID;
         checkPointBlock.time = header.timestamp;
-        bytes32 result;
-        bytes memory source = header.mmrRoot;
-        assembly {
-            result := mload(add(source, 32))
-        }
-        checkPointBlock.mmrRoot = result;
+        checkPointBlock.mmrRoot = HarmonyParser.toBytes32(header.mmrRoot);
         checkPointBlock.hash = header.hash;
         
         epochCheckPointBlockNumbers[header.epoch].push(header.number);

@@ -37,13 +37,13 @@ class Bridge {
         return this.web3.sendTx(tx);
     }
 
-    Deposit(token, to, amount) {
-        const tx = this.contract.methods.deposit(token, to, amount);
+    Lock(token, to, amount) {
+        const tx = this.contract.methods.lock(token, to, amount);
         return this.web3.sendTx(tx);
     }
 
-    Withdraw(token, to, amount) {
-        const tx = this.contract.methods.withdraw(token, to, amount);
+    Unlock(token, to, amount) {
+        const tx = this.contract.methods.unlock(token, to, amount);
         return this.web3.sendTx(tx);
     }
 
@@ -89,7 +89,7 @@ class Bridge {
     // to: receipt address on dest chain
     // amount: token amount
     static async TokenBack(src, dest, token, to, amount) {
-        const tx = await src.Withdraw(token, to, amount);
+        const tx = await src.Unlock(token, to, amount);
         // wait light client
         return Bridge.CrossRelay(src, dest, tx.transactionHash);
     }

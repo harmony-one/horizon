@@ -39,6 +39,8 @@ contract HarmonyLightClient is
     // block number to BlockHeader
     mapping(uint256 => BlockHeader) checkPointBlocks;
 
+    mapping(uint256 => mapping(bytes32 => bool)) epochMmrRoots;
+
     uint8 relayerThreshold;
 
     event RelayerThresholdChanged(uint256 newThreshold);
@@ -111,6 +113,8 @@ contract HarmonyLightClient is
         epochCheckPointBlockNumbers[header.epoch].push(header.number);
         checkPointBlocks[header.number] = firstBlock;
 
+        epochMmrRoots[header.epoch][firstBlock.mmrRoot] = true;
+
         relayerThreshold = initialRelayerThreshold;
         _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
         for (uint256 i; i < initialRelayers.length; i++) {
@@ -139,6 +143,8 @@ contract HarmonyLightClient is
         
         epochCheckPointBlockNumbers[header.epoch].push(header.number);
         checkPointBlocks[header.number] = checkPointBlock;
+
+        epochMmrRoots[header.epoch][checkPointBlock.mmrRoot] = true;
     }
 
     function getLatestCheckPoint(uint256 blockNumber, uint256 epoch)
@@ -162,5 +168,9 @@ contract HarmonyLightClient is
             }
         }
         checkPointBlock = checkPointBlocks[nearest];
+    }
+
+    function isValidCheckPoint(uint256 epoch, bytes32 mmrRoot) public view returns (bool status) {
+        return epochMmrRoots[epoch][mmrRoot];
     }
 }

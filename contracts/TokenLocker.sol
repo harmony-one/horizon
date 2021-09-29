@@ -2,21 +2,20 @@
 pragma solidity ^0.7;
 pragma experimental ABIEncoderV2;
 
-import "./EthereumLightClient.sol";
 import "./lib/RLPReader.sol";
-import {EthereumProver} from "./EthereumProver.sol";
-import {IERC20} from "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
-import {ERC20} from "openzeppelin-solidity/contracts/token/ERC20/ERC20.sol";
-import {SafeERC20} from "openzeppelin-solidity/contracts/token/ERC20/SafeERC20.sol";
-import {Ownable} from "openzeppelin-solidity/contracts/access/Ownable.sol";
-import {BridgedToken} from "./BridgedToken.sol";
+import "./BridgedToken.sol";
 import "./TokenRegistry.sol";
+import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
+import "openzeppelin-solidity/contracts/token/ERC20/ERC20.sol";
+import "openzeppelin-solidity/contracts/token/ERC20/SafeERC20.sol";
+import "openzeppelin-solidity/contracts/access/Ownable.sol";
+import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 
-contract HarmonyBridge is TokenRegistry, Ownable {
+contract TokenLocker is TokenRegistry {
     using RLPReader for RLPReader.RLPItem;
     using RLPReader for bytes;
-    using SafeMath for uint256;
     using SafeERC20 for IERC20;
+    using SafeMath for uint256;
 
     event Locked(
         address indexed token,
@@ -37,24 +36,9 @@ contract HarmonyBridge is TokenRegistry, Ownable {
     bytes32 constant burnEventSig =
         keccak256("Burn(address,address,uint256,address)");
 
-    EthereumLightClient public lightclient;
-
     address public otherSideBridge;
 
-    mapping(bytes32 => bool) public spentReceipt;
-
-    function changeLightClient(EthereumLightClient newClient)
-        external
-        onlyOwner
-    {
-        lightclient = newClient;
-    }
-
-    function bind(address otherSide) external onlyOwner {
-        otherSideBridge = otherSide;
-    }
-
-    function withdraw(
+    function unlock(
         BridgedToken token,
         address recipient,
         uint256 amount
@@ -68,7 +52,7 @@ contract HarmonyBridge is TokenRegistry, Ownable {
         emit Burn(address(token), msg.sender, amount, recipient);
     }
 
-    function deposit(
+    function lock(
         IERC20 token,
         address recipient,
         uint256 amount
@@ -86,35 +70,12 @@ contract HarmonyBridge is TokenRegistry, Ownable {
         emit Locked(address(token), msg.sender, actualAmount, recipient);
     }
 
-    function validateAndExecuteProof(
-        uint256 blockNo,
-        bytes32 rootHash,
-        bytes calldata mptkey,
-        bytes calldata proof
-    ) external {
-        bytes32 blockHash = bytes32(lightclient.blocksByHeight(blockNo, 0));
-        require(
-            lightclient.VerifyReceiptsHash(blockHash, rootHash),
-            "wrong receipt hash"
-        );
-        bytes32 receiptHash = keccak256(
-            abi.encodePacked(blockHash, rootHash, mptkey)
-        );
-        require(spentReceipt[receiptHash] == false, "double spent!");
-        bytes memory rlpdata = EthereumProver.validateMPTProof(rootHash, mptkey, proof);
-        spentReceipt[receiptHash] = true;
-        uint256 executedEvents = execute(rlpdata);
-        require(executedEvents > 0, "no valid event");
-    }
-
-    function execute(bytes memory rlpdata) private returns (uint256 events) {
+    function execute(bytes memory rlpdata) internal returns (uint256 events) {
         RLPReader.RLPItem memory stacks = rlpdata.toRlpItem();
         RLPReader.RLPItem[] memory receipt = stacks.toList();
         // TODO: check txs is revert or not
         uint256 postStateOrStatus = receipt[0].toUint();
         require(postStateOrStatus == 1, "revert receipt");
-        //uint CumulativeGasUsed = receipt[1].toUint();
-        //bytes memory Bloom = receipt[2].toBytes();
         RLPReader.RLPItem[] memory logs = receipt[3].toList();
         for (uint256 i = 0; i < logs.length; i++) {
             RLPReader.RLPItem[] memory rlpLog = logs[i].toList();

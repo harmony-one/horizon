@@ -4,6 +4,9 @@ const ethblock = require('@ethereumjs/block');
 const { rlp } = require('ethereumjs-util');
 const MPT = require('merkle-patricia-tree');
 const { GetProof } = require('eth-proof');
+const Web3 = require("web3");
+const BN = require("bn.js");
+const util = require("util");
 
 const Trie = MPT.BaseTrie;
 
@@ -11,7 +14,28 @@ function buffer2hex(buffer) {
     return '0x' + buffer.toString('hex');
 }
 
-function getHeader(block) {
+async function rpcWrapper(hash, isTxn, callback, args) {
+    let web3 = new Web3(new Web3.providers.HttpProvider(args[0]));
+    let receipt;
+    if (isTxn) {
+        receipt = await web3.eth.getTransactionReceipt(hash);
+    } else {
+        receipt = await web3.eth.getBlockByHash(hash);
+    }
+    const sendRpc = util.promisify(web3.currentProvider.send)
+        .bind(web3.currentProvider);
+    const response = await sendRpc({
+        jsonrpc: "2.0",
+        method: "hmyv2_getFullHeader",
+        params: [receipt.blockNumber],
+        id: (new Date()).getTime(),
+    });
+    let header = toRLPHeader(response.result);
+    let result = await callback(...args, header);
+    return result;
+}
+
+function toRLPHeader(block) {
     return rlp.encode([
         "HmnyTgd",
         "v4",
@@ -132,11 +156,11 @@ function expandkey(hexvalue) {
         .join('')
 }
 
-async function getTransactionProof(getProof, prover, txhash) {
+async function getTransactionProof(getProof, prover, txhash, fullHeader) {
     if (typeof getProof === 'string') getProof = new GetProof(getProof);
     const proof = await _getTransactionProof(getProof, txhash);
+    proof.headerData = fullHeader;
     const proofData = proof.proof.map(node => buffer2hex(rlp.encode(node)));
-    console.log(proof.headerData);
     const block = await prover.toBlockHeader(proof.headerData);
     return {
         expectedRoot: block.transactionsRoot,
@@ -149,19 +173,13 @@ async function getTransactionProof(getProof, prover, txhash) {
     }
 }
 
-// getTransactionProof(
-//     "http://localhost:9500",
-//     null,
-//     "0xe40cee5629973020ce841baee9405afb73a215f27ffc1e232a5b665346abb3e6",
-// ).then(() => {
-//     console.log("done!");
-// });
-
-async function getReceiptProof(getProof, prover, txhash) {
+async function getReceiptProof(getProof, prover, txhash, fullHeader) {
     if (typeof getProof === 'string') getProof = new GetProof(getProof);
     const proof = await _getReceiptProof(getProof, txhash);
+    proof.headerData = fullHeader;
     const proofData = proof.proof.map(node => buffer2hex(rlp.encode(node)));
     const block = await prover.toBlockHeader(proof.headerData);
+    // console.log(block);
     return {
         expectedRoot: block.receiptsRoot,
         key: index2key(proof.receiptIndex, proof.proof.length),
@@ -215,9 +233,10 @@ async function _getAccountProof(getProof, address, blockHash) {
     }
 }
 
-async function getAccountProof(web3, getProof, prover, address, blockHash) {
+async function getAccountProof(web3, getProof, prover, address, blockHash, fullHeader) {
     if (typeof getProof === 'string') getProof = new GetProof(getProof);
     const proof = await _getAccountProof(getProof, address, blockHash);
+    proof.headerData = fullHeader;
     const proofData = proof.proof.map(node => buffer2hex(rlp.encode(node)));
     const block = await prover.toBlockHeader(proof.headerData);
     return {
@@ -245,9 +264,10 @@ async function _getStorageProof(getProof, address, storageAddress, blockHash) {
     }
 }
 
-async function getStorageProof(getProof, prover, address, storageAddress, blockHash) {
+async function getStorageProof(getProof, prover, address, storageAddress, blockHash, fullHeader) {
     if (typeof getProof === 'string') getProof = new GetProof(getProof);
     const proof = await _getStorageProof(getProof, address, storageAddress, blockHash);
+    proof.headerData = fullHeader;
     const proofData = proof.proof.map(node => buffer2hex(rlp.encode(node)));
     const block = await prover.toBlockHeader(proof.headerData);
     return {
@@ -279,7 +299,8 @@ function fullToMin(header) {
 
 module.exports = {
     buffer2hex,
-    getHeader,
+    rpcWrapper,
+    toRLPHeader,
     getReceiptLight,
     getReceipt,
     getReceiptRlp,

@@ -6,6 +6,8 @@
 */node_modules
 /old_contracts
 /back
+build
+cache
 
 node_modules
 build/contracts

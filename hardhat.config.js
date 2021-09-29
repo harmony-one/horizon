@@ -1,16 +1,19 @@
-require("@nomiclabs/hardhat-truffle5");
+require("dotenv").config();
+// require("@nomiclabs/hardhat-truffle5");
+require("@nomiclabs/hardhat-ethers");
+require('@openzeppelin/hardhat-upgrades');
 
 /**
  * @type import('hardhat/config').HardhatUserConfig
  */
 
-const HARMONY_PRIVATE_KEY = "";
+const HARMONY_PRIVATE_KEY = process.env.PRIVATE_KEY;
 
 module.exports = {
     defaultNetwork: "hardhat",
     networks: {
         localnet: {
-            url: `https://api.s0.b.hmny.io`,
+            url: `http://localhost:9500`,
             accounts: [`0x${HARMONY_PRIVATE_KEY}`]
         },
         testnet: {

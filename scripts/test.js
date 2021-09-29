@@ -115,6 +115,26 @@ async function processMMRProof(err, res) {
   );
 });
 
+(async function() {
+  let txnHash = "0xe40cee5629973020ce841baee9405afb73a215f27ffc1e232a5b665346abb3e6";
+  let local = new Web3(new Web3.providers.HttpProvider(process.env.LOCALNET));
+  local.currentProvider.send(
+    {
+      method: "hmyv2_getReceiptProof",
+      params: [txnHash],
+      jsonrpc: "2.0",
+      id: "2",
+    },
+    // processMMRProof
+    function (err, res) {
+      if (err) throw err;
+      let proof = res.result;
+      console.log(proof);
+      
+    }
+  );
+})();
+
 (async function () {
   // let hash =
   //   "0x7e79e06185d57b9b54ab1b579411556cc7631629814a268cb528086eb33e7648";
@@ -133,7 +153,7 @@ async function processMMRProof(err, res) {
       console.log(web3.utils.keccak256(headerBytes));
     }
   );
-})();
+});
 
 function toHexString(byteArray) {
   return Array.from(byteArray, function (byte) {

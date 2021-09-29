@@ -6,7 +6,7 @@ import "./HarmonyLightClient.sol";
 import "./lib/RLPReader.sol";
 import "./lib/MMRVerifier.sol";
 import "./HarmonyProver.sol";
-import "./EthereumProver.sol";
+// import "./EthereumProver.sol";
 import {IERC20} from "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
 import {ERC20} from "openzeppelin-solidity/contracts/token/ERC20/ERC20.sol";
 import {SafeERC20} from "openzeppelin-solidity/contracts/token/ERC20/SafeERC20.sol";
@@ -93,8 +93,9 @@ contract EthereumBridge is TokenRegistry, Ownable {
     function validateAndExecuteProof(
         HarmonyParser.BlockHeader memory header,
         MMRVerifier.MMRProof memory mmrProof,
-        bytes calldata mptkey,
-        bytes calldata proof
+        MPT.MerkleProof memory receiptdata
+        // bytes calldata mptkey,
+        // bytes calldata proof
     ) external {
         bytes32 blockHash = HarmonyParser.getBlockHash(header);
         bytes32 rootHash = header.receiptsRoot;
@@ -107,9 +108,14 @@ contract EthereumBridge is TokenRegistry, Ownable {
             abi.encodePacked(blockHash, rootHash, mptkey)
         );
         require(spentReceipt[receiptHash] == false, "double spent!");
-        bytes memory rlpdata = EthereumProver.validateMPTProof(rootHash, mptkey, proof);
+        // bytes memory rlpdata = EthereumProver.validateMPTProof(rootHash, mptkey, proof);
+        (bool status, string memory message) = HarmonyProver.verifyReceipt(header, receiptdata);
+        require(
+            status,
+            "receipt data could not be verified"
+        );
         spentReceipt[receiptHash] = true;
-        uint256 executedEvents = execute(rlpdata);
+        uint256 executedEvents = execute(receiptdata.expectedValue);
         require(executedEvents > 0, "no valid event");
     }
 

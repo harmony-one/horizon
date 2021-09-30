@@ -2,14 +2,16 @@
 pragma solidity ^0.7;
 pragma experimental ABIEncoderV2;
 
-import "openzeppelin-solidity/contracts/math/SafeMath.sol";
+import "@openzeppelin/contracts-upgradeable/math/SafeMathUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/proxy/Initializable.sol";
+import "@openzeppelin/contracts-upgradeable/utils/PausableUpgradeable.sol";
 import "./EthereumParser.sol";
 import "./lib/EthUtils.sol";
 import "./ethash/ethash.sol";
 
 /// @title Ethereum light client
-contract EthereumLightClient is Ethash {
-    using SafeMath for uint256;
+contract EthereumLightClient is Ethash, Initializable, PausableUpgradeable {
+    using SafeMathUpgradeable for uint256;
     
     struct StoredBlockHeader {
         uint256 parentHash;
@@ -64,7 +66,7 @@ contract EthereumLightClient is Ethash {
 
     uint256 public finalityConfirms;
 
-    constructor(bytes memory _rlpHeader) public {
+    function initialize(bytes memory _rlpHeader) external initializer {
         finalityConfirms = DEFAULT_FINALITY_CONFIRMS;
 
         uint256 blockHash = EthereumParser.calcBlockHeaderHash(_rlpHeader);
@@ -90,7 +92,7 @@ contract EthereumLightClient is Ethash {
         bytes memory _rlpHeader,
         bytes32[4][loopAccesses] memory cache,
         bytes32[][loopAccesses] memory proofs
-    ) public returns (bool) {
+    ) public whenNotPaused returns (bool) {
         // Calculate block header hash
         uint256 blockHash = EthereumParser.calcBlockHeaderHash(_rlpHeader);
         // Check block existing

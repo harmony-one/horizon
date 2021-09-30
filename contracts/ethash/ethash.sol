@@ -5,7 +5,7 @@ pragma experimental ABIEncoderV2;
 import "./binary.sol";
 import "./keccak512.sol";
 import "./Prime.sol";
-import "openzeppelin-solidity/contracts/cryptography/MerkleProof.sol";
+import "@openzeppelin/contracts-upgradeable/cryptography/MerkleProofUpgradeable.sol";
 
 import "./MerkelRoot.sol"; // npm run merkelInit
 
@@ -25,8 +25,6 @@ contract Ethash is MerkelRoots {
     uint256 constant DATASET_BYTES_INIT = 1073741824;
     uint256 constant DATASET_BYTES_GROWTH = 8388608; // 2 ^ 23
     uint256 constant EPOCH_LENGTH = 30000;
-
-    constructor() public {}
 
     function getFullSize(uint256 epoc) private pure returns (uint256) {
         uint256 sz = DATASET_BYTES_INIT + (DATASET_BYTES_GROWTH) * epoc;
@@ -442,7 +440,7 @@ contract Ethash is MerkelRoots {
             uint256 dagIndex = 2 * parent;
             bytes32[] memory proof = proofs[i];
             bytes32 leafHash = keccak256(abi.encodePacked(dagIndex, dag));
-            MerkleProof.verify(proof, root, leafHash);
+            MerkleProofUpgradeable.verify(proof, root, leafHash);
             for (uint32 j = 0; j < dag.length; j++) {
                 uint32 k = j * 8;
                 uint256 data = uint256(dag[j]);

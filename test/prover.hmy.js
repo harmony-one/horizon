@@ -32,10 +32,6 @@ describe('HarmonyProver', function () {
         );
         prover = await HarmonyProver.deploy();
         await prover.deployed();
-
-        Test = await ethers.getContractFactory("Test");
-        test = await Test.deploy();
-        await test.deployed();
     });
 
     it('parse rlp block header', async function () {

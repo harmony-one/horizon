@@ -5,17 +5,22 @@ pragma experimental ABIEncoderV2;
 import "./lib/RLPReader.sol";
 import "./BridgedToken.sol";
 import "./TokenRegistry.sol";
-import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
-import "openzeppelin-solidity/contracts/token/ERC20/ERC20.sol";
-import "openzeppelin-solidity/contracts/token/ERC20/SafeERC20.sol";
-import "openzeppelin-solidity/contracts/access/Ownable.sol";
-import "openzeppelin-solidity/contracts/math/SafeMath.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC20/SafeERC20Upgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/math/SafeMathUpgradeable.sol";
+// import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
+// import "openzeppelin-solidity/contracts/token/ERC20/ERC20.sol";
+// import "openzeppelin-solidity/contracts/token/ERC20/SafeERC20.sol";
+// import "openzeppelin-solidity/contracts/access/Ownable.sol";
+// import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 
 contract TokenLocker is TokenRegistry {
     using RLPReader for RLPReader.RLPItem;
     using RLPReader for bytes;
-    using SafeERC20 for IERC20;
-    using SafeMath for uint256;
+    using SafeERC20Upgradeable for IERC20Upgradeable;
+    using SafeMathUpgradeable for uint256;
 
     event Locked(
         address indexed token,
@@ -53,7 +58,7 @@ contract TokenLocker is TokenRegistry {
     }
 
     function lock(
-        IERC20 token,
+        IERC20Upgradeable token,
         address recipient,
         uint256 amount
     ) external {
@@ -117,7 +122,7 @@ contract TokenLocker is TokenRegistry {
             data,
             (uint256, address)
         );
-        IERC20 lockedToken = TxMappedInv[token];
+        IERC20Upgradeable lockedToken = TxMappedInv[token];
         lockedToken.safeTransfer(recipient, amount);
     }
 

@@ -6,11 +6,16 @@ import "./HarmonyLightClient.sol";
 import "./lib/MMRVerifier.sol";
 import "./HarmonyProver.sol";
 import "./TokenLocker.sol";
+import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 
-contract TokenLockerOnEthereum is TokenLocker, Ownable {
+contract TokenLockerOnEthereum is TokenLocker, OwnableUpgradeable {
     HarmonyLightClient public lightclient;
 
     mapping(bytes32 => bool) public spentReceipt;
+
+    function initialize() external initializer {
+        __Ownable_init();
+    }
 
     function changeLightClient(HarmonyLightClient newClient)
         external

@@ -4,18 +4,20 @@ pragma experimental ABIEncoderV2;
 
 import "./HarmonyParser.sol";
 import "./lib/SafeCast.sol";
-import "openzeppelin-solidity/contracts/math/SafeMath.sol";
-import "openzeppelin-solidity/contracts/access/AccessControl.sol";
-import "openzeppelin-solidity/contracts/utils/Pausable.sol";
-import "openzeppelin-solidity/contracts/proxy/Initializable.sol";
+import "@openzeppelin/contracts-upgradeable/math/SafeMathUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
+// import "openzeppelin-solidity/contracts/utils/Pausable.sol";
+import "@openzeppelin/contracts-upgradeable/utils/PausableUpgradeable.sol";
+// import "openzeppelin-solidity/contracts/proxy/Initializable.sol";
+import "@openzeppelin/contracts-upgradeable/proxy/Initializable.sol";
 
 contract HarmonyLightClient is
-    AccessControl,
     Initializable,
-    Pausable
+    PausableUpgradeable,
+    AccessControlUpgradeable
 {
     using SafeCast for *;
-    using SafeMath for uint256;
+    using SafeMathUpgradeable for uint256;
 
     struct BlockHeader {
         bytes32 parentHash;

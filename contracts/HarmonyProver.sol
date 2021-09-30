@@ -25,7 +25,7 @@ library HarmonyProver {
     function verifyHeader(
         HarmonyParser.BlockHeader memory header,
         MMRVerifier.MMRProof memory proof
-    ) public view returns (bool valid, string memory reason) {
+    ) public pure returns (bool valid, string memory reason) {
         bytes32 blockHash = HarmonyParser.getBlockHash(header);
         if (blockHash != header.hash)
             return (false, "Header data or hash invalid");

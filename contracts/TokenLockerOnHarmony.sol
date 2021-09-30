@@ -2,15 +2,16 @@
 pragma solidity ^0.7;
 pragma experimental ABIEncoderV2;
 
+import "@openzeppelin/contracts-upgradeable/math/SafeMathUpgradeable.sol";
 import "./EthereumLightClient.sol";
 import "./EthereumProver.sol";
 import "./TokenLocker.sol";
 
-contract TokenLockerOnHarmony is TokenLocker, Ownable {
+contract TokenLockerOnHarmony is TokenLocker, OwnableUpgradeable {
     using RLPReader for RLPReader.RLPItem;
     using RLPReader for bytes;
-    using SafeMath for uint256;
-    using SafeERC20 for IERC20;
+    using SafeMathUpgradeable for uint256;
+    using SafeERC20Upgradeable for IERC20Upgradeable;
 
     EthereumLightClient public lightclient;
 

@@ -2,15 +2,18 @@
 pragma solidity ^0.7;
 pragma experimental ABIEncoderV2;
 
-import "openzeppelin-solidity/contracts/token/ERC20/ERC20Burnable.sol";
-import {Ownable} from "openzeppelin-solidity/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20BurnableUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 
-contract BridgedToken is ERC20Burnable, Ownable {
-    constructor(
+contract BridgedToken is ERC20Upgradeable, ERC20BurnableUpgradeable, OwnableUpgradeable {
+    function initialize(
         string memory name,
         string memory symbol,
         uint8 decimals
-    ) public ERC20(name, symbol) {
+    ) external initializer {
+        __ERC20_init(name, symbol);
+        __ERC20Burnable_init();
         _setupDecimals(decimals);
     }
 

@@ -27,7 +27,7 @@ library MMRVerifier {
         bytes32 value32,
         bytes32[] memory peaks,
         bytes32[] memory siblings
-    ) public pure returns (bool) {
+    ) internal pure returns (bool) {
         // bytes32 value32;
 
         // assembly {
@@ -111,7 +111,7 @@ library MMRVerifier {
     /**
      * @dev
      */
-    function getSize(uint256 width) public pure returns (uint256) {
+    function getSize(uint256 width) internal pure returns (uint256) {
         return (width << 1) - numOfPeaks(width);
     }
 
@@ -120,7 +120,7 @@ library MMRVerifier {
      *      M is the index of the node
      */
     function hashBranch(bytes32 left, bytes32 right)
-        public
+        internal
         pure
         returns (bytes32)
     {
@@ -132,7 +132,7 @@ library MMRVerifier {
      *      M is the index of the node
      */
     function hashLeaf(uint256 index, bytes32 dataHash)
-        public
+        internal
         pure
         returns (bytes32)
     {
@@ -143,7 +143,7 @@ library MMRVerifier {
     /**
      * @dev It returns the height of the highest peak
      */
-    function mountainHeight(uint256 size) public pure returns (uint8) {
+    function mountainHeight(uint256 size) internal pure returns (uint8) {
         uint8 height = 1;
         while (uint256(1) << height <= size + height) {
             height++;
@@ -154,7 +154,7 @@ library MMRVerifier {
     /**
      * @dev It returns the height of the index
      */
-    function heightAt(uint256 index) public pure returns (uint8 height) {
+    function heightAt(uint256 index) internal pure returns (uint8 height) {
         uint256 reducedIndex = index;
         uint256 peakIndex;
         // If an index has a left mountain subtract the mountain
@@ -171,7 +171,7 @@ library MMRVerifier {
      * @dev It returns the children when it is a parent node
      */
     function getChildren(uint256 index)
-        public
+        internal
         pure
         returns (uint256 left, uint256 right)
     {
@@ -185,7 +185,7 @@ library MMRVerifier {
      *      the given index(size)
      */
     function getPeakIndexes(uint256 width)
-        public
+        internal
         pure
         returns (uint256[] memory peakIndexes)
     {
@@ -202,7 +202,7 @@ library MMRVerifier {
         require(count == peakIndexes.length, "Invalid bit calculation");
     }
 
-    function numOfPeaks(uint256 width) public pure returns (uint256 num) {
+    function numOfPeaks(uint256 width) internal pure returns (uint256 num) {
         uint256 bits = width;
         while (bits > 0) {
             if (bits % 2 == 1) num++;

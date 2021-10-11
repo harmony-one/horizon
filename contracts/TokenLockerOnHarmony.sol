@@ -17,6 +17,10 @@ contract TokenLockerOnHarmony is TokenLocker, OwnableUpgradeable {
 
     mapping(bytes32 => bool) public spentReceipt;
 
+    function initialize() external initializer {
+        __Ownable_init();
+    }
+
     function changeLightClient(EthereumLightClient newClient)
         external
         onlyOwner

@@ -47,7 +47,7 @@ async function processMMRProof(err, res) {
   let proof = res.result;
   console.log(proof);
 
-  let root = '0x'+proof.root;
+  let root = '0x' + proof.root;
   let width = proof.width;
   let index = 12;
   let value = web3.utils.hexToBytes("0xe40cee5629973020ce841baee9405afb73a215f27ffc1e232a5b665346abb3e6");
@@ -95,27 +95,23 @@ async function processMMRProof(err, res) {
   }
 }
 
-(async function() {
-  let txnHash = "0xb03f8925206e47fd97243b8c0048e4a09162287fcf8b998053f6081c6e28e975";
-  let local = new Web3(new Web3.providers.HttpProvider(process.env.LOCALNET));
-  local.currentProvider.send(
-    {
-      method: "hmyv2_getTxMmrProof",
-      params: [txnHash, 54],
-      jsonrpc: "2.0",
-      id: "2",
-    },
-    // processMMRProof
-    function (err, res) {
-      if (err) throw err;
-      let proof = res.result;
-      console.log(proof);
-      
-    }
-  );
-});
+const util = require("util");
 
-(async function() {
+(async function () {
+  let txnHash = "0x54b8ef8b874e89dcec98e5472b06f0a00d80a86c8470a8888b6a781b45699064";
+  let web3 = new Web3(new Web3.providers.HttpProvider(process.env.LOCALNET));
+  const sendRpc = util.promisify(web3.currentProvider.send)
+    .bind(web3.currentProvider);
+    console.log(web3.utils.toDecimal("0x8"));
+  console.log(await sendRpc({
+    jsonrpc: "2.0",
+    method: "hmyv2_getTxMmrProof",
+    params: [txnHash, 88],
+    id: (new Date()).getTime(),
+  }));
+})();
+
+(async function () {
   let txnHash = "0xe40cee5629973020ce841baee9405afb73a215f27ffc1e232a5b665346abb3e6";
   let local = new Web3(new Web3.providers.HttpProvider(process.env.LOCALNET));
   local.currentProvider.send(
@@ -130,10 +126,10 @@ async function processMMRProof(err, res) {
       if (err) throw err;
       let proof = res.result;
       console.log(proof);
-      
+
     }
   );
-})();
+});
 
 (async function () {
   // let hash =

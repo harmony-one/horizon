@@ -6,7 +6,7 @@ pragma experimental ABIEncoderV2;
 library Prime {
     // miller rabin test
     function probablyPrime(uint256 n, uint256 prime)
-        public
+        internal
         pure
         returns (bool)
     {
@@ -44,7 +44,7 @@ library Prime {
         uint256 a,
         uint256 b,
         uint256 n
-    ) public pure returns (uint256) {
+    ) internal pure returns (uint256) {
         a = a % n;
         uint256 result = 1;
         uint256 x = a;
@@ -64,7 +64,7 @@ library Prime {
     }
 
     // Write (n - 1) as 2^s * d
-    function getValues(uint256 n) public pure returns (uint256[2] memory) {
+    function getValues(uint256 n) internal pure returns (uint256[2] memory) {
         uint256 s = 0;
         uint256 d = n - 1;
         while (d % 2 == 0) {

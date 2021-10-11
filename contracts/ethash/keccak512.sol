@@ -258,7 +258,7 @@ library Keccak512 {
        return keccak512(data);
    }
 */
-    function sha3_512(bytes memory data) public pure returns (bytes memory) {
+    function sha3_512(bytes memory data) internal pure returns (bytes memory) {
         require(
             data.length == 40 || data.length == 64,
             "sha512 only support 64 or 40 bytes"

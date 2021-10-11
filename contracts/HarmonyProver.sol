@@ -15,7 +15,7 @@ library HarmonyProver {
     using MPT for MPT.MerkleProof;
 
     function verifyTrieProof(MPT.MerkleProof memory data)
-        public
+        internal
         pure
         returns (bool)
     {
@@ -25,7 +25,7 @@ library HarmonyProver {
     function verifyHeader(
         HarmonyParser.BlockHeader memory header,
         MMRVerifier.MMRProof memory proof
-    ) public pure returns (bool valid, string memory reason) {
+    ) internal pure returns (bool valid, string memory reason) {
         bytes32 blockHash = HarmonyParser.getBlockHash(header);
         if (blockHash != header.hash)
             return (false, "Header data or hash invalid");
@@ -47,7 +47,7 @@ library HarmonyProver {
     function verifyTransaction(
         HarmonyParser.BlockHeader memory header,
         MPT.MerkleProof memory txdata
-    ) public pure returns (bool valid, string memory reason) {
+    ) internal pure returns (bool valid, string memory reason) {
         if (header.transactionsRoot != txdata.expectedRoot)
             return (false, "verifyTransaction - different trie roots");
 
@@ -60,7 +60,7 @@ library HarmonyProver {
     function verifyReceipt(
         HarmonyParser.BlockHeader memory header,
         MPT.MerkleProof memory receiptdata
-    ) public pure returns (bool valid, string memory reason) {
+    ) internal pure returns (bool valid, string memory reason) {
         if (header.receiptsRoot != receiptdata.expectedRoot)
             return (false, "verifyReceipt - different trie roots");
 
@@ -73,7 +73,7 @@ library HarmonyProver {
     function verifyAccount(
         HarmonyParser.BlockHeader memory header,
         MPT.MerkleProof memory accountdata
-    ) public pure returns (bool valid, string memory reason) {
+    ) internal pure returns (bool valid, string memory reason) {
         if (header.stateRoot != accountdata.expectedRoot)
             return (false, "verifyAccount - different trie roots");
 
@@ -87,7 +87,7 @@ library HarmonyProver {
         MPT.MerkleProof memory receiptdata,
         bytes memory logdata,
         uint256 logIndex
-    ) public pure returns (bool valid, string memory reason) {
+    ) internal pure returns (bool valid, string memory reason) {
         HarmonyParser.TransactionReceiptTrie memory receipt = HarmonyParser
             .toReceipt(receiptdata.expectedValue);
 
@@ -103,17 +103,17 @@ library HarmonyProver {
     function verifyTransactionAndStatus(
         HarmonyParser.BlockHeader memory header,
         MPT.MerkleProof memory receiptdata
-    ) external pure returns (bool valid, string memory reason) {}
+    ) internal pure returns (bool valid, string memory reason) {}
 
     function verifyCode(
         HarmonyParser.BlockHeader memory header,
         MPT.MerkleProof memory accountdata
-    ) public pure returns (bool valid, string memory reason) {}
+    ) internal pure returns (bool valid, string memory reason) {}
 
     function verifyStorage(
         MPT.MerkleProof memory accountProof,
         MPT.MerkleProof memory storageProof
-    ) public pure returns (bool valid, string memory reason) {
+    ) internal pure returns (bool valid, string memory reason) {
         HarmonyParser.Account memory account = HarmonyParser.toAccount(
             accountProof.expectedValue
         );
@@ -130,7 +130,7 @@ library HarmonyProver {
     function getTransactionSender(
         MPT.MerkleProof memory txdata,
         uint256 chainId
-    ) public pure returns (address sender) {
+    ) internal pure returns (address sender) {
         HarmonyParser.Transaction memory transaction = HarmonyParser
             .toTransaction(txdata.expectedValue);
         bytes memory txraw = HarmonyParser.getTransactionRaw(
@@ -148,7 +148,7 @@ library HarmonyProver {
     }
 
     function getTransactionHash(bytes memory signedTransaction)
-        public
+        internal
         pure
         returns (bytes32 hash)
     {
@@ -156,7 +156,7 @@ library HarmonyProver {
     }
 
     function getBlockHash(HarmonyParser.BlockHeader memory header)
-        public
+        internal
         pure
         returns (bytes32 hash)
     {
@@ -164,7 +164,7 @@ library HarmonyProver {
     }
 
     function getBlockRlpData(HarmonyParser.BlockHeader memory header)
-        public
+        internal
         pure
         returns (bytes memory data)
     {
@@ -172,7 +172,7 @@ library HarmonyProver {
     }
 
     function toBlockHeader(bytes memory data)
-        public
+        internal
         pure
         returns (HarmonyParser.BlockHeader memory header)
     {
@@ -180,7 +180,7 @@ library HarmonyProver {
     }
 
     function getLog(HarmonyParser.Log memory log)
-        public
+        internal
         pure
         returns (bytes memory data)
     {
@@ -189,12 +189,12 @@ library HarmonyProver {
 
     function getReceiptRlpData(
         HarmonyParser.TransactionReceiptTrie memory receipt
-    ) public pure returns (bytes memory data) {
+    ) internal pure returns (bytes memory data) {
         return HarmonyParser.getReceiptRlpData(receipt);
     }
 
     function toReceiptLog(bytes memory data)
-        public
+        internal
         pure
         returns (HarmonyParser.Log memory log)
     {
@@ -202,7 +202,7 @@ library HarmonyProver {
     }
 
     function toReceipt(bytes memory data)
-        public
+        internal
         pure
         returns (HarmonyParser.TransactionReceiptTrie memory receipt)
     {
@@ -210,7 +210,7 @@ library HarmonyProver {
     }
 
     function toTransaction(bytes memory data)
-        public
+        internal
         pure
         returns (HarmonyParser.Transaction memory transaction)
     {
@@ -218,7 +218,7 @@ library HarmonyProver {
     }
 
     function toAccount(bytes memory data)
-        public
+        internal
         pure
         returns (HarmonyParser.Account memory account)
     {

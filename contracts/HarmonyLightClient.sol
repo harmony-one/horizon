@@ -32,6 +32,18 @@ contract HarmonyLightClient is
         bytes32 hash;
     }
 
+    event CheckPoint(
+        bytes32 stateRoot,
+        bytes32 transactionsRoot,
+        bytes32 receiptsRoot,
+        uint256 number,
+        uint256 epoch,
+        uint256 shard,
+        uint256 time,
+        bytes32 mmrRoot,
+        bytes32 hash
+    );
+
     BlockHeader firstBlock;
     BlockHeader lastCheckPointBlock;
 
@@ -147,6 +159,17 @@ contract HarmonyLightClient is
         checkPointBlocks[header.number] = checkPointBlock;
 
         epochMmrRoots[header.epoch][checkPointBlock.mmrRoot] = true;
+        emit CheckPoint(
+            checkPointBlock.stateRoot,
+            checkPointBlock.transactionsRoot,
+            checkPointBlock.receiptsRoot,
+            checkPointBlock.number,
+            checkPointBlock.epoch,
+            checkPointBlock.shard,
+            checkPointBlock.time,
+            checkPointBlock.mmrRoot,
+            checkPointBlock.hash
+        );
     }
 
     function getLatestCheckPoint(uint256 blockNumber, uint256 epoch)

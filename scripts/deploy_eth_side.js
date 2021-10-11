@@ -18,7 +18,8 @@ async function fetchBlock(blockNumber) {
 }
 
 // need localhost to run
-async function main() {
+// npx hardhat run --network kovan scripts/deploy_eth_side.js
+async function deployEthSideContracts() {
   // const MMRVerifier = await ethers.getContractFactory("MMRVerifier");
   // const mmrVerifier = await MMRVerifier.deploy();
   // await mmrVerifier.deployed();
@@ -44,14 +45,14 @@ async function main() {
 
   const HarmonyLightClient = await ethers.getContractFactory("HarmonyLightClient");
 
-  const lightclient = await upgrades.deployProxy(
+  const harmonyLightClient = await upgrades.deployProxy(
     HarmonyLightClient,
     [initialBlockRlp, relayers, threshold],
     {
       initializer: "initialize"
     }
   );
-  console.log("HarmonyLightClient deployed to:", lightclient.address);
+  console.log("HarmonyLightClient deployed to:", harmonyLightClient.address);
 
   // deploy token locker
   const TokenLockerOnEthereum = await ethers.getContractFactory(
@@ -71,9 +72,11 @@ async function main() {
     }
   );
   console.log("TokenLockerOnEthereum deployed to:", tokenLockerOnEthereum.address);
+  return [harmonyLightClient.address, tokenLockerOnEthereum.address]
 }
 
-main()
+// module.exports = {deployEthSideContracts};
+deployEthSideContracts()
   .then(() => process.exit(0))
   .catch((error) => {
     console.error(error);

@@ -4,7 +4,7 @@ const { getHeaderProof, parseRlpHeader, getBlock } = require('./ethashProof/Bloc
 const { blockRelayLoop } = require('./eth2hmy-relay/elcRelay');
 const { deployELC, statusELC } = require('./elc/contract');
 const { merkelRootSol } = require('./ethashProof/MerkelRootSol');
-const { EProver } = require('../scripts/eprover');
+const { EProver } = require('../tools/eprover');
 const { deployEVerifier, validateMPTProof } = require('./everifier/contract');
 const {
   deployBridges,

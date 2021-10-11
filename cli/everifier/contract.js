@@ -1,4 +1,4 @@
-const EProver = require("../../build/contracts/EthereumProver.json");
+const EProver = require("../../tools/eprover/abi/EthereumProver.json");
 const { HmyWeb3 } = require('../lib/hmyWeb3');
 const { Receipt } = require('eth-object');
 

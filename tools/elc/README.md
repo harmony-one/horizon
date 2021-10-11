@@ -1,5 +1,5 @@
 # Horizon Ethereum Light Client (ELC) on Harmony
-Ethereum Light Client (ELC) is a SPV-based light client implemented as a smart contract that receives and stores Ethereum block header information. A reference implementation can be found in [near's eth-client](https://github.com/near/rainbow-bridge-rs/blob/master/eth-client/src/lib.rs). Some part of this is already ported in [here](https://github.com/rlan35/ethClient), which can be borrowed to further develop this component.
+Ethereum Light Client (ELC) is a SPV-based light client implemented as a smart contract that receives and stores Ethereum block header information.
 
 ## Requirements
 - nodejs 

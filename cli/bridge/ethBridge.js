@@ -1,7 +1,7 @@
 const { Bridge } = require('./bridge');
 const { EthWeb3 } = require('../lib/ethWeb3');
-const { EProver } = require('../../scripts/eprover');
-const BridgeSol = require("../../bridge/build/contracts/RainbowOnes.json");
+const { EProver } = require('../../tools/eprover');
+const BridgeSol = require("./abi/TokenLockerOnEthereum.json");
 
 
 class EthBridge extends Bridge {

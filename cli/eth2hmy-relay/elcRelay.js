@@ -1,4 +1,4 @@
-const ElcABI = require("../../elc/build/contracts/Client.json");
+const ElcABI = require("../../tools/elc/abi/EthereumLightClient.json");
 const { getBlock, getHeaderProof } = require('../ethashProof/BlockProof');
 const { HmyWeb3 } = require('../lib/hmyWeb3');
 

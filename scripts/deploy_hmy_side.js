@@ -1,9 +1,10 @@
 const { ethers } = require("hardhat");
 require("dotenv").config();
-const { getBlockByNumber } = require("../tools/lib/getBlockHeader.js");
+const { getBlockByNumber } = require("../tools/eth2hmy-relay/lib/getBlockHeader.js");
 
 // works with kovan
-async function main() {
+// npx hardhat run --network localnet scripts/deploy_hmy_side.js
+async function deployHmySideContracts() {
   // const Prime = await ethers.getContractFactory("Prime");
   // const prime = await Prime.deploy();
   // await prime.deployed();
@@ -58,9 +59,12 @@ async function main() {
     }
   );
   console.log("TokenLockerOnHarmony deployed to:", tokenLockerOnHarmony.address);
+
+  return [ethLightClient.address, tokenLockerOnHarmony.address];
 }
 
-main()
+// module.exports = {deployHmySideContracts};
+deployHmySideContracts()
   .then(() => process.exit(0))
   .catch((error) => {
     console.error(error);

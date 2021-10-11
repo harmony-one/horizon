@@ -1,6 +1,6 @@
 
-const ERC20Sol = require("../../bridge/build/contracts/ERC20.json");
-const FaucetToken = require("../../bridge/build/contracts/FaucetToken.json");
+const ERC20Sol = require("./abi/ERC20Upgradeable.json");
+const FaucetToken = require("./abi/FaucetToken.json");
 
 class ERC20 {
     constructor(web3, tokenAddress) {

@@ -1,5 +1,5 @@
 const yargs = require('yargs');
-const { DagProof } = require("../lib/DagProof.js");
+const { DagProof } = require("../eth2hmy-relay/lib/DagProof");
 const EthashUtil = require('@ethereumjs/ethash/dist/util');
 const { getBlockByNumber } = require("../lib/getBlockHeader.js");
 const fs = require('fs');

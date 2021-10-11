@@ -8,6 +8,8 @@
 /back
 build
 cache
+*/.dag
+.openzeppelin
 
 node_modules
 build/contracts

@@ -3,7 +3,7 @@ const { EthBridge } = require("./ethBridge");
 const { HmyBridge } = require("./hmyBridge");
 const { FaucetERC20, ERC20 } = require("./token");
 const { EthWeb3 } = require("../lib/ethWeb3");
-const FakeClient = require("../../bridge/build/contracts/LightClientFake.json");
+const FakeClient = require("./abi/EthereumLightClient.json");
 
 async function deployBridges(ethUrl, hmyUrl) {
     const ethBridge = await EthBridge.deploy(ethUrl);

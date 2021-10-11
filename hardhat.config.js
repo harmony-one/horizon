@@ -23,6 +23,14 @@ module.exports = {
         mainnet: {
             url: `https://api.harmony.one`,
             accounts: [`0x${HARMONY_PRIVATE_KEY}`]
+        },
+        kovan: {
+            url: `https://kovan.infura.io/v3/<project-id>`,
+            accounts: [`0x${HARMONY_PRIVATE_KEY}`]
+        },
+        ropsten: {
+            url: `https://ropsten.infura.io/v3/<project-id>`,
+            accounts: [`0x${HARMONY_PRIVATE_KEY}`]
         }
     },
     solidity: {

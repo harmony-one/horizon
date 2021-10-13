@@ -1,7 +1,7 @@
 const yargs = require('yargs');
 const { DagProof } = require("../eth2hmy-relay/lib/DagProof");
 const EthashUtil = require('@ethereumjs/ethash/dist/util');
-const { getBlockByNumber } = require("../lib/getBlockHeader.js");
+const { getBlockByNumber } = require("../eth2hmy-relay/lib/getBlockHeader.js");
 const fs = require('fs');
 
 const argv = yargs
@@ -29,6 +29,7 @@ const argv = yargs
     description: 'generate dag merkel proof tree',
 })
 .option('ethurl', {
+    alias: 'u',
     description: 'Ethereum RPC URL',
     type: 'string',
 }).env()
@@ -91,4 +92,9 @@ async function main(){
     }
 }
 
-main();
+main()
+    .then(() => process.exit(0))
+    .catch(error => {
+        console.error(error);
+        process.exit(1);
+    });

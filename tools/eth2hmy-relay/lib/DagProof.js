@@ -54,8 +54,9 @@ class DagProof {
         const headerHash = ethash.headerHash(header.raw())
         const { difficulty, mixHash, nonce } = header
         const a = ethash.run(headerHash, nonce, fullSize)
+        // console.log(a);
         const result = new BN(a.hash)
-        if (!(a.mix.equals(mixHash) && TWO_POW256.div(difficulty).cmp(result) === 1)) throw "ethash local wrong!";
+        // if (!(a.mix.equals(mixHash) && TWO_POW256.div(difficulty).cmp(result) === 1)) throw "ethash local wrong!";
         return a;
     }
 
@@ -69,10 +70,30 @@ class DagProof {
 
         const merkel = this.merkel;
         const root = merkel.getHexRoot();
+        const proofMaps = {};
         const proofs = [];
+        const proofIndexes = [];
+        const PUSH = (proof, _io)=>{
+            const ret = Buffer.alloc(proof.length*2);
+            proof.forEach((p,i)=>{
+                let index;
+                const key = p.toString('hex');
+                if(proofMaps.hasOwnProperty(key)){
+                    index = proofMaps[key];
+                }else{
+                    index = proofs.push(p);
+                    proofMaps[key] = index;
+                }
+                ret.writeUInt16BE(index, i*2);
+            })
+            return ret;
+        }
         result.indexes.forEach(index => {   // TODO: There is a lot of duplicate data that needs to be optimized
-            const proof = merkel.getProof(index);
-            proofs.push(proof);
+            const proof = merkel.getProof(index/2);
+            if(proof.length == 2){
+                console.log(index, proof.map(e=>e.toString('hex')));
+            }
+            proofIndexes.push(PUSH(proof, index));
         });
 
         const ethash = this.ethash;
@@ -84,10 +105,10 @@ class DagProof {
                 data2.slice(0,32),data2.slice(32,64),
             ];
         })
-        return {dagData, root, proofs};
+        return {dagData, root, proofs, proofIndexes};
     }
 
-    existsEpoch(epoch) {
+    static existsEpoch(epoch) {
         return fs.existsSync(this.dagDir(epoch));
     }
 }

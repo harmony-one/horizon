@@ -9,6 +9,7 @@
 build
 cache
 */.dag
+*/*/dag/
 .openzeppelin
 
 node_modules

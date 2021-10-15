@@ -22,6 +22,11 @@ class Bridge {
         return this.web3.sendTx(tx);
     }
 
+    Initialize() {
+        const tx = this.contract.methods.initialize();
+        return this.web3.sendTx(tx);
+    }
+
     Bind(bridgeAddress) {
         const tx = this.contract.methods.bind(bridgeAddress);
         return this.web3.sendTx(tx);

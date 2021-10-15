@@ -92,13 +92,13 @@ contract HarmonyLightClient is
         emit RelayerThresholdChanged(newThreshold);
     }
 
-    function adminAddRelayer(address relayerAddress) external {
+    function adminAddRelayer(address relayerAddress) external onlyAdmin {
         require(!hasRole(RELAYER_ROLE, relayerAddress), "addr already has relayer role!");
         grantRole(RELAYER_ROLE, relayerAddress);
         emit RelayerAdded(relayerAddress);
     }
 
-    function adminRemoveRelayer(address relayerAddress) external {
+    function adminRemoveRelayer(address relayerAddress) external onlyAdmin {
         require(hasRole(RELAYER_ROLE, relayerAddress), "addr doesn't have relayer role!");
         revokeRole(RELAYER_ROLE, relayerAddress);
         emit RelayerRemoved(relayerAddress);

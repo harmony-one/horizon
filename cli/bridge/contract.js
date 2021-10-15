@@ -8,8 +8,10 @@ const FakeClient = require("./abi/EthereumLightClient.json");
 async function deployBridges(ethUrl, hmyUrl) {
     const ethBridge = await EthBridge.deploy(ethUrl);
     const hmyBridge = await HmyBridge.deploy(hmyUrl);
-    await ethBridge.Bind(hmyBridge.contract._address);
+    await hmyBridge.Initialize();
     await hmyBridge.Bind(ethBridge.contract._address);
+    await ethBridge.Initialize();
+    await ethBridge.Bind(hmyBridge.contract._address);
     return { ethBridge, hmyBridge };
 }
 

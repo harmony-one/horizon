@@ -1,5 +1,5 @@
 const Web3 = require('web3');
-
+require("dotenv").config();
 class EthWeb3 {
     web3; address;
     constructor(url, prikey = process.env.PRIKEY) {

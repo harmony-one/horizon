@@ -5,7 +5,7 @@
  */
 
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.7;
+pragma solidity 0.7.3;
 
 library EthUtils {
     function bytesToBytes32(bytes memory b, uint256 offset)

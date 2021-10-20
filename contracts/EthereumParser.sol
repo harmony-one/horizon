@@ -5,7 +5,7 @@
  */
 
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.7;
+pragma solidity 0.7.3;
 
 import "./lib/RLPReader.sol";
 import "./lib/RLPEncode.sol";

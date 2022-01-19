@@ -6,16 +6,31 @@ CLI is a utility that provides a command-line interface to all the components to
 
 ## DAG Merkel Tree CLI
 1. `node index.js dagProve generate` which calculate merkle root for epochs from [start, start+n)
+```
+node index.js dagProve generate 377
+```
 2. `node index.js dagProve blockProof` which accepts block number to calculate all necessary information in order to prove the block
+```
+node index.js dagProve blockProof --block 11266784 --url https://ropsten.infura.io/v3/<project-id>
+```
 
 ## ELC(Ethereum Ligth Client) CLI
 > Before using the CLI, fill in the private key into `.env` and execute `source .env`.
 1. `node index.js ELC deploy` deploy ELC contract to Harmony network.
+```
+node index.js ELC deploy http://localhost:9500 --url https://ropsten.infura.io/v3/<project-id> --block 11266872
+```
 2. `node index.js ELC status` display last block of ELC.
+```
+node index.js ELC status http://localhost:9500 <ELC_Contract_Addr>
+```
 
 ## Ethereum Block Relay CLI
 > Before using the CLI, fill in the private key into `.env` and execute `source .env`.
 1. `node index.js ethRelay getBlockHeader` get block header from ethereum.
+```
+node index.js ethRelay getBlockHeader https://ropsten.infura.io/v3/<project-id> 11266872
+```
 2. `node index.js ethRelay relay` constantly relay blocks from Ethereum to Harmony.
 
 ## Ethereum Receipt Prove CLI

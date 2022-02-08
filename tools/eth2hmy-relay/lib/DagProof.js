@@ -51,12 +51,15 @@ class DagProof {
     verifyHeader(header) {
         const ethash = this.ethash;
         const fullSize = this.fullSize;
-        const headerHash = ethash.headerHash(header.raw())
-        const { difficulty, mixHash, nonce } = header
-        const a = ethash.run(headerHash, nonce, fullSize)
-        // console.log(a);
-        const result = new BN(a.hash)
-        // if (!(a.mix.equals(mixHash) && TWO_POW256.div(difficulty).cmp(result) === 1)) throw "ethash local wrong!";
+        let rawHeader = header.raw();
+        if (rawHeader.length > 15) {
+          rawHeader = [...rawHeader.slice(0, -3), ...rawHeader.slice(-1), ...rawHeader.slice(-3, -1)];
+        }
+        const headerHash = ethash.headerHash(rawHeader);
+        const { difficulty, mixHash, nonce } = header;
+        const a = ethash.run(headerHash, nonce, fullSize);
+        const result = new BN(a.hash);
+        if (!(a.mix.equals(mixHash) && TWO_POW256.div(difficulty).cmp(result) === 1)) throw "ethash local wrong!";
         return a;
     }
 

@@ -1,6 +1,7 @@
 const ElcABI = require("../../tools/elc/abi/EthereumLightClient.json");
-const { getBlock, getHeaderProof } = require('../ethashProof/BlockProof');
+const { getBlockByNumber, getHeaderProof } = require('../ethashProof/BlockProof');
 const { HmyWeb3 } = require('../lib/hmyWeb3');
+const Web3 = require('web3');
 
 async function blockRelay(dagPath, ethUrl, hmyWeb3, elcAddress) {
     const client = hmyWeb3.ContractAt(ElcABI.abi, elcAddress);
@@ -9,10 +10,16 @@ async function blockRelay(dagPath, ethUrl, hmyWeb3, elcAddress) {
     console.log("ELC last block number:", lastBlockNo);
     const blockRelay = Number(lastBlockNo) + 1;
     console.log("block to relay:", blockRelay);
-    const header = await getBlock(ethUrl, blockRelay);
+    const header = await getBlockByNumber(ethUrl, blockRelay);
+    this.web3 = new Web3(ethUrl);
+    console.log('header hash', this.web3.utils.keccak256(header.serialize()));
     const proofs = getHeaderProof(dagPath, header)
     const rlpHeader = header.serialize();
-    await clientMethods.addBlockHeader(rlpHeader, proofs.dagData, proofs.proofs).send({ gas: 5000000 });
+    try {
+        await clientMethods.addBlockHeader(rlpHeader, proofs.dagData, proofs.proofs).send({ gas: 5000000 });
+    } catch (error) {
+        console.log(error);
+    }
     const blockNo = await clientMethods.getBlockHeightMax().call();
     console.log("new block number:", blockNo);
 }

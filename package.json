@@ -7,7 +7,7 @@
     "libInit": "tar -zxf ethereumjs-ethash-dist.tar.gz -C node_modules/@ethereumjs/ethash"
   },
   "devDependencies": {
-    "@ethereumjs/block": "^3.0.0",
+    "@ethereumjs/block": "3.5.1",
     "@nomiclabs/hardhat-ethers": "^2.0.2",
     "@openzeppelin/hardhat-upgrades": "^1.10.0",
     "@truffle/contract": "^4.3.5",

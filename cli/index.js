@@ -1,6 +1,6 @@
 const { program } = require('commander');
 const { genearateDagMTreeRange } = require('./ethashProof/DagMtreeEpoch');
-const { getHeaderProof, parseRlpHeader, getBlock } = require('./ethashProof/BlockProof');
+const { getHeaderProof, parseRlpHeader, getBlockByNumber } = require('./ethashProof/BlockProof');
 const { blockRelayLoop } = require('./eth2hmy-relay/elcRelay');
 const { deployELC, statusELC } = require('./elc/contract');
 const { merkelRootSol } = require('./ethashProof/MerkelRootSol');
@@ -51,7 +51,7 @@ Dag_CMD
   .action(async (options) => {
     let header;
     if (options.block) {
-      header = await getBlock(options.url, options.block);
+      header = await getBlockByNumber(options.url, options.block);
     } else {
       const rlpHeader = Buffer.from(options.header, 'hex');
       header = parseRlpHeader(rlpHeader);
@@ -73,27 +73,6 @@ Dag_CMD
     }
   });
 
-const ETHRelay_CMD = program.command('ethRelay').description('ethereum block relay cli');
-ETHRelay_CMD
-  .command('getBlockHeader <ethUrl> <number/hash>')
-  .description('get block header')
-  .option('-t --type <output format>', 'output format: json/rlp', 'json')
-  .action(async (url, block, options) => {
-    const header = await getBlock(url, block);
-    if (options.type == 'rlp')
-      console.log(header.serialize().toString('hex'));
-    else
-      console.log(header.toJSON());
-  });
-
-ETHRelay_CMD
-  .command('relay <ethUrl> <hmyUrl> <elcAddress>')
-  .description('relay eth block header to elc on hmy')
-  .option('-d,--dagDir <dag dir>', 'direction to store dag merkel tree', './.dag')
-  .action(async (ethUrl, hmyUrl, elcAddress, options) => {
-    await blockRelayLoop(options.dagDir, ethUrl, hmyUrl, elcAddress);
-  });
-
 const CMD_ELC = program.command('ELC').description('ethereum ligth client cli')
 CMD_ELC
   .command('deploy <hmyUrl>')
@@ -104,7 +83,7 @@ CMD_ELC
   .action(async (hmyUrl, options) => {
     let header;
     if (options.block) {
-      header = await getBlock(options.url, options.block);
+      header = await getBlockByNumber(options.url, options.block);
     } else {
       const rlpHeader = Buffer.from(options.header, 'hex');
       header = parseRlpHeader(rlpHeader);
@@ -118,6 +97,27 @@ CMD_ELC
   .description('relay eth block header to elc on hmy')
   .action(async (hmyUrl, elcAddress) => {
     await statusELC(hmyUrl, elcAddress);
+  });
+
+const ETHRelay_CMD = program.command('ethRelay').description('ethereum block relay cli');
+ETHRelay_CMD
+  .command('getBlockHeader <ethUrl> <number/hash>')
+  .description('get block header')
+  .option('-t --type <output format>', 'output format: json/rlp', 'json')
+  .action(async (url, block, options) => {
+    const header = await getBlockByNumber(url, block);
+    if (options.type == 'rlp')
+      console.log(header.serialize().toString('hex'));
+    else
+      console.log(header.toJSON());
+  });
+
+ETHRelay_CMD
+  .command('relay <ethUrl> <hmyUrl> <elcAddress>')
+  .description('relay eth block header to elc on hmy')
+  .option('-d,--dagDir <dag dir>', 'direction to store dag merkel tree', './.dag')
+  .action(async (ethUrl, hmyUrl, elcAddress, options) => {
+    await blockRelayLoop(options.dagDir, ethUrl, hmyUrl, elcAddress);
   });
 
 const CMD_EProver = program.command('EProver').description('ethereum receipt prove cli')

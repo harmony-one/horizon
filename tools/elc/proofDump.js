@@ -74,6 +74,7 @@ async function main(){
         }
         const EthUrl = argv.ethurl;
         const dagProof = new DagProof(epoch);
+        
         const header = await getBlockByNumber(EthUrl, blockNo);
         const proofs = dagProof.getProof(header);
         const rlpHeader = header.serialize();
@@ -83,7 +84,6 @@ async function main(){
             merkle_root: _toHex(proofs.root),
             elements: proofs.dagData.map(elems=>elems.map(_toHex)),
             merkle_proofs: proofs.proofs.map(_toHex),
-            proofIndexes: proofs.proofIndexes.map(_toHex),
         }
         const dumpFile = `block_${blockNo}.json`;
         fs.writeFileSync(dumpFile, JSON.stringify(proofJson));

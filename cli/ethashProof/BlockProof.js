@@ -1,4 +1,4 @@
-const { DagProof, getBlock } = require("../../tools/eth2hmy-relay");
+const { DagProof, getBlockByNumber } = require("../../tools/eth2hmy-relay");
 const { BlockHeader } = require("@ethereumjs/block");
 
 let dagProof;
@@ -15,4 +15,4 @@ function parseRlpHeader(rlpHeader) {
     return BlockHeader.fromRLPSerializedHeader(rlpHeader);
 }
 
-module.exports = { getHeaderProof, parseRlpHeader, getBlock };
+module.exports = { getHeaderProof, parseRlpHeader, getBlockByNumber };

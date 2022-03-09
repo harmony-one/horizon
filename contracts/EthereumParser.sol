@@ -35,6 +35,7 @@ library EthereumParser {
         bytes extraData;
         uint256 mixHash;
         uint256 nonce;
+        uint256 baseFeePerGas;
     }
 
     /**
@@ -64,6 +65,7 @@ library EthereumParser {
             else if (idx == 12) header.extraData = it.next().toBytes();
             else if (idx == 13) header.mixHash = it.next().toUint();
             else if (idx == 14) header.nonce = it.next().toUint();
+            else if (idx == 15) header.baseFeePerGas = it.next().toUint();
             else it.next();
 
             idx++;

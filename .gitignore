@@ -9,6 +9,8 @@
 build
 cache
 */.dag
+*/dag*
+*/*/.dag/*
 */*/dag/
 .openzeppelin
 

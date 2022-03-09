@@ -53,9 +53,9 @@ function fromRPC(blockParams){
     return BlockHeader.fromHeaderData(headerData, opts);
 }
 
-function getBlock(url, blockNo) {
+function getBlockByNumber(url, blockNo) {
     const eth = new Web3Eth(url);
     return eth.getBlock(blockNo).then(fromRPC);
 }
 
-module.exports = {getBlock};
+module.exports = {getBlockByNumber};

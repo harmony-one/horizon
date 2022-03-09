@@ -5,7 +5,10 @@ const { BN } = require("ethereumjs-util");
 async function deployELC(hmyUrl, rlpHeader) {
     const hmyWeb3 = new HmyWeb3(hmyUrl);
     const tx = hmyWeb3.ContractDeploy(Client.abi, Client.bytecode, [rlpHeader]);
-    return await hmyWeb3.sendTx(tx); //options.address
+    const elc = await hmyWeb3.sendTx(tx); //options.address
+    const gas = await elc.methods.initialize(rlpHeader).estimateGas();
+    await elc.methods.initialize(rlpHeader).send({gas});
+    return elc;
 }
 
 function printBlock(block) {

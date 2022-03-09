@@ -1,8 +1,8 @@
 const {DagProof} = require('./lib/DagProof');
-const {getBlock} = require('./lib/getBlockHeader');
+const {getBlockByNumber} = require('./lib/getBlockHeader');
 
 
 module.exports = {
     DagProof,
-    getBlock
+    getBlockByNumber
 }

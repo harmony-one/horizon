@@ -123,7 +123,7 @@ library RLPEncode {
         bytes memory encoded;
         if (len < 56) {
             encoded = new bytes(1);
-            encoded[0] = bytes32(len + offset)[31];
+            encoded[0] = byte(uint8(len) + uint8(offset));
         } else {
             uint256 lenLen;
             uint256 i = 1;
@@ -133,9 +133,9 @@ library RLPEncode {
             }
 
             encoded = new bytes(lenLen + 1);
-            encoded[0] = bytes32(lenLen + offset + 55)[31];
+            encoded[0] = byte(uint8(lenLen) + uint8(offset) + 55);
             for (i = 1; i <= lenLen; i++) {
-                encoded[i] = bytes32((len / (256**(lenLen - i))) % 256)[31];
+                encoded[i] = byte(uint8((len / (256**(lenLen-i))) % 256));
             }
         }
         return encoded;

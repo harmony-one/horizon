@@ -86,10 +86,14 @@ library EthereumParser {
         pure
         returns (uint256)
     {
-        bytes[] memory rlpFields = new bytes[](13);
+        bytes[] memory rlpFields = new bytes[](14);
         RLPReader.Iterator memory it = _rlpHeader.toRlpItem().iterator();
         uint256 idx = 0;
-        while (it.hasNext() && idx < 13) {
+        while (it.hasNext() && idx < 14) {
+            if (idx == 13) {
+                it.next();
+                it.next();
+            }
             rlpFields[idx] = it.next().toRlpBytes();
             idx++;
         }

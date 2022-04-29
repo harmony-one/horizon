@@ -184,7 +184,7 @@ contract EthereumLightClient is Ethash, Initializable, PausableUpgradeable {
         }
         //Check if the canonical chain needs to be replaced by another fork
         else if(blocks[canonicalHead].totalDifficulty < blocks[blockHash].totalDifficulty){
-            _updateCanonicalChain(current);
+            _updateCanonicalChain(blockHash);
         }
 
         return true;
@@ -200,24 +200,18 @@ contract EthereumLightClient is Ethash, Initializable, PausableUpgradeable {
     {
         uint256 current = _blockHash;
 
-        while(!canonicalBlocks[current]){
-            canonicalBlocks[current] = true;
-            current = blocks[current].parentHash;
-        }
-
-        //current now represents either our point of convergence, or the block one before the first blocked stored in the ELC
-
         //Iterate backward from new head marking the blocks as part of the canonical chain
         while(!canonicalBlocks[current] && blockExisting[current]){ //Second part of if statement if for replacing whole canonical chain
             canonicalBlocks[current] = true;
             current = blocks[current].parentHash;
         }
 
-        uint256 convergenceBlock = current;
+        //current now represents either our point of convergence, or the block one before the first blocked stored in the ELC
+        uint256 convergenceOrFirstBlock = current;
         current = canonicalHead;
 
         //Remove blocks from canonical chain until either point of convergence, or until the chain leaves range of storage
-        while(current != convergenceBlock && blockExisting[current]){
+        while(current != convergenceOrFirstBlock && blockExisting[current]){
             canonicalBlocks[current] = false;
             current = blocks[current].parentHash;
         }

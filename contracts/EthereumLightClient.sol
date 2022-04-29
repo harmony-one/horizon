@@ -34,6 +34,12 @@ contract EthereumLightClient is Ethash, Initializable, PausableUpgradeable {
     // The first block header hash
     uint256 public firstBlock;
 
+    // Block header hash of the current canonical chain head
+    uint256 public canonicalHead;
+
+    //Blocks existing in the current canonical chain, in the form blockHeaderHash => bool
+    mapping(uint256 => bool) public canonicalBlocks;
+
     // Blocks data, in the form: blockHeaderHash => BlockHeader
     mapping(uint256 => StoredBlockHeader) public blocks;
 
@@ -171,6 +177,20 @@ contract EthereumLightClient is Ethash, Initializable, PausableUpgradeable {
             blockHeightMax = header.number;
         }
 
+        //Check if this block is ahead of the canonical head
+        if(header.parentHash == canonicalHead){
+            canonicalHead = blockHash;
+            canonicalBlocks[blockHash] = true;
+        }
+        //Check if the canonical chain needs to be replaced by another fork
+        else if(blocks[canonicalHead].totalDifficulty < blocks[blockHash].totalDifficulty){
+            //Iterate backward through blocks from this block to find where the canonical chain converges with this fork
+            //Consider also that there may be no point of convergence, so in that case stop iterating when block's parent hash stops exiting in the blocks mapping
+            //Mark All blocks along the way as part of the canonical chain
+
+            //Iterate backwards from the old canonical chain head until we reach the point of convergence removing the blocks from the canonical chain marking
+        }
+
         return true;
     }
 
@@ -225,5 +245,9 @@ contract EthereumLightClient is Ethash, Initializable, PausableUpgradeable {
         blockHeightMax = toSetBlock.number;
 
         longestBranchHead[toSetBlock.hash] = toSetBlock.hash;
+
+        canonicalHead = firstBlock;
+
+        canonicalBlocks[firstBlock] = true;
     }
 }

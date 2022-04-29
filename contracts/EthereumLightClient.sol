@@ -46,12 +46,6 @@ contract EthereumLightClient is Ethash, Initializable, PausableUpgradeable {
     // Block existing map, in the form: blockHeaderHash => bool
     mapping(uint256 => bool) public blockExisting;
 
-    // Blocks in 'Verified' state
-    mapping(uint256 => bool) public verifiedBlocks;
-
-    // Blocks in 'Finalized' state
-    mapping(uint256 => bool) public finalizedBlocks;
-
     // Valid relayed blocks for a block height, in the form: blockNumber => blockHeaderHash[]
     mapping(uint256 => uint256[]) public blocksByHeight;
 
@@ -218,6 +212,23 @@ contract EthereumLightClient is Ethash, Initializable, PausableUpgradeable {
 
     }
 
+    function isVerified(uint256 blockHash)
+        public
+        view
+        returns (bool)
+    {
+        //Check that block is in canonical chain and has at least 25 confirmations
+        return canonicalBlocks[blockHash] && blocks[blockHash].number + 25 < blocks[canonicalHead].number;
+    }
+
+    function isFinalized(uint256 blockHash)
+        public
+        view
+        returns (bool)
+    {
+        return canonicalBlocks[blockHash] && blocks[blockHash].number + 200 < blocks[canonicalHead].number;
+    }
+
     function getBlockHeightMax() public view returns (uint256) {
         return blockHeightMax;
     }
@@ -259,9 +270,6 @@ contract EthereumLightClient is Ethash, Initializable, PausableUpgradeable {
 
         blocks[toSetBlock.hash] = toSetBlock;
         blockExisting[toSetBlock.hash] = true;
-
-        verifiedBlocks[toSetBlock.hash] = true;
-        finalizedBlocks[toSetBlock.hash] = true;
 
         blocksByHeight[toSetBlock.number].push(toSetBlock.hash);
         blocksByHeightExisting[toSetBlock.number] = true;

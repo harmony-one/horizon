@@ -229,6 +229,15 @@ contract EthereumLightClient is Ethash, Initializable, PausableUpgradeable {
         return canonicalBlocks[blockHash] && blocks[blockHash].number + 200 < blocks[canonicalHead].number;
     }
 
+    function numberOfBlockConfirmations(uint256 blockHash)
+        public
+        view
+        returns (uint256)
+    {
+        if(!canonicalBlocks[blockHash]) return 0;
+        else return blocks[canonicalHead].number - blocks[blockHash].number;
+    }
+
     function getBlockHeightMax() public view returns (uint256) {
         return blockHeightMax;
     }

@@ -184,14 +184,44 @@ contract EthereumLightClient is Ethash, Initializable, PausableUpgradeable {
         }
         //Check if the canonical chain needs to be replaced by another fork
         else if(blocks[canonicalHead].totalDifficulty < blocks[blockHash].totalDifficulty){
-            //Iterate backward through blocks from this block to find where the canonical chain converges with this fork
-            //Consider also that there may be no point of convergence, so in that case stop iterating when block's parent hash stops exiting in the blocks mapping
-            //Mark All blocks along the way as part of the canonical chain
-
-            //Iterate backwards from the old canonical chain head until we reach the point of convergence removing the blocks from the canonical chain marking
+            _updateCanonicalChain(current);
         }
 
         return true;
+    }
+
+    //Iterate backward through blocks from this block to find where the canonical chain converges with this fork
+    //Consider also that there may be no point of convergence, so in that case stop iterating when block's parent hash stops exiting in the blocks mapping
+    //Mark All blocks along the way as part of the canonical chain
+    function _updateCanonicalChain(
+        uint256 _blockHash
+    )
+        internal
+    {
+        uint256 current = _blockHash;
+
+        while(!canonicalBlocks[current]){
+            canonicalBlocks[current] = true;
+            current = blocks[current].parentHash;
+        }
+
+        //current now represents either our point of convergence, or the block one before the first blocked stored in the ELC
+
+        //Iterate backward from new head marking the blocks as part of the canonical chain
+        while(!canonicalBlocks[current] && blockExisting[current]){ //Second part of if statement if for replacing whole canonical chain
+            canonicalBlocks[current] = true;
+            current = blocks[current].parentHash;
+        }
+
+        uint256 convergenceBlock = current;
+        current = canonicalHead;
+
+        //Remove blocks from canonical chain until either point of convergence, or until the chain leaves range of storage
+        while(current != convergenceBlock && blockExisting[current]){
+            canonicalBlocks[current] = false;
+            current = blocks[current].parentHash;
+        }
+
     }
 
     function getBlockHeightMax() public view returns (uint256) {

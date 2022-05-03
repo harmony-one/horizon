@@ -60,6 +60,9 @@ contract TokenRegistry {
         );
     }
 
+    /// @dev data - abi.encoded data: name and symbol
+    /// @dev topics[1] - bytes32 value containing the address of the token 
+    /// @dev topics[2] - decimal encoded
     function onTokenMapReqEvent(bytes32[] memory topics, bytes memory data)
         internal
     {

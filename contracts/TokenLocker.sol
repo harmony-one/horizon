@@ -10,11 +10,7 @@ import "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/math/SafeMathUpgradeable.sol";
-// import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
-// import "openzeppelin-solidity/contracts/token/ERC20/ERC20.sol";
-// import "openzeppelin-solidity/contracts/token/ERC20/SafeERC20.sol";
-// import "openzeppelin-solidity/contracts/access/Ownable.sol";
-// import "openzeppelin-solidity/contracts/math/SafeMath.sol";
+
 
 contract TokenLocker is TokenRegistry {
     using RLPReader for RLPReader.RLPItem;

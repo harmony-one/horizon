@@ -36,10 +36,19 @@ contract TokenLocker is TokenRegistry {
         address recipient
     );
 
+    event HorizonExecute(
+        address reciever,
+        address sendTo,
+        bytes transactionData,
+        uint256 value
+    );
+
     bytes32 constant lockEventSig =
         keccak256("Locked(address,address,uint256,address)");
     bytes32 constant burnEventSig =
         keccak256("Burn(address,address,uint256,address)");
+    bytes32 constant userEventSig =
+        keccak256("HorizonExecute(address,address,bytes,uint256)");
 
     address public otherSideBridge;
 
@@ -112,7 +121,16 @@ contract TokenLocker is TokenRegistry {
                 events++;
                 continue;
             }
+            if (topics[0] == userEventSig) {
+                onUserEvent(topics, Data);
+                events++;
+                continue;
+            }
         }
+    }
+
+    function onUserEvent(bytes32[] memory topics, bytes memory data) private {
+
     }
 
     function onBurnEvent(bytes32[] memory topics, bytes memory data) private {

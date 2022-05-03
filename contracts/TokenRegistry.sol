@@ -44,7 +44,9 @@ contract TokenRegistry {
         return (TxTokens.length, RxTokens.length);
     }
 
-    function issueTokenMapReq(ERC20Upgradeable thisSideToken) external returns (address) {
+    function issueTokenMapReq(ERC20Upgradeable thisSideToken)
+        external
+    {
         require(
             TxMapped[address(thisSideToken)] == address(0),
             "token is already mapped"
@@ -85,7 +87,9 @@ contract TokenRegistry {
         emit TokenMapAck(tokenReq, address(mintAddress));
     }
 
-    function onTokenMapAckEvent(bytes32[] memory topics) internal {
+    function onTokenMapAckEvent(bytes32[] memory topics)
+        internal
+    {
         address tokenReq = address(uint160(uint256(topics[1])));
         address tokenAck = address(uint160(uint256(topics[2])));
         require(

@@ -155,7 +155,7 @@ contract EthereumLightClient is Ethash, Initializable, PausableUpgradeable {
             receiptsRoot: header.receiptsRoot,
             number: header.number,
             difficulty: header.difficulty,
-            totalDifficulty : blocks[header.parentHash].difficulty.add(header.difficulty),
+            totalDifficulty : blocks[header.parentHash].totalDifficulty.add(header.difficulty),
             time: header.timestamp,
             hash: blockHash
         });

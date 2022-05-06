@@ -121,13 +121,70 @@ contract TokenLocker is TokenRegistry {
                 events++;
                 continue;
             }
-            if (topics[0] == userEventSig) {
-                onUserEvent(topics, Data);
+        }
+    }
+
+    function _getLogs(bytes memory rlpdata)
+        internal
+        returns (RLPReader.RLPItem[] memory)
+    {
+        RLPReader.RLPItem memory stacks = rlpdata.toRlpItem();
+        RLPReader.RLPItem[] memory receipt = stacks.toList();
+        // TODO: check txs is revert or not
+        uint256 postStateOrStatus = receipt[0].toUint();
+        require(postStateOrStatus == 1, "revert receipt");
+        RLPReader.RLPItem[] memory logs = receipt[3].toList();
+        return logs;
+    }
+
+    function _prepareTopics(RLPReader.RLPItem[] memory rlpLog)
+        internal
+        returns (bytes32[] memory)
+    {
+        RLPReader.RLPItem[] memory Topics = rlpLog[1].toList(); // TODO: if is lock event
+        bytes32[] memory topics = new bytes32[](Topics.length);
+        for (uint256 j = 0; j < Topics.length; j++) {
+            topics[j] = bytes32(Topics[j].toUint());
+        }
+        return topics;
+    }
+
+
+    function executeUserEvent(bytes memory rlpdata)
+        internal
+        returns (uint256 events)
+    {
+        RLPReader.RLPItem[] memory logs = _getLogs(rlpdata);
+        for (uint256 i = 0; i < logs.length; i++) {
+            RLPReader.RLPItem[] memory rlpLog = logs[i].toList();
+            address Address = rlpLog[0].toAddress();
+            if (Address != otherSideBridge) continue;
+            bytes32[] memory topics = _prepareTopics(rlpLog);
+            bytes memory Data = rlpLog[2].toBytes();
+            if (topics[0] == lockEventSig) {
+                onLockEvent(topics, Data);
+                events++;
+                continue;
+            }
+            if (topics[0] == burnEventSig) {
+                onBurnEvent(topics, Data);
+                events++;
+                continue;
+            }
+            if (topics[0] == TokenMapReqEventSig) {
+                onTokenMapReqEvent(topics, Data);
+                events++;
+                continue;
+            }
+            if (topics[0] == TokenMapAckEventSig) {
+                onTokenMapAckEvent(topics);
                 events++;
                 continue;
             }
         }
     }
+
+
 
     function onUserEvent(bytes32[] memory topics, bytes memory data) private {
 

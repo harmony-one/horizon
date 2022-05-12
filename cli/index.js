@@ -106,12 +106,15 @@ ETHRelay_CMD
   .command('getBlockHeader <ethUrl> <number/hash>')
   .description('get block header')
   .option('-t --type <output format>', 'output format: json/rlp', 'json')
+  .option('-r --repeat <number/hash>', 'Number of consecutive blocks to query', '1')
   .action(async (url, block, options) => {
-    const header = await getBlockByNumber(url, block);
-    if (options.type == 'rlp')
-      console.log(header.serialize().toString('hex'));
-    else
-      console.log(header.toJSON());
+    for (let i = 0; i < options.repeat; i++) {
+      const header = await getBlockByNumber(url, parseInt(block) + i);
+      if (options.type == 'rlp')
+        console.log(header.serialize().toString('hex'));
+      else
+        console.log(header.toJSON());
+    }
   });
 
 ETHRelay_CMD

@@ -5,28 +5,26 @@ pragma experimental ABIEncoderV2;
 import "../EthereumLightClient.sol";
 
 /// @title Ethereum light client
-contract TesterEthLightClient is EthereumLightClient {
+contract TesterEthereumLightClient is EthereumLightClient {
     using SafeMathUpgradeable for uint256;
 
-
-
-
     function dummmyAddBlockHeader(
-        uint256[] calldata _headerParams,
+        uint256 parentHash,
+        uint256 difficulty,
         uint256 blockHash
     )
         external
         returns (bool)
     {
         StoredBlockHeader memory storedBlock = StoredBlockHeader({
-            parentHash: _headerParams[0],
-            stateRoot: _headerParams[1],
-            transactionsRoot: _headerParams[2],
-            receiptsRoot: _headerParams[3],
-            number: _headerParams[4],
-            difficulty: _headerParams[5],
-            totalDifficulty : blocks[_headerParams[0]].difficulty.add(_headerParams[5]),
-            time: _headerParams[6],
+            parentHash: parentHash,
+            stateRoot: 0,
+            transactionsRoot: 0,
+            receiptsRoot: 0,
+            number: 0,
+            difficulty: difficulty,
+            totalDifficulty : blocks[parentHash].totalDifficulty.add(difficulty),
+            time: 0,
             hash: blockHash
         });
 
@@ -34,15 +32,8 @@ contract TesterEthLightClient is EthereumLightClient {
         blockExisting[blockHash] = true;
         // verifiedBlocks[blockHash] = true;
 
-        blocksByHeight[storedBlock.number].push(blockHash);
-        blocksByHeightExisting[storedBlock.number] = true;
-
-        if (storedBlock.number > blockHeightMax) {
-            blockHeightMax = storedBlock.number;
-        }
-
         //Check if this block is ahead of the canonical head
-        if(storedBlock.parentHash == canonicalHead){
+        if(parentHash == canonicalHead){
             canonicalHead = blockHash;
             canonicalBlocks[blockHash] = true;
         }

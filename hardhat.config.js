@@ -7,7 +7,7 @@ require('@openzeppelin/hardhat-upgrades');
  * @type import('hardhat/config').HardhatUserConfig
  */
 
-const HARMONY_PRIVATE_KEY = process.env.PRIVATE_KEY;
+const HARMONY_PRIVATE_KEY = process.env.PRIKEY;
 
 module.exports = {
     defaultNetwork: "hardhat",

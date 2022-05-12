@@ -63,13 +63,13 @@ Dag_CMD
       header_rlp: _toHex(header.serialize()),
       merkle_root: _toHex(proofs.root),
       elements: proofs.dagData.map(elems => elems.map(_toHex)),
-      merkle_proofs: proofs.proofs.map(_toHex),
-      proofIndexes: proofs.proofIndexes.map(_toHex),
+      merkle_proofs: proofs.proofs.map(_toHex)
+      //proofIndexes: proofs.proofIndexes.map(_toHex),
     }
     if (!options.output) {
       console.log(proofJson);
     } else {
-      fs.writeFileSync(options.output, JSON.stringify(proofJson));
+      fs.writeFileSync(options.output, JSON.stringify(proofJson, null, 2));
     }
   });
 

@@ -9,6 +9,12 @@ function hexToBytes(hex) {
     return bytes;
 }
 
+const DEBUG = true;
+
+function debug(msg){
+    if(DEBUG) console.log(msg);
+}
+
 
 describe("Ethereum Light Client", function () {
 
@@ -60,17 +66,53 @@ describe("Ethereum Light Client", function () {
     });
 
     describe("Forking tests", function() {
-        it("Partial Fork", async function () {
-            prevHashes = ['68776803263250831790672116253057717414537012912849465124179566887710318158907' , '2', '3', '4234' , '555', '1', '2568'];
+        it("Partial Fork and Total Difficulty Test", async function () {
+            prevHashes = ['68776803263250831790672116253057717414537012912849465124179566887710318158907' , '2', '3', '4234' , '555', '1', '2568', '9870', '990'];
             hashes = ['2', '3', '4234' , '555', '1', '2568', '9870', '990', '437'];
             difficulties = ['400', '400', '400', '400', '400', '400', '400', '400', '400'];
+            expectedTotalDifficulties = ['400', '800', '1200', '1600', '2000', '2400', '2800', '3200', '3600'];
+            baseDifficulty = 5551247598;
 
-            forkHashes = ['2', '3', '4234' , '555', '1', '159', '435', '3456']
-            forkdifficulties = ['400', '400', '400', '400', '400', '400', '1200', '1600'];
+            forkHashes = ['159', '435', '3456']
+            forkPrevHashes = ['1' ,'159', '435']
+            forkDifficulties = ['400', '1200', '1600'];
+            expectedForkTotalDifficulties = ['400', '1600', '3200'];
+            forkBaseDifficulty = 5551249598;
 
+            forkIndex = 5;
 
+            debug(prevHashes.length);
+            debug(hashes.length);
+            debug(difficulties.length);
 
+            for (let i = 0; i < hashes.length; i++) {
+                await ELC.dummmyAddBlockHeader(prevHashes[i], difficulties[i], hashes[i]);
+                //debug((await ELC.canonicalHead()).toString())
+                totalDiff = (await ELC.blocks(hashes[i])).totalDifficulty.toString();
+                //debug(`Total Diff ${totalDiff}`);
+                expect(parseInt(totalDiff) - baseDifficulty).to.equal(parseInt(expectedTotalDifficulties[i]));
+            }
 
+            for (let i = 0; i < forkHashes.length; i++) {
+                await ELC.dummmyAddBlockHeader(forkPrevHashes[i], forkDifficulties[i], forkHashes[i]);
+                //debug((await ELC.canonicalHead()).toString())
+                totalDiff = (await ELC.blocks(forkHashes[i])).totalDifficulty.toString();
+                //debug(`Total Diff ${totalDiff}`);
+                expect(parseInt(totalDiff) - forkBaseDifficulty).to.equal(parseInt(expectedForkTotalDifficulties[i]));
+            }
+
+            for (let i = 0; i < hashes.length; i++) {
+                isCanon = await ELC.canonicalBlocks(hashes[i]);
+                debug(`Block ${hashes[i]} is canon? ${isCanon}`);
+                if(i < forkIndex) expect(isCanon).to.equal(true);
+                else expect(isCanon).to.equal(false);
+            }
+
+            for (let i = 0; i < forkHashes.length; i++) {
+                isCanon = await ELC.canonicalBlocks(hashes[i]);
+                debug(`Block ${hashes[i]} is canon? ${isCanon}`);
+                expect(isCanon).to.equal(true);
+            }
         })
         it("Complete fork replacement", async function () {
 

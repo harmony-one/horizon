@@ -58,7 +58,6 @@ contract TokenRegistry {
         );
     }
 
-    //This function is intended to be called inside tokenLocker's execute method, and should be internal not public.
     function onTokenMapReqEvent(bytes32[] memory topics, bytes memory data)
         public
     {
@@ -86,7 +85,6 @@ contract TokenRegistry {
         emit TokenMapAck(tokenReq, address(mintAddress));
     }
 
-    //This function is intended to be called inside tokenLocker's execute method, and should be internal not public.
     function onTokenMapAckEvent(bytes32[] memory topics) public {
         address tokenReq = address(uint160(uint256(topics[1])));
         address tokenAck = address(uint160(uint256(topics[2])));

@@ -63,7 +63,9 @@ Dag_CMD
       header_rlp: _toHex(header.serialize()),
       merkle_root: _toHex(proofs.root),
       elements: proofs.dagData.map(elems => elems.map(_toHex)),
-      merkle_proofs: proofs.proofs.map(_toHex)
+      merkle_proofs: proofs.proofs.map( function(subarray) {
+          return subarray.map(_toHex)
+      })
       //proofIndexes: proofs.proofIndexes.map(_toHex),
     }
     if (!options.output) {

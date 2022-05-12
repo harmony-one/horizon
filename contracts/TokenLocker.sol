@@ -149,8 +149,13 @@ contract TokenLocker is TokenRegistry {
         return topics;
     }
 
-
-    function executeUserEvent(bytes memory rlpdata)
+    //Only execute specified event, because if we execute them all people could
+    //point their call to a contract that reverts to stop any other calls in the block from executing.
+    //This is also why we use a separate function
+    function executeUserEvent(
+        bytes memory rlpdata,
+        uint256 _eventIndex
+    )
         internal
         returns (uint256 events)
     {
@@ -161,23 +166,10 @@ contract TokenLocker is TokenRegistry {
             if (Address != otherSideBridge) continue;
             bytes32[] memory topics = _prepareTopics(rlpLog);
             bytes memory Data = rlpLog[2].toBytes();
-            if (topics[0] == lockEventSig) {
-                onLockEvent(topics, Data);
-                events++;
-                continue;
-            }
-            if (topics[0] == burnEventSig) {
-                onBurnEvent(topics, Data);
-                events++;
-                continue;
-            }
-            if (topics[0] == TokenMapReqEventSig) {
-                onTokenMapReqEvent(topics, Data);
-                events++;
-                continue;
-            }
-            if (topics[0] == TokenMapAckEventSig) {
-                onTokenMapAckEvent(topics);
+            if (topics[0] == userEventSig) {
+                if(events == _eventIndex){
+                    onUserEvent(topics, Data);
+                }
                 events++;
                 continue;
             }
@@ -187,7 +179,9 @@ contract TokenLocker is TokenRegistry {
 
 
     function onUserEvent(bytes32[] memory topics, bytes memory data) private {
-
+        address target = address(uint160(uint256(topics[1])));
+        (bool success, ) = target.call{value: 0}(data);
+        require(success, "Transaction Failed");
     }
 
     function onBurnEvent(bytes32[] memory topics, bytes memory data) private {

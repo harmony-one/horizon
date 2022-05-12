@@ -22,6 +22,10 @@ async function blockRelay(dagPath, ethUrl, hmyWeb3, elcAddress) {
     }
     const blockNo = await clientMethods.getBlockHeightMax().call();
     console.log("new block number:", blockNo);
+
+    const canoncicalHead = await clientMethods.canonicalHead().call();
+    console.log("Canonical Head:", Web3.utils.toHex(canoncicalHead));
+
 }
 
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));

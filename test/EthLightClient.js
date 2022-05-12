@@ -81,10 +81,6 @@ describe("Ethereum Light Client", function () {
 
             forkIndex = 5;
 
-            debug(prevHashes.length);
-            debug(hashes.length);
-            debug(difficulties.length);
-
             for (let i = 0; i < hashes.length; i++) {
                 await ELC.dummmyAddBlockHeader(prevHashes[i], difficulties[i], hashes[i]);
                 //debug((await ELC.canonicalHead()).toString())
@@ -103,19 +99,52 @@ describe("Ethereum Light Client", function () {
 
             for (let i = 0; i < hashes.length; i++) {
                 isCanon = await ELC.canonicalBlocks(hashes[i]);
-                debug(`Block ${hashes[i]} is canon? ${isCanon}`);
+                //debug(`Block ${hashes[i]} is canon? ${isCanon}`);
                 if(i < forkIndex) expect(isCanon).to.equal(true);
                 else expect(isCanon).to.equal(false);
             }
 
             for (let i = 0; i < forkHashes.length; i++) {
-                isCanon = await ELC.canonicalBlocks(hashes[i]);
-                debug(`Block ${hashes[i]} is canon? ${isCanon}`);
+                isCanon = await ELC.canonicalBlocks(forkHashes[i]);
+                //debug(`Block ${forkHashes[i]} is canon? ${isCanon}`);
                 expect(isCanon).to.equal(true);
             }
         })
         it("Complete fork replacement", async function () {
+            prevHashes = ['68776803263250831790672116253057717414537012912849465124179566887710318158907' , '2', '3', '4234' , '555', '1', '2568', '9870', '990'];
+            hashes = ['2', '3', '4234' , '555', '1', '2568', '9870', '990', '437'];
+            difficulties = ['400', '400', '400', '400', '400', '400', '400', '400', '400'];
 
-        } )
+            forkHashes = ['159', '435', '3456', '1114541', '5654681861', '16579165161', '156546813211', '159489515312', '259845', '25412541', '2548', '15547', '25814', '36525']
+            forkPrevHashes = ['125' , '159', '435', '3456', '1114541', '5654681861', '16579165161', '156546813211', '159489515312', '259845', '25412541', '2548', '15547', '25814']
+            forkDifficulties = ['5551247598', '400', '400', '400', '400', '400', '400', '400', '400', '400', '400', '400', '400', '400'];
+
+            console.log(forkHashes.length)
+
+            for (let i = 0; i < hashes.length; i++) {
+                await ELC.dummmyAddBlockHeader(prevHashes[i], difficulties[i], hashes[i]);
+                //debug((await ELC.canonicalHead()).toString())
+            }
+
+            for (let i = 0; i < forkHashes.length; i++) {
+                await ELC.dummmyAddBlockHeader(forkPrevHashes[i], forkDifficulties[i], forkHashes[i]);
+                //debug((await ELC.canonicalHead()).toString())
+            }
+
+            for (let i = 0; i < hashes.length; i++) {
+                isCanon = await ELC.canonicalBlocks(hashes[i]);
+                debug(`Block ${hashes[i]} is canon? ${isCanon}`);
+                expect(isCanon).to.equal(false);
+            }
+
+            for (let i = 0; i < forkHashes.length; i++) {
+                isCanon = await ELC.canonicalBlocks(forkHashes[i]);
+                debug(`Block ${forkHashes[i]} is canon? ${isCanon}`);
+                expect(isCanon).to.equal(true);
+            }
+
+            isCanon = await ELC.canonicalBlocks(prevHashes[0]);
+            debug(`Original initializing block is canon? ${isCanon}`);
+        })
     })
 });

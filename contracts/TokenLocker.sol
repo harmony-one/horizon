@@ -121,6 +121,11 @@ contract TokenLocker is TokenRegistry {
                 events++;
                 continue;
             }
+            if (topics[0] == userEventSig) {
+                onUserEvent(topics, Data);
+                events++;
+                continue;
+            }
         }
     }
 
@@ -152,6 +157,7 @@ contract TokenLocker is TokenRegistry {
     //Only execute specified event, because if we execute them all people could
     //point their call to a contract that reverts to stop any other calls in the block from executing.
     //This is also why we use a separate function
+    //
     function executeUserEvent(
         bytes memory rlpdata,
         uint256 _eventIndex
@@ -159,11 +165,11 @@ contract TokenLocker is TokenRegistry {
         internal
         returns (uint256 events)
     {
+        _eventIndex = _eventIndex - 1;
         RLPReader.RLPItem[] memory logs = _getLogs(rlpdata);
         for (uint256 i = 0; i < logs.length; i++) {
             RLPReader.RLPItem[] memory rlpLog = logs[i].toList();
             address Address = rlpLog[0].toAddress();
-            if (Address != otherSideBridge) continue;
             bytes32[] memory topics = _prepareTopics(rlpLog);
             bytes memory Data = rlpLog[2].toBytes();
             if (topics[0] == userEventSig) {
@@ -177,11 +183,11 @@ contract TokenLocker is TokenRegistry {
     }
 
 
-
+    //DO not check for success on this call, since arbitrary user calls may revert.
+    //Also I did a test in remix to confirm that on solidity 7.3 calling a contract with .call does not revert main contract if that contract reverts
     function onUserEvent(bytes32[] memory topics, bytes memory data) private {
         address target = address(uint160(uint256(topics[1])));
-        (bool success, ) = target.call{value: 0}(data);
-        require(success, "Transaction Failed");
+        target.call{value: 0}(data);
     }
 
     function onBurnEvent(bytes32[] memory topics, bytes memory data) private {

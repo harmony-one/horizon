@@ -116,66 +116,13 @@ contract TokenLocker is TokenRegistry {
                 events++;
                 continue;
             }
-            if (topics[0] == TokenMapAckEventSig) {
+            if (topics[0] == TokenMapAckEventSig) {f
                 onTokenMapAckEvent(topics);
                 events++;
                 continue;
             }
             if (topics[0] == userEventSig) {
                 onUserEvent(topics, Data);
-                events++;
-                continue;
-            }
-        }
-    }
-
-    function _getLogs(bytes memory rlpdata)
-        internal
-        returns (RLPReader.RLPItem[] memory)
-    {
-        RLPReader.RLPItem memory stacks = rlpdata.toRlpItem();
-        RLPReader.RLPItem[] memory receipt = stacks.toList();
-        // TODO: check txs is revert or not
-        uint256 postStateOrStatus = receipt[0].toUint();
-        require(postStateOrStatus == 1, "revert receipt");
-        RLPReader.RLPItem[] memory logs = receipt[3].toList();
-        return logs;
-    }
-
-    function _prepareTopics(RLPReader.RLPItem[] memory rlpLog)
-        internal
-        returns (bytes32[] memory)
-    {
-        RLPReader.RLPItem[] memory Topics = rlpLog[1].toList(); // TODO: if is lock event
-        bytes32[] memory topics = new bytes32[](Topics.length);
-        for (uint256 j = 0; j < Topics.length; j++) {
-            topics[j] = bytes32(Topics[j].toUint());
-        }
-        return topics;
-    }
-
-    //Only execute specified event, because if we execute them all people could
-    //point their call to a contract that reverts to stop any other calls in the block from executing.
-    //This is also why we use a separate function
-    //
-    function executeUserEvent(
-        bytes memory rlpdata,
-        uint256 _eventIndex
-    )
-        internal
-        returns (uint256 events)
-    {
-        _eventIndex = _eventIndex - 1;
-        RLPReader.RLPItem[] memory logs = _getLogs(rlpdata);
-        for (uint256 i = 0; i < logs.length; i++) {
-            RLPReader.RLPItem[] memory rlpLog = logs[i].toList();
-            address Address = rlpLog[0].toAddress();
-            bytes32[] memory topics = _prepareTopics(rlpLog);
-            bytes memory Data = rlpLog[2].toBytes();
-            if (topics[0] == userEventSig) {
-                if(events == _eventIndex){
-                    onUserEvent(topics, Data);
-                }
                 events++;
                 continue;
             }

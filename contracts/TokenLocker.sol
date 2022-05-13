@@ -37,7 +37,6 @@ contract TokenLocker is TokenRegistry {
     );
 
     event HorizonExecute(
-        address indexed reciever,
         address indexed sendTo,
         bytes transactionData
     );
@@ -47,7 +46,7 @@ contract TokenLocker is TokenRegistry {
     bytes32 constant burnEventSig =
         keccak256("Burn(address,address,uint256,address)");
     bytes32 constant userEventSig =
-        keccak256("HorizonExecute(address,address,bytes)");
+        keccak256("HorizonExecute(address,bytes)");
 
     address constant ZERO_ADDRESS = 0x0000000000000000000000000000000000000000;
 

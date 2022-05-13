@@ -38,6 +38,22 @@ contract TokenLockerOnHarmony is TokenLocker, OwnableUpgradeable {
         bytes calldata mptkey,
         bytes calldata proof
     ) external {
+        validateAndExecuteProof(
+            blockNo,
+            rootHash,
+            mptkey,
+            proof,
+            ZERO_ADDRESS
+        );
+    }
+
+    function validateAndExecuteProof(
+        uint256 blockNo,
+        bytes32 rootHash,
+        bytes calldata mptkey,
+        bytes calldata proof,
+        address userTarget
+    ) public {
         bytes32 blockHash = bytes32(lightclient.blocksByHeight(blockNo, 0));
         require(
             lightclient.VerifyReceiptsHash(blockHash, rootHash),
@@ -53,7 +69,7 @@ contract TokenLockerOnHarmony is TokenLocker, OwnableUpgradeable {
             proof
         );
         spentReceipt[receiptHash] = true;
-        uint256 executedEvents = execute(rlpdata);
+        uint256 executedEvents = execute(rlpdata, userTarget);
         require(executedEvents > 0, "no valid event");
     }
 }

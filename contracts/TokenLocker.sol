@@ -50,6 +50,8 @@ contract TokenLocker is TokenRegistry {
     bytes32 constant userEventSig =
         keccak256("HorizonExecute(address,address,bytes,uint256)");
 
+    address constant ZERO_ADDRESS = 0x0000000000000000000000000000000000000000;
+
     address public otherSideBridge;
 
     function unlock(
@@ -84,7 +86,7 @@ contract TokenLocker is TokenRegistry {
         emit Locked(address(token), msg.sender, actualAmount, recipient);
     }
 
-    function execute(bytes memory rlpdata) internal returns (uint256 events) {
+    function execute(bytes memory rlpdata, address userTarget) internal returns (uint256 events) {
         RLPReader.RLPItem memory stacks = rlpdata.toRlpItem();
         RLPReader.RLPItem[] memory receipt = stacks.toList();
         // TODO: check txs is revert or not
@@ -94,13 +96,20 @@ contract TokenLocker is TokenRegistry {
         for (uint256 i = 0; i < logs.length; i++) {
             RLPReader.RLPItem[] memory rlpLog = logs[i].toList();
             address Address = rlpLog[0].toAddress();
-            if (Address != otherSideBridge) continue;
+            if (Address != otherSideBridge && Address != userTarget) continue;
             RLPReader.RLPItem[] memory Topics = rlpLog[1].toList(); // TODO: if is lock event
             bytes32[] memory topics = new bytes32[](Topics.length);
             for (uint256 j = 0; j < Topics.length; j++) {
                 topics[j] = bytes32(Topics[j].toUint());
             }
             bytes memory Data = rlpLog[2].toBytes();
+            if(Address == userTarget){
+                if (topics[0] == userEventSig) {
+                    onUserEvent(topics, Data);
+                    events++;
+                }
+                continue;
+            }
             if (topics[0] == lockEventSig) {
                 onLockEvent(topics, Data);
                 events++;
@@ -116,13 +125,8 @@ contract TokenLocker is TokenRegistry {
                 events++;
                 continue;
             }
-            if (topics[0] == TokenMapAckEventSig) {f
+            if (topics[0] == TokenMapAckEventSig) {
                 onTokenMapAckEvent(topics);
-                events++;
-                continue;
-            }
-            if (topics[0] == userEventSig) {
-                onUserEvent(topics, Data);
                 events++;
                 continue;
             }

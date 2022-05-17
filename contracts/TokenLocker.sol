@@ -45,6 +45,8 @@ contract TokenLocker is TokenRegistry {
         keccak256("Locked(address,address,uint256,address)");
     bytes32 constant burnEventSig =
         keccak256("Burn(address,address,uint256,address)");
+    //Horizon Execute is both the name of the function on the other chain to call, and the event to emit to call it
+    //This is the encoding for the event
     bytes32 constant userEventSig =
         keccak256("HorizonExecute(address,bytes)");
 
@@ -103,7 +105,7 @@ contract TokenLocker is TokenRegistry {
             bytes memory Data = rlpLog[2].toBytes();
             if(Address == userTarget){
                 if (topics[0] == userEventSig) {
-                    onUserEvent(topics, Data);
+                    onUserEvent(topics, Data, Address);
                     events++;
                 }
                 continue;
@@ -132,11 +134,17 @@ contract TokenLocker is TokenRegistry {
     }
 
 
-    //DO not check for success on this call, since arbitrary user calls may revert.
+    //DO Not check for success on this call, since arbitrary user calls may revert.
     //Also I did a test in remix to confirm that on solidity 7.3 calling a contract with .call does not revert main contract if that contract reverts
-    function onUserEvent(bytes32[] memory topics, bytes memory data) private {
+    function onUserEvent(bytes32[] memory topics, bytes memory data, address otherSideCaller) private {
         address target = address(uint160(uint256(topics[1])));
-        target.call{value: 0}(data);
+        target.call(
+            abi.encodeWithSignature(
+                "HorizonExecute(address,bytes)", //This is the encoding for the Horizon Execute function call
+                otherSideCaller,
+                data
+            )
+        );
     }
 
     function onBurnEvent(bytes32[] memory topics, bytes memory data) private {

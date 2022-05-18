@@ -6,13 +6,20 @@ const {getBlockByNumber} = require("../cli/ethashProof/BlockProof");
 const {DagProof} = require('../tools/eth2hmy-relay/lib/DagProof');
 require("hardhat-gas-reporter");
 
+const rpcUrl = process.env.RPCURL;
+const eventTx = "0x95f6998ff7c767a0b0d2f2cef4e6975cd5b9d3177dbee35f7b15e54e782ec688";
+const DEBUG = true;
+const _toHex = e => `0x${e.toString('hex')}`;
+
+function debug(msg){
+    if(DEBUG) console.log(msg);
+}
+
 function hexToBytes(hex) {
     for (var bytes = [], c = 0; c < hex.length; c += 2)
         bytes.push(parseInt(hex.substr(c, 2), 16));
     return bytes;
 }
-
-const _toHex = e => `0x${e.toString('hex')}`;
 
 async function addBlocksInRange(ELC, rpc, startBlock, numBlocks, dagPath){
     for (var currentBlock = startBlock; currentBlock < startBlock + numBlocks; currentBlock++){
@@ -35,16 +42,6 @@ function transformNestedByteArray(arr){
         }
     }
 }
-
-const DEBUG = true;
-
-function debug(msg){
-    if(DEBUG) console.log(msg);
-}
-
-const rpcUrl = process.env.RPCURL;
-const eventTx = "0x95f6998ff7c767a0b0d2f2cef4e6975cd5b9d3177dbee35f7b15e54e782ec688";
-
 
 describe("Token Locker Cross Chain Event Passing", function () {
 

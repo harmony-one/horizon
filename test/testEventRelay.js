@@ -14,8 +14,18 @@ function hexToBytes(hex) {
 
 const _toHex = e => `0x${e.toString('hex')}`;
 
-async function addBlocksInRange(ELC, rpc){
+async function addBlocksInRange(ELC, rpc, startBlock, numBlocks, dagPath){
+    for (var currentBlock = startBlock; currentBlock < startBlock + numBlocks; currentBlock++){
+        header = await getBlockByNumber(rpc, currentBlock);
 
+        dagProver = new DagProof(dagPath);
+
+        let proofs = dagProver.getProof(header);
+
+        await ELC.addBlockHeader(header.serialize(), proofs.dagData, proofs.proofs, {gasLimit: 3000000 });
+
+        console.log(`added block ${currentBlock} to ELC`);
+    }
 }
 
 function transformNestedByteArray(arr){
@@ -61,19 +71,7 @@ describe("Token Locker Cross Chain Event Passing", function () {
 
         const proof = await prover.receiptProof(eventTx);
 
-        blockNum = await ELC.blockHeightMax();
-
-        header = await getBlockByNumber(rpcUrl, 12274370);
-
-        dagProver = new DagProof('./cli/.dag');
-
-        let proofs = dagProver.getProof(header);
-
-        await ELC.addBlockHeader(header.serialize(), proofs.dagData, proofs.proofs, {gasLimit: 2500000 });
-
-        blockNum = await ELC.blockHeightMax();
-
-        console.log(blockNum);
+        await addBlocksInRange(ELC, rpcUrl, 12274370, 20, './cli/.dag');
 
     });
 

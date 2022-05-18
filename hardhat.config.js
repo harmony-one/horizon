@@ -14,7 +14,7 @@ module.exports = {
     networks: {
         localnet: {
             url: `http://localhost:9500`,
-            accounts: [`0x${HARMONY_PRIVATE_KEY}`]
+            accounts: [`0x${HARMONY_PRIVATE_KEY}`],
         },
         testnet: {
             url: `https://api.s0.b.hmny.io`,
@@ -31,7 +31,10 @@ module.exports = {
         ropsten: {
             url: `https://ropsten.infura.io/v3/<project-id>`,
             accounts: [`0x${HARMONY_PRIVATE_KEY}`]
-        }
+        },
+        hardhat: {
+            blockGasLimit: 30000000
+        },
     },
     solidity: {
         version: "0.7.3",
@@ -49,6 +52,9 @@ module.exports = {
         artifacts: "./build"
     },
     mocha: {
-        timeout: 20000
+        timeout: 200000000000
+    },
+    gasReporter: {
+        enabled: true
     }
 }

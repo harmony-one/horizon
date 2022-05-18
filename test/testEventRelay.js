@@ -64,11 +64,22 @@ describe("Token Locker Cross Chain Event Passing", function () {
 
         await LockerOnHarmony.deployed();
 
+        await addBlocksInRange(ELC, rpcUrl, 12274370, 8, './cli/.dag');
+
         const prover = new EProver(rpcUrl);
 
         const proof = await prover.receiptProof(eventTx);
 
-        await addBlocksInRange(ELC, rpcUrl, 12274370, 20, './cli/.dag');
+        await LockerOnHarmony.changeLightClient(ELC.address);
+
+        debug(proof);
+
+        await LockerOnHarmony.validateAndExecuteProof(
+            12274373,
+            proof.root,
+            proof.key,
+            proof.proof
+        );
 
     });
 

@@ -4,7 +4,8 @@
   "description": "Harmony soccerplayers.app",
   "main": "truffle.js",
   "scripts": {
-    "libInit": "tar -zxf ethereumjs-ethash-dist.tar.gz -C node_modules/@ethereumjs/ethash"
+    "libInit": "tar -zxf ethereumjs-ethash-dist.tar.gz -C node_modules/@ethereumjs/ethash",
+    "test": "npx hardhat test"
   },
   "devDependencies": {
     "@ethereumjs/block": "3.5.1",

@@ -1,21 +1,16 @@
 # Horizon Bridge Documentation and API reference
 
-
-# Testing
-
 ## Environment Data
+
+Here is an overview of Environment data setup for testing after following the steps below
+
 * Deployer Address : 0x8875fc2A47E35ACD1784bB5f58f563dFE86A8451
 * Infura Project: 32cb9c57bfe447a99ea34e30195b2d10
 * KOVAN ERC20 Contract: [0xc90a6555CaD53a9D85a80052Fe2926E21608CF41](https://kovan.etherscan.io/address/0xc90a6555cad53a9d85a80052fe2926e21608cf41)
 
-## Getting started
+# Getting started
 
-### Deployer Account
-Create a deployer account and fund it in both Harmony Testnet and Kovan using Faucets. Add the PRIVATE_KEY to the `.env` file
-
-### Infura Project Setup
-
-Create an [Infura Account](https://infura.io/) and create an ethereum project. Add the INFURA_PROJECT_ID to the `.env` file.
+## Setting up the codebase
 
 ### Install the tools and the cli
 
@@ -31,12 +26,40 @@ cd ../../cli
 yarn install
 ```
 
+## Setting up the Infrastructure 
+
+### Deployer Account
+Create a deployer account and fund it in both Harmony Testnet and Kovan using Faucets. Add the PRIVATE_KEY to the `.env` file
+
+### Infura Project Setup
+
+Create an [Infura Account](https://infura.io/) and create an ethereum project. Add the INFURA_PROJECT_ID to the `.env` file.
+
+
+## Deploying Smart Contracts
+
 ### Deploy the ERC20 Contract on Kovan
 
 ```
 npx hardhat run --network kovan scripts/deploy_erc20.js
 ERC20 deployed to: 0xD86eE1D13A1C34B5b2B08e1710f41a954A42D7fC
 ```
+
+## Creating the DAG Merkle Tree
+
+## Deploying the Relayer
+
+## Deploying the Client
+
+## Transfer Tokens
+
+# Running Tests
+Tests are set up in the tests folder and are run using hardhat.
+
+`yarn test` is set up as a script to run `npx hardhat test`
+
+
+
 
 ### Use the Horizon CLI to setup and run the bridge
 

@@ -26,7 +26,7 @@ but most likely, we will stick to the first one.
 - [ ] PR from Ganesha for Harmony Testnet Bridge Support
 - [ ] Check Status of TokenLocker and ERC721 and ERC1155 support (Bruce)
 - [ ] Review item which is needed for Permissionless Rollout of Validators (waiting on something on Ethereum?)
-- [ ] Check whether Boris is writing any tests
+- [ ] Check test updates from Boris
 
 
 ## Environment Data
@@ -36,6 +36,7 @@ Here is an overview of Environment data setup for testing after following the st
 * Deployer Address : 0x8875fc2A47E35ACD1784bB5f58f563dFE86A8451
 * Infura Project: 32cb9c57bfe447a99ea34e30195b2d10
 * KOVAN ERC20 Contract: [0xc90a6555CaD53a9D85a80052Fe2926E21608CF41](https://kovan.etherscan.io/address/0xc90a6555cad53a9d85a80052fe2926e21608cf41)
+* ROPSTEN ERC20 Contract
 
 # Getting started
 
@@ -57,13 +58,36 @@ yarn install
 
 ## Setting up the Infrastructure 
 
-### Deployer Account
-Create a deployer account and fund it in both Harmony Testnet and Kovan using Faucets. Add the PRIVATE_KEY to the `.env` file
-
 ### Infura Project Setup
+
+We use an an infura account to integrate with a Ropsten Node.
 
 Create an [Infura Account](https://infura.io/) and create an ethereum project. Add the INFURA_PROJECT_ID to the `.env` file.
 
+### Running a local Harmony Network
+See [here](https://github.com/harmony-one/harmony#debugging) for build instructions
+
+```
+cd $(go env GOPATH)/src/github.com/harmony-one/harmony
+make debug
+```
+To stop the network use `^C` or `make debug-kill`
+
+Note: If using a later version of openssl (e.g. openssl v3.3) on a mac you may need to
+modify  `scripts\go_executable_build.sh`
+changing this line
+`LIB[libcrypto.3.dylib]=/usr/local/opt/openssl/lib/libcrypto.3.dylib`
+### Deployer Account
+Create a deployer account and fund it in both Harmony Testnet and Ropsten using Faucets. Add the PRIVATE_KEY to the `.env` file
+
+[Here](https://ropsten.oregonctf.org/) is a ropsten faucet.
+
+To fund your harmony account use the [harmony cli](https://docs.harmony.one/home/general/wallets/harmony-cli) or metamask and transfer funds as follows
+
+```
+My Genesis Account: one1spshr72utf6rwxseaz339j09ed8p6f8ke370zj/2d61379e44a772e5757e27ee2b3874254f56073e6bd226eb8b160371cc3c18b8c4977bd3dcb71fd57dc62bf0e143fd08:0
+Legacy mode; node key 2d61379e44a772e5757e27ee2b3874254f56073e6bd226eb8b160371cc3c18b8c4977bd3dcb71fd57dc62bf0e143fd08; -> shard 0
+```
 
 ## Deploying Smart Contracts
 

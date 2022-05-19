@@ -1,5 +1,32 @@
 # Horizon Bridge Documentation and API reference
 
+# Overview
+
+The current state of the project is that we are testing using a Harmony Local Node and brdiging to Ropsten. For the client we will use the CLI and moving forward will use the new UI
+* DAG genertion : Takes several hours to run Ganesha has a machine to do this and shares the latest DAG info from Ropsten using [google drive](https://ropsten.etherscan.io/block/12280236). The epoch logic is the block Number divided by 30,000 so current Ropsten EPOCH is block 12280236 / 30000 = 409 which is the DAG info shared above. **Moving forward we need to update DAG information for every new EPOCH**
+* CLI Relayer : Relays the blocks, this is initially written in javascript as a Proof of concept and may be implemented in other languages moving forward. **Once the Relayer has begun we need to continually relay each block**
+* Client: The client is used to Process transactions this is done by locking the Token using the TokenLocker.sol contract (e.g. TokenLockerOnEth.Sol AND TokenLockerOnHarmony.sol)
+Currently only ERC20 are supported. Moving forward ERC721 and ERC1155 as well as operations on smart contracts will also be supported. For now all client transactions will be done using the CLI. Moving forward  the current bridge (bridge.harmony.one) will be migrated to https://bridge-validator-1.web.app/ and jenya also built a fresh frontend for upcoming trustless bridge: https://github.com/harmony-one/horizon-trustless-frontend
+but most likely, we will stick to the first one.
+* Harmony Node: we use a [harmony local node](https://github.com/harmony-one/harmony#dev-docker-image) this can be run via docker. **There is a pull request which needs to be pushed to Harmony Testnet to enable the bridging functionality.**
+
+**Current Status**
+* End to End Testing : Has never been succesfully completed
+* Smart Contract Tests: Have errors in them.
+
+**RollOut Strategy**
+* Complete End To End Testing (using CLI)
+* Write Smart Contract Tests (will use hardhat)
+* Update Smart Contract Documentation and README.md
+* Integrate with Front END UI
+* Onboard Production Validators (15 Validators to relay blocks - incentives tbd)
+
+
+**Additional Notes/Action Items**
+- [ ] PR from Ganesha for Harmony Testnet Bridge Support
+- [ ] Check Status of TokenLocker and ERC721 and ERC1155 support (Bruce)
+
+
 ## Environment Data
 
 Here is an overview of Environment data setup for testing after following the steps below
@@ -70,6 +97,11 @@ CLI is a utility that provides a command-line interface to all the components to
 `node index.js [command] -h`
 
 #### DAG Merkel Tree CLI
+Ropsten Divide Ropsten BlockNumber by 30,000
+e.g. https://ropsten.etherscan.io/block/12280236 divided by 30,000
+
+Ganesha will share the file.
+
 1. `node index.js dagProve generate` which calculate merkle root for epochs from [start, start+n)
 ```
 node index.js dagProve generate 377

@@ -25,6 +25,7 @@ but most likely, we will stick to the first one.
 **Additional Notes/Action Items**
 - [ ] PR from Ganesha for Harmony Testnet Bridge Support
 - [ ] Check Status of TokenLocker and ERC721 and ERC1155 support (Bruce)
+- [ ] Review item which is needed for Permissionless Rollout of Validators (waiting on something on Ethereum?)
 
 
 ## Environment Data

@@ -222,6 +222,25 @@ library RLPReader {
         return result;
     }
 
+    function toBytesItem(RLPItem memory item) internal pure returns (RLPItem memory) {
+        require(item.len > 0);
+
+        uint256 offset = _payloadOffset(item.memPtr);
+        uint256 len = item.len - offset;
+        return RLPItem(len, item.memPtr+offset);
+    }
+
+
+    function toBytesHash(RLPItem memory item) internal pure returns (bytes32 _hash) {
+        require(item.len > 0);
+        uint256 offset = _payloadOffset(item.memPtr);
+        uint256 len = item.len - offset;
+        uint256 ptr = item.memPtr + offset;
+        assembly{
+            _hash := keccak256(ptr, len)
+        }
+    }
+
     function toBytes32(RLPItem memory item) internal pure returns (bytes32) {
         return _bytesToBytes32(toBytes(item), 0);
     }
@@ -344,5 +363,25 @@ library RLPReader {
             out |= bytes32(b[offset + i] & 0xFF) >> (i * 8);
         }
         return out;
+    }
+
+    /*
+     * @param get the RLP item by index. save gas.
+     */
+    function safeGetItemByIndex(RLPItem memory item, uint idx) internal pure returns (RLPItem memory) {
+        require(isList(item), "RLPDecoder iterator is not a list");
+
+        uint endPtr = item.memPtr + item.len;
+
+        uint memPtr = item.memPtr + _payloadOffset(item.memPtr);
+        uint dataLen;
+        for (uint i = 0; i < idx; i++) {
+            dataLen = _itemLength(memPtr);
+            memPtr = memPtr + dataLen;
+        }
+        dataLen = _itemLength(memPtr);
+
+        require(memPtr + dataLen <= endPtr, "RLP item overflow");
+        return RLPItem(dataLen, memPtr);
     }
 }

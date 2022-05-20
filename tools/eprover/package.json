@@ -1,7 +1,8 @@
 {
   "dependencies": {
-    "eth-proof": "^2.1.6",
+    "eth-object": "^1.0.3",
     "eth-util-lite": "^1.0.1",
+    "merkle-patricia-tree": "4.2.1",
     "sha3": "^2.1.4"
   }
 }

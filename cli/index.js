@@ -128,7 +128,7 @@ CMD_EProver
   .option('-o,--output <OUTPUT>', 'output file')
   .action(async (ethUrl, txHash, options) => {
     const ep = new EProver(ethUrl);
-    const proof = await ep.receiptProof(txHash);
+    const proof = await ep.receiptProofABI(txHash);
     const keys = Object.keys(proof);
     const out = {};
     keys.forEach(key => out[key] = '0x' + proof[key].toString('hex'));
@@ -149,7 +149,7 @@ CMD_EVerifier
   .option('-t --type <output format>', 'output format: json/rlp', 'json')
   .action(async (ethUrl, txHash, hmyUrl, evAddress, options) => {
     const ep = new EProver(ethUrl);
-    const proof = await ep.receiptProof(txHash);
+    const proof = await ep.receiptProofABI(txHash);
     const receiptObj = await validateMPTProof(hmyUrl, evAddress, proof);
     const out = options.type == 'json' ? receiptObj.toJson() : receiptObj.toHex();
     if (options.output) {

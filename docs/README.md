@@ -3,7 +3,7 @@
 # Overview
 
 The current state of the project is that we are testing using a Harmony Local Node and brdiging to Ropsten. For the client we will use the CLI and moving forward will use the new UI
-* DAG genertion : Takes several hours to run Ganesha has a machine to do this and shares the latest DAG info from Ropsten using [google drive](https://ropsten.etherscan.io/block/12280236). The epoch logic is the block Number divided by 30,000 so current Ropsten EPOCH is block 12280236 / 30000 = 409 which is the DAG info shared above. **Moving forward we need to update DAG information for every new EPOCH**
+* DAG genertion : Takes several hours to run Ganesha has a machine to do this and shares the latest DAG info from Ropsten using [google drive](https://drive.google.com/file/d/1FqLCO5oc1xDYNMuub7xAqnb6kfohdf-U/view?usp=sharing). The epoch logic is the block Number divided by 30,000 so current Ropsten EPOCH is block 12280236 / 30000 = 409 which is the DAG info shared above. **Moving forward we need to update DAG information for every new EPOCH**
 * CLI Relayer : Relays the blocks, this is initially written in javascript as a Proof of concept and may be implemented in other languages moving forward. **Once the Relayer has begun we need to continually relay each block**
 * Client: The client is used to Process transactions this is done by locking the Token using the TokenLocker.sol contract (e.g. TokenLockerOnEth.Sol AND TokenLockerOnHarmony.sol)
 Currently only ERC20 are supported. Moving forward ERC721 and ERC1155 as well as operations on smart contracts will also be supported. For now all client transactions will be done using the CLI. Moving forward  the current bridge (bridge.harmony.one) will be migrated to https://bridge-validator-1.web.app/ and jenya also built a fresh frontend for upcoming trustless bridge: https://github.com/harmony-one/horizon-trustless-frontend
@@ -73,23 +73,50 @@ make debug
 ```
 To stop the network use `^C` or `make debug-kill`
 
-Note: If using a later version of openssl (e.g. openssl v3.3) on a mac you may need to
-modify  `scripts\go_executable_build.sh`
-changing this line
-`LIB[libcrypto.3.dylib]=/usr/local/opt/openssl/lib/libcrypto.3.dylib`
+*Note: If using a later version of openssl (e.g. openssl v3.3) on a mac you may need to modify `scripts\go_executable_build.sh` changing this line `LIB[libcrypto.3.dylib]=/usr/local/opt/openssl/lib/libcrypto.3.dylib`*
 ### Deployer Account
 Create a deployer account and fund it in both Harmony Testnet and Ropsten using Faucets. Add the PRIVATE_KEY to the `.env` file
 
 [Here](https://ropsten.oregonctf.org/) is a ropsten faucet.
 
-To fund your harmony account use the [harmony cli](https://docs.harmony.one/home/general/wallets/harmony-cli) or metamask and transfer funds as follows
+To fund your harmony account use the [harmony cli](https://docs.harmony.one/home/general/wallets/harmony-cli) or metamask and transfer funds from the following account.
+
 
 ```
-My Genesis Account: one1spshr72utf6rwxseaz339j09ed8p6f8ke370zj/2d61379e44a772e5757e27ee2b3874254f56073e6bd226eb8b160371cc3c18b8c4977bd3dcb71fd57dc62bf0e143fd08:0
-Legacy mode; node key 2d61379e44a772e5757e27ee2b3874254f56073e6bd226eb8b160371cc3c18b8c4977bd3dcb71fd57dc62bf0e143fd08; -> shard 0
+On localnet, by default, 0xA5241513DA9F4463F1d4874b548dFBAC29D91f34 has funds, as defined in core/genesis.go. The private key for this address is 1f84c95ac16e6a50f08d44c7bde7aff8742212fda6e4321fde48bf83bef266dc
 ```
+
+For testing purposes we used account `0x8875fc2A47E35ACD1784bB5f58f563dFE86A8451` and funded it with 1000 ONE on localnet and 1 ETH on Ropsten, but you can use any acccount you like as long as you know the private key or mnemonic.
 
 ## Deploying Smart Contracts
+
+Following is an overview of the contracts used in the bridge and which chain they should be deployed on. *Note: her we only focus on the contracts deployed the imported contracts are not covered*
+
+**Ethereum (Kovan)**
+* EthereumLightClient.sol : stores all blockheaders which are used for verification.
+* TokenLockerOnEthereum.sol : Tracks tokens locked which are then minted by the bridge
+* FaucetToken.sol : Token created on Ethereum which will be bridged to Harmony (Testing Only)
+* BridgedToken.sol : Token created on Ethereum to tracked tokens bridged from Harmony (Testing Only)
+
+Following are the commands used to deploy the contracts as well as the output, the contract addresses of the deployed contracts need to be recorded for later use`
+
+
+**Harmony (Localnet)**
+* HarmonyLightClient.sol : stores all blockheaders used for verification
+* TokenLockerOnHarmony.sol : Tracks tokens locked which are then minted by the bridge 
+* FaucetToken.sol : Token created on Harmony which will be bridged to Ethereum (Testing Only)
+* BridgedToken.sol : Token created on Harmony to tracked tokens bridged from Ethereum (Testing Only)
+
+### Deploying Contracts using the Bridge CLI
+1. `node index.js Bridge deploy` deploy bridge contract both on etheruem and harmony.
+2. `node index.js Bridge deployFaucet` deploy a faucet ERC20 token for testing.
+3. `node index.js Brodge deployFakeClient` deploy a fake lightclient for testing.
+4. `node index.js Bridge change` change light client contract, only owner has access.
+5. `node index.js Bridge map` map ERC20 from ethereum to harmony.
+6. `node index.js Bridge crossTo` cross transfer ERC20 from ethereum to harmony.
+7. `node index.js Bridge crossBack` cross transfer HRC20 from harmony back to ethereum.
+
+
 
 ### Deploy the ERC20 Contract on Kovan
 
@@ -99,6 +126,11 @@ ERC20 deployed to: 0xD86eE1D13A1C34B5b2B08e1710f41a954A42D7fC
 ```
 
 ## Creating the DAG Merkle Tree
+
+DAG genertion takes several hours to run Ganesha has a machine to do this and shares the latest DAG info from Ropsten using [google drive](https://drive.google.com/file/d/1FqLCO5oc1xDYNMuub7xAqnb6kfohdf-U/view?usp=sharing). The epoch logic is the block Number divided by 30,000 so current Ropsten EPOCH is block 12280236 / 30000 = 409 which is the DAG info shared above.
+
+ *Note: Moving forward we need to update DAG information for every new EPOCH*
+
 
 ## Deploying the Relayer
 

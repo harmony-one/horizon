@@ -17,8 +17,8 @@ library MPTValidatorV2 {
             item = iterator.next();
             uint index = uint8(paths);
             paths>>=8;
-            require(hashRoot == item.toBytesHash(), "ProofLib: invalid hashlink");
-            item = item.toBytesItem().safeGetItemByIndex(index);
+            require(hashRoot == item.toRlpBytesHash(), "ProofLib: invalid hashlink");
+            item = item.safeGetItemByIndex(index);
             if (i < numItems - 1)
                 hashRoot = bytes32(item.toUint());
         }

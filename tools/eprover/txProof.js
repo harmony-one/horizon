@@ -65,7 +65,6 @@ class EProver {
             key,
             tree,
             node,
-            nibbles,
             proofIndex: Buffer.from(proofIndex),
         }
     }
@@ -85,11 +84,11 @@ class EProver {
         return {
             hash: keccak256(resp.header.serialize()),
             root: resp.tree.root,
-            proof: resp.proof.raw.map(rlpEncode),
-            key: bufferToNibbles(resp.key), // '0x12' => Nunmber
+            proof: resp.proof,
+            key: resp.key, // '0x12' => Nunmber
             receipt: resp.node.value,
             node: resp.node,
-            nibbles: resp.nibbles,
+            nibbles: bufferToNibbles(resp.key),
             proofIndex: resp.proofIndex,
         }
     }

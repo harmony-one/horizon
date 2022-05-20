@@ -222,20 +222,10 @@ library RLPReader {
         return result;
     }
 
-    function toBytesItem(RLPItem memory item) internal pure returns (RLPItem memory) {
+    function toRlpBytesHash(RLPItem memory item) internal pure returns (bytes32 _hash) {
         require(item.len > 0);
-
-        uint256 offset = _payloadOffset(item.memPtr);
-        uint256 len = item.len - offset;
-        return RLPItem(len, item.memPtr+offset);
-    }
-
-
-    function toBytesHash(RLPItem memory item) internal pure returns (bytes32 _hash) {
-        require(item.len > 0);
-        uint256 offset = _payloadOffset(item.memPtr);
-        uint256 len = item.len - offset;
-        uint256 ptr = item.memPtr + offset;
+        uint256 len = item.len;
+        uint256 ptr = item.memPtr;
         assembly{
             _hash := keccak256(ptr, len)
         }

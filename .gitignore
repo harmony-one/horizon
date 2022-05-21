@@ -19,7 +19,6 @@ build/contracts
 
 coverage
 coverage.json
-typechain
 
 #Hardhat files
 cache

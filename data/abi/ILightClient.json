@@ -1,0 +1,4 @@
+[
+  "function VerifyReceiptsHash(bytes32,bytes32) returns (bool)",
+  "function blocksByHeight(uint256,uint256) returns (uint256)"
+]

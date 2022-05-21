@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: UNLICENSED
+
 /**
  * Created on 2019-12-28
  * @summary: The EthCommon library contains common structures / functions
@@ -5,7 +7,7 @@
  */
 
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity 0.7.3;
+pragma solidity ^0.8.0;
 
 import "./lib/RLPReader.sol";
 import "./lib/RLPEncode.sol";

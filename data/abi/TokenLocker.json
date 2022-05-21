@@ -1,0 +1,17 @@
+[
+  "event Burn(address indexed,address indexed,uint256,address)",
+  "event Locked(address indexed,address indexed,uint256,address)",
+  "event TokenMapAck(address indexed,address indexed)",
+  "event TokenMapReq(address indexed,uint8 indexed,string,string)",
+  "function RxMapped(address) view returns (address)",
+  "function RxMappedInv(address) view returns (address)",
+  "function RxTokens(uint256) view returns (address)",
+  "function TxMapped(address) view returns (address)",
+  "function TxMappedInv(address) view returns (address)",
+  "function TxTokens(uint256) view returns (address)",
+  "function issueTokenMapReq(address)",
+  "function lock(address,address,uint256)",
+  "function otherSideBridge() view returns (address)",
+  "function totalBridgedTokens() view returns (uint256, uint256)",
+  "function unlock(address,address,uint256)"
+]

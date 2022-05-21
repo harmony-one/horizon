@@ -1,0 +1,4 @@
+[
+  "event Initialized(uint8)",
+  "function supportsInterface(bytes4) view returns (bool)"
+]

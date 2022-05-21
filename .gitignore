@@ -16,3 +16,11 @@ cache
 
 node_modules
 build/contracts
+
+coverage
+coverage.json
+typechain
+
+#Hardhat files
+cache
+artifacts

@@ -4,6 +4,11 @@
   "description": "Harmony Horizon Bridge",
   "scripts": {
     "libInit": "tar -zxf ethereumjs-ethash-dist.tar.gz -C node_modules/@ethereumjs/ethash",
+    "check": "npx hardhat check",
+    "compile": "npx hardhat compile",
+    "coverage": "npx hardhat coverage",
+    "deploy": "npx hardhat run scripts/deploy.ts",
+    "gas": "REPORT_GAS=true npx hardhat test",
     "test": "npx hardhat test"
   },
   "license": "UNLICENSED",

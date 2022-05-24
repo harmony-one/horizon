@@ -8,6 +8,6 @@
     "moduleResolution": "node",
     "outDir": "dist"
   },
-  "include": ["./scripts", "./test", "./typechain", "src/lib/upgrade"],
+  "include": ["./scripts", "./test", "./typechain", "./deploy", "src/lib/upgrade"],
   "files": ["./hardhat.config.ts"]
 }

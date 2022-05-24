@@ -88,6 +88,7 @@ contract TokenLocker is TokenRegistry {
 
     function parseLogs(bytes memory rlpdata)
         internal
+        pure
         returns (RLPReader.RLPItem[] memory)
     {
         RLPReader.RLPItem memory stacks = rlpdata.toRlpItem();
@@ -98,7 +99,10 @@ contract TokenLocker is TokenRegistry {
         return receipt[3].toList();
     }
 
-    function parseTopics(RLPReader.RLPItem[] memory rlpLog) internal returns (bytes32[] memory topics, bytes memory Data)
+    function parseTopics(RLPReader.RLPItem[] memory rlpLog)
+        internal
+        pure
+        returns (bytes32[] memory topics, bytes memory Data)
     {
         RLPReader.RLPItem[] memory Topics = rlpLog[1].toList(); // TODO: if is lock event
         topics = new bytes32[](Topics.length);

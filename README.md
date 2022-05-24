@@ -29,7 +29,7 @@ Horizon - a trustless harmony to ethereum bridge
 3. User sends the proof-of-lock to bridge smart contract on Harmony 
 4. Bridge smart contract on Harmony invokes ELC and EVerifier to verify the proof-of-lock and mints HRC20 (equivalent amount)
 
-<img src="assets/eth2hmy.png" alt="drawing" width="600"/>
+<img src="docs/assets/eth2hmy.png" alt="drawing" width="600"/>
 
 ## Harmony to Ethereum asset redeem
 1. User burns HRC20 on Harmony using Bridge smart contract and obtains the hash of this transaction from blockchain
@@ -37,4 +37,9 @@ Horizon - a trustless harmony to ethereum bridge
 3. User sends the proof-of-burn to bridge smart contract on Ethereum 
 4. Bridge smart contract on Ethereum invokes HLC and HVerifier to verify the proof-of-burn and unlocks ERC20 (equivalent amount)
 
-<img src="assets/hmy2eth.png" alt="drawing" width="600"/>
+<img src="docs/assets/hmy2eth.png" alt="drawing" width="600"/>
+
+## Additional Reading
+1. [Development Approach](./docs/README.md)
+2. [Solidity Approach](./docs/SOLIDITY.md)
+3. [Solidity generated documentation](./docs/solidity/)

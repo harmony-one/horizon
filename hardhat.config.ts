@@ -31,25 +31,33 @@ task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
 // Go to https://hardhat.org/config/ to learn more
 
 const config: HardhatUserConfig = {
-  solidity: "0.8.4",
+  solidity: {
+    version: "0.8.9",
+    settings: {
+      optimizer: {
+        enabled: true,
+        runs: 200,
+      },
+    },
+  },
   defaultNetwork: "hardhat",
   networks: {
-      localnet: {
-          url: `http://localhost:9500`,
-          accounts: [`0x${HARMONY_PRIVATE_KEY}`]
-      },
-      testnet: {
-          url: `https://api.s0.b.hmny.io`,
-          accounts: [`0x${HARMONY_PRIVATE_KEY}`]
-      },
-      mainnet: {
-          url: `https://api.harmony.one`,
-          accounts: [`0x${HARMONY_PRIVATE_KEY}`]
-      },
-      ropsten: {
-          url: `https://ropsten.infura.io/v3/${PROJECT_ID}`,
-          accounts: [`0x${HARMONY_PRIVATE_KEY}`]
-      },
+    localnet: {
+      url: `http://localhost:9500`,
+      accounts: [`0x${HARMONY_PRIVATE_KEY}`]
+    },
+    testnet: {
+      url: `https://api.s0.b.hmny.io`,
+      accounts: [`0x${HARMONY_PRIVATE_KEY}`]
+    },
+    mainnet: {
+      url: `https://api.harmony.one`,
+      accounts: [`0x${HARMONY_PRIVATE_KEY}`]
+    },
+    ropsten: {
+      url: `https://ropsten.infura.io/v3/${PROJECT_ID}`,
+      accounts: [`0x${HARMONY_PRIVATE_KEY}`]
+    },
   },
   gasReporter: {
     enabled: process.env.REPORT_GAS !== undefined,

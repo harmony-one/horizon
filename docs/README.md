@@ -15,6 +15,23 @@ but most likely, we will stick to the first one.
 * End to End Testing : Has never been succesfully completed
 * Smart Contract Tests: Have errors in them.
 
+**Migration Strategy**
+* Smart Contract use Hardhat with Typescript and ethers(instead of web3)
+  * Replace all web3 with ethers
+  * replace all js files with typescript
+  * remove all truffleConfig use hardhat instead
+  * write tests
+* docs: new folder for documentation
+* docs/assets => migrated from assets
+* docs/solidity: contains generated solidity documentation
+* deploy: new folder for deployment scripts (using hardhat-deploy and logic from scripts)
+* src: new folder for typescript source files 
+* src/lib: (migrated from scripts)
+* src/cli: (migrated from cli)
+* src/(elc, eprover, eth2hmy-relay): migrated from tools(elc, eprover, eth2hmy-relay)
+* docs: new folder for documentation
+
+
 **RollOut Strategy**
 * Complete End To End Testing (using CLI)
 * Write Smart Contract Tests (will use hardhat)

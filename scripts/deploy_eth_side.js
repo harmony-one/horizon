@@ -43,13 +43,15 @@ async function deployEthSideContracts() {
   const relayers = ["0x0B585F8DaEfBC68a311FbD4cB20d9174aD174016"];
   const threshold = 1;
 
-  const HarmonyLightClient = await ethers.getContractFactory("HarmonyLightClient");
+  const HarmonyLightClient = await ethers.getContractFactory(
+    "HarmonyLightClient"
+  );
 
   const harmonyLightClient = await upgrades.deployProxy(
     HarmonyLightClient,
     [initialBlockRlp, relayers, threshold],
     {
-      initializer: "initialize"
+      initializer: "initialize",
     }
   );
   console.log("HarmonyLightClient deployed to:", harmonyLightClient.address);

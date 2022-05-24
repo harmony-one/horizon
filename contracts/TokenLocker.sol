@@ -98,18 +98,24 @@ contract TokenLocker is TokenRegistry {
         return receipt[3].toList();
     }
 
+    function parseTopics(RLPReader.RLPItem[] memory rlpLog) internal returns (bytes32[] memory topics, bytes memory Data)
+    {
+        RLPReader.RLPItem[] memory Topics = rlpLog[1].toList(); // TODO: if is lock event
+        bytes32[] memory topics = new bytes32[](Topics.length);
+        for (uint256 j = 0; j < Topics.length; j++) {
+            topics[j] = bytes32(Topics[j].toUint());
+        }
+        bytes memory Data = rlpLog[2].toBytes();
+        return (topics, Data);
+    }
+
     function execute(bytes memory rlpdata, address userTarget) internal returns (uint256 events) {
         RLPReader.RLPItem[] memory logs = parseLogs(rlpdata);
         for (uint256 i = 0; i < logs.length; i++) {
             RLPReader.RLPItem[] memory rlpLog = logs[i].toList();
             address Address = rlpLog[0].toAddress();
             if (Address != otherSideBridge && Address != userTarget) continue;
-            RLPReader.RLPItem[] memory Topics = rlpLog[1].toList(); // TODO: if is lock event
-            bytes32[] memory topics = new bytes32[](Topics.length);
-            for (uint256 j = 0; j < Topics.length; j++) {
-                topics[j] = bytes32(Topics[j].toUint());
-            }
-            bytes memory Data = rlpLog[2].toBytes();
+            (bytes32[] memory topics, bytes memory Data) = parseTopics(rlpLog);
             if(Address == userTarget){
                 if (topics[0] == userEventSig) {
                     onUserEvent(topics, Data, Address);

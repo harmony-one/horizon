@@ -75,7 +75,7 @@ class EProver {
             hash: keccak256(resp.header.serialize()),
             root: resp.tree.root,
             proof: rlpEncode(resp.proof),
-            key: resp.key // '0x12' => Nunmber
+            key: resp.key
         }
     }
 
@@ -85,7 +85,7 @@ class EProver {
             hash: keccak256(resp.header.serialize()),
             root: resp.tree.root,
             proof: resp.proof,
-            key: resp.key, // '0x12' => Nunmber
+            key: resp.key,
             receipt: resp.node.value,
             node: resp.node,
             nibbles: bufferToNibbles(resp.key),

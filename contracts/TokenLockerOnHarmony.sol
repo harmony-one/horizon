@@ -89,6 +89,7 @@ contract TokenLockerOnHarmony is TokenLocker, OwnableUpgradeable {
             mptkey,
             proof
         );
+        //Adding a parameter makes the concept of a "receiptHash" a little less valid, but no need to declare another mapping due to entropy of keccak256
         bytes32 receiptHash = keccak256(
             abi.encodePacked(blockHash, rootHash, mptkey, targetAddress)
         );

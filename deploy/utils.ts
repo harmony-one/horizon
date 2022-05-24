@@ -297,7 +297,8 @@ function fullToMin(header) {
   return { hash, parentHash, difficulty, number, gasLimit, gasUsed, timestamp, totalDifficulty };
 }
 
-module.exports = {
+// module.exports = {
+export {
   buffer2hex,
   rpcWrapper,
   toRLPHeader,
@@ -314,5 +315,4 @@ module.exports = {
   getStorageProof,
   getKeyFromProof,
   fullToMin,
-}
-
+};

@@ -5,9 +5,8 @@
     "strict": true,
     "esModuleInterop": true,
     "moduleResolution": "node",
-    "outDir": "dist",
-    // "declaration": true
+    "outDir": "dist"
   },
-  "include": ["./scripts", "./test", "./typechain"],
+  "include": ["./scripts", "./test", "./typechain", "src/lib/upgrade"],
   "files": ["./hardhat.config.ts"]
 }

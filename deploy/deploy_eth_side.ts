@@ -4,7 +4,7 @@ import { ethers } from "hardhat"
 import { util } from "util";
 import { DeployFunction } from "hardhat-deploy/types"
 import { HardhatRuntimeEnvironment } from "hardhat/types"
-
+import { toRLPHeader, rpcWrapper, getReceiptProof } from "./utils";
 
 async function fetchBlock(blockNumber) {
   const provider = new ethers.providers.JsonRpcProvider(process.env.LOCALNET);

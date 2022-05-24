@@ -33,20 +33,6 @@ contract TokenLockerOnEthereum is TokenLocker, OwnableUpgradeable {
         MMRVerifier.MMRProof memory mmrProof,
         MPT.MerkleProof memory receiptdata
     ) external {
-        validateAndExecuteProof(
-            header,
-            mmrProof,
-            receiptdata,
-            ZERO_ADDRESS
-        );
-    }
-
-    function validateAndExecuteProof(
-        HarmonyParser.BlockHeader memory header,
-        MMRVerifier.MMRProof memory mmrProof,
-        MPT.MerkleProof memory receiptdata,
-        address userTarget
-    ) public {
         require(lightclient.isValidCheckPoint(header.epoch, mmrProof.root), "checkpoint validation failed");
         bytes32 blockHash = HarmonyParser.getBlockHash(header);
         bytes32 rootHash = header.receiptsRoot;
@@ -62,7 +48,7 @@ contract TokenLockerOnEthereum is TokenLocker, OwnableUpgradeable {
         (status, message) = HarmonyProver.verifyReceipt(header, receiptdata);
         require(status, "receipt data could not be verified");
         spentReceipt[receiptHash] = true;
-        uint256 executedEvents = execute(receiptdata.expectedValue, userTarget);
+        uint256 executedEvents = execute(receiptdata.expectedValue);
         require(executedEvents > 0, "no valid event");
     }
 }

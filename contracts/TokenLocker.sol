@@ -86,13 +86,20 @@ contract TokenLocker is TokenRegistry {
         emit Locked(address(token), msg.sender, actualAmount, recipient);
     }
 
-    function execute(bytes memory rlpdata, address userTarget) internal returns (uint256 events) {
+    function parseLogs(bytes memory rlpdata)
+        internal
+        returns (RLPReader.RLPItem[] memory)
+    {
         RLPReader.RLPItem memory stacks = rlpdata.toRlpItem();
         RLPReader.RLPItem[] memory receipt = stacks.toList();
         // TODO: check txs is revert or not
         uint256 postStateOrStatus = receipt[0].toUint();
         require(postStateOrStatus == 1, "revert receipt");
-        RLPReader.RLPItem[] memory logs = receipt[3].toList();
+        return receipt[3].toList();
+    }
+
+    function execute(bytes memory rlpdata, address userTarget) internal returns (uint256 events) {
+        RLPReader.RLPItem[] memory logs = parseLogs(rlpdata);
         for (uint256 i = 0; i < logs.length; i++) {
             RLPReader.RLPItem[] memory rlpLog = logs[i].toList();
             address Address = rlpLog[0].toAddress();
@@ -132,7 +139,6 @@ contract TokenLocker is TokenRegistry {
             }
         }
     }
-
 
     //DO Not check for success on this call, since arbitrary user calls may revert.
     //Also I did a test in remix to confirm that on solidity 7.3 calling a contract with .call does not revert main contract if that contract reverts

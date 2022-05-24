@@ -32,26 +32,43 @@ contract TokenLockerOnHarmony is TokenLocker, OwnableUpgradeable {
         otherSideBridge = otherSide;
     }
 
+    function _validateEthTransaction(
+        uint256 blockNo,
+        bytes32 rootHash,
+        bytes calldata mptkey,
+        bytes calldata proof
+    )
+        internal
+        returns (bytes32 blockHash, bytes memory rlpdata)
+    {
+        blockHash = bytes32(lightclient.blocksByHeight(blockNo, 0));
+        require(
+            lightclient.VerifyReceiptsHash(blockHash, rootHash),
+            "wrong receipt hash"
+        );
+        rlpdata = EthereumProver.validateMPTProof(
+            rootHash,
+            mptkey,
+            proof
+        );
+    }
+
     function validateAndExecuteProof(
         uint256 blockNo,
         bytes32 rootHash,
         bytes calldata mptkey,
         bytes calldata proof
     ) external {
-        bytes32 blockHash = bytes32(lightclient.blocksByHeight(blockNo, 0));
-        require(
-            lightclient.VerifyReceiptsHash(blockHash, rootHash),
-            "wrong receipt hash"
+        (bytes32 blockHash, bytes memory rlpdata) = _validateEthTransaction(
+            blockNo,
+            rootHash,
+            mptkey,
+            proof
         );
         bytes32 receiptHash = keccak256(
             abi.encodePacked(blockHash, rootHash, mptkey)
         );
         require(spentReceipt[receiptHash] == false, "double spent!");
-        bytes memory rlpdata = EthereumProver.validateMPTProof(
-            rootHash,
-            mptkey,
-            proof
-        );
         spentReceipt[receiptHash] = true;
         uint256 executedEvents = execute(rlpdata);
         require(executedEvents > 0, "no valid event");
@@ -66,20 +83,16 @@ contract TokenLockerOnHarmony is TokenLocker, OwnableUpgradeable {
     )
         external
     {
-        bytes32 blockHash = bytes32(lightclient.blocksByHeight(blockNo, 0));
-        require(
-            lightclient.VerifyReceiptsHash(blockHash, rootHash),
-            "wrong receipt hash"
+        (bytes32 blockHash, bytes memory rlpdata) = _validateEthTransaction(
+            blockNo,
+            rootHash,
+            mptkey,
+            proof
         );
         bytes32 receiptHash = keccak256(
             abi.encodePacked(blockHash, rootHash, mptkey, targetAddress)
         );
         require(spentReceipt[receiptHash] == false, "double spent!");
-        bytes memory rlpdata = EthereumProver.validateMPTProof(
-            rootHash,
-            mptkey,
-            proof
-        );
         spentReceipt[receiptHash] = true;
         uint256 executedEvents = userExecute(rlpdata, targetAddress);
         require(executedEvents > 0, "no valid event");

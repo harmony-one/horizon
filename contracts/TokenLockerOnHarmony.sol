@@ -47,6 +47,24 @@ contract TokenLockerOnHarmony is TokenLocker, OwnableUpgradeable {
         );
     }
 
+    function userValidateAndExecuteProof(
+        uint256 blockNo,
+        bytes32 rootHash,
+        bytes calldata mptkey,
+        bytes calldata proof,
+        address targetAddress
+    )
+        external
+    {
+        _validateAndExecuteProof(
+            blockNo,
+            rootHash,
+            mptkey,
+            proof,
+            targetAddress
+        );
+    }
+
     function _validateAndExecuteProof(
         uint256 blockNo,
         bytes32 rootHash,

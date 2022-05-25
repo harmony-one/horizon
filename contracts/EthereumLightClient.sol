@@ -95,7 +95,9 @@ contract EthereumLightClient is Ethash, Initializable, PausableUpgradeable {
     function _deleteBlock(uint256 blockNo) private {
         uint256[] storage blockHashes = blocksByHeight[blockNo];
         for(uint256 j = 0; j < blockHashes.length; j++) {
-            delete blocks[blockHashes[j]];
+            uint256 blockHash = blockHashes[j];
+            delete blocks[blockHash];
+            delete blockExisting[blockHash];
         }
         delete blocksByHeight[blockNo];
         delete blocksByHeightExisting[blockNo];

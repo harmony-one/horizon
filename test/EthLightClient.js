@@ -4,7 +4,7 @@ const block1 = require('./proof1.json');
 const block2 = require('./proof2.json');
 
 function hexToBytes(hex) {
-    for (var bytes = [], c = 0; c < hex.length; c += 2)
+    for (let bytes = [], c = 0; c < hex.length; c += 2)
         bytes.push(parseInt(hex.substr(c, 2), 16));
     return bytes;
 }

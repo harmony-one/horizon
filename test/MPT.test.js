@@ -3,9 +3,10 @@ const { EProver } = require('../tools/eprover');
 const { Receipt } = require('eth-object');
 const {ethers} = require('hardhat');
 const recepits = require('./receipts.json');
-const { encode } = require('eth-util-lite');
+const { encode:rlpEncode } = require('eth-util-lite');
+const { bufferToNibbles } = require('merkle-patricia-tree/dist/util/nibbles')
 
-describe('AllTest', () => {
+describe('Merkle-Patricia-Trie Test', () => {
     before(async function() {
         const MPTTest = await ethers.getContractFactory("MPTTest");
         this.MPTTest = await MPTTest.deploy();
@@ -31,8 +32,9 @@ describe('AllTest', () => {
         const block = await ep.getBlock('0xf67c0b7f2827cb8f675934729740e3ec34ecd5c62ac446c1125df331ac67268d')
         for(const txIndex in block.transactions) {
             const txHash = block.transactions[txIndex];
-            const proof = await ep.receiptProofABIV2(txHash);
-            const success = await MPTTest.verifyTrieProof(proof.root, proof.nibbles, proof.proof.raw.map(encode), proof.receipt)
+            const proof = await ep.receiptProof(txHash);
+            const recepit = await ep.getReceipt(txHash);
+            const success = await MPTTest.verifyTrieProof(proof.tree.root, bufferToNibbles(proof.key), proof.proof.raw.map(rlpEncode), Receipt.fromRpc(recepit).toHex())
             expect(success).equals(true)
         }
     })
@@ -43,9 +45,10 @@ describe('AllTest', () => {
         const block = await ep.getBlock('0xf67c0b7f2827cb8f675934729740e3ec34ecd5c62ac446c1125df331ac67268d')
         for(const txIndex in block.transactions) {
             const txHash = block.transactions[txIndex];
-            const proof = await ep.receiptProofABIV2(txHash);
-            const rlpReceipts = await MPTTest.validateProof(proof.root, proof.proofIndex, proof.proof.raw.map(encode))
-            expect(rlpReceipts.slice(2)).equals(proof.receipt.toString('hex'))
+            const proof = await ep.receiptProof(txHash);
+            const rlpReceipts = await MPTTest.validateProof(proof.tree.root, proof.proofIndex, proof.proof.raw.map(rlpEncode))
+            const recepit = await ep.getReceipt(txHash);
+            expect(rlpReceipts).equals(Receipt.fromRpc(recepit).toHex())
         }
     })
 
@@ -56,10 +59,9 @@ describe('AllTest', () => {
         for(const txIndex in block.transactions) {
             const txHash = block.transactions[txIndex];
             const proof = await ep.receiptProofABIV2(txHash);
-            const pathInv = Buffer.from(proof.proofIndex).reverse()
-            const pathInvU256 = '0x'+pathInv.toString('hex')
-            const rlpReceipts = await MPTTest.validateProofOptimize(proof.root, pathInvU256, encode(proof.proof))
-            expect(rlpReceipts.slice(2)).equals(proof.receipt.toString('hex'))
+            const rlpReceipts = await MPTTest.validateProofOptimize(proof.root, proof.key, proof.proof)
+            const recepit = await ep.getReceipt(txHash);
+            expect(rlpReceipts).equals(Receipt.fromRpc(recepit).toHex())
         }
     })
 })

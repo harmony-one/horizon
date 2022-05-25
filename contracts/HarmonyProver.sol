@@ -9,17 +9,23 @@ import "./HarmonyParser.sol";
 import "./HarmonyLightClient.sol";
 import "./lib/MMRVerifier.sol";
 import "./lib/ECVerify.sol";
-import "./lib/MPT.sol";
+import "./lib/MPTValidatorV2.sol";
 
 library HarmonyProver {
-    using MPT for MPT.MerkleProof;
+    using HarmonyProver for MerkleProof;
 
-    function verifyTrieProof(MPT.MerkleProof memory data)
+    struct MerkleProof {
+        bytes32 root;
+        uint256 paths;
+        bytes proof;
+    }
+
+    function verifyTrieProof(MerkleProof memory data)
         internal
         pure
-        returns (bool)
+        returns (bytes memory)
     {
-        return data.verifyTrieProof();
+        return MPTValidatorV2.validateProofOptimize(data.root, data.paths, data.proof);
     }
 
     function verifyHeader(
@@ -46,93 +52,65 @@ library HarmonyProver {
 
     function verifyTransaction(
         HarmonyParser.BlockHeader memory header,
-        MPT.MerkleProof memory txdata
-    ) internal pure returns (bool valid, string memory reason) {
-        if (header.transactionsRoot != txdata.expectedRoot)
-            return (false, "verifyTransaction - different trie roots");
-
-        valid = txdata.verifyTrieProof();
-        if (!valid) return (false, "verifyTransaction - invalid proof");
-
-        return (true, "");
+        MerkleProof memory txdata
+    ) internal pure returns (bytes memory serializedTx) {
+        require(header.transactionsRoot == txdata.root, "verifyTransaction - different trie roots");
+        return txdata.verifyTrieProof();
     }
 
     function verifyReceipt(
         HarmonyParser.BlockHeader memory header,
-        MPT.MerkleProof memory receiptdata
-    ) internal pure returns (bool valid, string memory reason) {
-        if (header.receiptsRoot != receiptdata.expectedRoot)
-            return (false, "verifyReceipt - different trie roots");
-
-        valid = receiptdata.verifyTrieProof();
-        if (!valid) return (false, "verifyReceipt - invalid proof");
-
-        return (true, "");
+        MerkleProof memory receiptdata
+    ) internal pure returns (bytes memory serializedReceipt) {
+        require(header.receiptsRoot == receiptdata.root, "verifyReceipt - different trie roots");
+        return receiptdata.verifyTrieProof();
     }
 
     function verifyAccount(
         HarmonyParser.BlockHeader memory header,
-        MPT.MerkleProof memory accountdata
-    ) internal pure returns (bool valid, string memory reason) {
-        if (header.stateRoot != accountdata.expectedRoot)
-            return (false, "verifyAccount - different trie roots");
-
-        valid = accountdata.verifyTrieProof();
-        if (!valid) return (false, "verifyAccount - invalid proof");
-
-        return (true, "");
+        MerkleProof memory accountdata
+    ) internal pure returns (bytes memory serializedAccount) {
+        require(header.stateRoot == accountdata.root, "verifyAccount - different trie roots");
+        return accountdata.verifyTrieProof();
     }
 
     function verifyLog(
-        MPT.MerkleProof memory receiptdata,
-        bytes memory logdata,
+        MerkleProof memory receiptdata,
         uint256 logIndex
-    ) internal pure returns (bool valid, string memory reason) {
+    ) internal pure returns (bytes memory logdata) {
+        bytes memory serializedReceipt = receiptdata.verifyTrieProof();
         HarmonyParser.TransactionReceiptTrie memory receipt = HarmonyParser
-            .toReceipt(receiptdata.expectedValue);
-
-        if (
-            keccak256(logdata) ==
-            keccak256(HarmonyParser.getLog(receipt.logs[logIndex]))
-        ) {
-            return (true, "");
-        }
-        return (false, "Log not found");
+            .toReceipt(serializedReceipt);
+        return HarmonyParser.getLog(receipt.logs[logIndex]);
     }
 
     function verifyTransactionAndStatus(
         HarmonyParser.BlockHeader memory header,
-        MPT.MerkleProof memory receiptdata
+        MerkleProof memory receiptdata
     ) internal pure returns (bool valid, string memory reason) {}
 
     function verifyCode(
         HarmonyParser.BlockHeader memory header,
-        MPT.MerkleProof memory accountdata
+        MerkleProof memory accountdata
     ) internal pure returns (bool valid, string memory reason) {}
 
     function verifyStorage(
-        MPT.MerkleProof memory accountProof,
-        MPT.MerkleProof memory storageProof
-    ) internal pure returns (bool valid, string memory reason) {
+        MerkleProof memory accountProof,
+        MerkleProof memory storageProof
+    ) internal pure returns (bytes memory data) {
         HarmonyParser.Account memory account = HarmonyParser.toAccount(
-            accountProof.expectedValue
+            accountProof.verifyTrieProof()
         );
-
-        if (account.storageRoot != storageProof.expectedRoot)
-            return (false, "verifyStorage - different trie roots");
-
-        valid = storageProof.verifyTrieProof();
-        if (!valid) return (false, "verifyStorage - invalid proof");
-
-        return (true, "");
+        require(account.storageRoot == storageProof.root, "verifyStorage - different trie roots");
+        return storageProof.verifyTrieProof();
     }
 
     function getTransactionSender(
-        MPT.MerkleProof memory txdata,
+        bytes memory txdata,
         uint256 chainId
     ) internal pure returns (address sender) {
         HarmonyParser.Transaction memory transaction = HarmonyParser
-            .toTransaction(txdata.expectedValue);
+            .toTransaction(txdata);
         bytes memory txraw = HarmonyParser.getTransactionRaw(
             transaction,
             chainId

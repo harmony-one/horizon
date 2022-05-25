@@ -8,7 +8,7 @@ class Bridge {
     }
 
     getProof(txHash) {
-        return this.prover.receiptProofABI(txHash);
+        return this.prover.receiptProofABIV2(txHash);
     }
 
     ExecProof(proofData) {

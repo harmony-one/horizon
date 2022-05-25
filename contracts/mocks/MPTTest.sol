@@ -4,7 +4,7 @@ pragma experimental ABIEncoderV2;
 
 import "../lib/MPT.sol";
 import "../lib/MPTValidatorV2.sol";
-import "../EthereumProver.sol";
+import "../lib/EthereumProver.sol";
 
 contract MPTTest {
     using MPT for MPT.MerkleProof;

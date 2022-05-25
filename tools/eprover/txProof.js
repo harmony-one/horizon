@@ -4,12 +4,13 @@ const { bufferToNibbles,matchingNibbleLength } = require('merkle-patricia-tree/d
 const { BranchNode, ExtensionNode, LeafNode } = require('merkle-patricia-tree/dist/trieNode')
 const Rpc = require('isomorphic-rpc')
 const { Header, Proof, Receipt } = require('eth-object')
+const { BigNumber } = require('ethers')
 
 class EProver {
     constructor(ethUrl, cache) {
         this.rpc = new Rpc(ethUrl);
         this.cache = cache || {}
-        this.trees = {}
+        this.txTrees = {}
     }
 
     async getReceipt(txHash) {
@@ -20,7 +21,7 @@ class EProver {
     }
 
     async getReceiptTree(blockHash) {
-        if (this.trees[blockHash]) return this.trees[blockHash]
+        if (this.txTrees[blockHash]) return this.txTrees[blockHash]
         const rpcBlock = await this.getBlock(blockHash)
         const receipts = await (await Promise.all(rpcBlock.transactions.map(siblingTxHash => this.getReceipt(siblingTxHash))))
         const tree = new Tree();
@@ -30,7 +31,7 @@ class EProver {
             return tree.put(siblingPath, serializedReceipt)
         }))
         if(Buffer.compare(Header.fromRpc(rpcBlock).receiptRoot, tree.root) != 0) throw "receiptRoot error"
-        this.trees[blockHash] = tree
+        this.txTrees[blockHash] = tree
         return tree
     }
 
@@ -84,12 +85,8 @@ class EProver {
         return {
             hash: keccak256(resp.header.serialize()),
             root: resp.tree.root,
-            proof: resp.proof,
-            key: resp.key,
-            receipt: resp.node.value,
-            node: resp.node,
-            nibbles: bufferToNibbles(resp.key),
-            proofIndex: resp.proofIndex,
+            proof: rlpEncode(resp.proof),
+            key: BigNumber.from(Buffer.from(resp.proofIndex).reverse()),
         }
     }
 }

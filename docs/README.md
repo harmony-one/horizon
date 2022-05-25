@@ -63,8 +63,7 @@ Here is an overview of Environment data setup for testing after following the st
 * KOVAN ERC20 Contract: [0xc90a6555CaD53a9D85a80052Fe2926E21608CF41](https://kovan.etherscan.io/address/0xc90a6555cad53a9d85a80052fe2926e21608cf41)
 * ROPSTEN ERC20 Faucet Contract
 
-# Getting started
-
+# Developer and Testing guide
 ## Setting up the codebase
 
 ### Install the tools and the cli

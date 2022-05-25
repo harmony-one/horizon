@@ -23,9 +23,9 @@ function hexToBytes(hex) {
 
 async function addBlocksInRange(ELC, rpc, startBlock, numBlocks, dagPath){
     for (let currentBlock = startBlock; currentBlock < startBlock + numBlocks; currentBlock++){
-        header = await getBlockByNumber(rpc, currentBlock);
+        const header = await getBlockByNumber(rpc, currentBlock);
 
-        dagProver = new DagProof(dagPath);
+        const dagProver = new DagProof(dagPath);
 
         let proofs = dagProver.getProof(header);
 

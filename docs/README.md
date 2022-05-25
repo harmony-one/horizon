@@ -8,12 +8,27 @@ The current state of the project is that we are testing using a Harmony Local No
 * Client: The client is used to Process transactions this is done by locking the Token using the TokenLocker.sol contract (e.g. TokenLockerOnEth.Sol AND TokenLockerOnHarmony.sol)
 Currently only ERC20 are supported. Moving forward ERC721 and ERC1155 as well as operations on smart contracts will also be supported. For now all client transactions will be done using the CLI. Moving forward  the current bridge (bridge.harmony.one) will be migrated to https://bridge-validator-1.web.app/ and jenya also built a fresh frontend for upcoming trustless bridge: https://github.com/harmony-one/horizon-trustless-frontend
 but most likely, we will stick to the first one.
-* Harmony Node: we use a [harmony local node](https://github.com/harmony-one/harmony#dev-docker-image) this can be run via docker. **There is a pull request which needs to be pushed to Harmony Testnet to enable the bridging functionality. [we need this PR to be pushed to testnet (should be done by May 27th, 2022)](https://github.com/harmony-one/harmony/pull/3872)
-* For fully trustless bridfe we need the bls signature verification precompile to be available on ethereum [eip-2537](https://eips.ethereum.org/EIPS/eip-2537), however this won't be a blocker, as we can initially do permissioned relayers, later adopt optimistic approach, etc. there are many fallback plans for this.
+* Harmony Node: we use a [harmony local node](https://github.com/harmony-one/harmony#dev-docker-image) this can be run via docker. **There is a pull request which needs to be pushed to Harmony Testnet to enable the bridging functionality. [we need this PR to be pushed to testnet (should be done by May 27th, 2022)](https://github.com/harmony-one/harmony/pull/3872)**
+* For fully trustless bridge we need the bls signature verification precompile to be available on ethereum [eip-2537](https://eips.ethereum.org/EIPS/eip-2537), however this won't be a blocker, as we can initially do permissioned relayers, later adopt optimistic approach, etc. there are many fallback plans for this.
 
 **Current Status**
 * End to End Testing : Has never been succesfully completed
 * Smart Contract Tests: Have errors in them.
+
+**Migration Strategy**
+* Smart Contract use Hardhat with Typescript and ethers(instead of web3)
+  * Replace all web3 with ethers
+  * replace all js files with typescript
+  * remove all truffleConfig use hardhat instead
+  * write tests
+* docs: new folder for documentation
+* docs/assets => migrated from assets
+* docs/solidity: contains generated solidity documentation
+* deploy: new folder for deployment scripts (using hardhat-deploy and logic from scripts)
+* src: new folder for typescript source files 
+* src/lib: (migrated from scripts)
+* src/cli: (migrated from cli)
+* src/(elc, eprover, eth2hmy-relay): migrated from tools(elc, eprover, eth2hmy-relay)
 
 **RollOut Strategy**
 * Complete End To End Testing (using CLI)

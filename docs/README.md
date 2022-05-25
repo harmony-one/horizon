@@ -133,6 +133,24 @@ If to find the latest epoch on Harmony you can look at [explorer](https://stakin
 
  *Note: Moving forward we need to update DAG information for every new EPOCH on Ethereum(Ropsten)*
 
+ **Original Documentation**
+Original documenation is found [here](https://github.com/johnwhitton/horizon/tree/main/cli#dag-merkel-tree-cli) and uses the cli
+#### DAG Merkel Tree CLI
+1. `node index.js dagProve generate` which calculate merkle root for epochs from [start, start+n)
+```
+node index.js dagProve generate 377
+```
+2. `node index.js dagProve blockProof` which accepts block number to calculate all necessary information in order to prove the block
+```
+node index.js dagProve blockProof --block 11266784 --url https://ropsten.infura.io/v3/<project-id>
+```
+
+**Questions**
+1. When do you need to run `node index.js dagProve blockProof`?
+2. Do you need to generate a new DAG information on each EPOC change?
+3. Where is this currently hosted?
+4. Where do we want to deploy this longterm?
+
 ## Deploying Smart Contracts
 
 Following is an overview of the contracts used in the bridge and which chain they should be deployed on. *Note: her we only focus on the contracts deployed the imported contracts are not covered*
@@ -147,34 +165,26 @@ Following is an overview of the contracts used in the bridge and which chain the
 * TokenLockerOnHarmony.sol : Tracks tokens locked which are then minted by the bridge 
 * FaucetToken.sol : Token created on Harmony which will be bridged to Ethereum (Testing Only)
 
-### Deploying Contracts using the Bridge CLI
-Following are the commands used to deploy the contracts as well as the output, the contract addresses of the deployed contracts need to be recorded for later use`
+**Original Documentation**
+Original documentation using the CLI can be found [here for Ethereum Light Client](https://github.com/johnwhitton/horizon/blob/main/cli/README.md#elcethereum-ligth-client-cli) and [here for Bridge CLI](https://github.com/johnwhitton/horizon/blob/main/cli/README.md#bridge-cli) but the CLI does not mention Ethereum deployment or the deployment of the TokenLocker contracts.
 
-1. `node index.js Bridge deploy` deploy bridge contract both on etheruem and harmony.
-2. `node index.js Bridge deployFaucet` deploy a faucet ERC20 token for testing.
-3. `node index.js Brodge deployFakeClient` deploy a fake lightclient for testing.
-4. `node index.js Bridge change` change light client contract, only owner has access.
-5. `node index.js Bridge map` map ERC20 from ethereum to harmony.
-6. `node index.js Bridge crossTo` cross transfer ERC20 from ethereum to harmony.
-7. `node index.js Bridge crossBack` cross transfer HRC20 from harmony back to ethereum.
+The tools folder also has notes on Ethereum Light client deployment using truffle [here](https://github.com/johnwhitton/horizon/tree/main/tools/elc#deployment).
 
+There are also two scripts available [deploy_eth_side.js](https://github.com/johnwhitton/horizon/blob/main/scripts/deploy_eth_side.js) and [deploy_hmy_side.js](https://github.com/johnwhitton/horizon/blob/main/scripts/deploy_hmy_side.js)
 
-
-### Deploy the ERC20 Contract on Kovan
-
-```
-npx hardhat run --network kovan scripts/deploy_erc20.js
-ERC20 deployed to: 0xD86eE1D13A1C34B5b2B08e1710f41a954A42D7fC
-```
-
-
-
+**Questions**
+1. Are there additional contracts besides LightClient, TokenLocker and FaucetToken which need to be deployed?
+2. Which of the methods above were used to deploy the contracts previously?
+3. What is the purpose of `-block=<ETH BLOCK NUMBER>` do we need to provide blockNumber?
+4. Do we need to run post deploy steps such as [configure.js](https://github.com/johnwhitton/horizon/blob/main/scripts/configure.js)?
+5. Is there any [upgrade process](https://github.com/johnwhitton/horizon/tree/main/scripts/upgrade) and if so when is it needed?
+6. What is the purpose of `node index.js Bridge deployFakeClient`
+7. What is the purpose of `node index.js Bridge change`
 
 ## Deploying the Relayer
 
-## Deploying the Client
 
-## Transfer Tokens
+## End to End Testing
 
 # Running Tests
 Tests are set up in the tests folder and are run using hardhat.

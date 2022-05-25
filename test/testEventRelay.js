@@ -1,6 +1,5 @@
 const { expect } = require("chai");
 const { ethers, upgrades } = require("hardhat");
-const block1 = require('./proof1.json');
 const { EProver } = require('../tools/eprover');
 const {getBlockByNumber} = require("../cli/ethashProof/BlockProof");
 const {DagProof} = require('../tools/eth2hmy-relay/lib/DagProof');
@@ -16,13 +15,14 @@ function debug(msg){
 }
 
 function hexToBytes(hex) {
-    for (var bytes = [], c = 0; c < hex.length; c += 2)
+    let bytes
+    for (bytes = [], c = 0; c < hex.length; c += 2)
         bytes.push(parseInt(hex.substr(c, 2), 16));
     return bytes;
 }
 
 async function addBlocksInRange(ELC, rpc, startBlock, numBlocks, dagPath){
-    for (var currentBlock = startBlock; currentBlock < startBlock + numBlocks; currentBlock++){
+    for (let currentBlock = startBlock; currentBlock < startBlock + numBlocks; currentBlock++){
         header = await getBlockByNumber(rpc, currentBlock);
 
         dagProver = new DagProof(dagPath);
@@ -36,8 +36,8 @@ async function addBlocksInRange(ELC, rpc, startBlock, numBlocks, dagPath){
 }
 
 function transformNestedByteArray(arr){
-    for (var i = 0; i < arr.length; i++){
-        for (var k = 0; k < arr[i].length; k++){
+    for (let i = 0; i < arr.length; i++){
+        for (let k = 0; k < arr[i].length; k++){
             arr[i][k] = _toHex(arr[i][k]);
         }
     }

@@ -15,6 +15,16 @@ but most likely, we will stick to the first one.
 * End to End Testing : Has never been succesfully completed
 * Smart Contract Tests: Have errors in them.
 
+**Testing Summary**
+
+| #   | Status | Step                          | Notes |
+| --- | ------ | ----------------------------- | ----- |
+| 1   | *PASS  | Infrastructure Setup          | Working with Local Net until [PR 3872](https://github.com/harmony-one/harmony/pull/3872) is pushed to Testnet |
+| 2   | TBD    | Ropsten Smart Contract Deploy | | 
+| 3   | TBD    | Harmony Smart Contract Deploy | |
+| 4   | TBD    | Relayer Running               | |
+| 5   | TBD    | End To End Testing            | |
+
 **Migration Strategy**
 * Smart Contract use Hardhat with Typescript and ethers(instead of web3)
   * Replace all web3 with ethers
@@ -44,7 +54,6 @@ but most likely, we will stick to the first one.
 - [ ] Review item which is needed for Permissionless Rollout of Validators (waiting on something on Ethereum?)
 - [ ] Check test updates from Boris
 
-
 ## Environment Data
 
 Here is an overview of Environment data setup for testing after following the steps below
@@ -52,7 +61,9 @@ Here is an overview of Environment data setup for testing after following the st
 * Deployer Address : 0x8875fc2A47E35ACD1784bB5f58f563dFE86A8451
 * Infura Project: 32cb9c57bfe447a99ea34e30195b2d10
 * KOVAN ERC20 Contract: [0xc90a6555CaD53a9D85a80052Fe2926E21608CF41](https://kovan.etherscan.io/address/0xc90a6555cad53a9d85a80052fe2926e21608cf41)
-* ROPSTEN ERC20 Contract
+* ROPSTEN ERC20 Faucet Contract
+
+
 
 # Getting started
 
@@ -90,6 +101,7 @@ make debug
 To stop the network use `^C` or `make debug-kill`
 
 *Note: If using a later version of openssl (e.g. openssl v3.3) on a mac you may need to modify `scripts\go_executable_build.sh` changing this line `LIB[libcrypto.3.dylib]=/usr/local/opt/openssl/lib/libcrypto.3.dylib`*
+
 ### Deployer Account
 Create a deployer account and fund it in both Harmony Testnet and Ropsten using Faucets. Add the PRIVATE_KEY to the `.env` file
 
@@ -104,26 +116,40 @@ On localnet, by default, 0xA5241513DA9F4463F1d4874b548dFBAC29D91f34 has funds, a
 
 For testing purposes we used account `0x8875fc2A47E35ACD1784bB5f58f563dFE86A8451` and funded it with 1000 ONE on localnet and 1 ETH on Ropsten, but you can use any acccount you like as long as you know the private key or mnemonic.
 
+## Creating the DAG Merkle Tree
+
+DAG genertion takes several hours to run Ganesha has a machine to do this and shares the latest DAG info from Ropsten using [google drive](https://drive.google.com/file/d/1FqLCO5oc1xDYNMuub7xAqnb6kfohdf-U/view?usp=sharing). The epoch logic is the block Number divided by 30,000 so current Ropsten EPOCH is block 12280236 / 30000 = 409 which is the DAG info shared above.
+
+To run this command from the CLI you would
+```
+cd cli
+node index.js dagProve generate 409
+```
+which calculate merkle root for epochs from [start, start+n)
+
+**Note: You do not need to generate the DAG for the Harmony Chain, just Ethereum (Ropsten)**
+
+If to find the latest epoch on Harmony you can look at [explorer](https://staking.harmony.one/validators/testnet/one1fxazl9qk7c30mk3lp7tun4yepptwvfq9ss28u7) for a validater and see the latest epoch on the EXPECTED RETURN HISTORY GRAPH. For example in Harmony Testnet on May 18th 2022, the latest epoch was 75762 so to generate the merkle root would need to run the following `node index.js dagProve generate 75762`.
+
+ *Note: Moving forward we need to update DAG information for every new EPOCH on Ethereum(Ropsten)*
+
 ## Deploying Smart Contracts
 
 Following is an overview of the contracts used in the bridge and which chain they should be deployed on. *Note: her we only focus on the contracts deployed the imported contracts are not covered*
 
 **Ethereum (Kovan)**
-* EthereumLightClient.sol : stores all blockheaders which are used for verification.
+* HarmonyLightClient.sol : stores all blockheaders which are used for verification.
 * TokenLockerOnEthereum.sol : Tracks tokens locked which are then minted by the bridge
 * FaucetToken.sol : Token created on Ethereum which will be bridged to Harmony (Testing Only)
-* BridgedToken.sol : Token created on Ethereum to tracked tokens bridged from Harmony (Testing Only)
-
-Following are the commands used to deploy the contracts as well as the output, the contract addresses of the deployed contracts need to be recorded for later use`
-
 
 **Harmony (Localnet)**
-* HarmonyLightClient.sol : stores all blockheaders used for verification
+* EthereumLightClient.sol : stores all blockheaders used for verification
 * TokenLockerOnHarmony.sol : Tracks tokens locked which are then minted by the bridge 
 * FaucetToken.sol : Token created on Harmony which will be bridged to Ethereum (Testing Only)
-* BridgedToken.sol : Token created on Harmony to tracked tokens bridged from Ethereum (Testing Only)
 
 ### Deploying Contracts using the Bridge CLI
+Following are the commands used to deploy the contracts as well as the output, the contract addresses of the deployed contracts need to be recorded for later use`
+
 1. `node index.js Bridge deploy` deploy bridge contract both on etheruem and harmony.
 2. `node index.js Bridge deployFaucet` deploy a faucet ERC20 token for testing.
 3. `node index.js Brodge deployFakeClient` deploy a fake lightclient for testing.
@@ -141,11 +167,7 @@ npx hardhat run --network kovan scripts/deploy_erc20.js
 ERC20 deployed to: 0xD86eE1D13A1C34B5b2B08e1710f41a954A42D7fC
 ```
 
-## Creating the DAG Merkle Tree
 
-DAG genertion takes several hours to run Ganesha has a machine to do this and shares the latest DAG info from Ropsten using [google drive](https://drive.google.com/file/d/1FqLCO5oc1xDYNMuub7xAqnb6kfohdf-U/view?usp=sharing). The epoch logic is the block Number divided by 30,000 so current Ropsten EPOCH is block 12280236 / 30000 = 409 which is the DAG info shared above.
-
- *Note: Moving forward we need to update DAG information for every new EPOCH*
 
 
 ## Deploying the Relayer
@@ -348,3 +370,73 @@ Generate `MerkelRoot.sol` from `MerkelRoot.json`.
     truffle --network=<NETWORK> exec ./eth2one-relay.js [--elc=CONTRACT ADDRESS] [--block=<ETH BLOCK NUMBER>]
     ```
     example:`truffle --network=develop exec ./eth2one-relay.js`
+
+
+```
+johnlaptop cli (main) $ node index.js --help
+Usage: index [options] [command]
+
+Horizon Trustless Bridge CLI
+
+Options:
+  -h, --help      display help for command
+
+Commands:
+  dagProve        DAG Merkel Tree cli
+  ELC             ethereum ligth client cli
+  ethRelay        ethereum block relay cli
+  EProver         ethereum receipt prove cli
+  EVerifier       ethereum receipt verify cli
+  Bridge          bridge cli
+  help [command]  display help for command
+  ```
+
+# Component Overview
+Following is an overview of the components which make up the horizon bridge.
+
+| #       | Component                   | Function                   | Status   | Notes  |
+| ------- | --------------------------- | -------------------------- |--------- |------- |
+| **1**   | **contracts**               | **On chain Functionality** | Untested |        |
+| 1.1     | HarmonyLightClient.sol      | 
+| 1.2     | TokenLockerOnEtherum.sol    |
+| 1.3     | FaucetToken.sol             |
+| 1.4     | EthereumLightClient.sol     |
+| 1.5     | TokenLockerOnHarmony.sol    |
+| **2**   | tools                       |
+| 2.1     | elc                         |
+| 2.2     | eprover                     |
+| 2.3     | eth2my-relay                |
+| **3**   | **cli**                     |
+| 3.1     | elc                         |
+| 3.2     | ethashProof                 |
+| 3.3     | eth2hmy-relay               |
+| 3.4     | bridge                      |
+| 3.5     | everifier                   |
+| **4**   | **scripts**                 |
+| 4.0     | utils.js                    |
+| 4.1     | deploy_eth_side.js          |
+| 4.2     | deploy_hmy_side.js          |
+| 4.3     | deploy_erc20.js             |
+| 4.4     | upgrade                     |
+| 4.5     | configure.js                |
+| 4.6     | test.js                     |
+| 4.7     | newtest.js                  |
+| 4.8     | end2end.js                  |
+| **5**   | **test**                    |
+| 5.1     | bridge.hmy.js               |
+
+
+**Migration Strategy**
+* Smart Contract use Hardhat with Typescript and ethers(instead of web3)
+  * Replace all web3 with ethers
+  * replace all js files with typescript
+  * remove all truffleConfig use hardhat instead
+  * write tests
+* docs: new folder for documentation
+* docs/assets => migrated from assets
+* docs/solidity: contains generated solidity documentation
+* deploy: new folder for deployment scripts (using hardhat-deploy and logic from scripts)
+* src: new folder for typescript source files 
+* src/lib: (migrated from scripts)
+* src/cli: (migrated from cli)
+* src/(elc, eprover, eth2hmy-relay): migrated from tools(elc, eprover, eth2hmy-relay)

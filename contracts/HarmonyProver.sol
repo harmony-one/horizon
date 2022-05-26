@@ -25,7 +25,7 @@ library HarmonyProver {
         pure
         returns (bytes memory)
     {
-        return MPTValidatorV2.validateProofOptimize(data.root, data.paths, data.proof);
+        return MPTValidatorV2.validateProof(data.root, data.paths, data.proof);
     }
 
     function verifyHeader(

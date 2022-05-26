@@ -70,16 +70,6 @@ class EProver {
         }
     }
 
-    async receiptProofABI(txHash) {
-        const resp = await this.receiptProof(txHash);
-        return {
-            hash: keccak256(resp.header.serialize()),
-            root: resp.tree.root,
-            proof: rlpEncode(resp.proof),
-            key: resp.key
-        }
-    }
-
     async receiptProofABIV2(txHash) {
         const resp = await this.receiptProof(txHash);
         return {

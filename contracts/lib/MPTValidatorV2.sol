@@ -19,7 +19,7 @@ library MPTValidatorV2 {
     ///        need to be traversed during verification.
     /// @return value whose inclusion is proved or an empty byte array for
     ///         a proof of exclusion
-    function validateProofOptimize(bytes32 rootHash, uint256 paths, bytes memory proof) internal pure returns(bytes memory) {
+    function validateProof(bytes32 rootHash, uint256 paths, bytes memory proof) internal pure returns(bytes memory) {
         RLPReader.RLPItem memory item = RLPReader.toRlpItem(proof);
         RLPReader.Iterator memory iterator = item.iterator();
         uint numItems = item.numItems();
@@ -33,25 +33,6 @@ library MPTValidatorV2 {
                 rootHash = bytes32(item.toUint());
         }
         require(paths == 0, "invalid path");
-        return item.toBytes();
-    }
-
-    function validateProof(bytes32 rootHash, bytes memory paths, bytes[] memory proof) internal pure returns(bytes memory) {
-        require(paths.length == proof.length, "ProofLib: invalid proof size");
-
-        RLPReader.RLPItem memory item;
-        bytes memory proofBytes;
-
-        for (uint i = 0; i < proof.length; i++) {
-            proofBytes = proof[i];
-            uint index = uint8(paths[i]);
-            require(rootHash == keccak256(proofBytes), "ProofLib: invalid hashlink");
-            
-            item = RLPReader.toRlpItem(proofBytes);
-            if (item.numItems() == 2) index = 1;
-            item = item.safeGetItemByIndex(index);
-            if (i < proof.length - 1) rootHash = bytes32(item.toUint());
-        }
         return item.toBytes();
     }
 }

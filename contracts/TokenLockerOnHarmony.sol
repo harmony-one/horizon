@@ -47,7 +47,7 @@ contract TokenLockerOnHarmony is TokenLocker, OwnableUpgradeable {
             abi.encodePacked(blockHash, rootHash, proofPath)
         );
         require(spentReceipt[receiptHash] == false, "double spent!");
-        bytes memory rlpdata = MPTValidatorV2.validateProofOptimize(
+        bytes memory rlpdata = MPTValidatorV2.validateProof(
             rootHash,
             proofPath,
             proof

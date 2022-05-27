@@ -6,19 +6,19 @@ import { ethers, upgrades } from "hardhat";
 const deployFunction: DeployFunction = async function (
   hre: HardhatRuntimeEnvironment
 ) {
-  const TokenLockerOnEthereum = await ethers.getContractFactory(
-    "TokenLockerOnEthereum"
+  const TokenLockerOnHarmony = await ethers.getContractFactory(
+    "TokenLockerOnHarmony"
   );
-  const tokenLockerOnEthereum = await upgrades.deployProxy(
-    TokenLockerOnEthereum,
+  const tokenLockerOnHarmony = await upgrades.deployProxy(
+    TokenLockerOnHarmony,
     []
   );
   console.log(
-    "TokenLockerOnEthereum deployed to:",
-    tokenLockerOnEthereum.address
+    "TokenLockerOnHarmony deployed to:",
+    tokenLockerOnHarmony.address
   );
 };
 
 deployFunction.dependencies = [];
-deployFunction.tags = ["TokenLockerOnEthereum", "Ethereum", "Deploy", "Working"];
+deployFunction.tags = ["TokenLockerOnHarmony", "Harmony", "Deploy", "Working"];
 export default deployFunction;

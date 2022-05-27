@@ -6,7 +6,9 @@ import { promisify } from "util";
 import { toRLPHeader } from "../src/lib/utils";
 
 async function fetchBlock(blockNumber) {
-  const provider = new ethers.providers.JsonRpcProvider(process.env.LOCALNET);
+  const provider = new ethers.providers.JsonRpcProvider(
+    process.env.HARMONY_LOCALNET
+  );
   const sendRpc = promisify(provider.send).bind(provider);
   return await sendRpc({
     jsonrpc: "2.0",
@@ -19,9 +21,6 @@ async function fetchBlock(blockNumber) {
 const deployFunction: DeployFunction = async function (
   hre: HardhatRuntimeEnvironment
 ) {
-//   const firstRlpHeader = ""; // bytes memory firstRlpHeader,
-//   const initialRelayers = ""; // address[] memory initialRelayers,
-//   const initialRelayersThreshold = ""; // uint8 initialRelayerThreshold
   const initialBlock = "0xe";
   const response = await fetchBlock(initialBlock);
   const initialBlockRlp = toRLPHeader(response.result);
@@ -39,5 +38,5 @@ const deployFunction: DeployFunction = async function (
 };
 
 deployFunction.dependencies = [];
-deployFunction.tags = ["HarmonyLightClient", "Ethereum"];
+deployFunction.tags = ["HarmonyLightClient", "Ethereum", "Deploy"];
 export default deployFunction;

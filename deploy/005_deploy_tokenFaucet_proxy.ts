@@ -15,5 +15,12 @@ const deployFunction: DeployFunction = async function (
 };
 
 deployFunction.dependencies = [];
-deployFunction.tags = ["FaucetToken", "Ethereum", "Harmony", "Test", "Deploy"];
+deployFunction.tags = [
+  "FaucetToken",
+  "Ethereum",
+  "Harmony",
+  "Test",
+  "Deploy",
+  "Working",
+];
 export default deployFunction;

@@ -19,7 +19,7 @@ but most likely, we will stick to the first one.
 
 | #   | Status | Step                          | Notes |
 | --- | ------ | ----------------------------- | ----- |
-| 1   | *PASS  | Infrastructure Setup          | Working with Local Net until [PR 3872](https://github.com/harmony-one/harmony/pull/3872) is pushed to Testnet |
+| 1   | *PASS  | Infrastructure Setup          | Working with Local Net until [PR 3872](https://github.com/harmony-one/harmony/pull/3872) [fork](https://github.com/gupadhyaya/harmony/tree/mmr-hard-fork) is pushed to Testnet |
 | 2   | TBD    | Ropsten Smart Contract Deploy | | 
 | 3   | TBD    | Harmony Smart Contract Deploy | |
 | 4   | TBD    | Relayer Running               | |

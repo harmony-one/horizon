@@ -27,7 +27,7 @@ interface FaucetTokenInterface extends ethers.utils.Interface {
     "decimals()": FunctionFragment;
     "decreaseAllowance(address,uint256)": FunctionFragment;
     "increaseAllowance(address,uint256)": FunctionFragment;
-    "initialize(string,string,uint8)": FunctionFragment;
+    "initialize(string,string)": FunctionFragment;
     "mint()": FunctionFragment;
     "name()": FunctionFragment;
     "symbol()": FunctionFragment;
@@ -56,7 +56,7 @@ interface FaucetTokenInterface extends ethers.utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "initialize",
-    values: [string, string, BigNumberish]
+    values: [string, string]
   ): string;
   encodeFunctionData(functionFragment: "mint", values?: undefined): string;
   encodeFunctionData(functionFragment: "name", values?: undefined): string;
@@ -200,7 +200,6 @@ export class FaucetToken extends BaseContract {
     initialize(
       name: string,
       symbol: string,
-      decimals: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -259,7 +258,6 @@ export class FaucetToken extends BaseContract {
   initialize(
     name: string,
     symbol: string,
-    decimals: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -318,7 +316,6 @@ export class FaucetToken extends BaseContract {
     initialize(
       name: string,
       symbol: string,
-      decimals: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -422,7 +419,6 @@ export class FaucetToken extends BaseContract {
     initialize(
       name: string,
       symbol: string,
-      decimals: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -485,7 +481,6 @@ export class FaucetToken extends BaseContract {
     initialize(
       name: string,
       symbol: string,
-      decimals: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 

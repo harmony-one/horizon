@@ -1,3 +1,0 @@
-[
-  "function verifyEthash(bytes32,uint64,uint64,bytes32[4][64],bytes32[][64],uint256,uint256) pure returns (bool)"
-]

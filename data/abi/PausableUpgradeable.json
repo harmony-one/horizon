@@ -1,6 +1,0 @@
-[
-  "event Initialized(uint8)",
-  "event Paused(address)",
-  "event Unpaused(address)",
-  "function paused() view returns (bool)"
-]

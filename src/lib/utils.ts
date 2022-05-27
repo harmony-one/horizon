@@ -1,13 +1,8 @@
-import { ethblock } from "@ethereumjs/block";
-// const ethtx = require("@ethereumjs/tx");
-import { rlp } from "ethereumjs-util";
-import MPT from "merkle-patricia-tree";
+/* eslint-disable node/no-unpublished-import */
+import { ethers } from "ethers";
+import { promisify } from "util";
+import { BaseTrie as Trie } from "merkle-patricia-tree";
 import { GetProof } from "eth-proof";
-import { ethers } from "hardhat";
-import { BN } from "bn.js";
-import util from "util";
-
-const Trie = MPT.BaseTrie;
 
 function buffer2hex(buffer) {
   return "0x" + buffer.toString("hex");
@@ -15,13 +10,14 @@ function buffer2hex(buffer) {
 
 async function rpcWrapper(hash, isTxn, callback, args) {
   const provider = new ethers.providers.JsonRpcProvider(args[0]);
+  // let web3 = new Web3(new Web3.providers.HttpProvider(args[0]));
   let receipt;
   if (isTxn) {
     receipt = await provider.getTransactionReceipt(hash);
   } else {
     receipt = await provider.getBlock(hash);
   }
-  const sendRpc = util.promisify(provider.send).bind(provider);
+  const sendRpc = promisify(provider.send).bind(provider);
   const response = await sendRpc({
     jsonrpc: "2.0",
     method: "hmyv2_getFullHeader",
@@ -34,7 +30,7 @@ async function rpcWrapper(hash, isTxn, callback, args) {
 }
 
 function toRLPHeader(block) {
-  return rlp.encode([
+  return ethers.utils.RLP.encode([
     "HmnyTgd",
     "v4",
     [
@@ -46,14 +42,14 @@ function toRLPHeader(block) {
       block.outgoingReceiptsRoot,
       block.incomingReceiptsRoot,
       block.logsBloom,
-      new BN(block.number),
+      ethers.BigNumber.from(block.number),
       block.gasLimit,
       block.gasUsed,
-      new BN(block.timestamp),
+      ethers.BigNumber.from(block.timestamp),
       block.extraData,
       block.mixHash,
-      new BN(block.viewID),
-      new BN(block.epoch),
+      ethers.BigNumber.from(block.viewID),
+      ethers.BigNumber.from(block.epoch),
       block.shardID,
       block.lastCommitSignature,
       block.lastCommitBitmap,
@@ -65,7 +61,7 @@ function toRLPHeader(block) {
       block.mmrRoot,
     ],
   ]);
-};
+}
 
 function getReceiptLight(receipt) {
   return {
@@ -73,7 +69,7 @@ function getReceiptLight(receipt) {
     gasUsed: receipt.gasUsed,
     logsBloom: receipt.logsBloom,
     logs: receipt.logs,
-  }
+  };
 }
 
 function getReceipt(receipt) {
@@ -104,23 +100,28 @@ function getReceipt(receipt) {
 }
 
 function getReceiptRlp(receipt) {
-  return rlp.encode(Object.values(getReceipt(receipt)));
+  return ethers.utils.RLP.encode(Object.values(getReceipt(receipt)));
 }
 
 async function getReceiptTrie(receipts) {
   const receiptTrie = new Trie();
   for (let txIdx = 0; txIdx < receipts.length; txIdx++) {
-    await receiptTrie.put(rlp.encode(txIdx), getReceiptRlp(receipts[txIdx]));
+    await receiptTrie.put(
+      Buffer.from(ethers.utils.RLP.encode(txIdx), "utf-8"),
+      Buffer.from(getReceiptRlp(receipts[txIdx]), "utf-8")
+    );
   }
   return receiptTrie;
 }
 
 function hex2key(hexkey, proofLength) {
   const actualkey = [];
-  const encoded = buffer2hex(rlp.encode(hexkey)).slice(2);
-  let key = [...new Array(encoded.length / 2).keys()].map(i => parseInt(encoded[i * 2] + encoded[i * 2 + 1], 16));
+  const encoded = buffer2hex(ethers.utils.RLP.encode(hexkey)).slice(2);
+  const key = [...new Array(encoded.length / 2).keys()].map((i) =>
+    parseInt(encoded[i * 2] + encoded[i * 2 + 1], 16)
+  );
 
-  key.forEach(val => {
+  key.forEach((val) => {
     if (actualkey.length + 1 === proofLength) {
       actualkey.push(val);
     } else {
@@ -128,15 +129,17 @@ function hex2key(hexkey, proofLength) {
       actualkey.push(val % 16);
     }
   });
-  return "0x" + actualkey.map(v => v.toString(16).padStart(2, "0")).join("");
+  return "0x" + actualkey.map((v) => v.toString(16).padStart(2, "0")).join("");
 }
 
 function index2key(index, proofLength) {
   const actualkey = [];
-  const encoded = buffer2hex(rlp.encode(index)).slice(2);
-  let key = [...new Array(encoded.length / 2).keys()].map(i => parseInt(encoded[i * 2] + encoded[i * 2 + 1], 16));
+  const encoded = buffer2hex(ethers.utils.RLP.encode(index)).slice(2);
+  const key = [...new Array(encoded.length / 2).keys()].map((i) =>
+    parseInt(encoded[i * 2] + encoded[i * 2 + 1], 16)
+  );
 
-  key.forEach(val => {
+  key.forEach((val) => {
     if (actualkey.length + 1 === proofLength) {
       actualkey.push(val);
     } else {
@@ -150,7 +153,7 @@ function index2key(index, proofLength) {
 function expandkey(hexvalue) {
   if (hexvalue.substring(0, 2) === "0x") hexvalue = hexvalue.substring(2);
   return [...new Array(hexvalue.length).keys()]
-    .map(i => "0" + hexvalue[i])
+    .map((i) => "0" + hexvalue[i])
     .join("");
 }
 
@@ -158,7 +161,9 @@ async function getTransactionProof(getProof, prover, txhash, fullHeader) {
   if (typeof getProof === "string") getProof = new GetProof(getProof);
   const proof = await _getTransactionProof(getProof, txhash);
   proof.headerData = fullHeader;
-  const proofData = proof.proof.map(node => buffer2hex(rlp.encode(node)));
+  const proofData = proof.proof.map((node) =>
+    buffer2hex(ethers.utils.RLP.encode(node))
+  );
   const block = await prover.toBlockHeader(proof.headerData);
   return {
     expectedRoot: block.transactionsRoot,
@@ -175,7 +180,9 @@ async function getReceiptProof(getProof, prover, txhash, fullHeader) {
   if (typeof getProof === "string") getProof = new GetProof(getProof);
   const proof = await _getReceiptProof(getProof, txhash);
   proof.headerData = fullHeader;
-  const proofData = proof.proof.map(node => buffer2hex(rlp.encode(node)));
+  const proofData = proof.proof.map((node) =>
+    buffer2hex(ethers.utils.RLP.encode(node))
+  );
   const block = await prover.toBlockHeader(proof.headerData);
   // console.log(block);
   return {
@@ -216,7 +223,7 @@ async function _getReceiptProof(getProof, txhash) {
     receiptData: receiptProof[receiptProof.length - 1][1],
     proof: receiptProof,
     headerData: proof.header.toHex(),
-  };
+  }
 }
 
 async function _getAccountProof(getProof, address, blockHash) {
@@ -233,11 +240,20 @@ async function _getAccountProof(getProof, address, blockHash) {
   };
 }
 
-async function getAccountProof(web3, getProof, prover, address, blockHash, fullHeader) {
+async function getAccountProof(
+  web3,
+  getProof,
+  prover,
+  address,
+  blockHash,
+  fullHeader
+) {
   if (typeof getProof === "string") getProof = new GetProof(getProof);
   const proof = await _getAccountProof(getProof, address, blockHash);
   proof.headerData = fullHeader;
-  const proofData = proof.proof.map(node => buffer2hex(rlp.encode(node)));
+  const proofData = proof.proof.map((node) =>
+    buffer2hex(ethers.utils.RLP.encode(node))
+  );
   const block = await prover.toBlockHeader(proof.headerData);
   return {
     expectedRoot: block.stateRoot,
@@ -264,11 +280,25 @@ async function _getStorageProof(getProof, address, storageAddress, blockHash) {
   };
 }
 
-async function getStorageProof(getProof, prover, address, storageAddress, blockHash, fullHeader) {
+async function getStorageProof(
+  getProof,
+  prover,
+  address,
+  storageAddress,
+  blockHash,
+  fullHeader
+) {
   if (typeof getProof === "string") getProof = new GetProof(getProof);
-  const proof = await _getStorageProof(getProof, address, storageAddress, blockHash);
+  const proof = await _getStorageProof(
+    getProof,
+    address,
+    storageAddress,
+    blockHash
+  );
   proof.headerData = fullHeader;
-  const proofData = proof.proof.map(node => buffer2hex(rlp.encode(node)));
+  const proofData = proof.proof.map((node) =>
+    buffer2hex(ethers.utils.RLP.encode(node))
+  );
   const block = await prover.toBlockHeader(proof.headerData);
   return {
     expectedRoot: block.stateRoot,
@@ -285,16 +315,37 @@ async function getStorageProof(getProof, prover, address, storageAddress, blockH
 function getKeyFromProof(proof) {
   if (proof.length <= 1) return "";
   const node = proof[proof.length - 1];
-  const hash = web3.utils.soliditySha3(node);
-  let decodedPrevNode = rlp.decode(proof[proof.length - 2]).map(buffer2hex);
-  let index = decodedPrevNode.findIndex(value => value === hash);
+  //   const hash = web3.utils.soliditySha3(node);
+  const hash = ethers.utils.keccak256(node);
+  const decodedPrevNode = ethers.utils.RLP.decode(proof[proof.length - 2]).map(
+    buffer2hex
+  );
+  const index = decodedPrevNode.findIndex((value) => value === hash);
   proof.pop();
   return getKeyFromProof(proof) + index.toString(16).padStart(2, "0");
 }
 
 function fullToMin(header) {
-  const { hash, parentHash, difficulty, number, gasLimit, gasUsed, timestamp, totalDifficulty } = header;
-  return { hash, parentHash, difficulty, number, gasLimit, gasUsed, timestamp, totalDifficulty };
+  const {
+    hash,
+    parentHash,
+    difficulty,
+    number,
+    gasLimit,
+    gasUsed,
+    timestamp,
+    totalDifficulty,
+  } = header;
+  return {
+    hash,
+    parentHash,
+    difficulty,
+    number,
+    gasLimit,
+    gasUsed,
+    timestamp,
+    totalDifficulty,
+  };
 }
 
 // module.exports = {

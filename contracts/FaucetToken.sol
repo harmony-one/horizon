@@ -8,7 +8,7 @@ import "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
 contract FaucetToken is ERC20Upgradeable {
     function initialize(
         string memory name,
-        string memory symbol,
+        string memory symbol
         // uint8 decimals
     ) external initializer {
         __ERC20_init(name, symbol);

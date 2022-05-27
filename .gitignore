@@ -16,7 +16,7 @@ cache
 
 node_modules
 build/contracts
-
+yarn-error.log
 coverage
 coverage.json
 
@@ -30,3 +30,8 @@ Thumbs.db
 
 # Ignore built ts files
 dist/**/*
+
+# Ignore solidity documentation until code has been documented
+docs/solidity
+
+data/abi

@@ -10,12 +10,14 @@ import "@primitivefi/hardhat-dodoc";
 import "hardhat-abi-exporter";
 import "@atixlabs/hardhat-time-n-mine";
 import "hardhat-spdx-license-identifier";
+import "hardhat-deploy";
 import "@openzeppelin/hardhat-upgrades";
 
 dotenv.config();
 
-const HARMONY_PRIVATE_KEY = process.env.PRIVATE_KEY;
-const PROJECT_ID = process.env.INFURA_PROJECT_ID
+const HARMONY_PRIVATE_KEY = process.env.HARMONY_PRIVATE_KEY;
+const PRIVATE_KEY = process.env.PRIVATE_KEY;
+const PROJECT_ID = process.env.INFURA_PROJECT_ID;
 
 // This is a sample Hardhat task. To learn how to create your own go to
 // https://hardhat.org/guides/create-task.html
@@ -40,6 +42,9 @@ const config: HardhatUserConfig = {
       },
     },
   },
+  namedAccounts: {
+    deployer: 0,
+  },
   defaultNetwork: "hardhat",
   networks: {
     localnet: {
@@ -55,8 +60,15 @@ const config: HardhatUserConfig = {
       accounts: [`0x${HARMONY_PRIVATE_KEY}`]
     },
     ropsten: {
-      url: `https://ropsten.infura.io/v3/${PROJECT_ID}`,
-      accounts: [`0x${HARMONY_PRIVATE_KEY}`]
+      url: process.env.ROPSTEN_URL,
+      accounts: [`0x${PRIVATE_KEY}`],
+      chainId: 3,
+      live: true,
+      saveDeployments: true,
+      tags: ["staging"],
+      gasPrice: 20000000000,
+      gas: 6000000,
+      gasMultiplier: 2,
     },
   },
   gasReporter: {

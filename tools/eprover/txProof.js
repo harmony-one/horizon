@@ -3,14 +3,15 @@ const { BaseTrie: Tree } = require('merkle-patricia-tree')
 const { bufferToNibbles,matchingNibbleLength } = require('merkle-patricia-tree/dist/util/nibbles')
 const { BranchNode, ExtensionNode, LeafNode } = require('merkle-patricia-tree/dist/trieNode')
 const Rpc = require('isomorphic-rpc')
-const { Header, Proof, Receipt } = require('eth-object')
+const { Header, Proof } = require('eth-object')
+const Receipt = require('./Receipt')
 const { BigNumber } = require('ethers')
 
 class EProver {
     constructor(ethUrl, cache) {
         this.rpc = new Rpc(ethUrl);
         this.cache = cache || {}
-        this.txTrees = {}
+        this.receiptTrees = {}
     }
 
     async getReceipt(txHash) {
@@ -21,17 +22,16 @@ class EProver {
     }
 
     async getReceiptTree(blockHash) {
-        if (this.txTrees[blockHash]) return this.txTrees[blockHash]
+        if (this.receiptTrees[blockHash]) return this.receiptTrees[blockHash]
         const rpcBlock = await this.getBlock(blockHash)
-        const receipts = await (await Promise.all(rpcBlock.transactions.map(siblingTxHash => this.getReceipt(siblingTxHash))))
+        const receipts = await Promise.all(rpcBlock.transactions.map(siblingTxHash => this.getReceipt(siblingTxHash)))
         const tree = new Tree();
         await Promise.all(receipts.map((siblingReceipt, index) => {
             const siblingPath = rlpEncode(index)
-            const serializedReceipt = Receipt.fromRpc(siblingReceipt).serialize()
-            return tree.put(siblingPath, serializedReceipt)
+            return tree.put(siblingPath, Receipt.fromRpc(siblingReceipt).serialize())
         }))
         if(Buffer.compare(Header.fromRpc(rpcBlock).receiptRoot, tree.root) != 0) throw "receiptRoot error"
-        this.txTrees[blockHash] = tree
+        this.receiptTrees[blockHash] = tree
         return tree
     }
 
@@ -72,6 +72,7 @@ class EProver {
 
     async receiptProofABIV2(txHash) {
         const resp = await this.receiptProof(txHash);
+        if (resp.proofIndex.length > 32) throw "proof index too long";
         return {
             hash: keccak256(resp.header.serialize()),
             root: resp.tree.root,

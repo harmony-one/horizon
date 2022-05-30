@@ -55,7 +55,7 @@
     "ethers": "^5.4.6",
     "ganache-cli": "^6.9.1",
     "hardhat": "^2.6.2",
-    "merkle-patricia-tree": "4.2.1",
+    "merkle-patricia-tree": "4.2.4",
     "openzeppelin-solidity": "^3.3.0",
     "randombytes": "^2.1.0",
     "sha3": "^2.1.3",

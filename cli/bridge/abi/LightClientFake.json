@@ -1,0 +1,59 @@
+{
+  "_format": "hh-sol-artifact-1",
+  "contractName": "LightClientFake",
+  "sourceName": "contracts/LightClient.sol",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "blockHash",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "bytes32",
+          "name": "receiptsHash",
+          "type": "bytes32"
+        }
+      ],
+      "name": "VerifyReceiptsHash",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "number",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "name": "blocksByHeight",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "bytecode": "0x608060405234801561001057600080fd5b50610116806100206000396000f3fe6080604052348015600f57600080fd5b506004361060325760003560e01c806329e141af1460375780633c6c6b7314605a575b600080fd5b6046604236600460ac565b6074565b6040516051919060cc565b60405180910390f35b6069606536600460ac565b607c565b6040516051919060d7565b600192915050565b600082604051602001608d919060d7565b60408051601f1981840301815291905280516020909101209392505050565b6000806040838503121560bd578182fd5b50508035926020909101359150565b901515815260200190565b9081526020019056fea26469706673582212200068319c32d8e592bc095161fd8c7f01b523930a2d5663b8d273cf2f5c6d014564736f6c63430007030033",
+  "deployedBytecode": "0x6080604052348015600f57600080fd5b506004361060325760003560e01c806329e141af1460375780633c6c6b7314605a575b600080fd5b6046604236600460ac565b6074565b6040516051919060cc565b60405180910390f35b6069606536600460ac565b607c565b6040516051919060d7565b600192915050565b600082604051602001608d919060d7565b60408051601f1981840301815291905280516020909101209392505050565b6000806040838503121560bd578182fd5b50508035926020909101359150565b901515815260200190565b9081526020019056fea26469706673582212200068319c32d8e592bc095161fd8c7f01b523930a2d5663b8d273cf2f5c6d014564736f6c63430007030033",
+  "linkReferences": {},
+  "deployedLinkReferences": {}
+}

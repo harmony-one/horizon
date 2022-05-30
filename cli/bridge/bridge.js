@@ -83,7 +83,7 @@ class Bridge {
     // to: receipt address on dest chain
     // amount: token amount
     static async TokenTo(src, dest, token, to, amount) {
-        const tx = await src.Deposit(token, to, amount);
+        const tx = await src.Lock(token, to, amount);
         // wait light client
         return Bridge.CrossRelay(src, dest, tx.transactionHash);
     }

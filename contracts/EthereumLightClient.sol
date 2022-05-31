@@ -67,6 +67,11 @@ contract EthereumLightClient is Ethash, Initializable, PausableUpgradeable {
 
     uint256 public finalityConfirms;
 
+    // number of the oldest block that stored, we use this to prune the expired blocks from state
+    uint256 public oldestBlockStored;
+    uint256 private constant BLOCK_EXPIRED = 30 days;
+    uint256 private constant MAX_PRUNE_ONCE = 16;
+
     function initialize(bytes memory _rlpHeader) external initializer {
         finalityConfirms = DEFAULT_FINALITY_CONFIRMS;
 
@@ -89,12 +94,37 @@ contract EthereumLightClient is Ethash, Initializable, PausableUpgradeable {
         _setFirstBlock(storedBlock);
     }
 
+    function _deleteBlock(uint256 blockNo) private {
+        uint256[] storage blockHashes = blocksByHeight[blockNo];
+        for(uint256 j = 0; j < blockHashes.length; j++) {
+            uint256 blockHash = blockHashes[j];
+            delete blocks[blockHash];
+            delete blockExisting[blockHash];
+        }
+        delete blocksByHeight[blockNo];
+        delete blocksByHeightExisting[blockNo];
+        delete canonicalBlocks[blockNo];
+    }
+ 
+    function _pruneBlocks(uint256 pruneTime) private {
+        uint256 blockCur = oldestBlockStored;
+        for(uint256 i = 0; i < MAX_PRUNE_ONCE; i++) {
+            uint256 blockNo = blockCur++;
+            if(!blocksByHeightExisting[blockNo]) continue;
+            uint256 blockHash = blocksByHeight[blockNo][0];
+            if(blocks[blockHash].time > pruneTime) break;
+            _deleteBlock(blockNo);
+        }
+        if(blockCur > oldestBlockStored) oldestBlockStored = blockCur;
+    }
+
     //uint32 constant loopAccesses = 64;      // Number of accesses in hashimoto loop
     function addBlockHeader(
         bytes memory _rlpHeader,
         bytes32[4][loopAccesses] memory cache,
         bytes32[][loopAccesses] memory proofs
     ) public whenNotPaused returns (bool) {
+        _pruneBlocks(block.timestamp - BLOCK_EXPIRED);
         // Calculate block header hash
         uint256 blockHash = EthereumParser.calcBlockHeaderHash(_rlpHeader);
         // Check block existing
@@ -292,5 +322,7 @@ contract EthereumLightClient is Ethash, Initializable, PausableUpgradeable {
         canonicalHead = firstBlock;
 
         canonicalBlocks[firstBlock] = true;
+
+        oldestBlockStored = toSetBlock.number;
     }
 }

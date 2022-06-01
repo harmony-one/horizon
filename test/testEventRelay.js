@@ -68,11 +68,22 @@ describe("Token Locker Cross Chain Event Passing", function () {
 
         const prover = new EProver(rpcUrl);
 
-        const proof = await prover.receiptProof(eventTx);
+        const proof = await prover.receiptProofABIV2(eventTx);
 
         await LockerOnHarmony.changeLightClient(ELC.address);
 
+        await LockerOnHarmony.bind("0x47055A6525ed5685731DA308af826C5F2bA33855");
+
         debug(proof);
+
+        /*
+        console.log("Boom")
+
+        console.log(proof.root)
+        console.log(proof.key)
+        console.log(proof.proof)
+
+         */
 
         await LockerOnHarmony.validateAndExecuteProof(
             12274373,
@@ -80,6 +91,8 @@ describe("Token Locker Cross Chain Event Passing", function () {
             proof.key,
             proof.proof
         );
+
+        console.log("done")
 
     });
 

@@ -136,7 +136,7 @@ async function deploy() {
     // console.log("receiveReceipt");
     // console.log(tokenLockerOnEthereum);
     try {
-        await tokenLockerOnEthereum.validateAndExecuteProof(receiptProof.header, mmrProof.result, receiptProof, {gasLimit: process.env.GAS_LIMIT});
+        await tokenLockerOnEthereum.validateAndExecuteProof(receiptProof.header, mmrProof.result, receiptProof.proof, {gasLimit: process.env.GAS_LIMIT});
         console.log("done!");
     } catch (error) {
         console.log(error);

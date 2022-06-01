@@ -47,7 +47,7 @@ function fromRPC(blockParams){
 
     if (baseFeePerGas != undefined) {
         opts =  { common: new Common({ chain: Chain.Mainnet, hardfork: Hardfork.London }) };
-        headerData.baseFeePerGas = toHex(baseFeePerGas);
+        headerData.baseFeePerGas = baseFeePerGas;
     }
 
     return BlockHeader.fromHeaderData(headerData, opts);

@@ -4,7 +4,7 @@ pragma experimental ABIEncoderV2;
 
 import "@openzeppelin/contracts-upgradeable/math/SafeMathUpgradeable.sol";
 import "./EthereumLightClient.sol";
-import "./EthereumProver.sol";
+import "./lib/MPTValidatorV2.sol";
 import "./TokenLocker.sol";
 
 contract TokenLockerOnHarmony is TokenLocker, OwnableUpgradeable {
@@ -35,7 +35,7 @@ contract TokenLockerOnHarmony is TokenLocker, OwnableUpgradeable {
     function _validateEthTransaction(
         uint256 blockNo,
         bytes32 rootHash,
-        bytes calldata mptkey,
+        uint256 proofPath,
         bytes calldata proof
     )
         internal
@@ -46,9 +46,9 @@ contract TokenLockerOnHarmony is TokenLocker, OwnableUpgradeable {
             lightclient.VerifyReceiptsHash(blockHash, rootHash),
             "wrong receipt hash"
         );
-        rlpdata = EthereumProver.validateMPTProof(
+        rlpdata = MPTValidatorV2.validateProof(
             rootHash,
-            mptkey,
+            proofPath,
             proof
         );
     }
@@ -56,17 +56,17 @@ contract TokenLockerOnHarmony is TokenLocker, OwnableUpgradeable {
     function validateAndExecuteProof(
         uint256 blockNo,
         bytes32 rootHash,
-        bytes calldata mptkey,
+        uint256 proofPath,
         bytes calldata proof
     ) external {
         (bytes32 blockHash, bytes memory rlpdata) = _validateEthTransaction(
             blockNo,
             rootHash,
-            mptkey,
+            proofPath,
             proof
         );
         bytes32 receiptHash = keccak256(
-            abi.encodePacked(blockHash, rootHash, mptkey)
+            abi.encodePacked(blockHash, rootHash, proofPath)
         );
         require(spentReceipt[receiptHash] == false, "double spent!");
         spentReceipt[receiptHash] = true;
@@ -77,7 +77,7 @@ contract TokenLockerOnHarmony is TokenLocker, OwnableUpgradeable {
     function userValidateAndExecuteProof(
         uint256 blockNo,
         bytes32 rootHash,
-        bytes calldata mptkey,
+        uint256 proofPath,
         bytes calldata proof,
         address targetAddress
     )
@@ -86,12 +86,12 @@ contract TokenLockerOnHarmony is TokenLocker, OwnableUpgradeable {
         (bytes32 blockHash, bytes memory rlpdata) = _validateEthTransaction(
             blockNo,
             rootHash,
-            mptkey,
+            proofPath,
             proof
         );
         //Adding a parameter makes the concept of a "receiptHash" a little less valid, but no need to declare another mapping due to entropy of keccak256
         bytes32 receiptHash = keccak256(
-            abi.encodePacked(blockHash, rootHash, mptkey, targetAddress)
+            abi.encodePacked(blockHash, rootHash, proofPath, targetAddress)
         );
         require(spentReceipt[receiptHash] == false, "double spent!");
         spentReceipt[receiptHash] = true;

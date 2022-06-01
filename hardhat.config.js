@@ -12,6 +12,9 @@ const HARMONY_PRIVATE_KEY = process.env.PRIKEY;
 module.exports = {
     defaultNetwork: "hardhat",
     networks: {
+        develop: {
+            url: `http://localhost:8545`
+        },
         localnet: {
             url: `http://localhost:9500`,
             accounts: [`0x${HARMONY_PRIVATE_KEY}`],

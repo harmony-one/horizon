@@ -7,6 +7,8 @@
     "init-all": "yarn install; cd ./src/cli; yarn install; cd ../elc; yarn install; cd ../eprover; yarn install; cd ../eth2hmy-relay; yarn install; cd ../..; hardhat clean; hardhat compile",
     "check": "npx hardhat check",
     "compile": "npx hardhat compile",
+    "lint": "eslint ./lib ./migrations ./test",
+    "lint-fix": "eslint ./lib ./migrations ./test --fix",
     "coverage": "npx hardhat coverage",
     "eth-local": "npx hardhat node --no-deploy",
     "harmony-local": "cd $GOPATH/src/github.com/harmony-one/harmony; make debug",

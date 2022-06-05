@@ -1,4 +1,4 @@
-const transactions = require('../test/transaction.json');
+const transactions = require("../test/transaction.json");
 const { ethers } = require("hardhat");
 const util = require("util");
 require("dotenv").config();
@@ -6,14 +6,15 @@ const Web3 = require("web3");
 const { toRLPHeader, rpcWrapper, getReceiptProof } = require("./utils");
 
 async function fetchBlock(blockNumber) {
-  let web3 = new Web3(new Web3.providers.HttpProvider(process.env.LOCALNET));
-  const sendRpc = util.promisify(web3.currentProvider.send)
-      .bind(web3.currentProvider);
+  const web3 = new Web3(new Web3.providers.HttpProvider(process.env.LOCALNET));
+  const sendRpc = util
+    .promisify(web3.currentProvider.send)
+    .bind(web3.currentProvider);
   return await sendRpc({
-      jsonrpc: "2.0",
-      method: "hmyv2_getFullHeader",
-      params: [blockNumber],
-      id: (new Date()).getTime(),
+    jsonrpc: "2.0",
+    method: "hmyv2_getFullHeader",
+    params: [blockNumber],
+    id: new Date().getTime(),
   });
 }
 
@@ -58,7 +59,7 @@ async function deployEthSideContracts() {
 
   // deploy token locker
   const TokenLockerOnEthereum = await ethers.getContractFactory(
-    "TokenLockerOnEthereum",
+    "TokenLockerOnEthereum"
     // {
     //   libraries: {
     //     HarmonyProver: prover.address
@@ -70,11 +71,14 @@ async function deployEthSideContracts() {
     [],
     {
       initializer: "initialize",
-      unsafeAllowLinkedLibraries: true
+      unsafeAllowLinkedLibraries: true,
     }
   );
-  console.log("TokenLockerOnEthereum deployed to:", tokenLockerOnEthereum.address);
-  return [harmonyLightClient.address, tokenLockerOnEthereum.address]
+  console.log(
+    "TokenLockerOnEthereum deployed to:",
+    tokenLockerOnEthereum.address
+  );
+  return [harmonyLightClient.address, tokenLockerOnEthereum.address];
 }
 
 // module.exports = {deployEthSideContracts};

@@ -22,7 +22,7 @@ async function deployHmySideContracts() {
   const initHeader = await getBlockByNumber(url, blockNum);
 
   const EthereumLightClient = await ethers.getContractFactory(
-    "EthereumLightClient",
+    "EthereumLightClient"
     // {
     //   libraries: {
     //     Prime: prime.address,
@@ -31,7 +31,8 @@ async function deployHmySideContracts() {
     // }
   );
 
-  const ethLightClient = await upgrades.deployProxy(EthereumLightClient,
+  const ethLightClient = await upgrades.deployProxy(
+    EthereumLightClient,
     [initHeader.serialize()],
     {
       initializer: "initialize",
@@ -39,7 +40,7 @@ async function deployHmySideContracts() {
     }
   );
   console.log("EthereumLightClient deployed to:", ethLightClient.address);
-  
+
   // const EthereumProver = await ethers.getContractFactory(
   //   "EthereumProver",
   // );
@@ -48,7 +49,7 @@ async function deployHmySideContracts() {
 
   // deploy token locker
   const TokenLockerOnHarmony = await ethers.getContractFactory(
-    "TokenLockerOnHarmony",
+    "TokenLockerOnHarmony"
   );
   const tokenLockerOnHarmony = await upgrades.deployProxy(
     TokenLockerOnHarmony,
@@ -58,7 +59,10 @@ async function deployHmySideContracts() {
       // unsafeAllowLinkedLibraries: true
     }
   );
-  console.log("TokenLockerOnHarmony deployed to:", tokenLockerOnHarmony.address);
+  console.log(
+    "TokenLockerOnHarmony deployed to:",
+    tokenLockerOnHarmony.address
+  );
 
   return [ethLightClient.address, tokenLockerOnHarmony.address];
 }

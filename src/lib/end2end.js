@@ -1,11 +1,7 @@
 const { ethers } = require("hardhat");
 require("dotenv").config();
 
-async function main() {
-    
-
-
-}
+async function main() {}
 
 main()
   .then(() => process.exit(0))

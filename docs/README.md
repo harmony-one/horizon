@@ -2,14 +2,17 @@
 
 # Overview
 
+This document gives a technical overview of the Horizon Bridge including build, deployment and testing information. For more information see [Harmony's Horizon Bridge Rollout strategy](https://harmonyone.notion.site/Trustless-Eth-bridge-launch-prep-dde21137582d4ddabc32828abeea0752), the [Horizon Whitepaper](./assets/horizon-whitepaper.pdf) and the [IRIS Bridge Presentation](https://docs.google.com/presentation/d/1suGKZ12n7aziudg6E2plxEfYgIE_pQZZGCtwKy6j0m0/edit#slide=id.g48989ac23a_0_0).
+
 The current state of the project is that we are testing using a Harmony Local Node and brdiging to Ropsten. For the client we will use the CLI and moving forward will use the new UI
 * DAG genertion : Takes several hours to run Ganesha has a machine to do this and shares the latest DAG info from Ropsten using [google drive](https://drive.google.com/file/d/1FqLCO5oc1xDYNMuub7xAqnb6kfohdf-U/view?usp=sharing). The epoch logic is the block Number divided by 30,000 so current Ropsten EPOCH is block 12280236 / 30000 = 409 which is the DAG info shared above. **Moving forward we need to update DAG information for every new EPOCH**
 * CLI Relayer : Relays the blocks, this is initially written in javascript as a Proof of concept and may be implemented in other languages moving forward. **Once the Relayer has begun we need to continually relay each block**
 * Client: The client is used to Process transactions this is done by locking the Token using the TokenLocker.sol contract (e.g. TokenLockerOnEth.Sol AND TokenLockerOnHarmony.sol)
 Currently only ERC20 are supported. Moving forward ERC721 and ERC1155 as well as operations on smart contracts will also be supported. For now all client transactions will be done using the CLI. Moving forward  the current bridge (bridge.harmony.one) will be migrated to https://bridge-validator-1.web.app/ and jenya also built a fresh frontend for upcoming trustless bridge: https://github.com/harmony-one/horizon-trustless-frontend
 but most likely, we will stick to the first one.
-* Harmony Node: we use a [harmony local node](https://github.com/harmony-one/harmony#dev-docker-image) this can be run via docker. **There is a pull request which needs to be pushed to Harmony Testnet to enable the bridging functionality. [we need this PR to be pushed to testnet (should be done by May 27th, 2022)](https://github.com/harmony-one/harmony/pull/3872)**
+* Harmony Node: we use a [harmony local node](https://github.com/harmony-one/harmony#dev-docker-image) this can be run via docker. Note at the time of writing this the local build should be done from [ganesha's mmr-hard-fork branch](https://github.com/gupadhyaya/harmony/tree/mmr-hard-fork). **There is a pull request which needs to be pushed to Harmony Testnet to enable the bridging functionality. [we need this PR to be pushed to testnet (should be done by May 27th, 2022)](https://github.com/harmony-one/harmony/pull/3872)**
 * For fully trustless bridge we need the bls signature verification precompile to be available on ethereum [eip-2537](https://eips.ethereum.org/EIPS/eip-2537), however this won't be a blocker, as we can initially do permissioned relayers, later adopt optimistic approach, etc. there are many fallback plans for this.
+* Front End: The current [bridge.harmony.one](https://bridge.harmony.one/busd) is being migrated to a new [bridge](https://bridge-validator-1.web.app/busd). Work is being done in the [ehthmy-brige.frontend repository](https://github.com/harmony-one/ethhmy-bridge.frontend) and initial feedback is documented [here](https://github.com/harmony-one/ethhmy-bridge.frontend/issues/155).
 
 **Current Status**
 * End to End Testing : Has never been succesfully completed
@@ -28,8 +31,8 @@ but most likely, we will stick to the first one.
 **Migration Strategy**
 * Smart Contract use Hardhat with Typescript and ethers(instead of web3)
   * Replace all web3 with ethers
-  * replace all js files with typescript
-  * remove all truffleConfig use hardhat instead
+  * Use typescript for tests.
+  * Use Hardhat for deploy scripts
   * write tests
 * docs: new folder for documentation
 * docs/assets => migrated from assets
@@ -40,7 +43,7 @@ but most likely, we will stick to the first one.
 * src/cli: (migrated from cli)
 * src/(elc, eprover, eth2hmy-relay): migrated from tools(elc, eprover, eth2hmy-relay)
 
-**RollOut Strategy**
+**RollOut Strategy [see here for launch](https://harmonyone.notion.site/Trustless-Eth-bridge-launch-prep-dde21137582d4ddabc32828abeea0752)**
 * Complete End To End Testing (using CLI)
 * Write Smart Contract Tests (will use hardhat)
 * Update Smart Contract Documentation and README.md

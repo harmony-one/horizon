@@ -1,6 +1,6 @@
 const { Bridge } = require('./bridge');
 const { EthWeb3 } = require('../lib/ethWeb3');
-const { EProver } = require('../../tools/eprover');
+const { EProver } = require('../../eprover');
 const BridgeSol = require("./abi/TokenLockerOnEthereum.json");
 
 

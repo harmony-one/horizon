@@ -4,9 +4,13 @@
   "description": "Harmony Horizon Bridge",
   "scripts": {
     "libInit": "tar -zxf ethereumjs-ethash-dist.tar.gz -C node_modules/@ethereumjs/ethash",
+    "init-all": "yarn install; cd ./src/cli; yarn install; cd ../elc; yarn install; cd ../eprover; yarn install; cd ../eth2hmy-relay; yarn install; cd ../..; hardhat clean; hardhat compile",
     "check": "npx hardhat check",
     "compile": "npx hardhat compile",
     "coverage": "npx hardhat coverage",
+    "eth-local": "npx hardhat node --no-deploy",
+    "harmony-local": "cd $GOPATH/src/github.com/harmony-one/harmony; make debug",
+    "harmony-local-kill": "cd $GOPATH/src/github.com/harmony-one/harmony; make debug-kill",
     "deploy": "npx hardhat run scripts/deploy.ts",
     "deployFaucet": "npx hardhat deploy --tags Deploy",
     "deployFaucetRopsten": "npx hardhat deploy --tags DeployRopsten",

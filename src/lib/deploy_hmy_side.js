@@ -1,6 +1,6 @@
 const { ethers } = require("hardhat");
 require("dotenv").config();
-const { getBlockByNumber } = require("../tools/eth2hmy-relay/lib/getBlockHeader.js");
+const { getBlockByNumber } = require("../eth2hmy-relay/lib/getBlockHeader.js");
 
 // works with kovan
 // npx hardhat run --network localnet scripts/deploy_hmy_side.js

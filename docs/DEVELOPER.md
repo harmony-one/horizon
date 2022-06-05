@@ -1,71 +1,7 @@
-# Horizon Bridge Documentation and API reference
-
-# Overview
-
-This document gives a technical overview of the Horizon Bridge including build, deployment and testing information. For more information see [Harmony's Horizon Bridge Rollout strategy](https://harmonyone.notion.site/Trustless-Eth-bridge-launch-prep-dde21137582d4ddabc32828abeea0752), the [Horizon Whitepaper](./assets/horizon-whitepaper.pdf) and the [IRIS Bridge Presentation](https://docs.google.com/presentation/d/1suGKZ12n7aziudg6E2plxEfYgIE_pQZZGCtwKy6j0m0/edit#slide=id.g48989ac23a_0_0).
-
-The current state of the project is that we are testing using a Harmony Local Node and brdiging to Ropsten. For the client we will use the CLI and moving forward will use the new UI
-* **Harmony Node**: we use a [harmony local node](https://github.com/harmony-one/harmony#dev-docker-image) this can be run via docker. Note at the time of writing this the local build should be done from [ganesha's mmr-hard-fork branch](https://github.com/gupadhyaya/harmony/tree/mmr-hard-fork). **There is a pull request which needs to be pushed to Harmony Testnet to enable the bridging functionality. [we need this PR to be pushed to testnet (should be done by May 27th, 2022)](https://github.com/harmony-one/harmony/pull/3872)**
-* **Ethereum Node**: For fully trustless bridge we need the bls signature verification precompile to be available on ethereum [eip-2537](https://eips.ethereum.org/EIPS/eip-2537), however this won't be a blocker, as we can initially do permissioned relayers, later adopt optimistic approach, etc. there are many fallback plans for this. 
-* **DAG genertion** : Takes several hours to run Ganesha has a machine to do this and shares the latest DAG info from Ropsten using [google drive](https://drive.google.com/file/d/1FqLCO5oc1xDYNMuub7xAqnb6kfohdf-U/view?usp=sharing). The epoch logic is the block Number divided by 30,000 so current Ropsten EPOCH is block 12280236 / 30000 = 409 which is the DAG info shared above. **Moving forward we need to update DAG information for every new EPOCH**
-* **CLI Relayer** : Relays the blocks, this is initially written in javascript as a Proof of concept and may be implemented in other languages moving forward. **Once the Relayer has begun we need to continually relay each block**
-* **Client**: The client is used to Process transactions this is done by locking the Token using the TokenLocker.sol contract (e.g. TokenLockerOnEth.Sol AND TokenLockerOnHarmony.sol)
-Currently only ERC20 are supported. Moving forward ERC721 and ERC1155 as well as operations on smart contracts will also be supported. For now all client transactions will be done using the CLI. Moving forward  the current bridge (bridge.harmony.one) will be migrated to https://bridge-validator-1.web.app/
-* **Front End**: The current [bridge.harmony.one](https://bridge.harmony.one/busd) is being migrated to a new [bridge](https://bridge-validator-1.web.app/busd). Work is being done in the [ehthmy-brige.frontend repository](https://github.com/harmony-one/ethhmy-bridge.frontend) and initial feedback is documented [here](https://github.com/harmony-one/ethhmy-bridge.frontend/issues/155). *Note: Jenya also built a fresh frontend for upcoming trustless bridge: https://github.com/harmony-one/horizon-trustless-frontend but most likely, we will stick to the first one.*
-
-**Current Status**
-* End to End Testing : Has never been succesfully completed
-* Smart Contract Tests: Have errors in them.
-
-**Testing Summary**
-
-| #   | Status | Step                          | Notes |
-| --- | ------ | ----------------------------- | ----- |
-| 1   | *PASS  | Infrastructure Setup          | Working with Local Net until [PR 3872](https://github.com/harmony-one/harmony/pull/3872) [fork](https://github.com/gupadhyaya/harmony/tree/mmr-hard-fork) is pushed to Testnet |
-| 2   | TBD    | Ropsten Smart Contract Deploy | | 
-| 3   | TBD    | Harmony Smart Contract Deploy | |
-| 4   | TBD    | Relayer Running               | |
-| 5   | TBD    | End To End Testing            | |
-
-**Migration Strategy**
-* Smart Contract use Hardhat with Typescript and ethers(instead of web3)
-  * Replace all web3 with ethers
-  * Use typescript for tests.
-  * Use Hardhat for deploy scripts
-  * write tests
-* docs: new folder for documentation
-* docs/assets => migrated from assets
-* docs/solidity: contains generated solidity documentation
-* deploy: new folder for deployment scripts (using hardhat-deploy and logic from scripts)
-* src: new folder for typescript source files 
-* src/lib: (migrated from scripts)
-* src/cli: (migrated from cli)
-* src/(elc, eprover, eth2hmy-relay): migrated from tools(elc, eprover, eth2hmy-relay)
-
-**RollOut Strategy [see here for launch](https://harmonyone.notion.site/Trustless-Eth-bridge-launch-prep-dde21137582d4ddabc32828abeea0752)**
-* Complete End To End Testing (using CLI)
-* Write Smart Contract Tests (will use hardhat)
-* Update Smart Contract Documentation and README.md
-* Integrate with Front END UI
-* Onboard Production Validators (15 Validators to relay blocks - incentives tbd)
-
-
-**Additional Notes/Action Items**
-- [ ] PR from Ganesha for Harmony Testnet Bridge Support
-- [ ] Check Status of TokenLocker and ERC721 and ERC1155 support (Bruce)
-- [ ] Review item which is needed for Permissionless Rollout of Validators (waiting on something on Ethereum?)
-- [ ] Check test updates from Boris
-
-## Environment Data
-
-Here is an overview of Environment data setup for testing after following the steps below
-
-* Deployer Address : 0x8875fc2A47E35ACD1784bB5f58f563dFE86A8451
-* Infura Project: 32cb9c57bfe447a99ea34e30195b2d10
-* KOVAN ERC20 Contract: [0xc90a6555CaD53a9D85a80052Fe2926E21608CF41](https://kovan.etherscan.io/address/0xc90a6555cad53a9d85a80052fe2926e21608cf41)
-* ROPSTEN ERC20 Faucet Contract
-
 # Developer and Testing guide
+This guide is for developers and testers working on the Horizon Bridge. It's focus is on the backend infrastructure including configuring nodes, deploying smart contracts generation of DAG's and using the CLI. We work with local nodes initially and add additional information for other envrionments.
+
+
 ## Setting up the codebase
 
 **Clone this repository**
@@ -82,16 +18,105 @@ The complete command in `package,json` is as follows
 `"init-all": "yarn install; cd ./src/cli; yarn install; cd ../elc; yarn install; cd ../eprover; yarn install; cd ../eth2hmy-relay; yarn install; cd ../..; hardhat clean; hardhat compile"`
 
 
-*Note: you can see the CLI commands available by typing*
-`node index.js [command] -h`
 
 ## Setting up the Infrastructure 
 
-### Infura Project Setup
+### Running Local Nodes
 
+**Ethereum Node**
+We use hardhat to run a local ethereum node. However as deploy scripts are specific to chains. We do not wish to run the deploys when we start a node. 
+
+To start a local hardhat(ethereum) node use
+`yarn eth local`
+which runs
+`npx hardhat node --no-deploy`
+
+**Harmony node**
+At the time of writing we need to build the node locally. This should be done from [ganesha's mmr-hard-fork branch](https://github.com/gupadhyaya/harmony/tree/mmr-hard-fork). 
+
+See [here](https://github.com/harmony-one/harmony#debugging) for build instructions
+
+```
+cd $(go env GOPATH)/src/github.com/harmony-one/harmony
+make debug
+```
+To stop the network use `^C` or `make debug-kill`
+
+*Note: If using a later version of openssl (e.g. openssl v3.3) on a mac you may need to modify `scripts\go_executable_build.sh` changing this line `LIB[libcrypto.3.dylib]=/usr/local/opt/openssl/lib/libcrypto.3.dylib`*
+
+To run a local harmony network use
+`yarn harmony-local`
+
+To stop the local harmony network use
+`^C` or `make debug-kill` or `yarn harmony-local-kill`
+
+
+### Running Testnet Nodes
+
+**Ethereum (Ropsten) Node**
 We use an an infura account to integrate with a Ropsten Node.
 
 Create an [Infura Account](https://infura.io/) and create an ethereum project. Add the INFURA_PROJECT_ID to the `.env` file.
+
+**Harmony node**
+There is a pull request which needs to be pushed to Harmony Testnet to enable the bridging functionality. [we need this PR to be pushed to testnet (should be done by May 27th, 2022)](https://github.com/harmony-one/harmony/pull/3872).
+
+### Funding the Deployer Account
+
+**Local Deployer Accounts**
+Harmony localnet has a default account of `0xA5241513DA9F4463F1d4874b548dFBAC29D91f34` which has funds, as defined in core/genesis.go. The private key for this address is `1f84c95ac16e6a50f08d44c7bde7aff8742212fda6e4321fde48bf83bef266dc`
+
+For testing purposes we used account `0x8875fc2A47E35ACD1784bB5f58f563dFE86A8451` and funded it with 1000 ONE on localnet and 1 ETH on Ropsten, but you can use any acccount you like as long as you know the private key or mnemonic.
+
+**Testnet Funding of Accounts**
+Create a deployer account and fund it in both Harmony Testnet and Ropsten using Faucets. Add the PRIVATE_KEY to the `.env` file
+
+[Here](https://ropsten.oregonctf.org/) is a ropsten faucet.
+
+To fund your harmony account use the [harmony cli](https://docs.harmony.one/home/general/wallets/harmony-cli) or metamask and transfer funds from the following account.
+
+### Creating the DAG Merkle Tree
+
+It is required to generate the DAG(directed acyclic graph) Merkle Tree for the Ethereum node we are connecting to.
+
+**Localnet (Hardhat) DAG Generation**
+
+```
+cd ./src/cli
+node index.js --help
+node index.js dagProve generate
+node index.js dagProve blockProof
+
+```
+
+#### DAG Merkel Tree CLI
+1. `node index.js dagProve generate` which calculate merkle root for epochs from [start, start+n)
+```
+node index.js dagProve generate 377
+```
+2. `node index.js dagProve blockProof` which accepts block number to calculate all necessary information in order to prove the block
+```
+node index.js dagProve blockProof --block 11266784 --url https://ropsten.infura.io/v3/<project-id>
+```
+
+
+**Testnet (Ropsten) DAG Generation**
+
+DAG genertion takes several hours to run Ganesha has a machine to do this and shares the latest DAG info from Ropsten using [google drive](https://drive.google.com/file/d/1FqLCO5oc1xDYNMuub7xAqnb6kfohdf-U/view?usp=sharing). The epoch logic is the block Number divided by 30,000 so current Ropsten EPOCH is block 12280236 / 30000 = 409 which is the DAG info shared above.
+
+After downloading the file and unzipping it move the epoch into the dag directory using 
+
+`cp -rf  ~/Downloads/409 ./src/cli/dag/.`
+
+ *Note: Moving forward we need to update DAG information for every new EPOCH on Ethereum(Ropsten)*
+
+**Note: You do not need to generate the DAG for the Harmony Chain, just Ethereum (Ropsten)**
+
+**How to find the Harmony Epoch (informational only, no need to generate a DAG for Harmony)**
+If to find the latest epoch on Harmony you can look at [explorer](https://staking.harmony.one/validators/testnet/one1fxazl9qk7c30mk3lp7tun4yepptwvfq9ss28u7) for a validater and see the latest epoch on the EXPECTED RETURN HISTORY GRAPH. For example in Harmony Testnet on May 18th 2022, the latest epoch was 75762.
+
+
+
 
 ### Building 
 
@@ -121,6 +146,8 @@ On localnet, by default, 0xA5241513DA9F4463F1d4874b548dFBAC29D91f34 has funds, a
 For testing purposes we used account `0x8875fc2A47E35ACD1784bB5f58f563dFE86A8451` and funded it with 1000 ONE on localnet and 1 ETH on Ropsten, but you can use any acccount you like as long as you know the private key or mnemonic.
 
 ## Creating the DAG Merkle Tree
+
+### Ethereum
 
 DAG genertion takes several hours to run Ganesha has a machine to do this and shares the latest DAG info from Ropsten using [google drive](https://drive.google.com/file/d/1FqLCO5oc1xDYNMuub7xAqnb6kfohdf-U/view?usp=sharing). The epoch logic is the block Number divided by 30,000 so current Ropsten EPOCH is block 12280236 / 30000 = 409 which is the DAG info shared above.
 
@@ -153,7 +180,7 @@ node index.js dagProve blockProof --block 11266784 --url https://ropsten.infura.
 **Questions**
 
 1. When do you need to run `node index.js dagProve blockProof`?
-2. Do you need to generate a new DAG information on each EPOC change?
+2. Do you need to generate a new DAG information on each EPOCH change?
 3. Where is this currently hosted?
 4. Where do we want to deploy this long term?
 

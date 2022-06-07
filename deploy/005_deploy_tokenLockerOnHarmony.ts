@@ -10,7 +10,7 @@ const deployFunction: DeployFunction = async function (
   const { deploy } = deployments
   const { deployer } = await getNamedAccounts()
 
-  const TokenLockerOnEthereum = await deploy('TokenLockerOnEthereum', {
+  const TokenLockerOnHarmony = await deploy('TokenLockerOnHarmony', {
     from: deployer,
     args: [],
     proxy: false,
@@ -18,16 +18,16 @@ const deployFunction: DeployFunction = async function (
     autoMine: true // speed up deployment on local network (ganache, hardhat), no effect on live networks
   })
 
-  const tokenLockerOnEthereum = await ethers.getContractAt('TokenLockerOnEthereum', TokenLockerOnEthereum.address)
+  const tokenLockerOnHarmony = await ethers.getContractAt('TokenLockerOnHarmony', TokenLockerOnHarmony.address)
 
-  console.log('TokenLockerOnEthereum deployed to:', tokenLockerOnEthereum.address)
-  const tx = await tokenLockerOnEthereum.initialize()
+  console.log('TokenLockerOnHarmony deployed to:', tokenLockerOnHarmony.address)
+  const tx = await tokenLockerOnHarmony.initialize()
   await ethers.provider.waitForTransaction(tx.hash)
 
-  console.log(`lightclient   : ${await tokenLockerOnEthereum.lightclient()}`)
-  console.log(`owner         : ${await tokenLockerOnEthereum.owner()}`)
+  console.log(`lightclient   : ${await tokenLockerOnHarmony.lightclient()}`)
+  console.log(`owner         : ${await tokenLockerOnHarmony.owner()}`)
 }
 
 deployFunction.dependencies = []
-deployFunction.tags = ['TokenLockerOnEthereum', 'Ethereum', 'hardhat']
+deployFunction.tags = ['TokenLockerOnHarmony', 'Harmony', 'localnet']
 export default deployFunction

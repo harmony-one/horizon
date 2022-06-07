@@ -6,11 +6,7 @@ module.exports = {
     node: true,
   },
   plugins: ["@typescript-eslint"],
-  extends: [
-    "standard",
-    "plugin:prettier/recommended",
-    "plugin:node/recommended",
-  ],
+  extends: ["standard", "plugin:node/recommended"],
   parser: "@typescript-eslint/parser",
   parserOptions: {
     ecmaVersion: 12,
@@ -20,5 +16,9 @@ module.exports = {
       "error",
       { ignores: ["modules"] },
     ],
+    'node/no-unpublished-import': 0,
+    'node/no-missing-import': ['error', {
+      tryExtensions: ['.js', '.json', '.node', '.ts']
+    }]
   },
 };

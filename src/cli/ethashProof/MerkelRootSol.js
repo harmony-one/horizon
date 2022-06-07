@@ -1,9 +1,9 @@
-const fs = require("fs");
+const fs = require('fs')
 
-function toHex(str) {
-  let hex = "";
-  for (let i = 0; i < str.length; i += 2) hex += `\\x${str.slice(i, i + 2)}`;
-  return hex;
+function toHex (str) {
+  let hex = ''
+  for (let i = 0; i < str.length; i += 2) hex += `\\x${str.slice(i, i + 2)}`
+  return hex
 }
 
 const merkelRootSol = (merkelInfo) => `
@@ -16,7 +16,7 @@ contract MerkelRoots {
     };
     bytes constant ROOTS = "${merkelInfo.roots.reduce(
       (a, b) => a + toHex(b),
-      ""
+      ''
     )}";
     
    function getRootHash(uint64 epoch) internal pure returns(bytes32 hash) {
@@ -27,8 +27,8 @@ contract MerkelRoots {
            hash := mload(add(roots, mul(index, 0x20)))
        }
    }
-}`;
+}`
 
 module.exports = {
-  merkelRootSol,
-};
+  merkelRootSol
+}

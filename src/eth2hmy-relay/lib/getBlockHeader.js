@@ -1,11 +1,11 @@
-const { BlockHeader } = require("@ethereumjs/block");
-const Web3Eth = require("web3-eth");
-const { BN } = require("ethereumjs-util");
-const { default: Common, Chain, Hardfork } = require("@ethereumjs/common");
+const { BlockHeader } = require('@ethereumjs/block')
+const Web3Eth = require('web3-eth')
+const { BN } = require('ethereumjs-util')
+const { default: Common, Chain, Hardfork } = require('@ethereumjs/common')
 
-const toHex = (num) => "0x" + new BN(num).toString("hex");
+const toHex = (num) => '0x' + new BN(num).toString('hex')
 
-function fromRPC(blockParams) {
+function fromRPC (blockParams) {
   const {
     parentHash,
     sha3Uncles,
@@ -23,10 +23,10 @@ function fromRPC(blockParams) {
     timestamp,
     extraData,
     mixHash,
-    nonce,
-  } = blockParams;
+    nonce
+  } = blockParams
 
-  let opts;
+  let opts
   const headerData = {
     parentHash,
     uncleHash: sha3Uncles,
@@ -42,22 +42,22 @@ function fromRPC(blockParams) {
     timestamp: toHex(timestamp),
     extraData,
     mixHash,
-    nonce,
-  };
+    nonce
+  }
 
   if (baseFeePerGas != undefined) {
     opts = {
-      common: new Common({ chain: Chain.Mainnet, hardfork: Hardfork.London }),
-    };
-    headerData.baseFeePerGas = toHex(baseFeePerGas);
+      common: new Common({ chain: Chain.Mainnet, hardfork: Hardfork.London })
+    }
+    headerData.baseFeePerGas = toHex(baseFeePerGas)
   }
 
-  return BlockHeader.fromHeaderData(headerData, opts);
+  return BlockHeader.fromHeaderData(headerData, opts)
 }
 
-function getBlockByNumber(url, blockNo) {
-  const eth = new Web3Eth(url);
-  return eth.getBlock(blockNo).then(fromRPC);
+function getBlockByNumber (url, blockNo) {
+  const eth = new Web3Eth(url)
+  return eth.getBlock(blockNo).then(fromRPC)
 }
 
-module.exports = { getBlockByNumber };
+module.exports = { getBlockByNumber }

@@ -1,7 +1,7 @@
-const { DagProof } = require("./lib/DagProof");
-const { getBlockByNumber } = require("./lib/getBlockHeader");
+const { DagProof } = require('./lib/DagProof')
+const { getBlockByNumber } = require('./lib/getBlockHeader')
 
 module.exports = {
   DagProof,
-  getBlockByNumber,
-};
+  getBlockByNumber
+}

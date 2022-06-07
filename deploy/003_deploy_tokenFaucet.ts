@@ -10,7 +10,7 @@ const deployFunction: DeployFunction = async function (
   const { deploy } = deployments
   const { deployer } = await getNamedAccounts()
 
-  const TokenLockerOnEthereum = await deploy('TokenLockerOnEthereum', {
+  const FaucetToken = await deploy('FaucetToken', {
     from: deployer,
     args: [],
     proxy: false,
@@ -18,16 +18,23 @@ const deployFunction: DeployFunction = async function (
     autoMine: true // speed up deployment on local network (ganache, hardhat), no effect on live networks
   })
 
-  const tokenLockerOnEthereum = await ethers.getContractAt('TokenLockerOnEthereum', TokenLockerOnEthereum.address)
+  const faucetToken = await ethers.getContractAt('FaucetToken', FaucetToken.address)
 
-  console.log('TokenLockerOnEthereum deployed to:', tokenLockerOnEthereum.address)
-  const tx = await tokenLockerOnEthereum.initialize()
+  console.log('FaucetToken deployed to:', faucetToken.address)
+  const tx = await faucetToken.initialize('EthHorizonFaucetToken', 'EHFT')
   await ethers.provider.waitForTransaction(tx.hash)
 
-  console.log(`lightclient   : ${await tokenLockerOnEthereum.lightclient()}`)
-  console.log(`owner         : ${await tokenLockerOnEthereum.owner()}`)
+  console.log(`name        : ${await faucetToken.name()}`)
+  console.log(`symbol      : ${await faucetToken.symbol()}`)
+  console.log(`decimals    : ${await faucetToken.decimals()}`)
+  console.log(`totalSupply : ${await faucetToken.totalSupply()}`)
 }
 
 deployFunction.dependencies = []
-deployFunction.tags = ['TokenLockerOnEthereum', 'Ethereum', 'hardhat']
+deployFunction.tags = [
+  'EthFaucetToken',
+  'Ethereum',
+  'hardhat',
+  'Test'
+]
 export default deployFunction

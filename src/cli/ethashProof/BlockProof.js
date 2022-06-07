@@ -1,18 +1,18 @@
-const { DagProof, getBlockByNumber } = require("../../eth2hmy-relay");
-const { BlockHeader } = require("@ethereumjs/block");
+const { DagProof, getBlockByNumber } = require('../../eth2hmy-relay')
+const { BlockHeader } = require('@ethereumjs/block')
 
-let dagProof;
+let dagProof
 
-function getHeaderProof(dagPath, header) {
+function getHeaderProof (dagPath, header) {
   // BlockHeader
   if (!dagProof || dagProof.dagPath != dagPath) {
-    dagProof = new DagProof(dagPath);
+    dagProof = new DagProof(dagPath)
   }
-  return dagProof.getProof(header);
+  return dagProof.getProof(header)
 }
 
-function parseRlpHeader(rlpHeader) {
-  return BlockHeader.fromRLPSerializedHeader(rlpHeader);
+function parseRlpHeader (rlpHeader) {
+  return BlockHeader.fromRLPSerializedHeader(rlpHeader)
 }
 
-module.exports = { getHeaderProof, parseRlpHeader, getBlockByNumber };
+module.exports = { getHeaderProof, parseRlpHeader, getBlockByNumber }

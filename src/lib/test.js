@@ -1,17 +1,17 @@
-require("dotenv").config();
-const Web3 = require("web3");
-const BN = require("bn.js");
-const rlp = require("rlp");
-const { toUtf8Bytes } = require("@harmony-js/contract");
-const { hexlify } = require("@harmony-js/crypto");
+require('dotenv').config()
+const Web3 = require('web3')
+const BN = require('bn.js')
+const rlp = require('rlp')
+const { toUtf8Bytes } = require('@harmony-js/contract')
+const { hexlify } = require('@harmony-js/crypto')
 
-const web3 = new Web3(new Web3.providers.HttpProvider(process.env.LOCALNET));
-web3.eth.defaultAccount = process.env.WALLET_ADDRESS;
+const web3 = new Web3(new Web3.providers.HttpProvider(process.env.LOCALNET))
+web3.eth.defaultAccount = process.env.WALLET_ADDRESS
 
 const toRLPHeader = (block) => {
   return rlp.encode([
-    "HmnyTgd",
-    "v4",
+    'HmnyTgd',
+    'v4',
     [
       block.parentHash,
       block.miner,
@@ -37,41 +37,41 @@ const toRLPHeader = (block) => {
       block.shardState,
       block.crossLink,
       block.slashes,
-      block.mmrRoot,
-    ],
-  ]);
-};
+      block.mmrRoot
+    ]
+  ])
+}
 
-async function processMMRProof(err, res) {
-  if (err) throw err;
-  const proof = res.result;
-  console.log(proof);
+async function processMMRProof (err, res) {
+  if (err) throw err
+  const proof = res.result
+  console.log(proof)
 
-  const root = "0x" + proof.root;
-  const width = proof.width;
-  const index = 12;
+  const root = '0x' + proof.root
+  const width = proof.width
+  const index = 12
   const value = web3.utils.hexToBytes(
-    "0xe40cee5629973020ce841baee9405afb73a215f27ffc1e232a5b665346abb3e6"
-  );
+    '0xe40cee5629973020ce841baee9405afb73a215f27ffc1e232a5b665346abb3e6'
+  )
   const peaks = [
-    "0x1086b6daeb590c506f8fb5f4aec47d861a74d04f7bef7ef4a87abd89f79dd0cf",
-    "0x34b52955ac457f63ce8ccd39c0fb9f8ec288350f0e34920eae532f081f69fdc1",
-  ]; // proof.peaks;
+    '0x1086b6daeb590c506f8fb5f4aec47d861a74d04f7bef7ef4a87abd89f79dd0cf',
+    '0x34b52955ac457f63ce8ccd39c0fb9f8ec288350f0e34920eae532f081f69fdc1'
+  ] // proof.peaks;
   const siblings = [
-    "0x1086b6daeb590c506f8fb5f4aec47d861a74d04f7bef7ef4a87abd89f79dd0cf",
-    "0xcd30063f44cf79c4ed9b7e212b1e892e2714234ef0758b9794043710eb6b480c",
-  ]; // proof.siblings;
+    '0x1086b6daeb590c506f8fb5f4aec47d861a74d04f7bef7ef4a87abd89f79dd0cf',
+    '0xcd30063f44cf79c4ed9b7e212b1e892e2714234ef0758b9794043710eb6b480c'
+  ] // proof.siblings;
 
   const client = new web3.eth.Contract(
-    require("../build/contracts/MMR.json").abi,
+    require('../build/contracts/MMR.json').abi,
     process.env.MMR
-  );
+  )
   let ethMasterAccount = web3.eth.accounts.privateKeyToAccount(
     process.env.PRIVATE_KEY
-  );
-  web3.eth.accounts.wallet.add(ethMasterAccount);
-  web3.eth.defaultAccount = ethMasterAccount.address;
-  ethMasterAccount = ethMasterAccount.address;
+  )
+  web3.eth.accounts.wallet.add(ethMasterAccount)
+  web3.eth.defaultAccount = ethMasterAccount.address
+  ethMasterAccount = ethMasterAccount.address
 
   try {
     // console.log('number of peaks: ' + await client.methods.numOfPeaks(5).call());
@@ -83,101 +83,100 @@ async function processMMRProof(err, res) {
       .send({
         from: ethMasterAccount,
         gas: process.env.GAS_LIMIT,
-        gasPrice: new BN(await web3.eth.getGasPrice()).mul(new BN(1)),
-      });
-    console.log(response);
+        gasPrice: new BN(await web3.eth.getGasPrice()).mul(new BN(1))
+      })
+    console.log(response)
   } catch (error) {
     // console.log(error);
-    console.log(await getRevertReason(error.receipt.transactionHash));
+    console.log(await getRevertReason(error.receipt.transactionHash))
   }
 }
 
-const util = require("util");
+const util = require('util');
 
 (async function () {
   const txnHash =
-    "0x54b8ef8b874e89dcec98e5472b06f0a00d80a86c8470a8888b6a781b45699064";
-  const web3 = new Web3(new Web3.providers.HttpProvider(process.env.LOCALNET));
+    '0x54b8ef8b874e89dcec98e5472b06f0a00d80a86c8470a8888b6a781b45699064'
+  const web3 = new Web3(new Web3.providers.HttpProvider(process.env.LOCALNET))
   const sendRpc = util
     .promisify(web3.currentProvider.send)
-    .bind(web3.currentProvider);
-  console.log(web3.utils.toDecimal("0x8"));
+    .bind(web3.currentProvider)
+  console.log(web3.utils.toDecimal('0x8'))
   console.log(
     await sendRpc({
-      jsonrpc: "2.0",
-      method: "hmyv2_getTxMmrProof",
+      jsonrpc: '2.0',
+      method: 'hmyv2_getTxMmrProof',
       params: [txnHash, 88],
-      id: new Date().getTime(),
+      id: new Date().getTime()
     })
-  );
+  )
 })();
 
 (async function () {
   const txnHash =
-    "0xe40cee5629973020ce841baee9405afb73a215f27ffc1e232a5b665346abb3e6";
-  const local = new Web3(new Web3.providers.HttpProvider(process.env.LOCALNET));
+    '0xe40cee5629973020ce841baee9405afb73a215f27ffc1e232a5b665346abb3e6'
+  const local = new Web3(new Web3.providers.HttpProvider(process.env.LOCALNET))
   local.currentProvider.send(
     {
-      method: "hmyv2_getReceiptProof",
+      method: 'hmyv2_getReceiptProof',
       params: [txnHash],
-      jsonrpc: "2.0",
-      id: "2",
+      jsonrpc: '2.0',
+      id: '2'
     },
     // processMMRProof
     function (err, res) {
-      if (err) throw err;
-      const proof = res.result;
-      console.log(proof);
+      if (err) throw err
+      const proof = res.result
+      console.log(proof)
     }
-  );
+  )
 });
 
 (async function () {
   // let hash =
   //   "0x7e79e06185d57b9b54ab1b579411556cc7631629814a268cb528086eb33e7648";
-  const local = new Web3(new Web3.providers.HttpProvider(process.env.LOCALNET));
+  const local = new Web3(new Web3.providers.HttpProvider(process.env.LOCALNET))
   local.currentProvider.send(
     {
-      method: "hmyv2_getFullHeader",
-      params: ["20"],
-      jsonrpc: "2.0",
-      id: "2",
+      method: 'hmyv2_getFullHeader',
+      params: ['20'],
+      jsonrpc: '2.0',
+      id: '2'
     },
     async function (err, result) {
-      if (err) throw err;
-      const headerBytes = toRLPHeader(result.result);
-      console.log(toHexString(headerBytes));
-      console.log(web3.utils.keccak256(headerBytes));
+      if (err) throw err
+      const headerBytes = toRLPHeader(result.result)
+      console.log(toHexString(headerBytes))
+      console.log(web3.utils.keccak256(headerBytes))
     }
-  );
-});
+  )
+})
 
-function toHexString(byteArray) {
+function toHexString (byteArray) {
   return Array.from(byteArray, function (byte) {
-    return ("0" + (byte & 0xff).toString(16)).slice(-2);
-  }).join("");
+    return ('0' + (byte & 0xff).toString(16)).slice(-2)
+  }).join('')
 }
 
-function hexToBytes(hex) {
-  for (var bytes = [], c = 0; c < hex.length; c += 2)
-    bytes.push(parseInt(hex.substr(c, 2), 16));
-  return bytes;
+function hexToBytes (hex) {
+  for (var bytes = [], c = 0; c < hex.length; c += 2) { bytes.push(parseInt(hex.substr(c, 2), 16)) }
+  return bytes
 }
 
 (function () {
-  const local = new Web3(new Web3.providers.HttpProvider(process.env.LOCALNET));
+  const local = new Web3(new Web3.providers.HttpProvider(process.env.LOCALNET))
   local.currentProvider.send(
     {
-      method: "hmyv2_getFullHeader",
-      params: ["23"],
-      jsonrpc: "2.0",
-      id: "2",
+      method: 'hmyv2_getFullHeader',
+      params: ['23'],
+      jsonrpc: '2.0',
+      id: '2'
     },
     async function (err, result) {
-      if (err) throw err;
-      console.log(result.result);
-      const headerBytes = toRLPHeader(result.result);
-      console.log(web3.utils.keccak256(headerBytes));
+      if (err) throw err
+      console.log(result.result)
+      const headerBytes = toRLPHeader(result.result)
+      console.log(web3.utils.keccak256(headerBytes))
 
       // let signers = [
       //   "65f55eb3052f9e9f632b2923be594ba77c55543f5c58ee1454b9cfd658d25e06373b0f7d42a19c84768139ea294f6204",
@@ -188,45 +187,45 @@ function hexToBytes(hex) {
       //   "95117937cd8c09acd2dfae847d74041a67834ea88662a7cbed1e170350bc329e53db151e5a0ef3e712e35287ae954818",
       // ];
       const signers = [
-        "b44e474dd0b492592b7e8b8585a8e67c7ded207ab2ae739f15cd2edc8df8255fc84548726dcfca7f28fe2661e8dbd5f5",
-        "833b27bca0237310d26b67562d971c74650cc70acc156844b7b1000831e76295504e9aca44a26f31aeb29eae5c7170a7",
-        "b57f4ff68d9d0b2b502fa4c8d1d1c264391caee32a2bd661d8755f38e2e40ed2f051320316f3f7d822036002c5b70117",
-        "b19c650a27e11971505ac3bd6a7469498410857c3ef5441bd56d6411b11d0da47cea2ef9a1ff94e1cdd1a34d10707c02",
-        "b5021089f597ad6541a95682c3eade4b26bc87012bd9a1ef22e1ca474623673863aa60429e99fd4706baf8376dae8b93",
-        "830da6ecd6a63e2798bfb3dd8c4e9bdf90833a3eca2cd91889deaa8126feb58534bac9bc48e45588bc8ffd41ae1aad11",
-      ];
+        'b44e474dd0b492592b7e8b8585a8e67c7ded207ab2ae739f15cd2edc8df8255fc84548726dcfca7f28fe2661e8dbd5f5',
+        '833b27bca0237310d26b67562d971c74650cc70acc156844b7b1000831e76295504e9aca44a26f31aeb29eae5c7170a7',
+        'b57f4ff68d9d0b2b502fa4c8d1d1c264391caee32a2bd661d8755f38e2e40ed2f051320316f3f7d822036002c5b70117',
+        'b19c650a27e11971505ac3bd6a7469498410857c3ef5441bd56d6411b11d0da47cea2ef9a1ff94e1cdd1a34d10707c02',
+        'b5021089f597ad6541a95682c3eade4b26bc87012bd9a1ef22e1ca474623673863aa60429e99fd4706baf8376dae8b93',
+        '830da6ecd6a63e2798bfb3dd8c4e9bdf90833a3eca2cd91889deaa8126feb58534bac9bc48e45588bc8ffd41ae1aad11'
+      ]
       // [65f55eb3052f9e9f632b2923be594ba77c55543f5c58ee1454b9cfd658d25e06373b0f7d42a19c84768139ea294f6204 02c8ff0b88f313717bc3a627d2f8bb172ba3ad3bb9ba3ecb8eed4b7c878653d3d4faf769876c528b73f343967f74a917 e751ec995defe4931273aaebcb2cd14bf37e629c554a57d3f334c37881a34a6188a93e76113c55ef3481da23b7d7ab09 2d61379e44a772e5757e27ee2b3874254f56073e6bd226eb8b160371cc3c18b8c4977bd3dcb71fd57dc62bf0e143fd08 86dc2fdc2ceec18f6923b99fd86a68405c132e1005cf1df72dca75db0adfaeb53d201d66af37916d61f079f34f21fb96 52ecce5f64db21cbe374c9268188f5d2cdd5bec1a3112276a350349860e35fb81f8cfe447a311e0550d961cf25cb988d 678ec9670899bf6af85b877058bea4fc1301a5a3a376987e826e3ca150b80e3eaadffedad0fedfa111576fa76ded980c 16513c487a6bb76f37219f3c2927a4f281f9dd3fd6ed2e3a64e500de6545cf391dd973cc228d24f9bd01efe94912e714]
-      const encoded = rlp.encode(signers);
+      const encoded = rlp.encode(signers)
       // console.log(rlp.decode(encoded));
       // const keys = signers.map(signer => hexlify(toUtf8Bytes(signer)));
 
       const client = new web3.eth.Contract(
-        require("../build/contracts/HarmonyLightClient.json").abi,
+        require('../build/contracts/HarmonyLightClient.json').abi,
         process.env.CLIENT
-      );
+      )
       let ethMasterAccount = web3.eth.accounts.privateKeyToAccount(
         process.env.PRIVATE_KEY
-      );
-      web3.eth.accounts.wallet.add(ethMasterAccount);
-      web3.eth.defaultAccount = ethMasterAccount.address;
-      ethMasterAccount = ethMasterAccount.address;
+      )
+      web3.eth.accounts.wallet.add(ethMasterAccount)
+      web3.eth.defaultAccount = ethMasterAccount.address
+      ethMasterAccount = ethMasterAccount.address
 
       try {
         await client.methods.addBlock(headerBytes, encoded).send({
           from: ethMasterAccount,
           gas: process.env.GAS_LIMIT,
-          gasPrice: new BN(await web3.eth.getGasPrice()).mul(new BN(1)),
-        });
-        console.log("mmr: " + (await client.methods.mmrRoot().call()));
-        console.log("blockHash: " + (await client.methods.blockHash1().call()));
-        console.log("sig: " + (await client.methods.sig().call()));
-        console.log("status: " + (await client.methods.status().call()));
+          gasPrice: new BN(await web3.eth.getGasPrice()).mul(new BN(1))
+        })
+        console.log('mmr: ' + (await client.methods.mmrRoot().call()))
+        console.log('blockHash: ' + (await client.methods.blockHash1().call()))
+        console.log('sig: ' + (await client.methods.sig().call()))
+        console.log('status: ' + (await client.methods.status().call()))
       } catch (error) {
-        console.log(await getRevertReason(error.receipt.transactionHash));
+        console.log(await getRevertReason(error.receipt.transactionHash))
       }
     }
-  );
-});
+  )
+})
 
 // (async function() {
 //   let sig = "0x84bfece7b2f0e0c9156a5763c8fc1b42383321347e978776b03f259aed500e8926ae7b206eb06780ee44e8e6d39ca7bc05ce9cd967d7136ccd667e1453ab18dc9f36d9dbc60a7c626d6aa4f865b53c4154c391c96863d6ed117d9b2e3e316630";
@@ -298,21 +297,21 @@ function hexToBytes(hex) {
 //   // console.log(web3.utils.keccak256(signers[0]));
 // });
 
-async function getRevertReason(txHash) {
-  const tx = await web3.eth.getTransaction(txHash);
+async function getRevertReason (txHash) {
+  const tx = await web3.eth.getTransaction(txHash)
 
-  let result = await web3.eth.call(tx, tx.blockNumber);
+  let result = await web3.eth.call(tx, tx.blockNumber)
 
-  result = result.startsWith("0x") ? result : `0x${result}`;
+  result = result.startsWith('0x') ? result : `0x${result}`
 
   if (result && result.substr(138)) {
-    console.log(result);
-    console.log(`0x${result.substr(138)}`);
-    const reason = web3.utils.toAscii(`0x${result.substr(138)}`);
-    console.log("Revert reason:", reason);
-    return reason;
+    console.log(result)
+    console.log(`0x${result.substr(138)}`)
+    const reason = web3.utils.toAscii(`0x${result.substr(138)}`)
+    console.log('Revert reason:', reason)
+    return reason
   } else {
-    console.log("Cannot get reason - No return value");
+    console.log('Cannot get reason - No return value')
   }
 }
 

@@ -116,7 +116,8 @@ After downloading the file and unzipping it move the epoch into the dag director
 If to find the latest epoch on Harmony you can look at [explorer](https://staking.harmony.one/validators/testnet/one1fxazl9qk7c30mk3lp7tun4yepptwvfq9ss28u7) for a validater and see the latest epoch on the EXPECTED RETURN HISTORY GRAPH. For example in Harmony Testnet on May 18th 2022, the latest epoch was 75762.
 
 
-
+## Deplopying smart contracts
+We use [hardhat deploy](https://www.npmjs.com/package/hardhat-deploy) to deploy the smart contracts see documenation [here](https://github.com/wighawag/hardhat-deploy#deploying-and-upgrading-proxies)
 
 ### Building 
 

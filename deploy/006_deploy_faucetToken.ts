@@ -33,8 +33,6 @@ const deployFunction: DeployFunction = async function (
 deployFunction.dependencies = []
 deployFunction.tags = [
   'ONEFaucetToken',
-  'Harmony',
-  'localnet',
-  'Test'
+  'Harmony'
 ]
 export default deployFunction

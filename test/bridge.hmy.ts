@@ -1,15 +1,21 @@
+import { expect } from 'chai'
+import { ethers, network } from 'hardhat'
 const rlp = require('rlp')
-const headerData = require('./headers.json')
-const transactions = require('./transaction.json')
-const { rpcWrapper, getReceiptProof } = require('../scripts/utils')
-
-const { expect } = require('chai')
+const headerData = require('./data/headers.json')
+const transactions = require('./data/transaction.json')
+const {
+  rpcWrapper,
+  getReceiptProof
+} = require('../src/lib/utils')
 
 let MMRVerifier, HarmonyProver
 let prover, mmrVerifier
 
-function hexToBytes (hex) {
-  for (var bytes = [], c = 0; c < hex.length; c += 2) { bytes.push(parseInt(hex.substr(c, 2), 16)) }
+function hexToBytes(hex) {
+  let bytes
+  for (let c = 0; c < hex.length; c += 2) {
+    bytes.push(parseInt(hex.substr(c, 2), 16))
+  }
   return bytes
 }
 
@@ -81,11 +87,11 @@ describe('TokenLocker', function () {
     // await prover.deployed();
   })
 
-  it('issue map token test', async function () {})
+  it('issue map token test', async function () { })
 
-  it('lock test', async function () {})
+  it('lock test', async function () { })
 
-  it('unlock test', async function () {})
+  it('unlock test', async function () { })
 
-  it('light client upgrade test', async function () {})
+  it('light client upgrade test', async function () { })
 })

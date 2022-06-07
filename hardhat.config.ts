@@ -44,7 +44,11 @@ const config: HardhatUserConfig = {
     }
   },
   namedAccounts: {
-    deployer: 0
+    deployer: 0,
+    relayer: 1,
+    alice: 2,
+    bob: 3,
+    carol: 4
   },
   defaultNetwork: 'hardhat',
   networks: {

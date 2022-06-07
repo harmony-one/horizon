@@ -36,5 +36,5 @@ const deployFunction: DeployFunction = async function (
 }
 
 deployFunction.dependencies = []
-deployFunction.tags = ['EthereumLightClient', 'Harmony', 'localnet']
+deployFunction.tags = ['EthereumLightClient', 'Harmony', 'Production']
 export default deployFunction

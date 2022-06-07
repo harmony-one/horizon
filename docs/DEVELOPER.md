@@ -56,7 +56,7 @@ You can check `package.json` to review what this command does, it
 | Production  | mainnet  | Harmony production network  | hosted by harmony              |
 | Production  | ethereum | Ethereum production network | hosted using infura or alchemy |
 
-*Note: network configuration can be found in hardhat.config.ts*
+*Note: network configuration can be found in hardhat.config.ts and we have a harmony specific focus (e.g. localnet, testnet and mainnet refer to Harmony networks) and Ethereum networks are defined by name (e.g. hardhat, ropsten and ethereum)*
 
 ### Running Local Nodes
 
@@ -139,25 +139,107 @@ We use [hardhat](https://hardhat.org/getting-started) for contract development a
   * Token Testing: Validation that tokens can be transferred between chains
 * Coverage: We will use hardhat coverage to generate coverage reports
 
+**Sample Test**
+* Tests are run using `yarn test`
+* Specific Test Files can be run with `npx hardhat test ./test/EthereumLightClient.ts`
+* Specific Tests can be run with `npx hardhat test ./test/EthereLightClient.ts --grep 'EthereumLightClient-1 `'
+
+```
+johnlaptop horizon (refactor) $ yarn test
+yarn run v1.22.18
+warning ../../package.json: No license field
+$ npx hardhat test
+No need to generate any newer typings.
+✅ Generated documentation for 46 contracts
+
+
+  HarmonyProver
+    1) "before each" hook for "parse rlp block header"
+
+  TokenLocker
+    2) "before each" hook for "issue map token test"
+
+  EthereumLightClient
+    EthereumLightClient Tests
+      ✔ EthereumLightClient-1 view functions should work (44ms)
+      ✔ EthereumLightClient-2 update functions should work
+      ✔ EthereumLightClient-3 reverts should work for negative use cases
+      ✔ EthereumLightClient-4 complex tests should work
+
+  FaucetToken
+    FaucetToken Tests
+      ✔ FaucetToken-1 view functions should work (42ms)
+      ✔ FaucetToken-2 update functions should work
+      ✔ FaucetToken-3 reverts should work for negative use cases
+      ✔ FaucetToken-4 complex tests should work
+
+  HarmonyLightClient
+    HarmonyLightClient Tests
+      ✔ HarmonyLightClient-1 view functions should work
+      ✔ HarmonyLightClient-2 update functions should work
+      ✔ HarmonyLightClient-3 reverts should work for negative use cases
+      ✔ HarmonyLightClient-4 complex tests should work
+
+  TokenLockerOnEthereum
+    TokenLockerOnEthereum Tests
+      ✔ TokenLockerOnEthereum-1 view functions should work
+      ✔ TokenLockerOnEthereum-2 update functions should work
+      ✔ TokenLockerOnEthereum-3 reverts should work for negative use cases
+      ✔ TokenLockerOnEthereum-4 complex tests should work
+
+  TokenLockerOnHarmony
+    TokenLockerOnHarmony Tests
+      ✔ TokenLockerOnHarmony-1 view functions should work
+      ✔ TokenLockerOnHarmony-2 update functions should work
+      ✔ TokenLockerOnHarmony-3 reverts should work for negative use cases
+      ✔ TokenLockerOnHarmony-4 complex tests should work
+
+
+  20 passing (3m)
+  2 failing
+
+  1) HarmonyProver
+       "before each" hook for "parse rlp block header":
+     NomicLabsHardhatPluginError: You tried to link the contract HarmonyProver with MMRVerifier, which is not one of its libraries.
+This contract doesn't need linking any libraries.
+      at collectLibrariesAndLink (node_modules/@nomiclabs/hardhat-ethers/src/internal/helpers.ts:207:13)
+      at getContractFactoryFromArtifact (node_modules/@nomiclabs/hardhat-ethers/src/internal/helpers.ts:149:32)
+      at getContractFactory (node_modules/@nomiclabs/hardhat-ethers/src/internal/helpers.ts:93:12)
+      at async Context.<anonymous> (test/bridge.hmy.ts:29:21)
+
+  2) TokenLocker
+       "before each" hook for "issue map token test":
+     TypeError: tokenLocker.bind is not a function
+      at Context.<anonymous> (test/bridge.hmy.ts:75:23)
+
+
+
+error Command failed with exit code 2.
+info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.
+```
+
 **Sample Coverage Report**
+* coverage reports are run using `yarn coverage`
+* coverage for a specific test file can be generated with `yarn coverage --testfiles ./test/EthereumLightClient.ts`
+
 ```
 ----------------------------|----------|----------|----------|----------|----------------|
 File                        |  % Stmts | % Branch |  % Funcs |  % Lines |Uncovered Lines |
 ----------------------------|----------|----------|----------|----------|----------------|
- contracts/                 |        0 |        0 |        0 |        0 |                |
+ contracts/                 |     7.75 |     9.15 |     9.78 |     5.23 |                |
   BridgedToken.sol          |        0 |      100 |        0 |        0 |       16,17,23 |
-  EthereumLightClient.sol   |        0 |        0 |        0 |        0 |... 221,223,225 |
-  EthereumParser.sol        |        0 |        0 |        0 |        0 |... 129,139,141 |
+  EthereumLightClient.sol   |    10.53 |        0 |    22.22 |    10.53 |... 221,223,225 |
+  EthereumParser.sol        |    25.35 |       25 |       50 |       25 |... 129,139,141 |
   EthereumProver.sol        |        0 |        0 |        0 |        0 |... 287,289,292 |
-  FaucetToken.sol           |        0 |      100 |        0 |        0 |    14,19,20,21 |
-  HarmonyLightClient.sol    |        0 |        0 |        0 |        0 |... 193,196,200 |
-  HarmonyParser.sol         |        0 |        0 |        0 |        0 |... 381,383,392 |
+  FaucetToken.sol           |       25 |      100 |       50 |       25 |       19,20,21 |
+  HarmonyLightClient.sol    |     1.72 |        0 |     8.33 |     1.67 |... 193,196,200 |
+  HarmonyParser.sol         |    11.22 |    15.96 |     7.14 |    10.08 |... 381,383,392 |
   HarmonyProver.sol         |        0 |        0 |        0 |        0 |... 210,218,226 |
   LightClient.sol           |        0 |      100 |        0 |        0 |    22,30,31,32 |
   Migrations.sol            |        0 |        0 |        0 |        0 |       10,14,18 |
   TokenLocker.sol           |        0 |        0 |        0 |        0 |... 137,138,139 |
-  TokenLockerOnEthereum.sol |        0 |        0 |        0 |        0 |... 50,51,52,53 |
-  TokenLockerOnHarmony.sol  |        0 |        0 |        0 |        0 |... 51,56,57,58 |
+  TokenLockerOnEthereum.sol |     6.67 |        0 |       25 |     6.67 |... 50,51,52,53 |
+  TokenLockerOnHarmony.sol  |     9.09 |        0 |       25 |     9.09 |... 51,56,57,58 |
   TokenRegistry.sol         |        0 |        0 |        0 |        0 |... 100,101,102 |
  contracts/ethash/          |        0 |        0 |        0 |        0 |                |
   MerkelRoot.sol            |        0 |        0 |        0 |        0 |    12,13,14,15 |
@@ -165,7 +247,7 @@ File                        |  % Stmts | % Branch |  % Funcs |  % Lines |Uncover
   binary.sol                |        0 |      100 |        0 |        0 |... 46,55,56,64 |
   ethash.sol                |        0 |      100 |        0 |        0 |... 503,504,505 |
   keccak512.sol             |        0 |        0 |        0 |        0 |... 285,286,288 |
- contracts/lib/             |        0 |        0 |        0 |        0 |                |
+ contracts/lib/             |     9.43 |     8.96 |    12.09 |     9.69 |                |
   ECVerify.sol              |        0 |        0 |        0 |        0 |... 22,24,27,29 |
   EthUtils.sol              |        0 |        0 |        0 |        0 |... 81,82,84,87 |
   MMR.sol                   |        0 |        0 |        0 |        0 |... 532,533,535 |
@@ -173,15 +255,27 @@ File                        |  % Stmts | % Branch |  % Funcs |  % Lines |Uncover
   MMRWrapper.sol            |        0 |      100 |        0 |        0 |... 52,57,58,60 |
   MPT.sol                   |        0 |        0 |        0 |        0 |... 282,283,285 |
   RLPEncode.sol             |        0 |        0 |        0 |        0 |... 251,253,295 |
-  RLPReader.sol             |        0 |        0 |        0 |        0 |... 345,346,348 |
+  RLPReader.sol             |    52.58 |     47.5 |       55 |    54.64 |... 345,346,348 |
   SafeCast.sol              |        0 |        0 |        0 |        0 |... 17,18,22,23 |
 ----------------------------|----------|----------|----------|----------|----------------|
-All files                   |        0 |        0 |        0 |        0 |                |
+All files                   |     7.13 |     8.67 |     9.95 |     6.18 |                |
 ----------------------------|----------|----------|----------|----------|----------------|
-
 ```
 
 ### Deploying Smart Contracts
+Deploying of smart contracts are specific to their network to control this we use the `deployFunction.tags` field in the deployment file and run the deployments using a combination of the `--network` and `--tags` options e.g. `hardhat deploy --network hardhat --tags hardhat`
+
+The tags we utilize are as follows
+* `ContractName`: e.g. `HarmonyLightClient` the contract we are deploying used to deploy individual contracts
+* `Ethereum`: for all contracts to be deployed on Ethereum
+* `Harmony`: for all contracts to be deployed on Harmony
+* `Production`: for all contracts which are to be deployed to mainnet (e.g. FaucetTokens are not to be deployed to production)
+
+We also update `package.json` to provide simplified deploy commands, by specifying the network and the tag. For example
+* `"deploy-hardhat": "hardhat deploy --network hardhat --tags Ethereum",`: deploys all Ethereum contracts on the hardhat (local Ethereum) network
+* `    "deploy-localnet-lightClient": "hardhat deploy --network localnet --tags EthereumLightClient",`: deploys the specific contract EthereumLightClient on localnet (local Harmony) network.
+
+
 
 Local Deployments
 ```

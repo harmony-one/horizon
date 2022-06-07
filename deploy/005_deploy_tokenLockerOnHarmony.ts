@@ -29,5 +29,5 @@ const deployFunction: DeployFunction = async function (
 }
 
 deployFunction.dependencies = []
-deployFunction.tags = ['TokenLockerOnHarmony', 'Harmony', 'localnet']
+deployFunction.tags = ['TokenLockerOnHarmony', 'Harmony', 'Production']
 export default deployFunction

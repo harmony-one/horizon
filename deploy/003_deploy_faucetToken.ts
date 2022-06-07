@@ -33,8 +33,6 @@ const deployFunction: DeployFunction = async function (
 deployFunction.dependencies = []
 deployFunction.tags = [
   'EthFaucetToken',
-  'Ethereum',
-  'hardhat',
-  'Test'
+  'Ethereum'
 ]
 export default deployFunction

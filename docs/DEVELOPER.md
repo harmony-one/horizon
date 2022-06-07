@@ -13,7 +13,7 @@ git clone https://github.com/harmony-one/horizon.git
 yarn init-all
 
 # In separate termintal windows start hardhat and harmony localnet
-# Note: Prerequisit is that you have a local Harmony Node set up see below
+# Note: Prerequisite is that you have a local Harmony Node set up see below
 yarn eth-local
 yarn harmony-local
 
@@ -31,6 +31,9 @@ yarn deploy-hardhat
 
 # Run the tests
 yarn test
+
+# Run coverage report
+yarn coverage
 
 ```
 

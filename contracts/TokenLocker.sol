@@ -123,6 +123,7 @@ contract TokenLocker is TokenRegistry {
         }
     }
 
+    //This argument passing is an excellent example of how to get around stack too deep
     function onBurnEvent(bytes32[] memory topics, bytes memory data) private {
         address token = address(uint160(uint256(topics[1])));
         //address sender = address(uint160(uint256(topics[2])));

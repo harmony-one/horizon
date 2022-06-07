@@ -64,13 +64,15 @@ Dag_CMD
       header_rlp: _toHex(header.serialize()),
       merkle_root: _toHex(proofs.root),
       elements: proofs.dagData.map(elems => elems.map(_toHex)),
-      merkle_proofs: proofs.proofs.map(_toHex),
-      proofIndexes: proofs.proofIndexes.map(_toHex),
+      merkle_proofs: proofs.proofs.map( function(subarray) {
+          return subarray.map(_toHex)
+      })
+      //proofIndexes: proofs.proofIndexes.map(_toHex),
     }
     if (!options.output) {
       console.log(proofJson);
     } else {
-      fs.writeFileSync(options.output, JSON.stringify(proofJson));
+      fs.writeFileSync(options.output, JSON.stringify(proofJson, null, 2));
     }
   });
 
@@ -105,12 +107,15 @@ ETHRelay_CMD
   .command('getBlockHeader <ethUrl> <number/hash>')
   .description('get block header')
   .option('-t --type <output format>', 'output format: json/rlp', 'json')
+  .option('-r --repeat <number/hash>', 'Number of consecutive blocks to query', '1')
   .action(async (url, block, options) => {
-    const header = await getBlockByNumber(url, block);
-    if (options.type == 'rlp')
-      console.log(header.serialize().toString('hex'));
-    else
-      console.log(header.toJSON());
+    for (let i = 0; i < options.repeat; i++) {
+      const header = await getBlockByNumber(url, parseInt(block) + i);
+      if (options.type == 'rlp')
+        console.log(header.serialize().toString('hex'));
+      else
+        console.log(header.toJSON());
+    }
   });
 
 ETHRelay_CMD

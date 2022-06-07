@@ -86,7 +86,7 @@ describe("Token Locker Cross Chain Event Passing", function () {
          */
 
         await LockerOnHarmony.validateAndExecuteProof(
-            12274373,
+            proof.blockHash,
             proof.root,
             proof.key,
             proof.proof

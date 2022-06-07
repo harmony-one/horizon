@@ -33,15 +33,14 @@ contract TokenLockerOnHarmony is TokenLocker, OwnableUpgradeable {
     }
 
     function _validateEthTransaction(
-        uint256 blockNo,
+        bytes32 blockHash,
         bytes32 rootHash,
         uint256 proofPath,
         bytes calldata proof
     )
         internal
-        returns (bytes32 blockHash, bytes memory rlpdata)
+        returns (bytes memory rlpdata)
     {
-        blockHash = bytes32(lightclient.blocksByHeight(blockNo, 0));
         require(
             lightclient.VerifyReceiptsHash(blockHash, rootHash),
             "wrong receipt hash"
@@ -54,13 +53,13 @@ contract TokenLockerOnHarmony is TokenLocker, OwnableUpgradeable {
     }
 
     function validateAndExecuteProof(
-        uint256 blockNo,
+        bytes32 blockHash,
         bytes32 rootHash,
         uint256 proofPath,
         bytes calldata proof
     ) external {
-        (bytes32 blockHash, bytes memory rlpdata) = _validateEthTransaction(
-            blockNo,
+        bytes memory rlpdata = _validateEthTransaction(
+            blockHash,
             rootHash,
             proofPath,
             proof
@@ -75,7 +74,7 @@ contract TokenLockerOnHarmony is TokenLocker, OwnableUpgradeable {
     }
 
     function userValidateAndExecuteProof(
-        uint256 blockNo,
+        bytes32 blockHash,
         bytes32 rootHash,
         uint256 proofPath,
         bytes calldata proof,
@@ -83,8 +82,8 @@ contract TokenLockerOnHarmony is TokenLocker, OwnableUpgradeable {
     )
         external
     {
-        (bytes32 blockHash, bytes memory rlpdata) = _validateEthTransaction(
-            blockNo,
+        bytes memory rlpdata = _validateEthTransaction(
+            blockHash,
             rootHash,
             proofPath,
             proof

@@ -1,6 +1,39 @@
 # Developer and Testing guide
 This guide is for developers and testers working on the Horizon Bridge. It's focus is on the backend infrastructure including configuring nodes, deploying smart contracts generation of DAG's and using the CLI. We work with local nodes initially and add additional information for other envrionments.
 
+To gain a better understanding of what some of the yarn commands are doing it is recommended that developers review the scripts in `package.json`.
+
+## Quick Start Cheat Sheet
+
+```
+# clone the horizon repository
+git clone https://github.com/harmony-one/horizon.git
+
+# install the node modules
+yarn init-all
+
+# In separate termintal windows start hardhat and harmony localnet
+# Note: Prerequisit is that you have a local Harmony Node set up see below
+yarn eth-local
+yarn harmony-local
+
+# Smart-Contract (Solidity) Commands
+
+# Clean all solidity artifacts
+yarn clean
+
+# Compile the Contracts
+yarn compile
+
+# Deploy the contracts on Harmony(localnet) and Ethereum(hardhat)
+yarn deploy-localnet
+yarn deploy-hardhat
+
+# Run the tests
+yarn test
+
+```
+
 
 ## Setting up the codebase
 
@@ -10,14 +43,6 @@ This guide is for developers and testers working on the Horizon Bridge. It's foc
 **Initialize node_modules, clean solidity environment and compile contracts**
 `yarn init-all`
 You can check `package.json` to review what this command does, it
-* Installs all node_modules `yarn install; cd ./src/cli; yarn install; cd ../elc; yarn install; cd ../eprover; yarn install; cd ../eth2hmy-relay; yarn install; cd ../..;`
-* cleans the solidity(hardhat) artifacts: `npx hardhat clean`
-* compiles all the solidity contracts: `npx hardhat compile`
-
-The complete command in `package,json` is as follows
-`"init-all": "yarn install; cd ./src/cli; yarn install; cd ../elc; yarn install; cd ../eprover; yarn install; cd ../eth2hmy-relay; yarn install; cd ../..; hardhat clean; hardhat compile"`
-
-
 
 ## Setting up the Infrastructure 
 

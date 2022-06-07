@@ -132,7 +132,62 @@ We use [hardhat](https://hardhat.org/getting-started) for contract development a
 
 ### Testing Smart Contracts
 
+**Testing Strategy**
+* Unit Testing: Each Contract has it's own unit test covering positive use cases, negative use cases, event validation and complex scenarios
+* Scenario Testing: Additional Tests will be for Scenarios grouped as follows
+  * Relayer Testing: Validation that block headers are relayed between to the two chains
+  * Token Testing: Validation that tokens can be transferred between chains
+* Coverage: We will use hardhat coverage to generate coverage reports
+
+**Sample Coverage Report**
+```
+----------------------------|----------|----------|----------|----------|----------------|
+File                        |  % Stmts | % Branch |  % Funcs |  % Lines |Uncovered Lines |
+----------------------------|----------|----------|----------|----------|----------------|
+ contracts/                 |        0 |        0 |        0 |        0 |                |
+  BridgedToken.sol          |        0 |      100 |        0 |        0 |       16,17,23 |
+  EthereumLightClient.sol   |        0 |        0 |        0 |        0 |... 221,223,225 |
+  EthereumParser.sol        |        0 |        0 |        0 |        0 |... 129,139,141 |
+  EthereumProver.sol        |        0 |        0 |        0 |        0 |... 287,289,292 |
+  FaucetToken.sol           |        0 |      100 |        0 |        0 |    14,19,20,21 |
+  HarmonyLightClient.sol    |        0 |        0 |        0 |        0 |... 193,196,200 |
+  HarmonyParser.sol         |        0 |        0 |        0 |        0 |... 381,383,392 |
+  HarmonyProver.sol         |        0 |        0 |        0 |        0 |... 210,218,226 |
+  LightClient.sol           |        0 |      100 |        0 |        0 |    22,30,31,32 |
+  Migrations.sol            |        0 |        0 |        0 |        0 |       10,14,18 |
+  TokenLocker.sol           |        0 |        0 |        0 |        0 |... 137,138,139 |
+  TokenLockerOnEthereum.sol |        0 |        0 |        0 |        0 |... 50,51,52,53 |
+  TokenLockerOnHarmony.sol  |        0 |        0 |        0 |        0 |... 51,56,57,58 |
+  TokenRegistry.sol         |        0 |        0 |        0 |        0 |... 100,101,102 |
+ contracts/ethash/          |        0 |        0 |        0 |        0 |                |
+  MerkelRoot.sol            |        0 |        0 |        0 |        0 |    12,13,14,15 |
+  Prime.sol                 |        0 |        0 |        0 |        0 |... 85,88,89,91 |
+  binary.sol                |        0 |      100 |        0 |        0 |... 46,55,56,64 |
+  ethash.sol                |        0 |      100 |        0 |        0 |... 503,504,505 |
+  keccak512.sol             |        0 |        0 |        0 |        0 |... 285,286,288 |
+ contracts/lib/             |        0 |        0 |        0 |        0 |                |
+  ECVerify.sol              |        0 |        0 |        0 |        0 |... 22,24,27,29 |
+  EthUtils.sol              |        0 |        0 |        0 |        0 |... 81,82,84,87 |
+  MMR.sol                   |        0 |        0 |        0 |        0 |... 532,533,535 |
+  MMRVerifier.sol           |        0 |        0 |        0 |        0 |... 209,210,212 |
+  MMRWrapper.sol            |        0 |      100 |        0 |        0 |... 52,57,58,60 |
+  MPT.sol                   |        0 |        0 |        0 |        0 |... 282,283,285 |
+  RLPEncode.sol             |        0 |        0 |        0 |        0 |... 251,253,295 |
+  RLPReader.sol             |        0 |        0 |        0 |        0 |... 345,346,348 |
+  SafeCast.sol              |        0 |        0 |        0 |        0 |... 17,18,22,23 |
+----------------------------|----------|----------|----------|----------|----------------|
+All files                   |        0 |        0 |        0 |        0 |                |
+----------------------------|----------|----------|----------|----------|----------------|
+
+```
+
 ### Deploying Smart Contracts
+
+Local Deployments
+```
+yarn deploy-localnet
+yarn deploy-hardhat
+```
 
 ### Upgrading Smart Contracts
 

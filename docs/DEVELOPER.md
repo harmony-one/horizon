@@ -202,8 +202,53 @@ Alernate ways to achieve this are
 
 Recommendation: Diamonds appear to be the more robust solution and will enable upgrading of functionality long term as we evolve our relay and verification functionality. If time is a constraint can use Hardhat Upgrades initially and then migrate to Diamonds at a later point. However this will incur a migration cost.
 
+## CLI
+A CLI has been developed to facilitate testing. Complete with mutliple commands and help functionality. We will provide an overview of the functionality it provides and also how to use it for end to end testing.
 
-## DAG Merkle Tree
+A good way to familiarize yourself with the cli is to run `node src/cli/index.js --help`
+
+### CLI Functionality
+
+Below is an overview of the high level commands for details we recommend running `node src/cli/index.js <command> --help` e.g. `node src/cli/index.js dagProve --help` for a better understanding of the options it is recommended to review the code in `src/cli/index.js`.
+
+**High Level Commands**
+```
+johnlaptop horizon (refactor) $ node src/cli/index.js --help
+Usage: index [options] [command]
+
+Horizon Trustless Bridge CLI
+
+Options:
+  -h, --help      display help for command
+
+Commands:
+  dagProve        DAG Merkel Tree cli
+  ELC             ethereum ligth client cli
+  ethRelay        ethereum block relay cli
+  EProver         ethereum receipt prove cli
+  EVerifier       ethereum receipt verify cli
+  Bridge          bridge cli
+  help [command]  display help for command
+```
+
+**Sample Command Help**
+```
+johnlaptop horizon (refactor) $ node src/cli/index.js dagProve --help
+Usage: index dagProve [options] [command]
+
+DAG Merkel Tree cli
+
+Options:
+  -h, --help                        display help for command
+
+Commands:
+  generate [options] <epoch_start>  generate cache merkle tree for epochs [start, start+num)
+  blockProof [options]              get block proof data
+  help [command]                    display help for command
+```
+
+
+### DAG Merkle Tree
 
 It is required to generate the DAG(directed acyclic graph) Merkle Tree for the Ethereum node we are connecting to.
 

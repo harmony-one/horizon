@@ -3,7 +3,7 @@ const { EthBridge } = require("./ethBridge");
 const { HmyBridge } = require("./hmyBridge");
 const { FaucetERC20, ERC20 } = require("./token");
 const { EthWeb3 } = require("../lib/ethWeb3");
-const FakeClient = require("./abi/EthereumLightClient.json");
+const FakeClient = require("./abi/LightClientFake.json");
 
 async function deployBridges(ethUrl, hmyUrl) {
     const ethBridge = await EthBridge.deploy(ethUrl);
@@ -22,7 +22,7 @@ async function tokenMap(
     destBridgeAddress,
     token
 ) {
-    const srcBridge = new EthBridge(srcUrl, srcBridgeAddress);
+    const srcBridge = new HmyBridge(srcUrl, srcBridgeAddress);
     const destBridge = new HmyBridge(destUrl, destBridgeAddress);
     await Bridge.TokenMap(srcBridge, destBridge, token);
     return { ethBridge: srcBridge, hmyBridge: destBridge };

@@ -40,6 +40,6 @@ Horizon - a trustless harmony to ethereum bridge
 <img src="docs/assets/hmy2eth.png" alt="drawing" width="600"/>
 
 ## Additional Reading
-1. [Development Approach](./docs/README.md)
+1. [Developer Guide ](./docs/DEVELOPER.md)
 2. [Solidity Approach](./docs/SOLIDITY.md)
 3. [Solidity generated documentation](./docs/solidity/)

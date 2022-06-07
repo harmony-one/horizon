@@ -14,6 +14,7 @@ contract BridgedToken is ERC20Upgradeable, ERC20BurnableUpgradeable, OwnableUpgr
     ) external initializer {
         __ERC20_init(name, symbol);
         __ERC20Burnable_init();
+        __Ownable_init();
         _setupDecimals(decimals);
     }
 

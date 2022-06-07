@@ -7,11 +7,15 @@ require('@openzeppelin/hardhat-upgrades');
  * @type import('hardhat/config').HardhatUserConfig
  */
 
-const HARMONY_PRIVATE_KEY = process.env.PRIKEY;
+const HARMONY_PRIVATE_KEY = process.env.PRIVATE_KEY;
+const PROJECT_ID = process.env.PROJECT_ID;
 
 module.exports = {
     defaultNetwork: "hardhat",
     networks: {
+        develop: {
+            url: `http://localhost:8545`
+        },
         localnet: {
             url: `http://localhost:9500`,
             accounts: [`0x${HARMONY_PRIVATE_KEY}`]
@@ -25,11 +29,11 @@ module.exports = {
             accounts: [`0x${HARMONY_PRIVATE_KEY}`]
         },
         kovan: {
-            url: `https://kovan.infura.io/v3/<project-id>`,
+            url: `https://kovan.infura.io/v3/${PROJECT_ID}`,
             accounts: [`0x${HARMONY_PRIVATE_KEY}`]
         },
         ropsten: {
-            url: `https://ropsten.infura.io/v3/<project-id>`,
+            url: `https://ropsten.infura.io/v3/${PROJECT_ID}`,
             accounts: [`0x${HARMONY_PRIVATE_KEY}`]
         }
     },

@@ -3,6 +3,7 @@ const ethblock = require('@ethereumjs/block');
 const { rlp } = require('ethereumjs-util');
 const MPT = require('merkle-patricia-tree');
 const { GetProof } = require('eth-proof');
+const { EProver } = require('../tools/eprover');
 const Web3 = require("web3");
 const BN = require("bn.js");
 const util = require("util");
@@ -173,19 +174,15 @@ async function getTransactionProof(getProof, prover, txhash, fullHeader) {
 }
 
 async function getReceiptProof(getProof, prover, txhash, fullHeader) {
-    if (typeof getProof === 'string') getProof = new GetProof(getProof);
-    const proof = await _getReceiptProof(getProof, txhash);
+    if (typeof getProof !== 'string') throw "require a rpc url"
+    const ep = new EProver(getProof);
+    const proof = await _getReceiptProof(ep, txhash);
     proof.headerData = fullHeader;
-    const proofData = proof.proof.map(node => buffer2hex(rlp.encode(node)));
     const block = await prover.toBlockHeader(proof.headerData);
     // console.log(block);
     return {
         expectedRoot: block.receiptsRoot,
-        key: index2key(proof.receiptIndex, proof.proof.length),
-        proof: proofData,
-        keyIndex: proof.keyIndex,
-        proofIndex: proof.proofIndex,
-        expectedValue: proof.receiptData,
+        proof,
         header: block,
     }
 }
@@ -205,16 +202,11 @@ async function _getTransactionProof(getProof, txhash) {
 }
 
 async function _getReceiptProof(getProof, txhash) {
-    const proof = await getProof.receiptProof(txhash);
-    const receiptProof = [...proof.receiptProof]
-        .map(node => node.map(elem => buffer2hex(elem)));
+    const proof = await getProof.receiptProofABIV2(txhash);
     return {
-        receiptIndex: parseInt(proof.txIndex.slice(2), 16),
-        keyIndex: 0,
-        proofIndex: 0,
-        receiptData: receiptProof[receiptProof.length - 1][1],
-        proof: receiptProof,
-        headerData: proof.header.toHex(),
+        root: proof.root,
+        paths: proof.key,
+        proof: proof.proof,
     }
 }
 

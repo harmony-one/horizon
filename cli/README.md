@@ -9,6 +9,8 @@ CLI is a utility that provides a command-line interface to all the components to
 ```
 node index.js dagProve generate 377
 ```
+Note that, at the end of downloading the DAG, the MerkleRoot.sol for the downloaded epoch is printed which needs to be copied over to `contracts/ethash/MerkleRoot.sol`.
+
 2. `node index.js dagProve blockProof` which accepts block number to calculate all necessary information in order to prove the block
 ```
 node index.js dagProve blockProof --block 11266784 --url https://ropsten.infura.io/v3/<project-id>
@@ -31,10 +33,17 @@ node index.js ELC status http://localhost:9500 <ELC_Contract_Addr>
 ```
 node index.js ethRelay getBlockHeader https://ropsten.infura.io/v3/<project-id> 11266872
 ```
-2. `node index.js ethRelay relay` constantly relay blocks from Ethereum to Harmony.
+2. `node index.js ethRelay relay ethURL hmyURL ELC` constantly relay blocks from Ethereum to Harmony.
+```
+node index.js ethRelay relay https://ropsten.infura.io/v3/<project-id> http://localhost:9500 0xFc3A27491EA0Bbc7e2EDd425caf6623b02f4199d
+```
 
 ## Ethereum Receipt Prove CLI
 1. `node index.js EProver proof` get the proof data of the receipt of the transaction.
+
+```
+node index.js EProver proof https://ropsten.infura.io/v3/<project-id> 0xdd09e400d5c3055d38eb385b9d8d4a6b98c0c168a0704277abfcf4d91cc0c623
+```
 
 ## Ethereum Receipt Verifier CLI
 1. `node index.js EVerifier deploy` deploy EVerifier library contract to Harmony network.

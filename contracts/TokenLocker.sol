@@ -75,9 +75,17 @@ contract TokenLocker is TokenRegistry {
         emit Locked(address(token), msg.sender, actualAmount, recipient);
     }
 
-    function execute(bytes memory rlpdata) internal returns (uint256 events) {
+    function toReceiptItems(bytes memory rlpdata) private pure returns(RLPReader.RLPItem[] memory receipt) {
         RLPReader.RLPItem memory stacks = rlpdata.toRlpItem();
-        RLPReader.RLPItem[] memory receipt = stacks.toList();
+        if(rlpdata[0] <= 0x7f) { // if rlpdata[0] between [0,0x7f], it means TransactionType of EIP-2718.
+            stacks.memPtr += 1;
+            stacks.len -= 1;
+        }
+        return stacks.toList();
+    }
+
+    function execute(bytes memory rlpdata) internal returns (uint256 events) {
+        RLPReader.RLPItem[] memory receipt = toReceiptItems(rlpdata);
         // TODO: check txs is revert or not
         uint256 postStateOrStatus = receipt[0].toUint();
         require(postStateOrStatus == 1, "revert receipt");

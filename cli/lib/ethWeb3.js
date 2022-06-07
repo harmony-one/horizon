@@ -4,7 +4,7 @@ class EthWeb3 {
     web3; address;
     constructor(url, prikey = process.env.PRIKEY) {
         this.web3 = new Web3(url);
-        this.addPrivateKey(prikey);
+        prikey && this.addPrivateKey(prikey);
     }
     ContractAt(abi, address) {
         const contract = new this.web3.eth.Contract(abi, address, { from: this.address });

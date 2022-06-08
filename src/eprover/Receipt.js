@@ -10,11 +10,16 @@ class Receipt extends LegacyReceipt {
 
     static fromBuffer (buf) {
         if (!buf) return new Receipt()
+<<<<<<< HEAD:src/eprover/Receipt.js
         if (buf[0] < 0x7f) {
             const receipt = new Receipt(decode(buf))
+=======
+        if(buf[0] < 0x7f) {
+            const receipt = new Receipt(buf.toString("hex"))
+>>>>>>> upstream/main:tools/eprover/Receipt.js
             receipt.type = buf[0]
         }
-        return new Receipt(decode(buf))
+        return new Receipt(buf.toString("hex"))
     }
 
     static fromHex (hex = '') {

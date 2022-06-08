@@ -8,11 +8,18 @@ require('@openzeppelin/hardhat-upgrades');
  */
 
 const HARMONY_PRIVATE_KEY = process.env.PRIVATE_KEY;
+<<<<<<< HEAD
 const PROJECT_ID = process.env.INFURA_PROJECT_ID
+=======
+const PROJECT_ID = process.env.PROJECT_ID;
+>>>>>>> upstream/main
 
 module.exports = {
     defaultNetwork: "hardhat",
     networks: {
+        develop: {
+            url: `http://localhost:8545`
+        },
         localnet: {
             url: `http://localhost:9500`,
             accounts: [`0x${HARMONY_PRIVATE_KEY}`]

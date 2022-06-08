@@ -9,6 +9,7 @@
     "@ethereumjs/ethash": "^1.1.0",
     "commander": "^7.1.0",
     "eth-object": "^1.0.3",
+    "ethereumjs-util": "^7.1.4",
     "hardhat": "^2.6.6",
     "web3": "^1.3.4"
   }

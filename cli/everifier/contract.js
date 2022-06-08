@@ -1,4 +1,4 @@
-const EProver = require("../../tools/eprover/abi/EthereumProver.json");
+const EProver = require("../../tools/eprover/abi/MPTTest.json");
 const { HmyWeb3 } = require('../lib/hmyWeb3');
 const { Receipt } = require('eth-object');
 
@@ -8,11 +8,11 @@ async function deployEVerifier(hmyUrl) {
     return await hmyWeb3.sendTx(tx); //options.address
 }
 
-async function validateMPTProof(hmyUrl, evAddress, proof) {
+async function validateReceiptProof(hmyUrl, evAddress, proof) {
     const hmyWeb3 = new HmyWeb3(hmyUrl);
     const everifier = hmyWeb3.ContractAt(EVerifierTest.abi, evAddress);
-    const rlpReceipts = await everifier.methods.validateMPTProof(proof.root, proof.key, proof.proof).call();
+    const rlpReceipts = await everifier.methods.validateProof(proof.root, proof.key, proof.proof).call();
     return Receipt.fromHex(rlpReceipts);
 }
 
-module.exports = { deployEVerifier, validateMPTProof }
+module.exports = { deployEVerifier, validateReceiptProof }

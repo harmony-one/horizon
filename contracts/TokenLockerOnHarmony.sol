@@ -4,7 +4,7 @@ pragma experimental ABIEncoderV2;
 
 import "@openzeppelin/contracts-upgradeable/math/SafeMathUpgradeable.sol";
 import "./EthereumLightClient.sol";
-import "./EthereumProver.sol";
+import "./lib/MPTValidatorV2.sol";
 import "./TokenLocker.sol";
 
 contract TokenLockerOnHarmony is TokenLocker, OwnableUpgradeable {
@@ -35,7 +35,7 @@ contract TokenLockerOnHarmony is TokenLocker, OwnableUpgradeable {
     function validateAndExecuteProof(
         uint256 blockNo,
         bytes32 rootHash,
-        bytes calldata mptkey,
+        uint256 proofPath,
         bytes calldata proof
     ) external {
         bytes32 blockHash = bytes32(lightclient.blocksByHeight(blockNo, 0));
@@ -43,13 +43,17 @@ contract TokenLockerOnHarmony is TokenLocker, OwnableUpgradeable {
             lightclient.VerifyReceiptsHash(blockHash, rootHash),
             "wrong receipt hash"
         );
+        require(
+            lightclient.isVerified(uint256(blockHash)),
+            "Block not verified"
+        );
         bytes32 receiptHash = keccak256(
-            abi.encodePacked(blockHash, rootHash, mptkey)
+            abi.encodePacked(blockHash, rootHash, proofPath)
         );
         require(spentReceipt[receiptHash] == false, "double spent!");
-        bytes memory rlpdata = EthereumProver.validateMPTProof(
+        bytes memory rlpdata = MPTValidatorV2.validateProof(
             rootHash,
-            mptkey,
+            proofPath,
             proof
         );
         spentReceipt[receiptHash] = true;

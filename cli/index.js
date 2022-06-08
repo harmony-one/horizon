@@ -5,7 +5,7 @@ const { blockRelayLoop } = require('./eth2hmy-relay/elcRelay');
 const { deployELC, statusELC } = require('./elc/contract');
 const { merkelRootSol } = require('./ethashProof/MerkelRootSol');
 const { EProver } = require('../tools/eprover');
-const { deployEVerifier, validateMPTProof } = require('./everifier/contract');
+const { deployEVerifier, validateReceiptProof } = require('./everifier/contract');
 const {
   deployBridges,
   tokenMap, tokenTo, tokenBack,
@@ -13,6 +13,7 @@ const {
   ChangeLightClient, deployFakeLightClient
 } = require('./bridge/contract');
 const fs = require('fs');
+const { BigNumber } = require('ethers');
 
 program.description("Horizon Trustless Bridge CLI");
 
@@ -63,13 +64,15 @@ Dag_CMD
       header_rlp: _toHex(header.serialize()),
       merkle_root: _toHex(proofs.root),
       elements: proofs.dagData.map(elems => elems.map(_toHex)),
-      merkle_proofs: proofs.proofs.map(_toHex),
-      proofIndexes: proofs.proofIndexes.map(_toHex),
+      merkle_proofs: proofs.proofs.map( function(subarray) {
+          return subarray.map(_toHex)
+      })
+      //proofIndexes: proofs.proofIndexes.map(_toHex),
     }
     if (!options.output) {
       console.log(proofJson);
     } else {
-      fs.writeFileSync(options.output, JSON.stringify(proofJson));
+      fs.writeFileSync(options.output, JSON.stringify(proofJson, null, 2));
     }
   });
 
@@ -104,12 +107,15 @@ ETHRelay_CMD
   .command('getBlockHeader <ethUrl> <number/hash>')
   .description('get block header')
   .option('-t --type <output format>', 'output format: json/rlp', 'json')
+  .option('-r --repeat <number/hash>', 'Number of consecutive blocks to query', '1')
   .action(async (url, block, options) => {
-    const header = await getBlockByNumber(url, block);
-    if (options.type == 'rlp')
-      console.log(header.serialize().toString('hex'));
-    else
-      console.log(header.toJSON());
+    for (let i = 0; i < options.repeat; i++) {
+      const header = await getBlockByNumber(url, parseInt(block) + i);
+      if (options.type == 'rlp')
+        console.log(header.serialize().toString('hex'));
+      else
+        console.log(header.toJSON());
+    }
   });
 
 ETHRelay_CMD
@@ -128,10 +134,14 @@ CMD_EProver
   .option('-o,--output <OUTPUT>', 'output file')
   .action(async (ethUrl, txHash, options) => {
     const ep = new EProver(ethUrl);
-    const proof = await ep.receiptProof(txHash);
+    const proof = await ep.receiptProofABIV2(txHash);
     const keys = Object.keys(proof);
     const out = {};
-    keys.forEach(key => out[key] = '0x' + proof[key].toString('hex'));
+    keys.forEach(key => {
+      if (Buffer.isBuffer(proof[key])) out[key] = '0x' + proof[key].toString('hex');
+      else if (BigNumber.isBigNumber(proof[key])) out[key] = proof[key].toHexString();
+      else out[key] = proof[key].toString();
+    });
     if (options.output) {
       fs.writeFileSync(options.output, JSON.stringify(out));
     } else {
@@ -149,8 +159,8 @@ CMD_EVerifier
   .option('-t --type <output format>', 'output format: json/rlp', 'json')
   .action(async (ethUrl, txHash, hmyUrl, evAddress, options) => {
     const ep = new EProver(ethUrl);
-    const proof = await ep.receiptProof(txHash);
-    const receiptObj = await validateMPTProof(hmyUrl, evAddress, proof);
+    const proof = await ep.receiptProofABIV2(txHash);
+    const receiptObj = await validateReceiptProof(hmyUrl, evAddress, proof);
     const out = options.type == 'json' ? receiptObj.toJson() : receiptObj.toHex();
     if (options.output) {
       fs.writeFileSync(options.output, out);

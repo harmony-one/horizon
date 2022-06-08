@@ -1,2 +1,3 @@
 const {EProver} = require('./txProof');
-module.exports = {EProver}
+const Receipt = require('./Receipt');
+module.exports = {EProver, Receipt}

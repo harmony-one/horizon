@@ -10,10 +10,10 @@ class Receipt extends LegacyReceipt {
     static fromBuffer(buf){
         if (!buf) return new Receipt()
         if(buf[0] < 0x7f) {
-            const receipt = new Receipt(decode(buf))
+            const receipt = new Receipt(buf.toString("hex"))
             receipt.type = buf[0]
         }
-        return new Receipt(decode(buf))
+        return new Receipt(buf.toString("hex"))
     }
     static fromHex(hex=''){
         const buffer = Buffer.from(hex.startsWith('0x')?hex.slice(2):hex, 'hex')

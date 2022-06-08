@@ -11,7 +11,6 @@ import {
   PopulatedTransaction,
   BaseContract,
   ContractTransaction,
-  Overrides,
   CallOverrides,
 } from "ethers";
 import { BytesLike } from "@ethersproject/bytes";
@@ -93,27 +92,27 @@ export class LightClientFake extends BaseContract {
     VerifyReceiptsHash(
       blockHash: BytesLike,
       receiptsHash: BytesLike,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
+      overrides?: CallOverrides
+    ): Promise<[boolean]>;
 
     blocksByHeight(
       number: BigNumberish,
       arg1: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
   };
 
   VerifyReceiptsHash(
     blockHash: BytesLike,
     receiptsHash: BytesLike,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
+    overrides?: CallOverrides
+  ): Promise<boolean>;
 
   blocksByHeight(
     number: BigNumberish,
     arg1: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
 
   callStatic: {
     VerifyReceiptsHash(
@@ -135,13 +134,13 @@ export class LightClientFake extends BaseContract {
     VerifyReceiptsHash(
       blockHash: BytesLike,
       receiptsHash: BytesLike,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     blocksByHeight(
       number: BigNumberish,
       arg1: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: CallOverrides
     ): Promise<BigNumber>;
   };
 
@@ -149,13 +148,13 @@ export class LightClientFake extends BaseContract {
     VerifyReceiptsHash(
       blockHash: BytesLike,
       receiptsHash: BytesLike,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     blocksByHeight(
       number: BigNumberish,
       arg1: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
   };
 }

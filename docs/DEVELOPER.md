@@ -25,15 +25,15 @@ yarn clean
 # Compile the Contracts
 yarn compile
 
-# Deploy the contracts on Harmony(localnet) and Ethereum(hardhat)
-yarn deploy-localnet
-yarn deploy-hardhat
-
 # Run the tests
 yarn test
 
 # Run coverage report
 yarn coverage
+
+# Deploy the contracts on Harmony(localnet) and Ethereum(hardhat)
+yarn deploy-localnet
+yarn deploy-hardhat
 
 ```
 
@@ -229,20 +229,19 @@ info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this comm
 ----------------------------|----------|----------|----------|----------|----------------|
 File                        |  % Stmts | % Branch |  % Funcs |  % Lines |Uncovered Lines |
 ----------------------------|----------|----------|----------|----------|----------------|
- contracts/                 |     7.75 |     9.15 |     9.78 |     5.23 |                |
-  BridgedToken.sol          |        0 |      100 |        0 |        0 |       16,17,23 |
-  EthereumLightClient.sol   |    10.53 |        0 |    22.22 |    10.53 |... 221,223,225 |
+ contracts/                 |     7.31 |     8.75 |     9.09 |     4.82 |                |
+  BridgedToken.sol          |        0 |      100 |        0 |        0 |       20,21,27 |
+  EthereumLightClient.sol   |     5.56 |        0 |    13.33 |     5.48 |... 323,325,327 |
   EthereumParser.sol        |    25.35 |       25 |       50 |       25 |... 129,139,141 |
   EthereumProver.sol        |        0 |        0 |        0 |        0 |... 287,289,292 |
   FaucetToken.sol           |       25 |      100 |       50 |       25 |       19,20,21 |
-  HarmonyLightClient.sol    |     1.72 |        0 |     8.33 |     1.67 |... 193,196,200 |
+  HarmonyLightClient.sol    |     1.32 |        0 |     7.14 |     1.27 |... 226,229,233 |
   HarmonyParser.sol         |    11.22 |    15.96 |     7.14 |    10.08 |... 381,383,392 |
-  HarmonyProver.sol         |        0 |        0 |        0 |        0 |... 210,218,226 |
-  LightClient.sol           |        0 |      100 |        0 |        0 |    22,30,31,32 |
+  HarmonyProver.sol         |        0 |        0 |        0 |        0 |... 188,196,204 |
   Migrations.sol            |        0 |        0 |        0 |        0 |       10,14,18 |
-  TokenLocker.sol           |        0 |        0 |        0 |        0 |... 137,138,139 |
+  TokenLocker.sol           |        0 |        0 |        0 |        0 |... 146,147,148 |
   TokenLockerOnEthereum.sol |     6.67 |        0 |       25 |     6.67 |... 50,51,52,53 |
-  TokenLockerOnHarmony.sol  |     9.09 |        0 |       25 |     9.09 |... 51,56,57,58 |
+  TokenLockerOnHarmony.sol  |     8.33 |        0 |       25 |     8.33 |... 55,60,61,62 |
   TokenRegistry.sol         |        0 |        0 |        0 |        0 |... 100,101,102 |
  contracts/ethash/          |        0 |        0 |        0 |        0 |                |
   MerkelRoot.sol            |        0 |        0 |        0 |        0 |    12,13,14,15 |
@@ -250,18 +249,24 @@ File                        |  % Stmts | % Branch |  % Funcs |  % Lines |Uncover
   binary.sol                |        0 |      100 |        0 |        0 |... 46,55,56,64 |
   ethash.sol                |        0 |      100 |        0 |        0 |... 503,504,505 |
   keccak512.sol             |        0 |        0 |        0 |        0 |... 285,286,288 |
- contracts/lib/             |     9.43 |     8.96 |    12.09 |     9.69 |                |
+ contracts/lib/             |     8.99 |     8.48 |     11.7 |     9.25 |                |
   ECVerify.sol              |        0 |        0 |        0 |        0 |... 22,24,27,29 |
   EthUtils.sol              |        0 |        0 |        0 |        0 |... 81,82,84,87 |
   MMR.sol                   |        0 |        0 |        0 |        0 |... 532,533,535 |
   MMRVerifier.sol           |        0 |        0 |        0 |        0 |... 209,210,212 |
   MMRWrapper.sol            |        0 |      100 |        0 |        0 |... 52,57,58,60 |
   MPT.sol                   |        0 |        0 |        0 |        0 |... 282,283,285 |
+  MPTValidatorV2.sol        |        0 |        0 |        0 |        0 |... 39,40,42,43 |
   RLPEncode.sol             |        0 |        0 |        0 |        0 |... 251,253,295 |
-  RLPReader.sol             |    52.58 |     47.5 |       55 |    54.64 |... 345,346,348 |
+  RLPReader.sol             |    46.36 |     41.3 |       50 |    47.75 |... 374,376,377 |
   SafeCast.sol              |        0 |        0 |        0 |        0 |... 17,18,22,23 |
+ contracts/mocks/           |        0 |      100 |        0 |        0 |                |
+  LightClient.sol           |        0 |      100 |        0 |        0 |    21,30,31,32 |
+  MPTTest.sol               |        0 |      100 |        0 |        0 |             13 |
+ contracts/test_contracts/  |        0 |        0 |        0 |        0 |                |
+  TestEthLightClient.sol    |        0 |        0 |        0 |        0 |... 35,36,43,46 |
 ----------------------------|----------|----------|----------|----------|----------------|
-All files                   |     7.13 |     8.67 |     9.95 |     6.18 |                |
+All files                   |     6.76 |     8.22 |      9.3 |     5.81 |                |
 ----------------------------|----------|----------|----------|----------|----------------|
 ```
 

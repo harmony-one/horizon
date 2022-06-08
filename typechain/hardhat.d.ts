@@ -89,6 +89,10 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.MMRWrapper__factory>;
     getContractFactory(
+      name: "Migrations",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.Migrations__factory>;
+    getContractFactory(
       name: "ILightClient",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.ILightClient__factory>;
@@ -97,9 +101,13 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.LightClientFake__factory>;
     getContractFactory(
-      name: "Migrations",
+      name: "MPTTest",
       signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.Migrations__factory>;
+    ): Promise<Contracts.MPTTest__factory>;
+    getContractFactory(
+      name: "TesterEthereumLightClient",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.TesterEthereumLightClient__factory>;
     getContractFactory(
       name: "TokenLocker",
       signerOrOptions?: ethers.Signer | FactoryOptions
@@ -213,6 +221,11 @@ declare module "hardhat/types/runtime" {
       signer?: ethers.Signer
     ): Promise<Contracts.MMRWrapper>;
     getContractAt(
+      name: "Migrations",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.Migrations>;
+    getContractAt(
       name: "ILightClient",
       address: string,
       signer?: ethers.Signer
@@ -223,10 +236,15 @@ declare module "hardhat/types/runtime" {
       signer?: ethers.Signer
     ): Promise<Contracts.LightClientFake>;
     getContractAt(
-      name: "Migrations",
+      name: "MPTTest",
       address: string,
       signer?: ethers.Signer
-    ): Promise<Contracts.Migrations>;
+    ): Promise<Contracts.MPTTest>;
+    getContractAt(
+      name: "TesterEthereumLightClient",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.TesterEthereumLightClient>;
     getContractAt(
       name: "TokenLocker",
       address: string,

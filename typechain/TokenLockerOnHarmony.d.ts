@@ -40,7 +40,7 @@ interface TokenLockerOnHarmonyInterface extends ethers.utils.Interface {
     "totalBridgedTokens()": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
     "unlock(address,address,uint256)": FunctionFragment;
-    "validateAndExecuteProof(uint256,bytes32,bytes,bytes)": FunctionFragment;
+    "validateAndExecuteProof(uint256,bytes32,uint256,bytes)": FunctionFragment;
   };
 
   encodeFunctionData(functionFragment: "RxMapped", values: [string]): string;
@@ -103,7 +103,7 @@ interface TokenLockerOnHarmonyInterface extends ethers.utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "validateAndExecuteProof",
-    values: [BigNumberish, BytesLike, BytesLike, BytesLike]
+    values: [BigNumberish, BytesLike, BigNumberish, BytesLike]
   ): string;
 
   decodeFunctionResult(functionFragment: "RxMapped", data: BytesLike): Result;
@@ -330,7 +330,7 @@ export class TokenLockerOnHarmony extends BaseContract {
     validateAndExecuteProof(
       blockNo: BigNumberish,
       rootHash: BytesLike,
-      mptkey: BytesLike,
+      proofPath: BigNumberish,
       proof: BytesLike,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
@@ -405,7 +405,7 @@ export class TokenLockerOnHarmony extends BaseContract {
   validateAndExecuteProof(
     blockNo: BigNumberish,
     rootHash: BytesLike,
-    mptkey: BytesLike,
+    proofPath: BigNumberish,
     proof: BytesLike,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
@@ -473,7 +473,7 @@ export class TokenLockerOnHarmony extends BaseContract {
     validateAndExecuteProof(
       blockNo: BigNumberish,
       rootHash: BytesLike,
-      mptkey: BytesLike,
+      proofPath: BigNumberish,
       proof: BytesLike,
       overrides?: CallOverrides
     ): Promise<void>;
@@ -652,7 +652,7 @@ export class TokenLockerOnHarmony extends BaseContract {
     validateAndExecuteProof(
       blockNo: BigNumberish,
       rootHash: BytesLike,
-      mptkey: BytesLike,
+      proofPath: BigNumberish,
       proof: BytesLike,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
@@ -749,7 +749,7 @@ export class TokenLockerOnHarmony extends BaseContract {
     validateAndExecuteProof(
       blockNo: BigNumberish,
       rootHash: BytesLike,
-      mptkey: BytesLike,
+      proofPath: BigNumberish,
       proof: BytesLike,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;

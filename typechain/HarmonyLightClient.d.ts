@@ -34,6 +34,7 @@ interface HarmonyLightClientInterface extends ethers.utils.Interface {
     "hasRole(bytes32,address)": FunctionFragment;
     "initialize(bytes,address[],uint8)": FunctionFragment;
     "isValidCheckPoint(uint256,bytes32)": FunctionFragment;
+    "oldestEpochStored()": FunctionFragment;
     "paused()": FunctionFragment;
     "renounceAdmin(address)": FunctionFragment;
     "renounceRole(bytes32,address)": FunctionFragment;
@@ -93,6 +94,10 @@ interface HarmonyLightClientInterface extends ethers.utils.Interface {
   encodeFunctionData(
     functionFragment: "isValidCheckPoint",
     values: [BigNumberish, BytesLike]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "oldestEpochStored",
+    values?: undefined
   ): string;
   encodeFunctionData(functionFragment: "paused", values?: undefined): string;
   encodeFunctionData(
@@ -157,6 +162,10 @@ interface HarmonyLightClientInterface extends ethers.utils.Interface {
   decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "isValidCheckPoint",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "oldestEpochStored",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "paused", data: BytesLike): Result;
@@ -411,6 +420,8 @@ export class HarmonyLightClient extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[boolean] & { status: boolean }>;
 
+    oldestEpochStored(overrides?: CallOverrides): Promise<[BigNumber]>;
+
     paused(overrides?: CallOverrides): Promise<[boolean]>;
 
     renounceAdmin(
@@ -525,6 +536,8 @@ export class HarmonyLightClient extends BaseContract {
     overrides?: CallOverrides
   ): Promise<boolean>;
 
+  oldestEpochStored(overrides?: CallOverrides): Promise<BigNumber>;
+
   paused(overrides?: CallOverrides): Promise<boolean>;
 
   renounceAdmin(
@@ -634,6 +647,8 @@ export class HarmonyLightClient extends BaseContract {
       mmrRoot: BytesLike,
       overrides?: CallOverrides
     ): Promise<boolean>;
+
+    oldestEpochStored(overrides?: CallOverrides): Promise<BigNumber>;
 
     paused(overrides?: CallOverrides): Promise<boolean>;
 
@@ -896,6 +911,8 @@ export class HarmonyLightClient extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    oldestEpochStored(overrides?: CallOverrides): Promise<BigNumber>;
+
     paused(overrides?: CallOverrides): Promise<BigNumber>;
 
     renounceAdmin(
@@ -991,6 +1008,8 @@ export class HarmonyLightClient extends BaseContract {
       mmrRoot: BytesLike,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
+
+    oldestEpochStored(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     paused(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 

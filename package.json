@@ -5,8 +5,9 @@
   "scripts": {
     "libInit": "tar -zxf ethereumjs-ethash-dist.tar.gz -C node_modules/@ethereumjs/ethash",
     "init-all": "yarn install; cd ./src/cli; yarn install; cd ../elc; yarn install; cd ../eprover; yarn install; cd ../eth2hmy-relay; yarn install; cd ../..; hardhat clean; hardhat compile",
-    "check": "npx hardhat check",
-    "compile": "npx hardhat compile",
+    "clean": "hardhat clean",
+    "check": "hardhat check",
+    "compile": "hardhat compile",
     "deploy-hardhat": "hardhat deploy --network hardhat --tags Ethereum",
     "deploy-hardhat-lightClient": "hardhat deploy --network hardhat --tags HarmonyLightClient",
     "deploy-hardhat-tokenLocker": "hardhat deploy --network hardhat --tags TokenLockerOnEthereum",

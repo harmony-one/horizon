@@ -40,7 +40,7 @@ interface TokenLockerOnEthereumInterface extends ethers.utils.Interface {
     "totalBridgedTokens()": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
     "unlock(address,address,uint256)": FunctionFragment;
-    "validateAndExecuteProof((bytes32,bytes32,address,bytes32,bytes32,bytes32,bytes32,bytes32,bytes,uint256,uint256,uint256,uint256,bytes,bytes32,uint256,uint256,uint256,bytes,bytes,bytes,bytes,bytes,bytes,bytes,bytes),(bytes32,uint256,uint256,bytes32[],bytes32[]),(bytes32,bytes,bytes[],uint256,uint256,bytes))": FunctionFragment;
+    "validateAndExecuteProof((bytes32,bytes32,address,bytes32,bytes32,bytes32,bytes32,bytes32,bytes,uint256,uint256,uint256,uint256,bytes,bytes32,uint256,uint256,uint256,bytes,bytes,bytes,bytes,bytes,bytes,bytes,bytes),(bytes32,uint256,uint256,bytes32[],bytes32[]),(bytes32,uint256,bytes))": FunctionFragment;
   };
 
   encodeFunctionData(functionFragment: "RxMapped", values: [string]): string;
@@ -139,14 +139,7 @@ interface TokenLockerOnEthereumInterface extends ethers.utils.Interface {
         peaks: BytesLike[];
         siblings: BytesLike[];
       },
-      {
-        expectedRoot: BytesLike;
-        key: BytesLike;
-        proof: BytesLike[];
-        keyIndex: BigNumberish;
-        proofIndex: BigNumberish;
-        expectedValue: BytesLike;
-      }
+      { root: BytesLike; paths: BigNumberish; proof: BytesLike }
     ]
   ): string;
 
@@ -407,14 +400,7 @@ export class TokenLockerOnEthereum extends BaseContract {
         peaks: BytesLike[];
         siblings: BytesLike[];
       },
-      receiptdata: {
-        expectedRoot: BytesLike;
-        key: BytesLike;
-        proof: BytesLike[];
-        keyIndex: BigNumberish;
-        proofIndex: BigNumberish;
-        expectedValue: BytesLike;
-      },
+      receiptdata: { root: BytesLike; paths: BigNumberish; proof: BytesLike },
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
   };
@@ -521,14 +507,7 @@ export class TokenLockerOnEthereum extends BaseContract {
       peaks: BytesLike[];
       siblings: BytesLike[];
     },
-    receiptdata: {
-      expectedRoot: BytesLike;
-      key: BytesLike;
-      proof: BytesLike[];
-      keyIndex: BigNumberish;
-      proofIndex: BigNumberish;
-      expectedValue: BytesLike;
-    },
+    receiptdata: { root: BytesLike; paths: BigNumberish; proof: BytesLike },
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -628,14 +607,7 @@ export class TokenLockerOnEthereum extends BaseContract {
         peaks: BytesLike[];
         siblings: BytesLike[];
       },
-      receiptdata: {
-        expectedRoot: BytesLike;
-        key: BytesLike;
-        proof: BytesLike[];
-        keyIndex: BigNumberish;
-        proofIndex: BigNumberish;
-        expectedValue: BytesLike;
-      },
+      receiptdata: { root: BytesLike; paths: BigNumberish; proof: BytesLike },
       overrides?: CallOverrides
     ): Promise<void>;
   };
@@ -846,14 +818,7 @@ export class TokenLockerOnEthereum extends BaseContract {
         peaks: BytesLike[];
         siblings: BytesLike[];
       },
-      receiptdata: {
-        expectedRoot: BytesLike;
-        key: BytesLike;
-        proof: BytesLike[];
-        keyIndex: BigNumberish;
-        proofIndex: BigNumberish;
-        expectedValue: BytesLike;
-      },
+      receiptdata: { root: BytesLike; paths: BigNumberish; proof: BytesLike },
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
   };
@@ -982,14 +947,7 @@ export class TokenLockerOnEthereum extends BaseContract {
         peaks: BytesLike[];
         siblings: BytesLike[];
       },
-      receiptdata: {
-        expectedRoot: BytesLike;
-        key: BytesLike;
-        proof: BytesLike[];
-        keyIndex: BigNumberish;
-        proofIndex: BigNumberish;
-        expectedValue: BytesLike;
-      },
+      receiptdata: { root: BytesLike; paths: BigNumberish; proof: BytesLike },
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
   };

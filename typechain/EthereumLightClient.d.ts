@@ -28,17 +28,21 @@ interface EthereumLightClientInterface extends ethers.utils.Interface {
     "blocks(uint256)": FunctionFragment;
     "blocksByHeight(uint256,uint256)": FunctionFragment;
     "blocksByHeightExisting(uint256)": FunctionFragment;
+    "canonicalBlocks(uint256)": FunctionFragment;
+    "canonicalHead()": FunctionFragment;
     "finalityConfirms()": FunctionFragment;
-    "finalizedBlocks(uint256)": FunctionFragment;
     "firstBlock()": FunctionFragment;
     "getBlockHeightMax()": FunctionFragment;
     "getReceiptRoot(bytes32)": FunctionFragment;
     "getStateRoot(bytes32)": FunctionFragment;
     "getTxRoot(bytes32)": FunctionFragment;
     "initialize(bytes)": FunctionFragment;
+    "isFinalized(uint256)": FunctionFragment;
+    "isVerified(uint256)": FunctionFragment;
     "longestBranchHead(uint256)": FunctionFragment;
+    "numberOfBlockConfirmations(uint256)": FunctionFragment;
+    "oldestBlockStored()": FunctionFragment;
     "paused()": FunctionFragment;
-    "verifiedBlocks(uint256)": FunctionFragment;
     "verifyEthash(bytes32,uint64,uint64,bytes32[4][64],bytes32[][64],uint256,uint256)": FunctionFragment;
   };
 
@@ -205,12 +209,16 @@ interface EthereumLightClientInterface extends ethers.utils.Interface {
     values: [BigNumberish]
   ): string;
   encodeFunctionData(
-    functionFragment: "finalityConfirms",
+    functionFragment: "canonicalBlocks",
+    values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "canonicalHead",
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "finalizedBlocks",
-    values: [BigNumberish]
+    functionFragment: "finalityConfirms",
+    values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "firstBlock",
@@ -237,14 +245,26 @@ interface EthereumLightClientInterface extends ethers.utils.Interface {
     values: [BytesLike]
   ): string;
   encodeFunctionData(
+    functionFragment: "isFinalized",
+    values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "isVerified",
+    values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
     functionFragment: "longestBranchHead",
     values: [BigNumberish]
   ): string;
-  encodeFunctionData(functionFragment: "paused", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "verifiedBlocks",
+    functionFragment: "numberOfBlockConfirmations",
     values: [BigNumberish]
   ): string;
+  encodeFunctionData(
+    functionFragment: "oldestBlockStored",
+    values?: undefined
+  ): string;
+  encodeFunctionData(functionFragment: "paused", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "verifyEthash",
     values: [
@@ -414,11 +434,15 @@ interface EthereumLightClientInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "finalityConfirms",
+    functionFragment: "canonicalBlocks",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "finalizedBlocks",
+    functionFragment: "canonicalHead",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "finalityConfirms",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "firstBlock", data: BytesLike): Result;
@@ -437,14 +461,23 @@ interface EthereumLightClientInterface extends ethers.utils.Interface {
   decodeFunctionResult(functionFragment: "getTxRoot", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
   decodeFunctionResult(
+    functionFragment: "isFinalized",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "isVerified", data: BytesLike): Result;
+  decodeFunctionResult(
     functionFragment: "longestBranchHead",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "paused", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "verifiedBlocks",
+    functionFragment: "numberOfBlockConfirmations",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(
+    functionFragment: "oldestBlockStored",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "paused", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "verifyEthash",
     data: BytesLike
@@ -673,6 +706,7 @@ export class EthereumLightClient extends BaseContract {
         BigNumber,
         BigNumber,
         BigNumber,
+        BigNumber,
         BigNumber
       ] & {
         parentHash: BigNumber;
@@ -681,6 +715,7 @@ export class EthereumLightClient extends BaseContract {
         receiptsRoot: BigNumber;
         number: BigNumber;
         difficulty: BigNumber;
+        totalDifficulty: BigNumber;
         time: BigNumber;
         hash: BigNumber;
       }
@@ -697,12 +732,14 @@ export class EthereumLightClient extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[boolean]>;
 
-    finalityConfirms(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    finalizedBlocks(
+    canonicalBlocks(
       arg0: BigNumberish,
       overrides?: CallOverrides
     ): Promise<[boolean]>;
+
+    canonicalHead(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    finalityConfirms(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     firstBlock(overrides?: CallOverrides): Promise<[BigNumber]>;
 
@@ -728,17 +765,29 @@ export class EthereumLightClient extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
+    isFinalized(
+      blockHash: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[boolean]>;
+
+    isVerified(
+      blockHash: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[boolean]>;
+
     longestBranchHead(
       arg0: BigNumberish,
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
-    paused(overrides?: CallOverrides): Promise<[boolean]>;
-
-    verifiedBlocks(
-      arg0: BigNumberish,
+    numberOfBlockConfirmations(
+      blockHash: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<[boolean]>;
+    ): Promise<[BigNumber]>;
+
+    oldestBlockStored(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    paused(overrides?: CallOverrides): Promise<[boolean]>;
 
     verifyEthash(
       hash: BytesLike,
@@ -1044,6 +1093,7 @@ export class EthereumLightClient extends BaseContract {
       BigNumber,
       BigNumber,
       BigNumber,
+      BigNumber,
       BigNumber
     ] & {
       parentHash: BigNumber;
@@ -1052,6 +1102,7 @@ export class EthereumLightClient extends BaseContract {
       receiptsRoot: BigNumber;
       number: BigNumber;
       difficulty: BigNumber;
+      totalDifficulty: BigNumber;
       time: BigNumber;
       hash: BigNumber;
     }
@@ -1068,12 +1119,14 @@ export class EthereumLightClient extends BaseContract {
     overrides?: CallOverrides
   ): Promise<boolean>;
 
-  finalityConfirms(overrides?: CallOverrides): Promise<BigNumber>;
-
-  finalizedBlocks(
+  canonicalBlocks(
     arg0: BigNumberish,
     overrides?: CallOverrides
   ): Promise<boolean>;
+
+  canonicalHead(overrides?: CallOverrides): Promise<BigNumber>;
+
+  finalityConfirms(overrides?: CallOverrides): Promise<BigNumber>;
 
   firstBlock(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -1096,17 +1149,29 @@ export class EthereumLightClient extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
+  isFinalized(
+    blockHash: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<boolean>;
+
+  isVerified(
+    blockHash: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<boolean>;
+
   longestBranchHead(
     arg0: BigNumberish,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
-  paused(overrides?: CallOverrides): Promise<boolean>;
-
-  verifiedBlocks(
-    arg0: BigNumberish,
+  numberOfBlockConfirmations(
+    blockHash: BigNumberish,
     overrides?: CallOverrides
-  ): Promise<boolean>;
+  ): Promise<BigNumber>;
+
+  oldestBlockStored(overrides?: CallOverrides): Promise<BigNumber>;
+
+  paused(overrides?: CallOverrides): Promise<boolean>;
 
   verifyEthash(
     hash: BytesLike,
@@ -1412,6 +1477,7 @@ export class EthereumLightClient extends BaseContract {
         BigNumber,
         BigNumber,
         BigNumber,
+        BigNumber,
         BigNumber
       ] & {
         parentHash: BigNumber;
@@ -1420,6 +1486,7 @@ export class EthereumLightClient extends BaseContract {
         receiptsRoot: BigNumber;
         number: BigNumber;
         difficulty: BigNumber;
+        totalDifficulty: BigNumber;
         time: BigNumber;
         hash: BigNumber;
       }
@@ -1436,12 +1503,14 @@ export class EthereumLightClient extends BaseContract {
       overrides?: CallOverrides
     ): Promise<boolean>;
 
-    finalityConfirms(overrides?: CallOverrides): Promise<BigNumber>;
-
-    finalizedBlocks(
+    canonicalBlocks(
       arg0: BigNumberish,
       overrides?: CallOverrides
     ): Promise<boolean>;
+
+    canonicalHead(overrides?: CallOverrides): Promise<BigNumber>;
+
+    finalityConfirms(overrides?: CallOverrides): Promise<BigNumber>;
 
     firstBlock(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -1461,17 +1530,29 @@ export class EthereumLightClient extends BaseContract {
 
     initialize(_rlpHeader: BytesLike, overrides?: CallOverrides): Promise<void>;
 
+    isFinalized(
+      blockHash: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
+    isVerified(
+      blockHash: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
     longestBranchHead(
       arg0: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    paused(overrides?: CallOverrides): Promise<boolean>;
-
-    verifiedBlocks(
-      arg0: BigNumberish,
+    numberOfBlockConfirmations(
+      blockHash: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<boolean>;
+    ): Promise<BigNumber>;
+
+    oldestBlockStored(overrides?: CallOverrides): Promise<BigNumber>;
+
+    paused(overrides?: CallOverrides): Promise<boolean>;
 
     verifyEthash(
       hash: BytesLike,
@@ -1801,12 +1882,14 @@ export class EthereumLightClient extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    finalityConfirms(overrides?: CallOverrides): Promise<BigNumber>;
-
-    finalizedBlocks(
+    canonicalBlocks(
       arg0: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
+
+    canonicalHead(overrides?: CallOverrides): Promise<BigNumber>;
+
+    finalityConfirms(overrides?: CallOverrides): Promise<BigNumber>;
 
     firstBlock(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -1832,17 +1915,29 @@ export class EthereumLightClient extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
+    isFinalized(
+      blockHash: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    isVerified(
+      blockHash: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     longestBranchHead(
       arg0: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    paused(overrides?: CallOverrides): Promise<BigNumber>;
-
-    verifiedBlocks(
-      arg0: BigNumberish,
+    numberOfBlockConfirmations(
+      blockHash: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
+
+    oldestBlockStored(overrides?: CallOverrides): Promise<BigNumber>;
+
+    paused(overrides?: CallOverrides): Promise<BigNumber>;
 
     verifyEthash(
       hash: BytesLike,
@@ -2153,12 +2248,14 @@ export class EthereumLightClient extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    finalityConfirms(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    finalizedBlocks(
+    canonicalBlocks(
       arg0: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
+
+    canonicalHead(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    finalityConfirms(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     firstBlock(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
@@ -2184,17 +2281,29 @@ export class EthereumLightClient extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
+    isFinalized(
+      blockHash: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    isVerified(
+      blockHash: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     longestBranchHead(
       arg0: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    paused(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    verifiedBlocks(
-      arg0: BigNumberish,
+    numberOfBlockConfirmations(
+      blockHash: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
+
+    oldestBlockStored(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    paused(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     verifyEthash(
       hash: BytesLike,

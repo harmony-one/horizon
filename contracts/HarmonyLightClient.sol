@@ -64,6 +64,12 @@ contract HarmonyLightClient is
 
     bytes32 public constant RELAYER_ROLE = keccak256("RELAYER_ROLE");
 
+    // number of the oldest epoch that stored, we use this to prune the expired epochs from state
+    uint256 public oldestEpochStored;
+    uint256 private constant BLOCK_EXPIRED = 30 days;
+    uint256 private constant MAX_PRUNE_ONCE = 2;
+
+
     modifier onlyAdmin() {
         require(hasRole(DEFAULT_ADMIN_ROLE, msg.sender), "sender doesn't have admin role");
         _;
@@ -124,6 +130,7 @@ contract HarmonyLightClient is
         firstBlock.time = header.timestamp;
         firstBlock.mmrRoot = HarmonyParser.toBytes32(header.mmrRoot);
         firstBlock.hash = header.hash;
+        oldestEpochStored = header.epoch;
         
         epochCheckPointBlockNumbers[header.epoch].push(header.number);
         checkPointBlocks[header.number] = firstBlock;
@@ -138,7 +145,33 @@ contract HarmonyLightClient is
 
     }
 
+    function _deleteEpoch(uint256 epochNo) private {
+        uint256[] storage blockNumbers = epochCheckPointBlockNumbers[epochNo];
+        for(uint256 i = 0; i < blockNumbers.length; i++) {
+            uint256 blockNo = blockNumbers[i];
+            bytes32 mmrRoot = checkPointBlocks[blockNo].mmrRoot;
+            delete checkPointBlocks[blockNo];
+            delete epochMmrRoots[epochNo][mmrRoot];
+        }
+        delete epochCheckPointBlockNumbers[epochNo];
+    }
+ 
+    function _pruneEpochs(uint256 pruneTime) private {
+        uint256 epochCur = oldestEpochStored;
+        if (epochCheckPointBlockNumbers[epochCur].length == 0) return;
+        for(uint256 i = 0; i < MAX_PRUNE_ONCE; i++) {
+            uint256 epochNo = epochCur++;
+            uint256[] storage epochBlockNumbers = epochCheckPointBlockNumbers[epochCur];
+            uint256 epochBlockCount = epochBlockNumbers.length;
+            if (epochBlockCount == 0) break;
+            if (checkPointBlocks[epochBlockNumbers[epochBlockCount-1]].time > pruneTime) break;
+            _deleteEpoch(epochNo);
+        }
+        if(epochCur > oldestEpochStored) oldestEpochStored = epochCur;
+    }
+
     function submitCheckpoint(bytes memory rlpHeader) external onlyRelayers whenNotPaused {
+        _pruneEpochs(block.timestamp - BLOCK_EXPIRED);
         HarmonyParser.BlockHeader memory header = HarmonyParser.toBlockHeader(
             rlpHeader
         );

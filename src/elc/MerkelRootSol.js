@@ -2,28 +2,28 @@ const fs = require('fs')
 const yargs = require('yargs')
 
 const argv = yargs
-  .option('in', {
-    alias: 'i',
-    description: 'merkel root json file',
-    type: 'string',
-    default: './MerkelRoot.json'
-  })
-  .option('out', {
-    alias: 'o',
-    description: 'output contract file',
-    type: 'string',
-    default: 'STDOUT'
-  })
-  .env()
-  .help()
-  .alias('help', 'h').argv
+    .option('in', {
+        alias: 'i',
+        description: 'merkel root json file',
+        type: 'string',
+        default: './MerkelRoot.json'
+    })
+    .option('out', {
+        alias: 'o',
+        description: 'output contract file',
+        type: 'string',
+        default: 'STDOUT'
+    })
+    .env()
+    .help()
+    .alias('help', 'h').argv
 
 const merkelInfo = require(argv.in)
 
 function toHex (str) {
-  let hex = ''
-  for (let i = 0; i < str.length; i += 2) hex += `\\x${str.slice(i, i + 2)}`
-  return hex
+    let hex = ''
+    for (let i = 0; i < str.length; i += 2) hex += `\\x${str.slice(i, i + 2)}`
+    return hex
 }
 
 a = Buffer.alloc(0)
@@ -35,11 +35,11 @@ pragma solidity ^0.6.2;
 contract MerkelRoots {
     uint64 constant epochStart = ${merkelInfo.epoch};
     uint64 constant epochEnd = ${
-      merkelInfo.epoch + merkelInfo.roots.length - 1
-    };
+    merkelInfo.epoch + merkelInfo.roots.length - 1
+};
     bytes constant ROOTS = "${merkelInfo.roots.reduce(
-      (a, b) => a + toHex(b),
-      ''
+        (a, b) => a + toHex(b),
+        ''
     )}";
     
    function getRootHash(uint64 epoch) internal pure returns(bytes32 hash) {
@@ -53,7 +53,7 @@ contract MerkelRoots {
 }`
 
 if (argv.out == 'STDOUT') {
-  console.log(MerkelRootSol)
+    console.log(MerkelRootSol)
 } else {
-  fs.writeFileSync(argv.out, MerkelRootSol)
+    fs.writeFileSync(argv.out, MerkelRootSol)
 }

@@ -1,10 +1,10 @@
-const EProver = require("../../tools/eprover/abi/MPTTest.json");
+const EVerifierTest = require("../../tools/eprover/abi/MPTTest.json");
 const { HmyWeb3 } = require('../lib/hmyWeb3');
-const { Receipt } = require('eth-object');
+const Receipt = require('../../tools/eprover/Receipt');
 
 async function deployEVerifier(hmyUrl) {
     const hmyWeb3 = new HmyWeb3(hmyUrl);
-    const tx = hmyWeb3.ContractDeploy(EProver.abi, EProver.bytecode);
+    const tx = hmyWeb3.ContractDeploy(EVerifierTest.abi, EVerifierTest.bytecode);
     return await hmyWeb3.sendTx(tx); //options.address
 }
 

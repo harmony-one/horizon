@@ -378,10 +378,13 @@ Below gives an overview of how to deploy these contracts for the CLI.
 | -------- | ------------------------- | ------------------------------------------------------- | ------------ |
 | Harmony  | EthereumLightClient.sol   | `ELC deploy -b 0 -u "http://localhost:8545" "http://localhost:9500"`| Can also pass an rlp Header |
 | Harmony  | TokenLockerOnEthereum.sol | `yarn cli Bridge deploy http://localhost:8545 http://localhost:9500`  |  One command deploys both lockers on Ethereum and Harmony   |
-| Harmony  | FaucetToken.sol           |                            | Testing Only |
-| Ethereum | HarmonyLightClient.sol    |                       |              |
+| Harmony  | EthereumProver.sol        | `yarn cli EVerifier deploy "http://localhost:8545"` | |
+| Harmony  | FaucetToken.sol           | `yarn cli Bridge deployFaucet "http://localhost:9500" -m 10000` | Testing Only |
+| Harmony  | EthereumLightClient.sol   | `yarn cli Bridge deployFakeClient "http://localhost:9500"` | TESTING ONLY **Need to clarify whether this is needed** |
+| Ethereum | HarmonyLightClient.sol    |                       |              | **Do we deploy this?**
 | Ethereum | TokenLockerOnHarmony.sol  |  `yarn cli Bridge deploy http://localhost:8545 http://localhost:9500`  | One command deploys both lockers on Ethereum and Harmony  |
-| Ethereum | FaucetToken.sol           |                            | Testing Only |
+| Ethereum | FaucetToken.sol           | `yarn cli Bridge deployFaucet "http://localhost:8545" -m 10000`                           | Testing Only |
+| Ethereum  | EthereumLightClient.sol   | `yarn cli Bridge deployFakeClient "http://localhost:8545"` | TESTING ONLY **Need to clarify whether this is needed** |
 
 
 ### 2: Generate DAG Merkle Tree

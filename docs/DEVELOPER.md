@@ -349,6 +349,59 @@ Commands:
   help [command]                    display help for command
 ```
 
+## Example End to End Testing Locally
+
+Here we will walk through end to end testing using the CLI. at the bottom there will be a list of recommendations enhancements.
+
+*Note: `ethWeb3.js` curretnly uses one privateKey for all environments `prikey = process.env.PRIKEY` it is recommended to use the Harmony Localnet private key above and transfer funds to it (e.g. using metamask) from the hardhat account 0 (the deployer account) before deployments.*
+
+### Testing Steps Overview
+
+| #   | Step | Notes |
+| --- | ---- | ----- |
+| 0   | Prerequisite: Start local nodes     | See [above](#running-local-nodes)for running hardhart and harmony localnet |
+| 1   | Deploying Smart Contracts           | Deploy scripts are above, below we will use CLI Functionality |
+| 2   | Generate DAG Merkle Tree            | A DAG Merkle tree needs to be generated from the Ethereum Chain |
+| 3   | Relay Blocks Between the Two Chains | Blocks need to be relayed proven and verified |
+| 4   | Bridge Tokens                       | Deploy tokens to be bridged and transfer tokens back and forth between two chains |
+
+### 0: Start Local Nodes
+
+See [Running Local Nodes](#running-local-nodes)
+
+### 1: Deploying Smart Contracts
+See [Smart Contracts](#smart-contracts) for information on deploying the required smart contracts using hardhat.
+
+Below gives an overview of how to deploy these contracts for the CLI.
+
+| Network  | Contract                  | Example LocalNet Command  | Notes        |
+| -------- | ------------------------- | ------------------------------------------------------- | ------------ |
+| Harmony  | EthereumLightClient.sol   | `ELC deploy -b 0 -u "http://localhost:8545" "http://localhost:9500"`| Can also pass an rlp Header |
+| Harmony  | TokenLockerOnEthereum.sol | `yarn cli Bridge deploy http://localhost:8545 http://localhost:9500`  |  One command deploys both lockers on Ethereum and Harmony   |
+| Harmony  | FaucetToken.sol           |                            | Testing Only |
+| Ethereum | HarmonyLightClient.sol    |                       |              |
+| Ethereum | TokenLockerOnHarmony.sol  |  `yarn cli Bridge deploy http://localhost:8545 http://localhost:9500`  | One command deploys both lockers on Ethereum and Harmony  |
+| Ethereum | FaucetToken.sol           |                            | Testing Only |
+
+
+### 2: Generate DAG Merkle Tree
+
+### 3: Relay Bocks Between the Two Chains
+
+### 4: Bridge Tokens
+
+
+* Deploying Bridged Tokens: `node src/cli/index.js  Bridge deploy http://localhost:8545 http://localhost:9500`
+
+### Notes and recommendations
+- [ ] remove `src/cli/lib/` replace ethWeb3 and hmyWeb3 with hardhat deploy scripts and tools
+- [ ] .env define seperate accounts for each network and update hardhat.config.ts
+- [ ] make consistent use of `ethers.js` replacing libraries such as `web3`, `rlp`, `bigNumber`, `ethereumjs-util`. Recommendation is `ethers` vs `web3` based on hardhat integration [this article](https://moralis.io/web3-js-vs-ethers-js-guide-to-eth-javascript-libraries/), [these stats](https://npm-stat.com/charts.html?package=ethers&package=web3&from=2021-01-01&to=2021-06-01) and these comments `Ethers.js loads slightly faster thanks to its noticeably smaller size, which may offer better performance.` and `However, the blockchain industry as a whole is slowly migrating towards a younger alternative – Ethers.js. `
+- [ ] Upgrade CLI commands into functional stages (e.g. infrastructure, deployment, relayer (incorporates ethRelayer, EProver, ) and bridging)
+- [ ] Consolidate abi's currently under different folders (e.g. `cli/bridge/abi`, `cli/elc/abi`, `cli/eprover/abi`) can use the automatically generated abis under `build/Contracts` e.g. `build/Contracts/TokenLockerOnEthereum.sol/TokenLockerOnEthereum.json` if this is not preferred can update deploy scripts to automatically update current disparate directories on build.
+- [ ] If continuing to use the CLI improve validation rather than throwing exceptions (e.g. when calling `yarn cli ELC deploy -b 0 -u "http://localhost:8545" "http://localhost:9500")` we get exceptions when the Ethereum url is not populated
+
+
 
 ### DAG Merkle Tree
 

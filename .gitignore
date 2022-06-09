@@ -35,3 +35,6 @@ dist/**/*
 docs/solidity
 
 data/abi
+
+# Ignore generated typescript definitions
+typechain

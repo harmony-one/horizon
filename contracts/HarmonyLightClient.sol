@@ -1,15 +1,16 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity 0.7.3;
+
+pragma solidity ^0.8.0;
 pragma experimental ABIEncoderV2;
 
 import "./HarmonyParser.sol";
 import "./lib/SafeCast.sol";
-import "@openzeppelin/contracts-upgradeable/math/SafeMathUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/utils/math/SafeMathUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
 // import "openzeppelin-solidity/contracts/utils/Pausable.sol";
-import "@openzeppelin/contracts-upgradeable/utils/PausableUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol";
 // import "openzeppelin-solidity/contracts/proxy/Initializable.sol";
-import "@openzeppelin/contracts-upgradeable/proxy/Initializable.sol";
+import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 
 contract HarmonyLightClient is
     Initializable,

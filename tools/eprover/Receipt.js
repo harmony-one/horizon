@@ -1,4 +1,5 @@
 const { Receipt:LegacyReceipt } = require('eth-object')
+const { decode } = require('eth-util-lite')
 class Receipt extends LegacyReceipt {
     type=0
     static fromRpc(rpcResult) {
@@ -10,10 +11,11 @@ class Receipt extends LegacyReceipt {
     static fromBuffer(buf){
         if (!buf) return new Receipt()
         if(buf[0] < 0x7f) {
-            const receipt = new Receipt(buf.toString("hex"))
+            const receipt = new Receipt(decode(buf.slice(1)))
             receipt.type = buf[0]
+            return receipt
         }
-        return new Receipt(buf.toString("hex"))
+        return new Receipt(decode(buf))
     }
     static fromHex(hex=''){
         const buffer = Buffer.from(hex.startsWith('0x')?hex.slice(2):hex, 'hex')

@@ -1,13 +1,6 @@
-const {
-    expect
-} = require('chai')
-const {
-    EProver,
-    Receipt
-} = require('../src/eprover')
-const {
-    ethers
-} = require('hardhat')
+const { expect } = require('chai')
+const { EProver, Receipt } = require('../src/eprover')
+const { ethers } = require('hardhat')
 const recepits = require('./receipts.json')
 
 describe('Merkle-Patricia-Trie Test', () => {
@@ -24,9 +17,10 @@ describe('Merkle-Patricia-Trie Test', () => {
         for (const txIndex in block.transactions) {
             const txHash = block.transactions[txIndex]
             const proof = await ep.receiptProofABIV2(txHash)
-            const rlpReceipts = await MPTTest.validateProof(proof.root, proof.key, proof.proof)
+            const rlpReceipt = await MPTTest.validateProof(proof.root, proof.key, proof.proof)
             const recepit = await ep.getReceipt(txHash)
-            expect(rlpReceipts).equals(Receipt.fromRpc(recepit).toHex())
+            expect(Receipt.fromHex(rlpReceipt).toHex()).equals(rlpReceipt)
+            expect(rlpReceipt).equals(Receipt.fromRpc(recepit).toHex())
         }
     })
 })

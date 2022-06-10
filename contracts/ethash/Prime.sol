@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity 0.7.3;
+
+pragma solidity ^0.8.0;
 pragma experimental ABIEncoderV2;
 
 // from https://gist.github.com/lhartikk/c7bbc120aa8e58a0e0e781edb9a90497

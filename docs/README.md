@@ -2,14 +2,16 @@
 
 # Overview
 
+This document gives a technical overview of the Horizon Bridge including build, deployment and testing information. For more information see [Harmony's Horizon Bridge Rollout strategy](https://harmonyone.notion.site/Trustless-Eth-bridge-launch-prep-dde21137582d4ddabc32828abeea0752), the [Horizon Whitepaper](./assets/horizon-whitepaper.pdf) and the [IRIS Bridge Presentation](https://docs.google.com/presentation/d/1suGKZ12n7aziudg6E2plxEfYgIE_pQZZGCtwKy6j0m0/edit#slide=id.g48989ac23a_0_0).
+
 The current state of the project is that we are testing using a Harmony Local Node and brdiging to Ropsten. For the client we will use the CLI and moving forward will use the new UI
-* DAG genertion : Takes several hours to run Ganesha has a machine to do this and shares the latest DAG info from Ropsten using [google drive](https://drive.google.com/file/d/1FqLCO5oc1xDYNMuub7xAqnb6kfohdf-U/view?usp=sharing). The epoch logic is the block Number divided by 30,000 so current Ropsten EPOCH is block 12280236 / 30000 = 409 which is the DAG info shared above. **Moving forward we need to update DAG information for every new EPOCH**
-* CLI Relayer : Relays the blocks, this is initially written in javascript as a Proof of concept and may be implemented in other languages moving forward. **Once the Relayer has begun we need to continually relay each block**
-* Client: The client is used to Process transactions this is done by locking the Token using the TokenLocker.sol contract (e.g. TokenLockerOnEth.Sol AND TokenLockerOnHarmony.sol)
-Currently only ERC20 are supported. Moving forward ERC721 and ERC1155 as well as operations on smart contracts will also be supported. For now all client transactions will be done using the CLI. Moving forward  the current bridge (bridge.harmony.one) will be migrated to https://bridge-validator-1.web.app/ and jenya also built a fresh frontend for upcoming trustless bridge: https://github.com/harmony-one/horizon-trustless-frontend
-but most likely, we will stick to the first one.
-* Harmony Node: we use a [harmony local node](https://github.com/harmony-one/harmony#dev-docker-image) this can be run via docker. **There is a pull request which needs to be pushed to Harmony Testnet to enable the bridging functionality. [we need this PR to be pushed to testnet (should be done by May 27th, 2022)](https://github.com/harmony-one/harmony/pull/3872)**
-* For fully trustless bridge we need the bls signature verification precompile to be available on ethereum [eip-2537](https://eips.ethereum.org/EIPS/eip-2537), however this won't be a blocker, as we can initially do permissioned relayers, later adopt optimistic approach, etc. there are many fallback plans for this.
+* **Harmony Node**: we use a [harmony local node](https://github.com/harmony-one/harmony#dev-docker-image) this can be run via docker. Note at the time of writing this the local build should be done from [ganesha's mmr-hard-fork branch](https://github.com/gupadhyaya/harmony/tree/mmr-hard-fork). **There is a pull request which needs to be pushed to Harmony Testnet to enable the bridging functionality. [we need this PR to be pushed to testnet (should be done by May 27th, 2022)](https://github.com/harmony-one/harmony/pull/3872)**
+* **Ethereum Node**: For fully trustless bridge we need the bls signature verification precompile to be available on ethereum [eip-2537](https://eips.ethereum.org/EIPS/eip-2537), however this won't be a blocker, as we can initially do permissioned relayers, later adopt optimistic approach, etc. there are many fallback plans for this. 
+* **DAG genertion** : Takes several hours to run Ganesha has a machine to do this and shares the latest DAG info from Ropsten using [google drive](https://drive.google.com/file/d/1FqLCO5oc1xDYNMuub7xAqnb6kfohdf-U/view?usp=sharing). The epoch logic is the block Number divided by 30,000 so current Ropsten EPOCH is block 12280236 / 30000 = 409 which is the DAG info shared above. **Moving forward we need to update DAG information for every new EPOCH**
+* **CLI Relayer** : Relays the blocks, this is initially written in javascript as a Proof of concept and may be implemented in other languages moving forward. **Once the Relayer has begun we need to continually relay each block**
+* **Client**: The client is used to Process transactions this is done by locking the Token using the TokenLocker.sol contract (e.g. TokenLockerOnEth.Sol AND TokenLockerOnHarmony.sol)
+Currently only ERC20 are supported. Moving forward ERC721 and ERC1155 as well as operations on smart contracts will also be supported. For now all client transactions will be done using the CLI. Moving forward  the current bridge (bridge.harmony.one) will be migrated to https://bridge-validator-1.web.app/
+* **Front End**: The current [bridge.harmony.one](https://bridge.harmony.one/busd) is being migrated to a new [bridge](https://bridge-validator-1.web.app/busd). Work is being done in the [ehthmy-brige.frontend repository](https://github.com/harmony-one/ethhmy-bridge.frontend) and initial feedback is documented [here](https://github.com/harmony-one/ethhmy-bridge.frontend/issues/155). *Note: Jenya also built a fresh frontend for upcoming trustless bridge: https://github.com/harmony-one/horizon-trustless-frontend but most likely, we will stick to the first one.*
 
 **Current Status**
 * End to End Testing : Has never been succesfully completed
@@ -19,7 +21,7 @@ but most likely, we will stick to the first one.
 
 | #   | Status | Step                          | Notes |
 | --- | ------ | ----------------------------- | ----- |
-| 1   | *PASS  | Infrastructure Setup          | Working with Local Net until [PR 3872](https://github.com/harmony-one/harmony/pull/3872) is pushed to Testnet |
+| 1   | *PASS  | Infrastructure Setup          | Working with Local Net until [PR 3872](https://github.com/harmony-one/harmony/pull/3872) [fork](https://github.com/gupadhyaya/harmony/tree/mmr-hard-fork) is pushed to Testnet |
 | 2   | TBD    | Ropsten Smart Contract Deploy | | 
 | 3   | TBD    | Harmony Smart Contract Deploy | |
 | 4   | TBD    | Relayer Running               | |
@@ -28,8 +30,8 @@ but most likely, we will stick to the first one.
 **Migration Strategy**
 * Smart Contract use Hardhat with Typescript and ethers(instead of web3)
   * Replace all web3 with ethers
-  * replace all js files with typescript
-  * remove all truffleConfig use hardhat instead
+  * Use typescript for tests.
+  * Use Hardhat for deploy scripts
   * write tests
 * docs: new folder for documentation
 * docs/assets => migrated from assets
@@ -40,7 +42,7 @@ but most likely, we will stick to the first one.
 * src/cli: (migrated from cli)
 * src/(elc, eprover, eth2hmy-relay): migrated from tools(elc, eprover, eth2hmy-relay)
 
-**RollOut Strategy**
+**RollOut Strategy [see here for launch](https://harmonyone.notion.site/Trustless-Eth-bridge-launch-prep-dde21137582d4ddabc32828abeea0752)**
 * Complete End To End Testing (using CLI)
 * Write Smart Contract Tests (will use hardhat)
 * Update Smart Contract Documentation and README.md
@@ -66,19 +68,22 @@ Here is an overview of Environment data setup for testing after following the st
 # Developer and Testing guide
 ## Setting up the codebase
 
-### Install the tools and the cli
+**Clone this repository**
+`git clone https://github.com/harmony-one/horizon.git`
 
-```
-cd ./tools
-cd elc
-yarn install
-cd ../eprover
-yarn install
-cd ../eth2hmy-relay
-yarn install
-cd ../../cli
-yarn install
-```
+**Initialize node_modules, clean solidity environment and compile contracts**
+`yarn init-all`
+You can check `package.json` to review what this command does, it
+* Installs all node_modules `yarn install; cd ./src/cli; yarn install; cd ../elc; yarn install; cd ../eprover; yarn install; cd ../eth2hmy-relay; yarn install; cd ../..;`
+* cleans the solidity(hardhat) artifacts: `npx hardhat clean`
+* compiles all the solidity contracts: `npx hardhat compile`
+
+The complete command in `package,json` is as follows
+`"init-all": "yarn install; cd ./src/cli; yarn install; cd ../elc; yarn install; cd ../eprover; yarn install; cd ../eth2hmy-relay; yarn install; cd ../..; hardhat clean; hardhat compile"`
+
+
+*Note: you can see the CLI commands available by typing*
+`node index.js [command] -h`
 
 *Note: you can see the CLI commands available by typing*
 `node index.js [command] -h`
@@ -90,6 +95,8 @@ yarn install
 We use an an infura account to integrate with a Ropsten Node.
 
 Create an [Infura Account](https://infura.io/) and create an ethereum project. Add the INFURA_PROJECT_ID to the `.env` file.
+
+### Building 
 
 ### Running a local Harmony Network
 See [here](https://github.com/harmony-one/harmony#debugging) for build instructions
@@ -145,6 +152,7 @@ node index.js dagProve generate 377
 ```
 node index.js dagProve blockProof --block 11266784 --url https://ropsten.infura.io/v3/<project-id>
 ```
+which calculate merkle root for epochs from [start, start+n)
 
 **Questions**
 
@@ -166,6 +174,15 @@ Following is an overview of the contracts used in the bridge and which chain the
 * EthereumLightClient.sol : stores all blockheaders used for verification
 * TokenLockerOnHarmony.sol : Tracks tokens locked which are then minted by the bridge 
 * FaucetToken.sol : Token created on Harmony which will be bridged to Ethereum (Testing Only)
+
+**Proxies and Upgradability**
+In the original codebase deployments of contracts where made upgradeable via the use of [upgrade scripts](https://github.com/harmony-one/horizon/tree/main/scripts/upgrade) and `await upgrades.deployProxy` (e.g. see [deploy_erc20.js](https://github.com/harmony-one/horizon/blob/main/scripts/deploy_erc20.js))
+
+Alernate ways to achieve this are
+1. Hardhat Upgrades: Open Zepplin provides an [upgrade plugin](https://docs.openzeppelin.com/upgrades-plugins/1.x/hardhat-upgrades) via [this npm package](https://www.npmjs.com/package/@openzeppelin/hardhat-upgrades).  
+2. [EIP-2535 Diamonds, Multi-Facet Proxy](https://eips.ethereum.org/EIPS/eip-2535): Diamonds are [supported by hardhat-deploy](https://github.com/wighawag/hardhat-deploy/tree/master#builtin-in-support-for-diamonds-eip2535) and have [reference-implementations](https://github.com/mudgen/diamond-3-hardhat).
+
+Recommendation: Diamonds appear to be the more robust solution and will enable upgrading of functionality long term as we evolve our relay and verification functionality. If time is a constraint can use Hardhat Upgrades initially and then migrate to Diamonds at a later point. However this will incur a migration cost.
 
 **Original Documentation**
 
@@ -278,17 +295,7 @@ Following is an overview of the components which make up the horizon bridge.
 | 5.1     | bridge.hmy.js               |
 
 
-**Migration Strategy**
-* Smart Contract use Hardhat with Typescript and ethers(instead of web3)
-  * Replace all web3 with ethers
-  * replace all js files with typescript
-  * remove all truffleConfig use hardhat instead
-  * write tests
-* docs: new folder for documentation
-* docs/assets => migrated from assets
-* docs/solidity: contains generated solidity documentation
-* deploy: new folder for deployment scripts (using hardhat-deploy and logic from scripts)
-* src: new folder for typescript source files 
-* src/lib: (migrated from scripts)
-* src/cli: (migrated from cli)
-* src/(elc, eprover, eth2hmy-relay): migrated from tools(elc, eprover, eth2hmy-relay)
+### Additional References
+* [Additional Bridge Research](https://eavenetwork.notion.site/Bridges-713be29794df41b4aeb65c26d6a0404b): Other Bridging techniques including Nomad, Cosmos, Solana Wormhole, Snowfork and XCMP.
+* [Nomad's Docs](https://docs.nomad.xyz/#home):  Nomad's optimistic rollup hub and spoke appoach
+* [EIP-235: Diamonds, Multi-Facet Proxy](https://eips.ethereum.org/EIPS/eip-2535): Smart contract compasability 

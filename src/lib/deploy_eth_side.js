@@ -6,7 +6,7 @@ const Web3 = require('web3')
 const { toRLPHeader, rpcWrapper, getReceiptProof } = require('./utils')
 
 async function fetchBlock (blockNumber) {
-    const web3 = new Web3(new Web3.providers.HttpProvider(process.env.LOCALNET))
+    const web3 = new Web3(new Web3.providers.HttpProvider(process.env.HMY_URL))
     const sendRpc = util
         .promisify(web3.currentProvider.send)
         .bind(web3.currentProvider)

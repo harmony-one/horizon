@@ -11,7 +11,7 @@ const deployFunction: DeployFunction = async function (
     const { deploy } = deployments
     const { deployer } = await getNamedAccounts()
 
-    const url = process.env.ETH_NODE_URL
+    const url = process.env.ETH_URL
     const blockNum = 0
     // const blockNum = 27625582
     const initHeader = await getBlockByNumber(url, blockNum)

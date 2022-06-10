@@ -46,6 +46,43 @@ yarn deploy-hardhat
 `yarn init-all`
 You can check `package.json` to review what this command does, it
 
+## Configuration Overview
+
+### Environment Variables
+Environment variables are set in `.env` and used predominately for network and private key configuration. However we also currently use some environment variables to keep track of deployment information and gas costs. These variable must be updated when working with testnet or mainnet environments. 
+
+A `.env.sample` file is provided here is a copy of it annotated to show how to use variables.
+
+```
+# These variable should be set once with all the system information
+LOCALNET_PRIVATE_KEY=1f84c95ac16e6a50f08d44c7bde7aff8742212fda6e4321fde48bf83bef266dc
+TESTNET_PRIVATE_KEY=0xabc123abc123abc123abc123abc123abc123abc123abc123abc123abc123abc1
+MAINNET_PRIVATE_KEY=0xabc123abc123abc123abc123abc123abc123abc123abc123abc123abc123abc1
+HARDHAT_PRIVATE_KEY=ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80
+ROPSTEN_PRIVATE_KEY=0xabc123abc123abc123abc123abc123abc123abc123abc123abc123abc123abc1
+ETHEREUM_PRIVATE_KEY=0xabc123abc123abc123abc123abc123abc123abc123abc123abc123abc123abc1
+LOCALNET_URL=http://localhost:9500
+TESTNET_URL=https://api.s0.b.hmny.io
+MAINNET_URL=https://api.harmony.one
+HARDHAT_URL=http://localhost:9500
+ROPSTEN_URL=https://ropsten.infura.io/v3/<YOUR INFURA KEY>
+ETEHERUM_URL=https://mainnet.infura.io/v3/<YOUR INFURA KEY>
+ETHERSCAN_API_KEY=ABC123ABC123ABC123ABC123ABC123ABC1
+
+# These variables are environment specific and need to be updated when changing networks and deploying new contracts.
+PRIVATE_KEY=1f84c95ac16e6a50f08d44c7bde7aff8742212fda6e4321fde48bf83bef266dc
+HMY_PRIVATE_KEY=1f84c95ac16e6a50f08d44c7bde7aff8742212fda6e4321fde48bf83bef266dc
+HMY_URL=http://localhost:9500
+ETH_PRIVATE_KEY=ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80
+GAS_LIMIT=6000000
+GAS_PRICE=20000000000
+ERC20=0x876dEfe099Ff0C2E13b0c7B4b9101859e52c07c6
+HMY_TOKEN_LOCKER=0x4c97F77fa1D2ceB60A6Ee76929439B33D34A219A
+ETH_TOKEN_LOCKER=0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0
+```
+
+*Note: moving forward we may move to using configuration from `hardhat.config.ts` for gas information and the `deployments` folder for deployment information`.*
+
 ## Setting up the Infrastructure 
 
 ### Network Overview
@@ -291,6 +328,8 @@ yarn deploy-localnet
 yarn deploy-hardhat
 ```
 
+*Note: `HMY_URL` and `ETH_URL` must be updated in `.env` when deploying to testnet or mainnet. As we use these variables in the deploy scripts (e.g. to get block headers). Moving forward this should be replaced to construct the urls based on the `--network` flag passed in the command.*
+
 ### Upgrading Smart Contracts
 
 **Proxies and Upgradability**
@@ -353,7 +392,7 @@ Commands:
 
 Here we will walk through end to end testing using the CLI. at the bottom there will be a list of recommendations enhancements.
 
-*Note: `ethWeb3.js` curretnly uses one privateKey for all environments `prikey = process.env.PRIKEY` it is recommended to use the Harmony Localnet private key above and transfer funds to it (e.g. using metamask) from the hardhat account 0 (the deployer account) before deployments.*
+*Note: `ethWeb3.js` curretnly uses one privateKey for all environments `privateKey = process.env.PRIVATE_KEY)` it is recommended to use the Harmony Localnet private key above and transfer funds to it (e.g. using metamask) from the hardhat account 0 (the deployer account) before deployments.*
 
 ### Testing Steps Overview
 
@@ -403,6 +442,8 @@ Below gives an overview of how to deploy these contracts for the CLI.
 - [ ] Upgrade CLI commands into functional stages (e.g. infrastructure, deployment, relayer (incorporates ethRelayer, EProver, ) and bridging)
 - [ ] Consolidate abi's currently under different folders (e.g. `cli/bridge/abi`, `cli/elc/abi`, `cli/eprover/abi`) can use the automatically generated abis under `build/Contracts` e.g. `build/Contracts/TokenLockerOnEthereum.sol/TokenLockerOnEthereum.json` if this is not preferred can update deploy scripts to automatically update current disparate directories on build.
 - [ ] If continuing to use the CLI improve validation rather than throwing exceptions (e.g. when calling `yarn cli ELC deploy -b 0 -u "http://localhost:8545" "http://localhost:9500")` we get exceptions when the Ethereum url is not populated
+- [ ] Modify Deploy scripts to dynamically use network (e.g. for getting blockHeader) instead of the current use of environment variables `HMY_URL` and `ETH_URL`which need to be changed in `.env` when deploying to new networks.
+- [ ] Change `src/lib/configure.js` to use hardhat network definitions for `GAS_LIMIT` and `GAS_PRICE` and hardhat deployment information for `ERC20`, `HMY_TOKEN_LOCKER`, `ETH_TOKEN_LOCKER` and remove environement variables for `GAS_LIMIT`, `GAS_PRICE`, `ERC20`, `HMY_TOKEN_LOCKER`, `ETH_TOKEN_LOCKER`.
 
 
 ### Additional Feedback (Action Items)

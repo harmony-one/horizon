@@ -17,7 +17,7 @@ async function deployHmySideContracts () {
     // const merkleProof = await MerkleProof.deploy();
     // await merkleProof.deployed();
 
-    const url = process.env.ETH_NODE_URL
+    const url = process.env.ETH_URL
     const blockNum = 27625582
     const initHeader = await getBlockByNumber(url, blockNum)
 

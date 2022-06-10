@@ -5,7 +5,7 @@ require('dotenv').config()
 let tokenLockerOnEthereum, TokenLockerOnEthereum
 let faucetToken, FaucetToken
 const web3 = new Web3(
-    new Web3.providers.HttpProvider(process.env.ETH_NODE_URL)
+    new Web3.providers.HttpProvider(process.env.ETH_URL)
 )
 const options = {
     gasLimit: process.env.GAS_LIMIT,

@@ -16,10 +16,17 @@ import '@openzeppelin/hardhat-upgrades'
 dotenv.config()
 
 const LOCALNET_PRIVATE_KEY = process.env.LOCALNET_PRIVATE_KEY
-const HARMONY_PRIVATE_KEY = process.env.HARMONY_PRIVATE_KEY
-const PRIVATE_KEY = process.env.PRIVATE_KEY
-const PROJECT_ID = process.env.INFURA_PROJECT_ID
-
+const TESTNET_PRIVATE_KEY = process.env.TESTNET_PRIVATE_KEY
+const MAINNET_PRIVATE_KEY = process.env.MAINNET_PRIVATE_KEY
+// const HARDHAT_PRIVATE_KEY = process.env.HARDHAT_PRIVATE_KEY
+const ROPSTEN_PRIVATE_KEY = process.env.ROPSTEN_PRIVATE_KEY
+const ETHEREUM_PRIVATE_KEY = process.env.ETHEREUM_PRIVATE_KEY
+const LOCALNET_URL = process.env.LOCALNET_URL
+const TESTNET_URL = process.env.TESTNET_URL
+const MAINNET_URL = process.env.MAINNET_URL
+// const HARDHAT_URL = process.env.HARDHAT_URL
+const ROPSTEN_URL = process.env.ROPSTEN_URL
+const ETHEREUM_URL = process.env.ETHEREUM_URL
 // This is a sample Hardhat task. To learn how to create your own go to
 // https://hardhat.org/guides/create-task.html
 task('accounts', 'Prints the list of accounts', async (taskArgs, hre) => {
@@ -59,22 +66,22 @@ const config: HardhatUserConfig = {
             }
         },
         localnet: {
-            url: 'http://localhost:9500',
+            url: LOCALNET_URL,
             accounts: [`0x${LOCALNET_PRIVATE_KEY}`],
             gasPrice: 20000000000,
             gas: 6000000
         },
         testnet: {
-            url: 'https://api.s0.b.hmny.io',
-            accounts: [`0x${HARMONY_PRIVATE_KEY}`]
+            url: TESTNET_URL,
+            accounts: [`0x${TESTNET_PRIVATE_KEY}`]
         },
         mainnet: {
-            url: 'https://api.harmony.one',
-            accounts: [`0x${HARMONY_PRIVATE_KEY}`]
+            url: MAINNET_URL,
+            accounts: [`0x${MAINNET_PRIVATE_KEY}`]
         },
         ropsten: {
-            url: process.env.ROPSTEN_URL,
-            accounts: [`0x${PRIVATE_KEY}`],
+            url: ROPSTEN_URL,
+            accounts: [`0x${ROPSTEN_PRIVATE_KEY}`],
             chainId: 3,
             live: true,
             saveDeployments: true,
@@ -82,6 +89,12 @@ const config: HardhatUserConfig = {
             gasPrice: 20000000000,
             gas: 6000000,
             gasMultiplier: 2
+        },
+        ethereum: {
+            url: ETHEREUM_URL,
+            accounts: [`0x${ETHEREUM_PRIVATE_KEY}`],
+            gasPrice: 120 * 1000000000,
+            chainId: 1
         }
     },
     gasReporter: {

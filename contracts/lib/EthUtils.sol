@@ -1,11 +1,12 @@
+// SPDX-License-Identifier: UNLICENSED
+
 /**
  * Created on 2019-12-28
  * @summary: The EthUtils library contains utility functions
  * @author: Tuan Vu (tuanvd@gmail.com)
  */
 
-// SPDX-License-Identifier: UNLICENSED
-pragma solidity 0.7.3;
+pragma solidity ^0.8.0;
 
 library EthUtils {
     function bytesToBytes32(bytes memory b, uint256 offset)

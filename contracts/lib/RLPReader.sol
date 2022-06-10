@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity 0.7.3;
+
+pragma solidity ^0.8.0;
 
 /*
  * @author Hamdi Allam hamdi.allam97@gmail.com
@@ -168,7 +169,8 @@ library RLPReader {
         // 1 byte for the length prefix
         require(item.len == 21);
 
-        return address(toUint(item));
+        return address(uint160(toUint(item)));
+        // return address(toUint(item));
     }
 
     function toUint(RLPItem memory item) internal pure returns (uint256) {

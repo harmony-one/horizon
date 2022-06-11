@@ -154,6 +154,7 @@ To fund your harmony account use the [harmony cli](https://docs.harmony.one/home
 
 ## Smart Contracts
 
+For a detailed view of smart contracts and there relationships see [inheritance-graph](./inheritance-graph.png).
 Following is an overview of the contracts used in the bridge and which chain they should be deployed on. *Note: here we only focus on the contracts deployed the imported contracts are not covered*
 
 | Network  | Contract                  | Functionality                                           | Notes        |
@@ -415,7 +416,7 @@ Below gives an overview of how to deploy these contracts for the CLI.
 
 | Network  | Contract                  | Example LocalNet Command  | Notes        |
 | -------- | ------------------------- | ------------------------------------------------------- | ------------ |
-| Harmony  | EthereumLightClient.sol   | `ELC deploy -b 0 -u "http://localhost:8545" "http://localhost:9500"`| Can also pass an rlp Header |
+| Harmony  | EthereumLightClient.sol   | `yarn cli ELC deploy -b 0 -u "http://localhost:8545" "http://localhost:9500"`| Can also pass an rlp Header |
 | Harmony  | TokenLockerOnEthereum.sol | `yarn cli Bridge deploy http://localhost:8545 http://localhost:9500`  |  One command deploys both lockers on Ethereum and Harmony   |
 | Harmony  | EthereumProver.sol        | `yarn cli EVerifier deploy "http://localhost:8545"` | |
 | Harmony  | FaucetToken.sol           | `yarn cli Bridge deployFaucet "http://localhost:9500" -m 10000` | Testing Only |
@@ -427,6 +428,11 @@ Below gives an overview of how to deploy these contracts for the CLI.
 
 
 ### 2: Generate DAG Merkle Tree
+A DAG can be generated for hardhat for block 0 using
+`dagProve blockProof -b 0 -u http://localhost:8545 -d ./src/cli/.dag`
+A sample log for this can be found [here](https://gist.github.com/johnwhitton/6cba77d4c8d2fe0a7a136598ff19b5d6)
+
+A zipped version of the folder can be found [here](https://drive.google.com/file/d/1h4E6vpo-6axB8rwBjpGfFvcmrHM1Zu4F/view?usp=sharing). This can be unzipped and the `0` folder can then be moved to `./src/cli/.dag.`
 
 ### 3: Relay Bocks Between the Two Chains
 

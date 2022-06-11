@@ -34,6 +34,9 @@ dist/**/*
 # Ignore solidity documentation until code has been documented
 docs/solidity
 
+# Ignore solidity files used for analysis
+docs/slither
+
 data/abi
 
 # Ignore generated typescript definitions

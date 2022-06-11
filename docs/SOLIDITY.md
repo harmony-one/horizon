@@ -97,15 +97,16 @@ The following [plugins](https://hardhat.org/plugins/) have also been added
 Slither documentation can be found [here](https://github.com/crytic/slither)
 #### List all solidity warnings and vulnerabilities
 ```
-slither .
+slither . --hardhat-artifacts-directory build
 ```
+A sample analysis can be found [here](https://gist.github.com/johnwhitton/31a40cd54210518a48945e270f15199c)
 
 #### Producting slither inheritance graph
 
 ```
-slither . --print inheritance-graph
-mv *.dot ./slither/.
-cd slither
+slither . --print inheritance-graph --hardhat-artifacts-directory build
+mv *.dot ./docs/slither/.
+cd ./docs/slither
 dot inheritance-graph.dot -Tpng -o inheritance-graph.png
 rm *.dot
 ```

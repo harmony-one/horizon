@@ -21,11 +21,9 @@ coverage
 coverage.json
 
 #Hardhat files
-cache
 artifacts
 
 # OS metadata
-.DS_Store
 Thumbs.db
 
 # Ignore built ts files
@@ -41,3 +39,6 @@ data/abi
 
 # Ignore generated typescript definitions
 typechain
+
+# webstorm
+.idea

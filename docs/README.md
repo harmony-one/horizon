@@ -85,6 +85,9 @@ The complete command in `package,json` is as follows
 *Note: you can see the CLI commands available by typing*
 `node index.js [command] -h`
 
+*Note: you can see the CLI commands available by typing*
+`node index.js [command] -h`
+
 ## Setting up the Infrastructure 
 
 ### Infura Project Setup
@@ -149,6 +152,7 @@ node index.js dagProve generate 377
 ```
 node index.js dagProve blockProof --block 11266784 --url https://ropsten.infura.io/v3/<project-id>
 ```
+which calculate merkle root for epochs from [start, start+n)
 
 **Questions**
 

@@ -405,6 +405,28 @@ Below gives an overview of how to deploy these contracts for the CLI.
 - [ ] If continuing to use the CLI improve validation rather than throwing exceptions (e.g. when calling `yarn cli ELC deploy -b 0 -u "http://localhost:8545" "http://localhost:9500")` we get exceptions when the Ethereum url is not populated
 
 
+### Additional Feedback (Action Items)
+From @polymorpher on [PR Refactor #38](https://github.com/harmony-one/horizon/pull/38)
+- [ ] Harmony Epoch: Each epoch should have 32768 blocks https://docs.harmony.one/home/network/validators/definitions/epoch-transition
+- [ ] What are the DAGs for and how is it generated?
+- [ ] Might be worthwhile discussing the differences in frequency and behaviors of how block headers are relayed between Ethereum and Harmony.
+- [ ] Is this referring to Ethereum and Harmony light clients? I think they are for adding and verifying block headers from the other side. Token lockers are for managing tokens and verifying transactions and releasing the tokens after a bridge transaction is verified.
+- [ ] It seems the frontend implementation contains only a basic user interface, and does not have the majority of the necessary frontend components (APIs, services, state and session management, error handling, UI usage of APIs, and many others). I think the documentation we put here should reflect some of the details and the state of the frontend, otherwise it may give developers, users, and partners an inaccurate impression of the state of completion
+- [ ] What are the paths to support ERC721 and ERC1155? It would be nice to have some clarifications or pointers to technical components required and TODO lists
+- [ ] Why is this PR needed? Is it not sufficient to have the block header submitters (relays) to compute the MMR?
+- [ ] Can this be clarified in more detail? Where is BLS signature verification needed, and why isn't there any alternative? What are the optimistic approach and fallback options?
+- [ ] It would be very helpful to have more unit tests, and comments explaining what each component (and unit test) is doing. Right now it is not apparent that each unit component is functioning as intended, what the corner cases are, what the potential attack vectors are, and how they are defended (through the bridging mechanism). It would be nice to have the unit tests illustrating those
+- [ ] it seems some substantial frontend implementation work needs to be done before integration could take place
+- [ ] Non-validators can also relay blocks as long as they have access to a valid RPC node. Have we decided on the criteria of inclusion for the initial permissioned set of relayers? Many of them would be submitting redundant block headers and epochs - what are the top 3 things we want to achieve through this initial set of relayers, and what is the roadmap for transitioning into a permissionless set?
+- [ ] The code looks like something that can be parallelized and made efficient. What exactly is DAG and what is the purpose of generating all of them? Why is it aligned to epoch numbers? I think these questions should be answered before discussing how DAG is generated and the relevant commands
+- [ ] Harmony block headers - I think it would be informative to document the differences compared to Ethereum block headers, and how the light clients act differently (frequency and nature of updates, cost considerations, etc.)
+- [ ] `bridge cli` This seems to trigger an actual "bridging" but I am not sure if it is supposed to work. It covers some deployment and verification stuff, but doesn't seem to cover end-to-end
+- [ ] Can all links point to files in the original repository and made permalink (so they don't change across versions?)
+- [ ] As to the questions, I suppose Bridge subcommands (the three you mentioned) can be used to do human-driven testing once deployment is complete. But they don't seem to be good for any automated testing. I don't think there is any end-to-end testing elsewhere
+- [ ] Some PRs seem to be introducing useful tests, for example: https://github.com/harmony-one/horizon/pull/31/files
+
+
+
 
 ### DAG Merkle Tree
 

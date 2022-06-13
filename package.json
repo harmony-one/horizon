@@ -12,7 +12,7 @@
         "deploy-hardhat-lightClient": "hardhat deploy --network hardhat --tags HarmonyLightClient",
         "deploy-hardhat-tokenLocker": "hardhat deploy --network hardhat --tags TokenLockerOnEthereum",
         "deploy-hardhat-tokenFaucet": "hardhat deploy --network hardhat --tags EthFaucetToken",
-        "deploy-localnet": "hardhat deploy --network localnet --tags Harmony",
+        "deploy-localnet": "rm -rf ./deployments/localnet; hardhat deploy --network localnet --tags Harmony",
         "deploy-localnet-lightClient": "hardhat deploy --network localnet --tags EthereumLightClient",
         "deploy-localnet-tokenLocker": "hardhat deploy --network localnet --tags TokenLockerOnHarmony",
         "deploy-localnet-tokenFaucet": "hardhat deploy --network localnet --tags ONEFaucetToken",

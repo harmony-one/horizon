@@ -71,11 +71,18 @@ const config: HardhatUserConfig = {
             gasPrice: 20000000000,
             gas: 6000000
         },
-        testnet: {
+        hmy_testnet: {
             url: TESTNET_URL,
-            accounts: [`0x${TESTNET_PRIVATE_KEY}`]
+            accounts: [`0x${TESTNET_PRIVATE_KEY}`],
+            chainId: 1666700000,
+            live: true,
+            saveDeployments: true,
+            tags: ['staging'],
+            gas: 2100000,
+            gasPrice: 5000000000,
+            gasMultiplier: 2
         },
-        mainnet: {
+        hmy_mainnet: {
             url: MAINNET_URL,
             accounts: [`0x${MAINNET_PRIVATE_KEY}`]
         },

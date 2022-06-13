@@ -489,7 +489,12 @@ From @polymorpher on [PR Refactor #38](https://github.com/harmony-one/horizon/pu
 - [ ] Some PRs seem to be introducing useful tests, for example: https://github.com/harmony-one/horizon/pull/31/files
 
 
-
+## Example End to End Testing Testnet
+```
+yarn deploy-ropsten
+yarn deploy-testnet
+yarn cli ethRelay relay https://ropsten.infura.io/v3/32cb9c57bfe447a99ea34e30195b2d10 https://api.s0.b.hmny.io 0x017f8C7d1Cb04dE974B8aC1a6B8d3d74bC74E7E1 -d ./src/cli/.dag
+```
 
 ### DAG Merkle Tree
 

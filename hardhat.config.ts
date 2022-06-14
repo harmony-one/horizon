@@ -16,15 +16,18 @@ import '@openzeppelin/hardhat-upgrades'
 dotenv.config()
 
 const LOCALNET_PRIVATE_KEY = process.env.LOCALNET_PRIVATE_KEY
+const DEVNET_PRIVATE_KEY = process.env.DEVNET_PRIVATE_KEY
 const TESTNET_PRIVATE_KEY = process.env.TESTNET_PRIVATE_KEY
 const MAINNET_PRIVATE_KEY = process.env.MAINNET_PRIVATE_KEY
+const LOCALGETH_PRIVATE_KEY = process.env.LOCALGETH_PRIVATE_KEY
 // const HARDHAT_PRIVATE_KEY = process.env.HARDHAT_PRIVATE_KEY
 const ROPSTEN_PRIVATE_KEY = process.env.ROPSTEN_PRIVATE_KEY
 const ETHEREUM_PRIVATE_KEY = process.env.ETHEREUM_PRIVATE_KEY
 const LOCALNET_URL = process.env.LOCALNET_URL
+const DEVNET_URL = process.env.DEVNET_URL
 const TESTNET_URL = process.env.TESTNET_URL
 const MAINNET_URL = process.env.MAINNET_URL
-// const HARDHAT_URL = process.env.HARDHAT_URL
+const LOCALGETH_URL = process.env.LOCALGETH_URL
 const ROPSTEN_URL = process.env.ROPSTEN_URL
 const ETHEREUM_URL = process.env.ETHEREUM_URL
 // This is a sample Hardhat task. To learn how to create your own go to
@@ -71,7 +74,18 @@ const config: HardhatUserConfig = {
             gasPrice: 20000000000,
             gas: 6000000
         },
-        hmy_testnet: {
+        devnet: {
+            url: DEVNET_URL,
+            accounts: [`0x${DEVNET_PRIVATE_KEY}`],
+            chainId: 1666900000,
+            live: true,
+            saveDeployments: true,
+            tags: ['staging'],
+            gas: 2100000,
+            gasPrice: 5000000000,
+            gasMultiplier: 2
+        },
+        testnet: {
             url: TESTNET_URL,
             accounts: [`0x${TESTNET_PRIVATE_KEY}`],
             chainId: 1666700000,
@@ -82,9 +96,15 @@ const config: HardhatUserConfig = {
             gasPrice: 5000000000,
             gasMultiplier: 2
         },
-        hmy_mainnet: {
+        mainnet: {
             url: MAINNET_URL,
             accounts: [`0x${MAINNET_PRIVATE_KEY}`]
+        },
+        localgeth: {
+            url: LOCALGETH_URL,
+            accounts: [`0x${LOCALGETH_PRIVATE_KEY}`],
+            gasPrice: 20000000000,
+            gas: 6000000
         },
         ropsten: {
             url: ROPSTEN_URL,

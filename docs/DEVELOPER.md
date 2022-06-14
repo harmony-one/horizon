@@ -12,9 +12,9 @@ git clone https://github.com/harmony-one/horizon.git
 # install the node modules
 yarn init-all
 
-# In separate termintal windows start hardhat and harmony localnet
+# In separate termintal windows start localgeth and harmony localnet
 # Note: Prerequisite is that you have a local Harmony Node set up see below
-yarn eth-local
+yarn geth-local
 yarn harmony-local
 
 # Smart-Contract (Solidity) Commands
@@ -31,8 +31,8 @@ yarn test
 # Run coverage report
 yarn coverage
 
-# Deploy the contracts on Harmony(localnet) and Ethereum(hardhat)
-yarn deploy-localnet
+# Deploy the contracts on Harmony(localnet) and Ethereum(localgeth)
+yarn deploy-localgeth
 yarn deploy-hardhat
 
 ```
@@ -87,16 +87,18 @@ ETH_TOKEN_LOCKER=0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0
 
 ### Network Overview
 
-| Environment | Network  | Description                 | Notes                          |
-| ----------- | -------- | --------------------------  | ------------------------------ |
-| Local       | localnet | Harmony local network       | local build                    |
-| Local       | hardhat  | Ethereum local network      | local build                    |
-| Testnet     | testnet  | Harmony test network        | hosted by Harmony              |
-| Testnet     | ropsten  | Ethereum test network       | hosted using infura or alchemy |
-| Production  | mainnet  | Harmony production network  | hosted by harmony              |
-| Production  | ethereum | Ethereum production network | hosted using infura or alchemy |
+| Environment | Network   | Description                 | Notes                          |
+| ----------- | --------- | --------------------------  | ------------------------------ |
+| Local       | localnet  | Harmony local network       | local build                    |
+| Local       | hardhat   | Ethereum local network      | local build                    |
+| Local       | localgeth | Ethereum local network      | local build                    |
+| Devnet      | devnet    | Harmony developer network   | hosted by Harmony              |
+| Testnet     | testnet   | Harmony test network        | hosted by Harmony              |
+| Testnet     | ropsten   | Ethereum test network       | hosted using infura or alchemy |
+| Production  | mainnet   | Harmony production network  | hosted by harmony              |
+| Production  | ethereum  | Ethereum production network | hosted using infura or alchemy |
 
-*Note: network configuration can be found in hardhat.config.ts and we have a harmony specific focus (e.g. localnet, testnet and mainnet refer to Harmony networks) and Ethereum networks are defined by name (e.g. hardhat, ropsten and ethereum)*
+*Note: network configuration can be found in hardhat.config.ts and we have a harmony specific focus (e.g. localnet, devnet, testnet and mainnet refer to Harmony networks) and Ethereum networks are defined by name (e.g. hardhat, localgeth, ropsten and ethereum)*
 
 ### Running Local Nodes
 
@@ -107,6 +109,16 @@ To start a local hardhat(ethereum) node use
 `yarn eth local`
 which runs
 `npx hardhat node --no-deploy`
+
+**GETH Local Node**
+Both hardhat and ganache have difficulty set to zero. Which is incompatible with integration testing. In order to run a local ethereum network we use [a local geth private network](https://geth.ethereum.org/docs/interface/private-network) and follow these instuctions
+* [installation](https://geth.ethereum.org/docs/install-and-build/installing-geth)
+* `yarn localgeth` : runs a local geth network
+
+*Note: we considered puppeth (which builds using docker) and [ethUtils](https://github.com/ethersphere/eth-utils) (which are some helper scripts) but both seemed old and outdated)
+* [Running a Private Network](https://geth.ethereum.org/docs/getting-started/private-net)
+* [Creating a Private Network](https://medium.com/@niceoneallround/creating-a-private-ethereum-network-on-a-mac-c417ab971055)
+
 
 **Harmony node**
 At the time of writing we need to build the node locally. This should be done from [ganesha's mmr-hard-fork branch](https://github.com/gupadhyaya/harmony/tree/mmr-hard-fork). 
@@ -148,7 +160,9 @@ For testing purposes we used account `0x8875fc2A47E35ACD1784bB5f58f563dFE86A8451
 **Testnet Funding of Accounts**
 Create a deployer account and fund it in both Harmony Testnet and Ropsten using Faucets. Add the PRIVATE_KEY to the `.env` file
 
-[Here](https://ropsten.oregonctf.org/) is a ropsten faucet.
+* [Here](https://ropsten.oregonctf.org/) is a ropsten faucet.
+* [Here](http://dev.faucet.easynode.one/) is a devnet faucet.
+* [Here](https://faucet.pops.one/) is a testnet faucet.
 
 To fund your harmony account use the [harmony cli](https://docs.harmony.one/home/general/wallets/harmony-cli) or metamask and transfer funds from the following account.
 
@@ -416,27 +430,27 @@ Below gives an overview of how to deploy these contracts for the CLI.
 
 | Network  | Contract                  | Example LocalNet Command  | Notes        |
 | -------- | ------------------------- | ------------------------------------------------------- | ------------ |
-| Harmony  | EthereumLightClient.sol   | `yarn cli ELC deploy -b 0 -u "http://localhost:8545" "http://localhost:9500"`| Can also pass an rlp Header |
-| Harmony  | TokenLockerOnEthereum.sol | `yarn cli Bridge deploy http://localhost:8545 http://localhost:9500`  |  One command deploys both lockers on Ethereum and Harmony   |
-| Harmony  | EthereumProver.sol        | `yarn cli EVerifier deploy "http://localhost:8545"` | |
+| Harmony  | EthereumLightClient.sol   | `yarn cli ELC deploy -b 0 -u "http://localhost:8645" "http://localhost:9500"`| Can also pass an rlp Header |
+| Harmony  | TokenLockerOnEthereum.sol | `yarn cli Bridge deploy http://localhost:8645 http://localhost:9500`  |  One command deploys both lockers on Ethereum and Harmony   |
+| Harmony  | EthereumProver.sol        | `yarn cli EVerifier deploy "http://localhost:8645"` | |
 | Harmony  | FaucetToken.sol           | `yarn cli Bridge deployFaucet "http://localhost:9500" -m 10000` | Testing Only |
 | Harmony  | EthereumLightClient.sol   | `yarn cli Bridge deployFakeClient "http://localhost:9500"` | TESTING ONLY **Need to clarify whether this is needed** |
 | Ethereum | HarmonyLightClient.sol    |                       |              | **Do we deploy this?**
-| Ethereum | TokenLockerOnHarmony.sol  |  `yarn cli Bridge deploy http://localhost:8545 http://localhost:9500`  | One command deploys both lockers on Ethereum and Harmony  |
-| Ethereum | FaucetToken.sol           | `yarn cli Bridge deployFaucet "http://localhost:8545" -m 10000`                           | Testing Only |
-| Ethereum  | EthereumLightClient.sol   | `yarn cli Bridge deployFakeClient "http://localhost:8545"` | TESTING ONLY **Need to clarify whether this is needed** |
+| Ethereum | TokenLockerOnHarmony.sol  |  `yarn cli Bridge deploy http://localhost:8645 http://localhost:9500`  | One command deploys both lockers on Ethereum and Harmony  |
+| Ethereum | FaucetToken.sol           | `yarn cli Bridge deployFaucet "http://localhost:8645" -m 10000`                           | Testing Only |
+| Ethereum  | EthereumLightClient.sol   | `yarn cli Bridge deployFakeClient "http://localhost:8645"` | TESTING ONLY **Need to clarify whether this is needed** |
 
 
 ### 2: Generate DAG Merkle Tree
 A DAG can be generated for hardhat for block 0 using
-`dagProve blockProof -b 0 -u http://localhost:8545 -d ./src/cli/.dag`
+`dagProve blockProof -b 0 -u http://localhost:8645 -d ./src/cli/.dag`
 A sample log for this can be found [here](https://gist.github.com/johnwhitton/6cba77d4c8d2fe0a7a136598ff19b5d6)
 
 A zipped version of the folder can be found [here](https://drive.google.com/file/d/1h4E6vpo-6axB8rwBjpGfFvcmrHM1Zu4F/view?usp=sharing). This can be unzipped and the `0` folder can then be moved to `./src/cli/.dag.`
 
 ### 3: Relay Bocks Between the Two Chains
 `ethRelay` calls `blockRelayLoop` to relay all blocks. It will generate a DAG if one does not exists. You can run this using the following command and leave this running in a seperate window.
-`yarn cli ethRelay relay http://localhost:8545 http://localhost:9500 0xa210f356046b9497E73581F0b8B38fa4988F913B -d ./src/cli/.dag`
+`yarn cli ethRelay relay http://localhost:8645 http://localhost:9500 0xa210f356046b9497E73581F0b8B38fa4988F913B -d ./src/cli/.dag`
 
 *Note: currently when running locally we get the error `ethash local wrong!` generated by `verifyHeader` in  `src/eth2Hmy-relay/lib/DagProof.js`. The log can be found [here](https://gist.github.com/johnwhitton/3cfc746cb5e5cc5c469b6638f439dd3b)
 
@@ -452,42 +466,10 @@ getBlockHeightMax: 0
 ### 4: Bridge Tokens
 
 
-* Deploying Bridged Tokens: `node src/cli/index.js  Bridge deploy http://localhost:8545 http://localhost:9500`
+* Deploying Bridged Tokens: `node src/cli/index.js  Bridge deploy http://localhost:8645 http://localhost:9500`
 
 ### Notes and recommendations
-- [ ] remove `src/cli/lib/` replace ethWeb3 and hmyWeb3 with hardhat deploy scripts and tools
-- [ ] .env define seperate accounts for each network and update hardhat.config.ts
-- [ ] make consistent use of `ethers.js` replacing libraries such as `web3`, `rlp`, `bigNumber`, `ethereumjs-util`. Recommendation is `ethers` vs `web3` based on hardhat integration [this article](https://moralis.io/web3-js-vs-ethers-js-guide-to-eth-javascript-libraries/), [these stats](https://npm-stat.com/charts.html?package=ethers&package=web3&from=2021-01-01&to=2021-06-01) and these comments `Ethers.js loads slightly faster thanks to its noticeably smaller size, which may offer better performance.` and `However, the blockchain industry as a whole is slowly migrating towards a younger alternative – Ethers.js. `
-- [ ] Upgrade CLI commands into functional stages (e.g. infrastructure, deployment, relayer (incorporates ethRelayer, EProver, ) and bridging)
-- [ ] Consolidate abi's currently under different folders (e.g. `cli/bridge/abi`, `cli/elc/abi`, `cli/eprover/abi`) can use the automatically generated abis under `build/Contracts` e.g. `build/Contracts/TokenLockerOnEthereum.sol/TokenLockerOnEthereum.json` if this is not preferred can update deploy scripts to automatically update current disparate directories on build.
-- [ ] If continuing to use the CLI improve validation rather than throwing exceptions (e.g. when calling `yarn cli ELC deploy -b 0 -u "http://localhost:8545" "http://localhost:9500")` we get exceptions when the Ethereum url is not populated
-- [ ] Modify Deploy scripts to dynamically use network (e.g. for getting blockHeader) instead of the current use of environment variables `HMY_URL` and `ETH_URL`which need to be changed in `.env` when deploying to new networks.
-- [ ] Change `src/lib/configure.js` to use hardhat network definitions for `GAS_LIMIT` and `GAS_PRICE` and hardhat deployment information for `ERC20`, `HMY_TOKEN_LOCKER`, `ETH_TOKEN_LOCKER` and remove environement variables for `GAS_LIMIT`, `GAS_PRICE`, `ERC20`, `HMY_TOKEN_LOCKER`, `ETH_TOKEN_LOCKER`.
-- [ ] Review [slither analysis](https://gist.github.com/johnwhitton/31a40cd54210518a48945e270f15199c) and fix issues and vunerabilities
-- [ ] Resolve `ethash local wrong!` generated by `yarn cli dagProve blockProof -b 0 -u http://localhost:8545` log can be found [here](https://gist.github.com/johnwhitton/6cba77d4c8d2fe0a7a136598ff19b5d6)
-- [ ] Resolve `ethash local wrong!` generated by `yarn cli ethRelay relay http://localhost:8545 http://localhost:9500 0x7e88a2e433222E4162d70Bfb02FB873c0c1cf508 -d ./src/cli/.dag` log can be found [here](https://gist.github.com/johnwhitton/3cfc746cb5e5cc5c469b6638f439dd3b) also mentioned [here](https://github.com/harmony-one/horizon/pull/31#discussion_r881611082) This may be related to the fact that hardhat has a difficulty of zero (unless forking) and so mixHash = `0x0000000000000000000000000000000000000000000000000000000000000000` a gist showing sample blockheaders from ethereum, ropsten and hardhat can be found [here](https://gist.github.com/johnwhitton/e1e0d16156223a5b138b8381f4cc989c)
-
-
-### Additional Feedback (Action Items)
-From @polymorpher on [PR Refactor #38](https://github.com/harmony-one/horizon/pull/38)
-- [ ] Harmony Epoch: Each epoch should have 32768 blocks https://docs.harmony.one/home/network/validators/definitions/epoch-transition
-- [ ] What are the DAGs for and how is it generated?
-- [ ] Might be worthwhile discussing the differences in frequency and behaviors of how block headers are relayed between Ethereum and Harmony.
-- [ ] Is this referring to Ethereum and Harmony light clients? I think they are for adding and verifying block headers from the other side. Token lockers are for managing tokens and verifying transactions and releasing the tokens after a bridge transaction is verified.
-- [ ] It seems the frontend implementation contains only a basic user interface, and does not have the majority of the necessary frontend components (APIs, services, state and session management, error handling, UI usage of APIs, and many others). I think the documentation we put here should reflect some of the details and the state of the frontend, otherwise it may give developers, users, and partners an inaccurate impression of the state of completion
-- [ ] What are the paths to support ERC721 and ERC1155? It would be nice to have some clarifications or pointers to technical components required and TODO lists
-- [ ] Why is this PR needed? Is it not sufficient to have the block header submitters (relays) to compute the MMR?
-- [ ] Can this be clarified in more detail? Where is BLS signature verification needed, and why isn't there any alternative? What are the optimistic approach and fallback options?
-- [ ] It would be very helpful to have more unit tests, and comments explaining what each component (and unit test) is doing. Right now it is not apparent that each unit component is functioning as intended, what the corner cases are, what the potential attack vectors are, and how they are defended (through the bridging mechanism). It would be nice to have the unit tests illustrating those
-- [ ] it seems some substantial frontend implementation work needs to be done before integration could take place
-- [ ] Non-validators can also relay blocks as long as they have access to a valid RPC node. Have we decided on the criteria of inclusion for the initial permissioned set of relayers? Many of them would be submitting redundant block headers and epochs - what are the top 3 things we want to achieve through this initial set of relayers, and what is the roadmap for transitioning into a permissionless set?
-- [ ] The code looks like something that can be parallelized and made efficient. What exactly is DAG and what is the purpose of generating all of them? Why is it aligned to epoch numbers? I think these questions should be answered before discussing how DAG is generated and the relevant commands
-- [ ] Harmony block headers - I think it would be informative to document the differences compared to Ethereum block headers, and how the light clients act differently (frequency and nature of updates, cost considerations, etc.)
-- [ ] `bridge cli` This seems to trigger an actual "bridging" but I am not sure if it is supposed to work. It covers some deployment and verification stuff, but doesn't seem to cover end-to-end
-- [ ] Can all links point to files in the original repository and made permalink (so they don't change across versions?)
-- [ ] As to the questions, I suppose Bridge subcommands (the three you mentioned) can be used to do human-driven testing once deployment is complete. But they don't seem to be good for any automated testing. I don't think there is any end-to-end testing elsewhere
-- [ ] Some PRs seem to be introducing useful tests, for example: https://github.com/harmony-one/horizon/pull/31/files
-
+See [TASKS.md](./TASKS.md)
 
 ## Example End to End Testing Testnet
 ```

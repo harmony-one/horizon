@@ -42,3 +42,6 @@ typechain
 
 # webstorm
 .idea
+
+# Local Network data
+localgeth/data

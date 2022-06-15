@@ -72,14 +72,14 @@ Here is an overview of Environment data setup for testing after following the st
 `git clone https://github.com/harmony-one/horizon.git`
 
 **Initialize node_modules, clean solidity environment and compile contracts**
-`yarn init-all`
+`yarn init-yarn`
 You can check `package.json` to review what this command does, it
 * Installs all node_modules `yarn install; cd ./src/cli; yarn install; cd ../elc; yarn install; cd ../eprover; yarn install; cd ../eth2hmy-relay; yarn install; cd ../..;`
 * cleans the solidity(hardhat) artifacts: `npx hardhat clean`
 * compiles all the solidity contracts: `npx hardhat compile`
 
 The complete command in `package,json` is as follows
-`"init-all": "yarn install; cd ./src/cli; yarn install; cd ../elc; yarn install; cd ../eprover; yarn install; cd ../eth2hmy-relay; yarn install; cd ../..; hardhat clean; hardhat compile"`
+`"init-yarn": "yarn install; cd ./src/cli; yarn install; cd ../elc; yarn install; cd ../eprover; yarn install; cd ../eth2hmy-relay; yarn install; cd ../..; hardhat clean; hardhat compile"`
 
 
 *Note: you can see the CLI commands available by typing*

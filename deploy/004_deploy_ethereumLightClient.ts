@@ -12,10 +12,13 @@ const deployFunction: DeployFunction = async function (
     const { deployer } = await getNamedAccounts()
 
     const url = process.env.ETH_URL
-    // const blockNum = 0 // Hardhat Block Number
-    const blockNum = 12387200 // Ropsten Block Number
+    console.log(`process.env.ETH_URL: ${process.env.ETH_URL}`)
+    const blockNum = 1000 // Localgeth Block Number
+    // const blockNum = 12387200 // Ropsten Block Number
     const initHeader = await getBlockByNumber(url, blockNum)
+    console.log(`initHeader: ${JSON.stringify(initHeader)}`)
     const rlpHeader = initHeader.serialize()
+    console.log(`rlpHeader: ${JSON.stringify(rlpHeader)}`)
     const EthereumLightClient = await deploy('EthereumLightClient', {
         from: deployer,
         args: [],

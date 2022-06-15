@@ -10,7 +10,7 @@ To gain a better understanding of what some of the yarn commands are doing it is
 git clone https://github.com/harmony-one/horizon.git
 
 # install the node modules
-yarn init-all
+yarn init-yarn
 
 # In separate termintal windows start localgeth and harmony localnet
 # Note: Prerequisite is that you have a local Harmony Node set up see below
@@ -35,6 +35,9 @@ yarn coverage
 yarn deploy-localgeth
 yarn deploy-hardhat
 
+# Start the relayer (note: replace the etherum light client address below)
+yarn cli ethRelay relay http://localhost:8645 http://localhost:9500 0xa210f356046b9497E73581F0b8B38fa4988F913B -d ./src/cli/.dag
+
 ```
 
 ## Setting up the codebase
@@ -43,7 +46,7 @@ yarn deploy-hardhat
 `git clone https://github.com/harmony-one/horizon.git`
 
 **Initialize node_modules, clean solidity environment and compile contracts**
-`yarn init-all`
+`yarn init-yarn`
 You can check `package.json` to review what this command does, it
 
 ## Configuration Overview

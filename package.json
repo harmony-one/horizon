@@ -4,7 +4,8 @@
     "description": "Harmony Horizon Bridge",
     "scripts": {
         "libInit": "tar -zxf ethereumjs-ethash-dist.tar.gz -C node_modules/@ethereumjs/ethash",
-        "init-all": "yarn install; cd ./src/cli; yarn install; cd ../elc; yarn install; cd ../eprover; yarn install; cd ../eth2hmy-relay; yarn install; cd ../..; hardhat clean; hardhat compile",
+        "init-yarn": "yarn install; cd ./src/cli; yarn install; cd ../elc; yarn install; cd ../eprover; yarn install; cd ../eth2hmy-relay; yarn install; cd ../..; hardhat clean; hardhat compile",
+        "init-chain": "rm -rf ./localgeth/data; cp -rf ../initData/localgeth/data ./localgeth/.; rm -rf ./src/cli/.dag/0; cp -rf ../initData/localgeth/dag/0 ./src/cli/.dag/.",
         "clean": "hardhat clean",
         "check": "hardhat check",
         "compile": "hardhat compile",

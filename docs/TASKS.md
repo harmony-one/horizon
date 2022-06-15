@@ -1,3 +1,31 @@
+## Process Overview
+1. Run Local Networks
+2. Deploy Contracts
+3. Run Relayer (proceses blockHeaders on Harmony with EthereumLightClient.sol)
+    1. Creation of DAG
+    2. Configure the first block we want to transfer
+4. Run Relayer 
+    1. process blockHeaders on Ethereum with HarmonyLightClient.sol
+    2. Verify block Headers
+5. Configure Bridge
+    1. Bind the bridge contracts (call Bind Function on each contract see `cli/bridge/contract.js`) 
+6. Create Bridged Tokens
+    1. Map the deployed tokens `map http://localhost:8645 0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0 http:localhost:9500 0xB75DA069E82064e0c9895b11F571aD99FDFd231D 0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9`
+7. Transfer Tokens
+   1. Lock Token (on Ethereum)
+   2. Relay the Block (to Harmony)
+   3. Prove the Transaction
+   4. Mint token on Harmony
+
+
+**Additional monitoring tools (non critical)**
+* dagProve: `DAG Merkel Tree cli`
+* ELC: `ethereum ligth client cli`
+* EProver: `get receipt proof of a transaction from ethereum`
+* EVerifier: `ethereum receipt verify cli`
+
+
+
 ### Notes and recommendations
 - [ ] remove `src/cli/lib/` replace ethWeb3 and hmyWeb3 with hardhat deploy scripts and tools
 - [ ] .env define seperate accounts for each network and update hardhat.config.ts

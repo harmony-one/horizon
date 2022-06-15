@@ -224,11 +224,15 @@ library RLPReader {
         return result;
     }
 
-    function toRlpBytesHash(RLPItem memory item) internal pure returns (bytes32 _hash) {
+    function toRlpBytesHash(RLPItem memory item)
+        internal
+        pure
+        returns (bytes32 _hash)
+    {
         require(item.len > 0);
         uint256 len = item.len;
         uint256 ptr = item.memPtr;
-        assembly{
+        assembly {
             _hash := keccak256(ptr, len)
         }
     }
@@ -333,11 +337,16 @@ library RLPReader {
         }
 
         // left over bytes. Mask is used to remove unwanted bytes from the word
-        uint256 mask = 256**(WORD_SIZE - len) - 1;
-        assembly {
-            let srcpart := and(mload(src), not(mask)) // zero out src
-            let destpart := and(mload(dest), mask) // retrieve the bytes
-            mstore(dest, or(destpart, srcpart))
+        if (len > 0) {
+            if (len >= WORD_SIZE) {
+                len = WORD_SIZE - 1;
+            }
+            uint256 mask = 256**(WORD_SIZE - len) - 1;
+            assembly {
+                let srcpart := and(mload(src), not(mask)) // zero out src
+                let destpart := and(mload(dest), mask) // retrieve the bytes
+                mstore(dest, or(destpart, srcpart))
+            }
         }
     }
 
@@ -360,14 +369,18 @@ library RLPReader {
     /*
      * @param get the RLP item by index. save gas.
      */
-    function safeGetItemByIndex(RLPItem memory item, uint idx) internal pure returns (RLPItem memory) {
+    function safeGetItemByIndex(RLPItem memory item, uint256 idx)
+        internal
+        pure
+        returns (RLPItem memory)
+    {
         require(isList(item), "RLPDecoder iterator is not a list");
 
-        uint endPtr = item.memPtr + item.len;
+        uint256 endPtr = item.memPtr + item.len;
 
-        uint memPtr = item.memPtr + _payloadOffset(item.memPtr);
-        uint dataLen;
-        for (uint i = 0; i < idx; i++) {
+        uint256 memPtr = item.memPtr + _payloadOffset(item.memPtr);
+        uint256 dataLen;
+        for (uint256 i = 0; i < idx; i++) {
             dataLen = _itemLength(memPtr);
             memPtr = memPtr + dataLen;
         }

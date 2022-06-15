@@ -105,8 +105,11 @@ ETH_TOKEN_LOCKER=0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0
 
 ### Running Local Nodes
 
-**Ethereum Node**
-We use hardhat to run a local ethereum node. However as deploy scripts are specific to chains. We do not wish to run the deploys when we start a node. 
+Initial data, including DAG and blockchain data for localgeth can be found [here](https://drive.google.com/file/d/1DpRcyydoKSmQqdcM4bwUzMjB3q0-B8xL/view?usp=sharing). This will save developers some time as the generation of DAG 0 can take 2 to 3 hours.
+To use this download the file and place it's contents in the same parent directory as where you have cloned the horizon repository. Then use `yarn init-chain` to copy the directories required into local folders. 
+
+**Hardhat Node**
+We use hardhat to run a local ethereum node. This allows us to debug using `console.log` and provides additional tools for development. However as deploy scripts are specific to chains. We do not wish to run the deploys when we start a node. 
 
 To start a local hardhat(ethereum) node use
 `yarn eth local`

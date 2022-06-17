@@ -34,7 +34,7 @@ yarn coverage
 
 # Deploy the contracts on Harmony(localnet) and Ethereum(localgeth)
 yarn deploy-localgeth
-yarn deploy-hardhat
+yarn deploy-localnet
 
 # Start the relayer (note: replace the etherum light client address below)
 yarn cli ethRelay relay http://localhost:8645 http://localhost:9500 0xa210f356046b9497E73581F0b8B38fa4988F913B -d ./src/cli/.dag

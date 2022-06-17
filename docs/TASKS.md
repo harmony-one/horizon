@@ -1,17 +1,17 @@
 ## Process Overview
-1. Run Local Networks
-2. Deploy Contracts
-3. Run Relayer (proceses blockHeaders on Harmony with EthereumLightClient.sol)
+- [x] Run Local Networks
+- [x] Deploy Contracts
+- [x] Run Relayer (proceses blockHeaders on Harmony with EthereumLightClient.sol)
     1. Creation of DAG
     2. Configure the first block we want to transfer
-4. Run Relayer 
+- [x] Run Relayer 
     1. process blockHeaders on Ethereum with HarmonyLightClient.sol
     2. Verify block Headers
-5. Configure Bridge
+- [ ] Configure Bridge
     1. Bind the bridge contracts (call Bind Function on each contract see `cli/bridge/contract.js`) 
-6. Create Bridged Tokens
+- [ ] Create Bridged Tokens
     1. Map the deployed tokens `map http://localhost:8645 0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0 http:localhost:9500 0xB75DA069E82064e0c9895b11F571aD99FDFd231D 0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9`
-7. Transfer Tokens
+- [ ] Transfer Tokens
    1. Lock Token (on Ethereum)
    2. Relay the Block (to Harmony)
    3. Prove the Transaction
@@ -27,6 +27,11 @@
 
 
 ### Notes and recommendations
+- [ ] Update .env Keys to only have two values ethereum and Harmony
+- [ ] Update funding process for local environment to send funds to test account
+- [ ] Update MerkleRoot.sol to have an initialize function and so we can deploy without modifying the contract
+- [ ] Update ABI definitions to use `./build/contracts`
+- [ ] Parameterize deploy scripts using Hardhat tasks
 - [ ] remove `src/cli/lib/` replace ethWeb3 and hmyWeb3 with hardhat deploy scripts and tools
 - [ ] .env define seperate accounts for each network and update hardhat.config.ts
 - [ ] make consistent use of `ethers.js` replacing libraries such as `web3`, `rlp`, `bigNumber`, `ethereumjs-util`. Recommendation is `ethers` vs `web3` based on hardhat integration [this article](https://moralis.io/web3-js-vs-ethers-js-guide-to-eth-javascript-libraries/), [these stats](https://npm-stat.com/charts.html?package=ethers&package=web3&from=2021-01-01&to=2021-06-01) and these comments `Ethers.js loads slightly faster thanks to its noticeably smaller size, which may offer better performance.` and `However, the blockchain industry as a whole is slowly migrating towards a younger alternative – Ethers.js. `

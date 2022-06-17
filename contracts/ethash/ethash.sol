@@ -41,7 +41,9 @@ contract Ethash is MerkelRoots {
     // the full 32-bit input, in contrast with the FNV-1 spec which multiplies the
     // prime with one byte (octet) in turn.
     function fnv(uint32 a, uint32 b) internal pure returns (uint32) {
-        return (a * 0x01000193) ^ b;
+        unchecked {
+            return (a * 0x01000193) ^ b;
+        }
     }
 
     // fnvHash mixes in data into mix using the ethash fnv method.

@@ -105,7 +105,7 @@ ETH_TOKEN_LOCKER=0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0
 
 ### Running Local Nodes
 
-Initial data, including DAG and blockchain data for localgeth can be found [here](https://drive.google.com/file/d/1DpRcyydoKSmQqdcM4bwUzMjB3q0-B8xL/view?usp=sharing). This will save developers some time as the generation of DAG 0 can take 2 to 3 hours.
+Initial data, including DAG and blockchain data for localgeth can be found [here](https://drive.google.com/file/d/1NyKfx-2vukDntcj8NmK3BNfblpBhh9rI/view?usp=sharing). This will save developers some time as the generation of DAG 0 can take 2 to 3 hours.
 To use this download the file and place it's contents in the same parent directory as where you have cloned the horizon repository. Then use `yarn init-chain` to copy the directories required into local folders. 
 
 **Hardhat Node**
@@ -119,7 +119,18 @@ which runs
 **GETH Local Node**
 Both hardhat and ganache have difficulty set to zero. Which is incompatible with integration testing. In order to run a local ethereum network we use [a local geth private network](https://geth.ethereum.org/docs/interface/private-network) and follow these instuctions
 * [installation](https://geth.ethereum.org/docs/install-and-build/installing-geth)
+
+If you want to use the pregenerated blockchain and dag data (Recommended).
+Copy and uncompress [this zip file](https://drive.google.com/file/d/1NyKfx-2vukDntcj8NmK3BNfblpBhh9rI/view?usp=sharing) to the same parent directory as your horizon repository and the run `yarn init-chain`
 * `yarn localgeth` : runs a local geth network
+
+If you want to generate the data yourself do the following
+```
+cd localgeth
+geth init --datadir data genesis.json
+yarn localgeth
+```
+*Note: when generating your own data and dag you will also need to update `MerkleRoot.sol` with the encoded root information which you can retrieve by running the relayer and seeing `proofs.root`.*
 
 *Note: we considered puppeth (which builds using docker) and [ethUtils](https://github.com/ethersphere/eth-utils) (which are some helper scripts) but both seemed old and outdated)
 * [Running a Private Network](https://geth.ethereum.org/docs/getting-started/private-net)

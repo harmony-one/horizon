@@ -14,6 +14,7 @@ yarn init-yarn
 
 # In separate termintal windows start localgeth and harmony localnet
 # Note: Prerequisite is that you have a local Harmony Node set up see below
+yarn init-chain
 yarn geth-local
 yarn harmony-local
 

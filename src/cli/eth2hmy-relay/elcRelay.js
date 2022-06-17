@@ -17,6 +17,7 @@ async function blockRelay (dagPath, ethUrl, hmyWeb3, elcAddress) {
     this.web3 = new Web3(ethUrl)
     console.log('header hash', this.web3.utils.keccak256(header.serialize()))
     const proofs = getHeaderProof(dagPath, header)
+    console.log(`proofs.root: ${proofs.root}`)
     const rlpHeader = header.serialize()
     try {
         await clientMethods

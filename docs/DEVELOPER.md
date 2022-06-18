@@ -37,8 +37,19 @@ yarn deploy-localgeth
 yarn deploy-localnet
 
 # Start the relayer (note: replace the etherum light client address below)
-yarn cli ethRelay relay http://localhost:8645 http://localhost:9500 0xa210f356046b9497E73581F0b8B38fa4988F913B -d ./src/cli/.dag
+yarn cli ethRelay relay http://localhost:8645 http://localhost:9500 0x0b84F276Ee85dD856Fb920dE270acF388688aeeA -d ./src/cli/.dag
 
+# Map the Tokens
+# map <ethUrl> <ethBridge> <hmyUrl> <hmyBridge> <token>
+yarn cli Bridge map http://localhost:8645 0x3Ceb74A902dc5fc11cF6337F68d04cB834AE6A22 http://localhost:9500 0x3Ceb74A902dc5fc11cF6337F68d04cB834AE6A22 0x82305ac469bc60D88D66b7259e3789fB8CD54A88
+
+# cross transfer ERC20 from eth to hmy (receipt is the recipient address)
+# crossTo <ethUrl> <ethBridge> <hmyUrl> <hmyBridge> <token> <receipt> <amount>
+yarn cli Bridge crossTo http://localhost:8645 0x3Ceb74A902dc5fc11cF6337F68d04cB834AE6A22 http://localhost:9500 0x3Ceb74A902dc5fc11cF6337F68d04cB834AE6A22 0x82305ac469bc60D88D66b7259e3789fB8CD54A88 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266 100
+
+# cross transfer HRC20 from hmy back to eth (receipt is the recipient address)
+# crossBack <hmyUrl> <hmyBridge> <ethUrl> <ethBridge> <token> <receipt> <amount>
+yarn cli Bridge crossBack http://localhost:9500 0x3Ceb74A902dc5fc11cF6337F68d04cB834AE6A22  http://localhost:8645 0x3Ceb74A902dc5fc11cF6337F68d04cB834AE6A22 0x017f8C7d1Cb04dE974B8aC1a6B8d3d74bC74E7E1 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266 100
 ```
 
 ## Setting up the codebase
@@ -59,25 +70,20 @@ A `.env.sample` file is provided here is a copy of it annotated to show how to u
 
 ```
 # These variable should be set once with all the system information
-LOCALNET_PRIVATE_KEY=1f84c95ac16e6a50f08d44c7bde7aff8742212fda6e4321fde48bf83bef266dc
-TESTNET_PRIVATE_KEY=0xabc123abc123abc123abc123abc123abc123abc123abc123abc123abc123abc1
-MAINNET_PRIVATE_KEY=0xabc123abc123abc123abc123abc123abc123abc123abc123abc123abc123abc1
-HARDHAT_PRIVATE_KEY=ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80
-ROPSTEN_PRIVATE_KEY=0xabc123abc123abc123abc123abc123abc123abc123abc123abc123abc123abc1
-ETHEREUM_PRIVATE_KEY=0xabc123abc123abc123abc123abc123abc123abc123abc123abc123abc123abc1
+HARDHAT_URL=http://localhost:8545
 LOCALNET_URL=http://localhost:9500
+DEVNET_URL=https://api.s0.ps.hmny.io/
 TESTNET_URL=https://api.s0.b.hmny.io
 MAINNET_URL=https://api.harmony.one
-HARDHAT_URL=http://localhost:9500
+LOCALGETH_URL=http://localhost:8645
 ROPSTEN_URL=https://ropsten.infura.io/v3/<YOUR INFURA KEY>
 ETEHERUM_URL=https://mainnet.infura.io/v3/<YOUR INFURA KEY>
 ETHERSCAN_API_KEY=ABC123ABC123ABC123ABC123ABC123ABC1
 
 # These variables are environment specific and need to be updated when changing networks and deploying new contracts.
 PRIVATE_KEY=1f84c95ac16e6a50f08d44c7bde7aff8742212fda6e4321fde48bf83bef266dc
-HMY_PRIVATE_KEY=1f84c95ac16e6a50f08d44c7bde7aff8742212fda6e4321fde48bf83bef266dc
 HMY_URL=http://localhost:9500
-ETH_PRIVATE_KEY=ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80
+ETH_URL=http://localhost:8645
 GAS_LIMIT=6000000
 GAS_PRICE=20000000000
 ERC20=0x876dEfe099Ff0C2E13b0c7B4b9101859e52c07c6

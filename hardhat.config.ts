@@ -15,14 +15,14 @@ import '@openzeppelin/hardhat-upgrades'
 
 dotenv.config()
 
-const LOCALNET_PRIVATE_KEY = process.env.LOCALNET_PRIVATE_KEY
-const DEVNET_PRIVATE_KEY = process.env.DEVNET_PRIVATE_KEY
-const TESTNET_PRIVATE_KEY = process.env.TESTNET_PRIVATE_KEY
-const MAINNET_PRIVATE_KEY = process.env.MAINNET_PRIVATE_KEY
-const LOCALGETH_PRIVATE_KEY = process.env.LOCALGETH_PRIVATE_KEY
+const LOCALNET_PRIVATE_KEY = process.env.PRIVATE_KEY
+const DEVNET_PRIVATE_KEY = process.env.PRIVATE_KEY
+const TESTNET_PRIVATE_KEY = process.env.PRIVATE_KEY
+const MAINNET_PRIVATE_KEY = process.env.PRIVATE_KEY
+const LOCALGETH_PRIVATE_KEY = process.env.PRIVATE_KEY
 // const HARDHAT_PRIVATE_KEY = process.env.HARDHAT_PRIVATE_KEY
-const ROPSTEN_PRIVATE_KEY = process.env.ROPSTEN_PRIVATE_KEY
-const ETHEREUM_PRIVATE_KEY = process.env.ETHEREUM_PRIVATE_KEY
+const ROPSTEN_PRIVATE_KEY = process.env.PRIVATE_KEY
+const ETHEREUM_PRIVATE_KEY = process.env.PRIVATE_KEY
 const LOCALNET_URL = process.env.LOCALNET_URL
 const DEVNET_URL = process.env.DEVNET_URL
 const TESTNET_URL = process.env.TESTNET_URL

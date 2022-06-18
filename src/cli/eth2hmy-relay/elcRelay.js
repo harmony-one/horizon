@@ -14,6 +14,7 @@ async function blockRelay (dagPath, ethUrl, hmyWeb3, elcAddress) {
     const blockRelay = Number(lastBlockNo) + 1
     console.log('block to relay:', blockRelay)
     const header = await getBlockByNumber(ethUrl, blockRelay)
+    console.log(`header: ${JSON.stringify(header)}`)
     this.web3 = new Web3(ethUrl)
     console.log('header hash', this.web3.utils.keccak256(header.serialize()))
     const proofs = getHeaderProof(dagPath, header)

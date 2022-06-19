@@ -1,5 +1,5 @@
-const ERC20Sol = require('./abi/ERC20Upgradeable.json')
-const FaucetToken = require('./abi/FaucetToken.json')
+const ERC20Sol = require('../../../build/@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol/ERC20Upgradeable.json')
+const FaucetToken = require('../../../build/contracts/FaucetToken.sol/FaucetToken.json')
 
 class ERC20 {
     constructor (web3, tokenAddress) {

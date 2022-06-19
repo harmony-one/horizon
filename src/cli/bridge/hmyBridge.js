@@ -1,6 +1,6 @@
 const { Bridge } = require('./bridge')
 const { HmyWeb3 } = require('../lib/hmyWeb3')
-const BridgeSol = require('./abi/TokenLockerOnHarmony.json')
+const BridgeSol = require('../../../build/contracts/TokenLockerOnHarmony.sol/TokenLockerOnHarmony.json')
 
 class HmyBridge extends Bridge {
     constructor (rpcUrl, bridgeAddress) {

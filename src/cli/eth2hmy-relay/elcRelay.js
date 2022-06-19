@@ -1,4 +1,4 @@
-const ElcABI = require('../../elc/abi/EthereumLightClient.json')
+const ElcABI = require('../../../build/contracts/EthereumLightClient.sol/EthereumLightClient.json')
 const {
     getBlockByNumber,
     getHeaderProof

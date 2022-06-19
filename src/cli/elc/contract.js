@@ -1,4 +1,4 @@
-const Client = require('../../elc/abi/EthereumLightClient.json')
+const Client = require('../../../build/contracts/EthereumLightClient.sol/EthereumLightClient.json')
 const { HmyWeb3 } = require('../lib/hmyWeb3')
 const { BN } = require('ethereumjs-util')
 

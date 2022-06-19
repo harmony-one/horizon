@@ -30,7 +30,6 @@
 - [ ] Review [bridgeMapError](https://gist.github.com/johnwhitton/14b2a62f18c53e76d4bdd1f97759e5fd)
 - [ ] Parameterize deploys and add in dependencies.
 - [ ] Update MerkleRoot.sol to have an initialize function and so we can deploy without modifying the contract
-- [ ] Update ABI definitions to use `./build/contracts`
 - [ ] Prepare demo of local environment and testing
 - [ ] remove `src/cli/lib/` replace ethWeb3 and hmyWeb3 with hardhat deploy scripts and tools
 - [ ] .env define seperate accounts for each network and update hardhat.config.ts
@@ -68,6 +67,6 @@ From @polymorpher on [PR Refactor #38](https://github.com/harmony-one/horizon/pu
 ### Completed
 - [x] Update .env Keys to only have two values ethereum and Harmony
 - [x] Update funding process for local environment to send funds to test account
-
+- [x] Update ABI definitions to use `./build/contracts`
 
 

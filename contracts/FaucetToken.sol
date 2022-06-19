@@ -29,7 +29,7 @@ contract FaucetToken is
         __ERC20Burnable_init();
         __Pausable_init();
         __Ownable_init();
-        _mint(owner(), supply);
+        mint(owner(), supply);
     }
 
     function pause() public onlyOwner {

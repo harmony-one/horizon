@@ -27,11 +27,11 @@
 
 
 ### Notes and recommendations
-- [ ] Update .env Keys to only have two values ethereum and Harmony
-- [ ] Update funding process for local environment to send funds to test account
+- [ ] Review [bridgeMapError](https://gist.github.com/johnwhitton/14b2a62f18c53e76d4bdd1f97759e5fd)
+- [ ] Parameterize deploys and add in dependencies.
 - [ ] Update MerkleRoot.sol to have an initialize function and so we can deploy without modifying the contract
 - [ ] Update ABI definitions to use `./build/contracts`
-- [ ] Parameterize deploy scripts using Hardhat tasks
+- [ ] Prepare demo of local environment and testing
 - [ ] remove `src/cli/lib/` replace ethWeb3 and hmyWeb3 with hardhat deploy scripts and tools
 - [ ] .env define seperate accounts for each network and update hardhat.config.ts
 - [ ] make consistent use of `ethers.js` replacing libraries such as `web3`, `rlp`, `bigNumber`, `ethereumjs-util`. Recommendation is `ethers` vs `web3` based on hardhat integration [this article](https://moralis.io/web3-js-vs-ethers-js-guide-to-eth-javascript-libraries/), [these stats](https://npm-stat.com/charts.html?package=ethers&package=web3&from=2021-01-01&to=2021-06-01) and these comments `Ethers.js loads slightly faster thanks to its noticeably smaller size, which may offer better performance.` and `However, the blockchain industry as a whole is slowly migrating towards a younger alternative – Ethers.js. `
@@ -65,7 +65,9 @@ From @polymorpher on [PR Refactor #38](https://github.com/harmony-one/horizon/pu
 - [ ] As to the questions, I suppose Bridge subcommands (the three you mentioned) can be used to do human-driven testing once deployment is complete. But they don't seem to be good for any automated testing. I don't think there is any end-to-end testing elsewhere
 - [ ] Some PRs seem to be introducing useful tests, for example: https://github.com/harmony-one/horizon/pull/31/files
 
-
+### Completed
+- [x] Update .env Keys to only have two values ethereum and Harmony
+- [x] Update funding process for local environment to send funds to test account
 
 
 

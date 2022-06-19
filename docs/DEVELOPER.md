@@ -41,7 +41,7 @@ yarn cli ethRelay relay http://localhost:8645 http://localhost:9500 0x0b84F276Ee
 
 # Map the Tokens
 # map <ethUrl> <ethBridge> <hmyUrl> <hmyBridge> <token>
-yarn cli Bridge map http://localhost:8645 0x3Ceb74A902dc5fc11cF6337F68d04cB834AE6A22 http://localhost:9500 0x3Ceb74A902dc5fc11cF6337F68d04cB834AE6A22 0x82305ac469bc60D88D66b7259e3789fB8CD54A88
+yarn cli Bridge map http://localhost:8645 0x3Ceb74A902dc5fc11cF6337F68d04cB834AE6A22 http://localhost:9500 0x3Ceb74A902dc5fc11cF6337F68d04cB834AE6A22 0x4e59AeD3aCbb0cb66AF94E893BEE7df8B414dAB1
 
 # cross transfer ERC20 from eth to hmy (receipt is the recipient address)
 # crossTo <ethUrl> <ethBridge> <hmyUrl> <hmyBridge> <token> <receipt> <amount>

@@ -7,7 +7,7 @@ const deployFunction: DeployFunction = async function (
     hre: HardhatRuntimeEnvironment
 ) {
     const { deployments, getNamedAccounts } = hre
-    const { deploy } = deployments
+    const { deploy, log, get } = deployments
     const { deployer } = await getNamedAccounts()
 
     const TokenLockerOnEthereum = await deploy('TokenLockerOnEthereum', {
@@ -21,7 +21,14 @@ const deployFunction: DeployFunction = async function (
     const tokenLockerOnEthereum = await ethers.getContractAt('TokenLockerOnEthereum', TokenLockerOnEthereum.address)
 
     console.log('TokenLockerOnEthereum deployed to:', tokenLockerOnEthereum.address)
-    const tx = await tokenLockerOnEthereum.initialize()
+    let tx = await tokenLockerOnEthereum.initialize()
+    await ethers.provider.waitForTransaction(tx.hash)
+
+    // get the Harmony light client
+    const HarmonyLightClient = await get('HarmonyLightClient')
+    // const harmonyLightClient = await ethers.getContractAt('HarmonyLightClient', HarmonyLightClient.address)
+    console.log(`harmonyLightClient.address: ${HarmonyLightClient.address}`)
+    tx = await tokenLockerOnEthereum.changeLightClient(HarmonyLightClient.address)
     await ethers.provider.waitForTransaction(tx.hash)
 
     console.log(`lightclient   : ${await tokenLockerOnEthereum.lightclient()}`)

@@ -32,7 +32,7 @@ Dag_CMD.command('generate <epoch_start>')
     .option(
         '-d,--dagDir <dag dir>',
         'direction to store dag merkel tree',
-        './.dag'
+        './data/dag'
     )
     .option('-t,--type <output type>', 'output type: sol,json', 'sol')
     .option('-o,--output <OUTPUT>', 'output file')
@@ -67,7 +67,7 @@ Dag_CMD.command('blockProof')
     .option(
         '-d,--dagDir <dag dir>',
         'direction to store dag merkel tree',
-        './.dag'
+        './data/dag'
     )
     .option('-o,--output <OUTPUT>', 'output file')
     .action(async (options) => {
@@ -139,7 +139,7 @@ ETHRelay_CMD.command('relay <ethUrl> <hmyUrl> <elcAddress>')
     .option(
         '-d,--dagDir <dag dir>',
         'direction to store dag merkel tree',
-        './.dag'
+        './data/dag'
     )
     .action(async (ethUrl, hmyUrl, elcAddress, options) => {
         await blockRelayLoop(options.dagDir, ethUrl, hmyUrl, elcAddress)

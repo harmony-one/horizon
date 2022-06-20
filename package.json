@@ -5,7 +5,7 @@
     "scripts": {
         "libInit": "tar -zxf ethereumjs-ethash-dist.tar.gz -C node_modules/@ethereumjs/ethash",
         "init-yarn": "yarn install; cd ./src/cli; yarn install; cd ../elc; yarn install; cd ../eprover; yarn install; cd ../eth2hmy-relay; yarn install; cd ../..; hardhat clean; hardhat compile",
-        "init-chain": "rm -rf ./localgeth/data; cp -rf ../initData/localgeth/data ./localgeth/.; rm -rf ./src/cli/.dag/0; cp -rf ../initData/localgeth/dag/0 ./src/cli/.dag/.; rm -rf ./deployments/localgeth; rm -rf ./deployments/localnet; rm ./.openzeppelin/unknown-8788.json; rm ./.openzeppelin/unknown-1666700000.json",
+        "init-chain": "rm -rf ./localgeth/data; cp -rf ../initData/localgeth/data ./localgeth/.; rm -rf ./data/dag/*; cp -rf ../initData/dag/* ./data/dag/.; rm -rf ./deployments/localgeth; rm -rf ./deployments/localnet; rm ./.openzeppelin/unknown-8788.json; rm ./.openzeppelin/unknown-1666700000.json",
         "clean": "hardhat clean",
         "check": "hardhat check",
         "compile": "hardhat compile",

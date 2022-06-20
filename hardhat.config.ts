@@ -120,7 +120,7 @@ const hardhatUserconfig: HardhatUserConfig = {
         outputDir: 'docs/solidity'
     },
     abiExporter: {
-        path: './data/abi',
+        path: './docs/abi',
         runOnCompile: true,
         clear: true,
         flat: true,

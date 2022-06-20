@@ -4,9 +4,11 @@ import { DeployFunction } from 'hardhat-deploy/types'
 import { ethers } from 'hardhat'
 import { toRLPHeader } from '../src/lib/utils'
 
+const config = require('../config.js')
+
 async function fetchBlock (blockNumber) {
     const provider = new ethers.providers.JsonRpcProvider(
-        process.env.HMY_URL
+        config.hmyURL
     )
     return await provider.send('hmyv2_getFullHeader', [blockNumber])
 }

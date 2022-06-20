@@ -4,6 +4,8 @@ import { DeployFunction } from 'hardhat-deploy/types'
 import { ethers } from 'hardhat'
 import { getBlockByNumber } from '../src/eth2hmy-relay/lib/getBlockHeader'
 
+const config = require('../config.js')
+
 const deployFunction: DeployFunction = async function (
     hre: HardhatRuntimeEnvironment
 ) {
@@ -11,8 +13,8 @@ const deployFunction: DeployFunction = async function (
     const { deploy } = deployments
     const { deployer } = await getNamedAccounts()
 
-    const url = process.env.ETH_URL
-    console.log(`process.env.ETH_URL: ${process.env.ETH_URL}`)
+    const url = config.ethURL
+    console.log(`config.ethURL: ${config.ethURL}`)
     const blockNum = 2175 // Localgeth Block Number
     // const blockNum = 12387200 // Ropsten Block Number
     const initHeader = await getBlockByNumber(url, blockNum)

@@ -1,12 +1,12 @@
 const transactions = require('../test/transaction.json')
 const { ethers } = require('hardhat')
 const util = require('util')
-require('dotenv').config()
+const config = require('../../config.js')
 const Web3 = require('web3')
 const { toRLPHeader, rpcWrapper, getReceiptProof } = require('./utils')
 
 async function fetchBlock (blockNumber) {
-    const web3 = new Web3(new Web3.providers.HttpProvider(process.env.HMY_URL))
+    const web3 = new Web3(new Web3.providers.HttpProvider(config.hmyURL))
     const sendRpc = util
         .promisify(web3.currentProvider.send)
         .bind(web3.currentProvider)

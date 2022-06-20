@@ -21,6 +21,7 @@ const {
     deployFakeLightClient
 } = require('./bridge/contract')
 const fs = require('fs')
+const { Logger } = require('../lib/logger.js')
 
 program.description('Horizon Trustless Bridge CLI')
 
@@ -209,6 +210,7 @@ CMD_Bridge.command('deploy <ethUrl> <hmyUrl>')
 CMD_Bridge.command('map <ethUrl> <ethBridge> <hmyUrl> <hmyBridge> <token>')
     .description('map ERC20 to HRC20')
     .action(async (ethUrl, ethAddress, hmyUrl, hmyAddress, token) => {
+        Logger.debug('In Bridge Map about to call tokenMap')
         const { ethBridge, hmyBridge } = await tokenMap(
             ethUrl,
             ethAddress,
@@ -216,20 +218,22 @@ CMD_Bridge.command('map <ethUrl> <ethBridge> <hmyUrl> <hmyBridge> <token>')
             hmyAddress,
             token
         )
-
+        Logger.debug('tokenMap succesful')
+        Logger.debug('calling ethBridgeTokenPair')
         const pair = await ethBridge.TokenPair(token)
+        Logger.debug(`pair: ${JSON.stringify(pair)}`)
         const ethTokenInfo = await tokenStatus(
             ethBridge.web3,
             pair[0],
             ethBridge.web3.address
         )
-        console.log('ethereum token:', ethTokenInfo)
+        Logger.debug('ethereum token:', ethTokenInfo)
         const hmyTokenInfo = await tokenStatus(
             hmyBridge.web3,
             pair[1],
             hmyBridge.web3.address
         )
-        console.log('harmony token:', hmyTokenInfo)
+        Logger.debug('harmony token:', hmyTokenInfo)
     })
 
 CMD_Bridge.command(

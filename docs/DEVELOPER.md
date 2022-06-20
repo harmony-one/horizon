@@ -587,6 +587,11 @@ Following is an overview of the components which make up the horizon bridge.
 ### Additional References
 * [Additional Bridge Research](https://eavenetwork.notion.site/Bridges-713be29794df41b4aeb65c26d6a0404b): Other Bridging techniques including Nomad, Cosmos, Solana Wormhole, Snowfork and XCMP.
 * [Nomad's Docs](https://docs.nomad.xyz/#home):  Nomad's optimistic rollup hub and spoke appoach
-* [EIP-235: Diamonds, Multi-Facet Proxy](https://eips.ethereum.org/EIPS/eip-2535): Smart contract compasability 
-
+* [EIP-235: Diamonds, Multi-Facet Proxy](https://eips.ethereum.org/EIPS/eip-2535): Smart contract compasability
+* [Ethereum Yellow Paper](http://gavwood.com/paper.pdf)
+* [Ethereum Block Architecture](https://ethereum.stackexchange.com/questions/268/ethereum-block-architecture)
+* [Harmony API docs](https://api.hmny.io/?version=latest#01148e4f-72bb-426d-a123-718a161eaec0)
+* [Harmony API Endpoints](https://docs.harmony.one/home/developers/api)
+* [Ethereum Testnets](https://ethereum.org/en/developers/docs/networks/#ethereum-testnets)
+* [Ethereum Sepolia Testnet](https://sepolia.dev/)
 

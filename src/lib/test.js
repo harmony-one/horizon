@@ -1,11 +1,11 @@
-require('dotenv').config()
+const config = require('../../config.js')
 const Web3 = require('web3')
 const BN = require('bn.js')
 const rlp = require('rlp')
 const { toUtf8Bytes } = require('@harmony-js/contract')
 const { hexlify } = require('@harmony-js/crypto')
 
-const web3 = new Web3(new Web3.providers.HttpProvider(process.env.LOCALNET))
+const web3 = new Web3(new Web3.providers.HttpProvider(config.localnetURL))
 web3.eth.defaultAccount = process.env.WALLET_ADDRESS
 
 const toRLPHeader = (block) => {

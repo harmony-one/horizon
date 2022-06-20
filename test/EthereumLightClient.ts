@@ -1,6 +1,7 @@
 import { expect } from 'chai'
 import { ethers, network } from 'hardhat'
 import { getBlockByNumber } from '../src/eth2hmy-relay/lib/getBlockHeader'
+const config = require('../config.js')
 
 // Constants Definition
 
@@ -11,7 +12,7 @@ describe('EthereumLightClient', function () {
     })
     beforeEach(async function (this) {
         this.snapshotId = await ethers.provider.send('evm_snapshot', [])
-        const url = process.env.HARDHAT_URL
+        const url = config.localgethURL
         const blockNum = 0
         // const blockNum = 27625582
         const initHeader = await getBlockByNumber(url, blockNum)

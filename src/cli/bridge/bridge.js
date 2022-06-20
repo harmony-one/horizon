@@ -1,3 +1,11 @@
+// const { Console } = require('console')
+// const { ethers } = require('ethers')
+const config = require('../../../config.js')
+const { Logger } = require('../../lib/logger.js')
+// const options = {
+//     gasLimit: config.gasLimit,
+//     gasPrice: config.gasPrice
+// }
 class Bridge {
     // contract: bridge contract
     // prover: eprover/hprover
@@ -8,10 +16,15 @@ class Bridge {
     }
 
     getProof (txHash) {
+        Logger.debug('getting Proof of Mapping Request')
+        // const tx = await this.prover.receiptProof(txHash)
+        Logger.debug(`receiptProof Mapping Request: ${JSON.stringify(tx)}`)
+        // return tx
         return this.prover.receiptProof(txHash)
     }
 
-    ExecProof (proofData) {
+    async ExecProof (proofData) {
+        Logger.debug('In exec Proof')
         const { hash, root, key, proof } = proofData
         const tx = this.contract.methods.validateAndExecuteProof(
             hash,
@@ -19,7 +32,10 @@ class Bridge {
             key,
             proof
         )
-        return this.web3.sendTx(tx)
+        const txResult = await this.web3.sendTx(tx, config.gasLimit)
+        Logger.debug('Have ExecProof Result')
+        return txResult
+        // return this.web3.sendTx(tx)
     }
 
     Initialize () {
@@ -37,9 +53,14 @@ class Bridge {
         return this.web3.sendTx(tx)
     }
 
-    IssueTokenMapReq (token) {
+    async IssueTokenMapReq (token) {
+        Logger.debug('In IssueTokenMapReq')
         const tx = this.contract.methods.issueTokenMapReq(token)
-        return this.web3.sendTx(tx)
+        Logger.debug('Have prepared tx')
+        const tx1 = await this.web3.sendTx(tx)
+        Logger.debug(`tx1: ${JSON.stringify(tx1)}`)
+        return tx1
+        // return this.web3.sendTx(tx)
     }
 
     Lock (token, to, amount) {
@@ -63,6 +84,7 @@ class Bridge {
     // dest: dest Bridge
     // tx: tx hash on src chain
     static CrossRelay (src, dest, tx) {
+        // return src.getProof(tx).then((proof) => dest.ExecProof(proof))
         return src.getProof(tx).then((proof) => dest.ExecProof(proof))
     }
 
@@ -70,10 +92,19 @@ class Bridge {
     // dest: dest Bridge
     // token: ERC20 address on src chain
     static async TokenMap (src, dest, token) {
+        Logger.debug('In bridge.js TokenMap')
+        Logger.debug('calling src.IssueTokenMapReq')
+        Logger.debug(`token: ${token}`)
+        // Logger.debug(`TxMapped: ${JSON.stringify(await src.contract.methods.TxMapped(token).call())}`)
+        // Logger.debug(`src: ${JSON.stringify(src)}`)
         const mapReq = await src.IssueTokenMapReq(token)
+        // Logger.debug(`Have mapReq: ${JSON.stringify(mapReq)}`)
+        Logger.debug('Have mapReq')
         // wait light client
         const mapAck = await Bridge.CrossRelay(src, dest, mapReq.transactionHash)
+        // Logger.debug(`Have mapAck: ${JSON.stringify(mapAck)}`)
         // wait light client
+        Logger.debug('FinalBridgeCrossRelay')
         return Bridge.CrossRelay(dest, src, mapAck.transactionHash)
     }
 

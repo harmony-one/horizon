@@ -1,9 +1,10 @@
 const Web3 = require('web3')
-require('dotenv').config()
+const config = require('../../../config.js')
+const { Logger } = require('../../lib/logger.js')
 class EthWeb3 {
     web3
     address
-    constructor (url, privateKey = process.env.PRIVATE_KEY) {
+    constructor (url, privateKey = config.privateKey) {
         this.web3 = new Web3(url)
         this.addPrivateKey(privateKey)
     }
@@ -27,7 +28,9 @@ class EthWeb3 {
         if (!gas) {
             gas = await tx.estimateGas()
         }
-        return tx.send({ gas })
+        Logger.debug(`gas: ${JSON.stringify(gas)}`)
+        return tx.send({ gasLimit: config.gasLimit })
+        // return tx.send({ gas })
     }
 
     addPrivateKey (privateKey) {

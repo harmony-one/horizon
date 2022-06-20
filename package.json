@@ -11,7 +11,7 @@
         "compile": "hardhat compile",
         "deploy-hardhat": "hardhat deploy --network hardhat --tags Ethereum",
         "hardhat-local": "npx hardhat node --no-deploy",
-        "geth-local": "geth --datadir ./localgeth/data --networkid 8788 --nat extip:127.0.0.1 --mine --miner.threads=1 --miner.etherbase=0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266  --http --http.api='eth,net,web3,personal' --http.port=8645 --http.corsdomain '*' --ws --ws.api='db,eth,net,web3,personal' --ws.port=8646",
+        "geth-local": "geth --datadir ./localgeth/data --networkid 8788 --nat extip:127.0.0.1 --mine --miner.threads=1 --miner.etherbase=0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266  --http --http.api='eth,net,web3,personal' --http.port=8645 --http.corsdomain '*' --ws --ws.api='db,eth,net,web3,personal' --ws.port=8646 --syncmode full  --gcmode archive",
         "harmony-local": "cd $GOPATH/src/github.com/harmony-one/harmony; make debug",
         "harmony-local-kill": "cd $GOPATH/src/github.com/harmony-one/harmony; make debug-kill",
         "deploy-localgeth": "hardhat deploy --network localgeth --tags Ethereum",

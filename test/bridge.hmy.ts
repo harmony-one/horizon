@@ -7,6 +7,7 @@ const {
     rpcWrapper,
     getReceiptProof
 } = require('../src/lib/utils')
+const config = require('../../config.js')
 
 let MMRVerifier, HarmonyProver
 let prover, mmrVerifier
@@ -42,7 +43,7 @@ describe('HarmonyProver', function () {
 
     it('parse transaction receipt proof', async function () {
         const callback = getReceiptProof
-        const callbackArgs = [process.env.LOCALNET_URL, prover, transactions.hash]
+        const callbackArgs = [config.localnetURL, prover, transactions.hash]
         const isTxn = true
         const txProof = await rpcWrapper(
             transactions.hash,

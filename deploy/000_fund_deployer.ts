@@ -2,6 +2,8 @@ import { HardhatRuntimeEnvironment } from 'hardhat/types'
 import { DeployFunction } from 'hardhat-deploy/types'
 import { ethers } from 'hardhat'
 
+const config = require('../config.js')
+
 // Fund deployer acounts for local networks localgeth and localnet
 const deployFunction: DeployFunction = async function (
     hre: HardhatRuntimeEnvironment
@@ -15,12 +17,12 @@ const deployFunction: DeployFunction = async function (
     switch (chainId) {
     // localgeth
     case '8788':{
-        funder = new ethers.Wallet(process.env.LOCALGETH_PRIVATE_KEY, ethers.provider)
+        funder = new ethers.Wallet(config.localgethPrivateKey, ethers.provider)
         break
     }
     // localnet
     case '1666700000': {
-        funder = new ethers.Wallet(process.env.LOCALNET_PRIVATE_KEY, ethers.provider)
+        funder = new ethers.Wallet(config.localnetPrivateKey, ethers.provider)
         break
     }
     }

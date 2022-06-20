@@ -1,5 +1,5 @@
 const { ethers } = require('hardhat')
-require('dotenv').config()
+const config = require('../../config.js')
 const { getBlockByNumber } = require('../eth2hmy-relay/lib/getBlockHeader.js')
 
 // works with kovan
@@ -17,7 +17,7 @@ async function deployHmySideContracts () {
     // const merkleProof = await MerkleProof.deploy();
     // await merkleProof.deployed();
 
-    const url = process.env.ETH_URL
+    const url = config.ethURL
     const blockNum = 27625582
     const initHeader = await getBlockByNumber(url, blockNum)
 

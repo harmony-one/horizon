@@ -1,7 +1,7 @@
 const transactions = require('../test/transaction.json')
 const { ethers } = require('hardhat')
 const util = require('util')
-require('dotenv').config()
+const config = require('../../config.js')
 const Web3 = require('web3')
 const { toRLPHeader, rpcWrapper, getReceiptProof } = require('./utils')
 
@@ -16,7 +16,7 @@ function hexToBytes (hex) {
 }
 
 async function getMmrProof (txnHash, refBlockNum) {
-    const web3 = new Web3(new Web3.providers.HttpProvider(process.env.LOCALNET))
+    const web3 = new Web3(new Web3.providers.HttpProvider(config.localnetURL))
     const sendRpc = util
         .promisify(web3.currentProvider.send)
         .bind(web3.currentProvider)
@@ -32,7 +32,7 @@ getMmrProof(transactions.hash, '0xf').then((res) => {
 })
 
 async function fetchBlock (blockNumber) {
-    const web3 = new Web3(new Web3.providers.HttpProvider(process.env.LOCALNET))
+    const web3 = new Web3(new Web3.providers.HttpProvider(config.localnetURL))
     const sendRpc = util
         .promisify(web3.currentProvider.send)
         .bind(web3.currentProvider)
@@ -143,7 +143,7 @@ async function deploy () {
             receiptProof.header,
             mmrProof.result,
             receiptProof,
-            { gasLimit: process.env.GAS_LIMIT }
+            { gasLimit: config.gasLimit }
         )
         console.log('done!')
     } catch (error) {
@@ -171,7 +171,7 @@ async function getRevertReason (txHash) {
 
 async function txReceiptProof () {
     const callback = getReceiptProof
-    const callbackArgs = [process.env.LOCALNET, prover, transactions.hash]
+    const callbackArgs = [config.localnetURL, prover, transactions.hash]
     const isTxn = true
     const txProof = await rpcWrapper(
         transactions.hash,
@@ -188,7 +188,7 @@ async function main () {
 
     // let callback = getReceiptProof;
     // let callbackArgs = [
-    //     process.env.LOCALNET,
+    //     config.localnetURL,
     //     prover,
     //     transactions.hash
     // ];

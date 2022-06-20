@@ -5,6 +5,8 @@ require('dotenv').config()
 const Web3 = require('web3')
 const { toRLPHeader, rpcWrapper, getReceiptProof } = require('./utils')
 
+const config = require('../config.js')
+
 let mmrVerifier, MMRVerifier
 let prover, HarmonyProver
 let lightclient, HarmonyLightClient
@@ -16,7 +18,7 @@ function hexToBytes (hex) {
 }
 
 async function getMmrProof (txnHash, refBlockNum) {
-    const web3 = new Web3(new Web3.providers.HttpProvider(process.env.LOCALNET))
+    const web3 = new Web3(new Web3.providers.HttpProvider(config.localnetURL))
     const sendRpc = util.promisify(web3.currentProvider.send)
         .bind(web3.currentProvider)
     return await sendRpc({
@@ -29,7 +31,7 @@ async function getMmrProof (txnHash, refBlockNum) {
 getMmrProof(transactions.hash, '0xf').then((res) => { console.log(res) })
 
 async function fetchBlock (blockNumber) {
-    const web3 = new Web3(new Web3.providers.HttpProvider(process.env.LOCALNET))
+    const web3 = new Web3(new Web3.providers.HttpProvider(config.localnetURL))
     const sendRpc = util.promisify(web3.currentProvider.send)
         .bind(web3.currentProvider)
     return await sendRpc({
@@ -135,7 +137,7 @@ async function deploy () {
     // console.log("receiveReceipt");
     // console.log(tokenLockerOnEthereum);
     try {
-        await tokenLockerOnEthereum.validateAndExecuteProof(receiptProof.header, mmrProof.result, receiptProof.proof, { gasLimit: process.env.GAS_LIMIT })
+        await tokenLockerOnEthereum.validateAndExecuteProof(receiptProof.header, mmrProof.result, receiptProof.proof, { gasLimit: config.gasLimit })
         console.log('done!')
     } catch (error) {
         console.log(error)
@@ -163,7 +165,7 @@ async function getRevertReason (txHash) {
 async function txReceiptProof () {
     const callback = getReceiptProof
     const callbackArgs = [
-        process.env.LOCALNET,
+        config.localnetURL,
         prover,
         transactions.hash
     ]
@@ -183,7 +185,7 @@ async function main () {
 
     // let callback = getReceiptProof;
     // let callbackArgs = [
-    //     process.env.LOCALNET,
+    //     config.localnetURL,
     //     prover,
     //     transactions.hash
     // ];

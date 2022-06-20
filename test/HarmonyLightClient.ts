@@ -1,13 +1,14 @@
 import { expect } from 'chai'
 import { ethers, network } from 'hardhat'
 import { toRLPHeader } from '../src/lib/utils'
+const config = require('../config.js')
 
 // Constants Definition
 
 // Additional Functions
 async function fetchBlock (blockNumber) {
     const provider = new ethers.providers.JsonRpcProvider(
-        process.env.LOCALNET_URL
+        config.localnetURL
     )
     return await provider.send('hmyv2_getFullHeader', [blockNumber])
 }

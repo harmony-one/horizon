@@ -67,12 +67,8 @@ class EProver {
             key,
             tree,
             node,
-<<<<<<< HEAD:tools/eprover/txProof.js
             proofIndex: Buffer.from(proofIndex),
             blockHash : targetReceipt.blockHash
-=======
-            proofIndex: Buffer.from(proofIndex)
->>>>>>> 28b220133f94afcedb6e604893bc4980d6f03d84:src/eprover/eprover/txProof.js
         }
     }
 

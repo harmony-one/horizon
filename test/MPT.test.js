@@ -1,7 +1,7 @@
 const { expect } = require('chai')
 const { EProver, Receipt } = require('../src/eprover')
 const { ethers } = require('hardhat')
-const recepits = require('./receipts.json')
+const recepits = require('./data/receipts.json')
 
 describe('Merkle-Patricia-Trie Test', () => {
     before(async function () {

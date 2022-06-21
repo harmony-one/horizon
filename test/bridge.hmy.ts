@@ -7,7 +7,7 @@ const {
     rpcWrapper,
     getReceiptProof
 } = require('../src/lib/utils')
-const config = require('../../config.js')
+const config = require('../config.js')
 
 let MMRVerifier, HarmonyProver
 let prover, mmrVerifier

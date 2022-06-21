@@ -51,13 +51,13 @@
 - [ ] Parameterize deploys.
 - [ ] Modify Deploy scripts to dynamically use network (e.g. for getting blockHeader) instead of the current use of environment variables `HMY_URL` and `ETH_URL`which need to be changed in `.env` when deploying to new networks.
 - [ ] Update MerkleRoot.sol to have an initialize function and so we can deploy without modifying the contract
-- [ ] Add linkage of Token Lockers to Deployments (migrate `lib\config.js` to a deploy task) 
+- [ ] Add linkage of Token Lockers to Deployments (migrate `lib\config.js` to a deploy task)
+- [ ] Write and Test Upgrade Process 
 
 **Code Optimization**
 - [ ] Ensure compatablity with [node version 18](https://nodejs.org/en/about/releases/) [hardhat compatability](https://hardhat.org/reference/stability-guarantees#node.js-versions-support) intital test with node version 18.4.0 gave an error on deploy `Error HH108: Cannot connect to the network localgeth.` see [here](https://github.com/NomicFoundation/hardhat/pull/2705)
 - [ ] Capture all Payloads for relay and TokenMap 
 - [ ] Update unit tests to use sample input files
-- [ ] Clean up lib (move deploys to deploy and tests to test and remove upgrade)
 - [ ] Consolidate helpers for cli and lib (create one js file per are in cli if needed e.g. `bridge.js`)
   - [ ] `src/cli/bridge` => `src/bridge`
   - [ ] `src/cli/elc` => `src/elc`
@@ -119,4 +119,5 @@ From @polymorpher on [PR Refactor #38](https://github.com/harmony-one/horizon/pu
 - [x] Update deploys to use proxies 
 - [x] Remove hardcoded deploy variables (use `config.js` instead)
 - [x] Remove deploy tasks from lib and place under deploy
+- [x] Clean up lib (move deploys to deploy and tests to test and remove upgrade)
 

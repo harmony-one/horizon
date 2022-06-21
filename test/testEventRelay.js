@@ -77,12 +77,9 @@ describe("Token Locker Cross Chain Event Passing", function () {
         debug(proof);
 
         /*
-        console.log("Boom")
-
-        console.log(proof.root)
-        console.log(proof.key)
-        console.log(proof.proof)
-
+        debug(proof.root)
+        debug(proof.key)
+        debug(proof.proof)
          */
 
         await LockerOnHarmony.validateAndExecuteProof(
@@ -92,7 +89,7 @@ describe("Token Locker Cross Chain Event Passing", function () {
             proof.proof
         );
 
-        console.log("done")
+        debug("done")
 
     });
 

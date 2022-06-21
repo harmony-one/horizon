@@ -22,7 +22,7 @@ async function tokenMap(
     destBridgeAddress,
     token
 ) {
-    const srcBridge = new HmyBridge(srcUrl, srcBridgeAddress);
+    const srcBridge = new EthBridge(srcUrl, srcBridgeAddress);
     const destBridge = new HmyBridge(destUrl, destBridgeAddress);
     await Bridge.TokenMap(srcBridge, destBridge, token);
     return { ethBridge: srcBridge, hmyBridge: destBridge };

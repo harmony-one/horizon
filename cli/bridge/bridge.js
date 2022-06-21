@@ -70,18 +70,10 @@ class Bridge {
     // dest: dest Bridge
     // token: ERC20 address on src chain
     static async TokenMap(src, dest, token) {
-        console.log("map request: ")
-        console.log(src)
         const mapReq = await src.IssueTokenMapReq(token);
         // wait light client
-        console.log("Printing Map Req: ");
-        console.log(mapReq);
-        console.log("Sending Map Ack");
         const mapAck = await Bridge.CrossRelay(src, dest, mapReq.transactionHash);
         // wait light client
-        console.log("Printing Map Ack: ");
-        console.log(mapAck);
-        console.log("Map finish")
         return Bridge.CrossRelay(dest, src, mapAck.transactionHash);
     }
 

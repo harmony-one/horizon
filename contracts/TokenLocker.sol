@@ -1,15 +1,16 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity 0.7.3;
+
+pragma solidity ^0.8.0;
 pragma experimental ABIEncoderV2;
 
 import "./lib/RLPReader.sol";
 import "./BridgedToken.sol";
 import "./TokenRegistry.sol";
-import "@openzeppelin/contracts-upgradeable/token/ERC20/SafeERC20Upgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC20/utils/SafeERC20Upgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/math/SafeMathUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/utils/math/SafeMathUpgradeable.sol";
 // import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
 // import "openzeppelin-solidity/contracts/token/ERC20/ERC20.sol";
 // import "openzeppelin-solidity/contracts/token/ERC20/SafeERC20.sol";
@@ -180,6 +181,7 @@ contract TokenLocker is TokenRegistry {
         );
     }
 
+    //This argument passing is an excellent example of how to get around stack too deep
     function onBurnEvent(bytes32[] memory topics, bytes memory data) private {
         address token = address(uint160(uint256(topics[1])));
         //address sender = address(uint160(uint256(topics[2])));

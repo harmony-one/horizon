@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity 0.7.3;
+
+pragma solidity ^0.8.0;
 pragma experimental ABIEncoderV2;
 
 interface ILightClient {
@@ -13,8 +14,8 @@ interface ILightClient {
 contract LightClientFake is ILightClient {
     function blocksByHeight(uint256 number, uint256)
         external
-        override
         pure
+        override
         returns (uint256)
     {
         return uint256(keccak256(abi.encode(number)));
@@ -22,8 +23,8 @@ contract LightClientFake is ILightClient {
 
     function VerifyReceiptsHash(bytes32 blockHash, bytes32 receiptsHash)
         external
-        override
         pure
+        override
         returns (bool)
     {
         blockHash;

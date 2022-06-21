@@ -48,7 +48,7 @@
 ### Notes and recommendations
 
 **Deploy updates**
-- [ ] Parameterize deploys.
+- [ ] Parameterize deploys (evaluate using [hardhat tasks](https://hardhat.org/guides/create-task) see [here](https://stackoverflow.com/questions/69111785/hardhat-run-with-parameters))
 - [ ] Modify Deploy scripts to dynamically use network (e.g. for getting blockHeader) instead of the current use of environment variables `HMY_URL` and `ETH_URL`which need to be changed in `.env` when deploying to new networks.
 - [ ] Update MerkleRoot.sol to have an initialize function and so we can deploy without modifying the contract
 - [ ] Add linkage of Token Lockers to Deployments (migrate `lib\config.js` to a deploy task)

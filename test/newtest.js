@@ -1,9 +1,9 @@
 const transactions = require('../test/transaction.json')
 const { ethers } = require('hardhat')
 const util = require('util')
-const config = require('../../config.js')
+const config = require('../config.js')
 const Web3 = require('web3')
-const { toRLPHeader, rpcWrapper, getReceiptProof } = require('./utils')
+const { toRLPHeader, rpcWrapper, getReceiptProof } = require('../src/lib/utils')
 
 let mmrVerifier, MMRVerifier
 let prover, HarmonyProver

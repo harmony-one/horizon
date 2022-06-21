@@ -15,7 +15,7 @@ data
 */dag*
 */*/.dag/*
 */*/dag/
-.openzeppelin
+#.openzeppelin
 
 node_modules
 yarn-error.log

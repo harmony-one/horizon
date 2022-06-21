@@ -48,10 +48,10 @@
 ### Notes and recommendations
 
 **Deploy updates**
-- [ ] Update deploys to use proxies 
 - [ ] Parameterize deploys.
 - [ ] Modify Deploy scripts to dynamically use network (e.g. for getting blockHeader) instead of the current use of environment variables `HMY_URL` and `ETH_URL`which need to be changed in `.env` when deploying to new networks.
 - [ ] Update MerkleRoot.sol to have an initialize function and so we can deploy without modifying the contract
+- [ ] Add linkage of Token Lockers to Deployments (migrate `lib\config.js` to a deploy task) 
 
 **Code Optimization**
 - [ ] Ensure compatablity with [node version 18](https://nodejs.org/en/about/releases/) [hardhat compatability](https://hardhat.org/reference/stability-guarantees#node.js-versions-support) intital test with node version 18.4.0 gave an error on deploy `Error HH108: Cannot connect to the network localgeth.` see [here](https://github.com/NomicFoundation/hardhat/pull/2705)
@@ -115,4 +115,8 @@ From @polymorpher on [PR Refactor #38](https://github.com/harmony-one/horizon/pu
 - [x] Add Logger similar to [this](https://github.com/polymorpher/one-wallet/blob/master/code/test/util.js#L25) with optional [debug](https://github.com/polymorpher/one-wallet/blob/master/code/lib/debug.js) and using a config.js similar to [this](https://github.com/polymorpher/one-wallet/blob/master/code/config.js)
 - [x] Consolidate dag data under data folder
 - [x] Add dependency for LightClient to TokenLocker on Deploy
+- [x] Create backup branch [refactorBeforeProxyChanges](https://github.com/johnwhitton/horizon/tree/refactorBeforeProxyChanges)
+- [x] Update deploys to use proxies 
+- [x] Remove hardcoded deploy variables (use `config.js` instead)
+- [x] Remove deploy tasks from lib and place under deploy
 

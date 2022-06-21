@@ -1,7 +1,7 @@
 /* eslint-disable node/no-unpublished-import */
 import { HardhatRuntimeEnvironment } from 'hardhat/types'
 import { DeployFunction } from 'hardhat-deploy/types'
-import { ethers } from 'hardhat'
+import { ethers, upgrades } from 'hardhat'
 import { getBlockByNumber } from '../src/eth2hmy-relay/lib/getBlockHeader'
 
 const config = require('../config.js')
@@ -9,31 +9,22 @@ const config = require('../config.js')
 const deployFunction: DeployFunction = async function (
     hre: HardhatRuntimeEnvironment
 ) {
-    const { deployments, getNamedAccounts } = hre
-    const { deploy } = deployments
-    const { deployer } = await getNamedAccounts()
-
     const url = config.ethURL
     console.log(`config.ethURL: ${config.ethURL}`)
-    const blockNum = 2175 // Localgeth Block Number
-    // const blockNum = 12387200 // Ropsten Block Number
+    const blockNum = config.elcInitialBlock // Localgeth Block Number
+    console.log(`blockNum: ${blockNum}`)
     const initHeader = await getBlockByNumber(url, blockNum)
-    // console.log(`initHeader: ${JSON.stringify(initHeader)}`)
     const rlpHeader = initHeader.serialize()
-    // console.log(`rlpHeader: ${JSON.stringify(rlpHeader)}`)
-    const EthereumLightClient = await deploy('EthereumLightClient', {
-        from: deployer,
-        args: [],
-        proxy: false,
-        log: true,
-        autoMine: true // speed up deployment on local network (ganache, hardhat), no effect on live networks
-    })
 
-    const ethereumLightClient = await ethers.getContractAt('EthereumLightClient', EthereumLightClient.address)
+    const EthereumLightClient = await ethers.getContractFactory('EthereumLightClient')
+    const ethereumLightClient = await upgrades.deployProxy(
+        EthereumLightClient,
+        [rlpHeader],
+        { initializer: 'initialize', unsafeAllow: ['external-library-linking'] }
+    )
 
+    await ethereumLightClient.deployed()
     console.log('EthereumLightClient deployed to:', ethereumLightClient.address)
-    const tx = await ethereumLightClient.initialize(rlpHeader)
-    await ethers.provider.waitForTransaction(tx.hash)
     console.log(`blockHeightMax   : ${await ethereumLightClient.blockHeightMax()}`)
     console.log(`finalityConfirms : ${await ethereumLightClient.finalityConfirms()}`)
     console.log(`firstBlock       : ${await ethereumLightClient.firstBlock()}`)
@@ -41,5 +32,5 @@ const deployFunction: DeployFunction = async function (
 }
 
 deployFunction.dependencies = []
-deployFunction.tags = ['EthereumLightClient', 'Harmony', 'Production']
+deployFunction.tags = ['EthereumLightClient']
 export default deployFunction

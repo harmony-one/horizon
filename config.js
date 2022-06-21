@@ -22,5 +22,10 @@ module.exports = {
     hmyTokenLocker: process.env.HMY_TOKEN_LOCKER,
     ethTokenLocker: process.env.ETH_TOKEN_LOCKER,
     verbose: process.env.VERBOSE === 'true' || process.env.VERBOSE === '1',
-    reportGas: false
+    reportGas: false,
+    hlcInitialBlock: process.env.HLC_INITIAL_BLOCK,
+    // use JSON.parse to parse the array of relayers
+    relayers: JSON.parse(process.env.RELAYERS),
+    threshold: process.env.THRESHOLD,
+    elcInitialBlock: process.env.ELC_INIITAL_BLOCK
 }

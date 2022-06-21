@@ -1,7 +1,7 @@
 /* eslint-disable node/no-unpublished-import */
 import { HardhatRuntimeEnvironment } from 'hardhat/types'
 import { DeployFunction } from 'hardhat-deploy/types'
-import { ethers } from 'hardhat'
+import { ethers, upgrades } from 'hardhat'
 import { toRLPHeader } from '../src/lib/utils'
 
 const config = require('../config.js')
@@ -16,36 +16,28 @@ async function fetchBlock (blockNumber) {
 const deployFunction: DeployFunction = async function (
     hre: HardhatRuntimeEnvironment
 ) {
-    const { deployments, getNamedAccounts } = hre
-    const { deploy } = deployments
-    const { deployer } = await getNamedAccounts()
-
     // const initialBlock = '0xe'
-    const initialBlock = 1
+    const initialBlock = config.hlcInitialBlock
     const response = await fetchBlock(initialBlock)
     const initialBlockRlp = toRLPHeader(response)
-    const relayers = ['0x0B585F8DaEfBC68a311FbD4cB20d9174aD174016']
-    const threshold = 1
+    const relayers = config.relayers
+    const threshold = config.threshold
 
-    const HarmonyLightClient = await deploy('HarmonyLightClient', {
-        from: deployer,
-        args: [],
-        proxy: false,
-        log: true,
-        autoMine: true // speed up deployment on local network (ganache, hardhat), no effect on live networks
-    })
+    const HarmonyLightClient = await ethers.getContractFactory('HarmonyLightClient')
+    const harmonyLightClient = await upgrades.deployProxy(
+        HarmonyLightClient,
+        [initialBlockRlp, relayers, threshold],
+        { initializer: 'initialize', unsafeAllow: ['external-library-linking'] }
+    )
 
-    const harmonyLightClient = await ethers.getContractAt('HarmonyLightClient', HarmonyLightClient.address)
+    await harmonyLightClient.deployed()
 
     console.log('HarmonyLightClient deployed to:', harmonyLightClient.address)
-    const tx = await harmonyLightClient.initialize(initialBlockRlp, relayers, threshold)
-    await ethers.provider.waitForTransaction(tx.hash)
-
     console.log(`DEFAULT_ADMIN_ROLE   : ${await harmonyLightClient.DEFAULT_ADMIN_ROLE()}`)
     console.log(`RELAYER_ROLE         : ${await harmonyLightClient.RELAYER_ROLE()}`)
     console.log(`paused               : ${await harmonyLightClient.paused()}`)
 }
 
 deployFunction.dependencies = []
-deployFunction.tags = ['HarmonyLightClient', 'Ethereum', 'Production']
+deployFunction.tags = ['HarmonyLightClient']
 export default deployFunction

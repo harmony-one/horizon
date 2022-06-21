@@ -37,19 +37,20 @@ yarn deploy-localgeth
 yarn deploy-localnet
 
 # Start the relayer (note: replace the etherum light client address below)
- yarn cli ethRelay relay http://localhost:8645 http://localhost:9500 0x0b84F276Ee85dD856Fb920dE270acF388688aeeA
+# relay [options] <ethUrl> <hmyUrl> <elcAddress>   relay eth block header to elc on hmy
+ yarn cli ethRelay relay http://localhost:8645 http://localhost:9500 0x3Ceb74A902dc5fc11cF6337F68d04cB834AE6A22
 
 # Map the Tokens
 # map <ethUrl> <ethBridge> <hmyUrl> <hmyBridge> <token>
-yarn cli Bridge map http://localhost:8645 0x3Ceb74A902dc5fc11cF6337F68d04cB834AE6A22 http://localhost:9500 0x3Ceb74A902dc5fc11cF6337F68d04cB834AE6A22 0x4e59AeD3aCbb0cb66AF94E893BEE7df8B414dAB1
+yarn cli Bridge map http://localhost:8645 0x017f8C7d1Cb04dE974B8aC1a6B8d3d74bC74E7E1 http://localhost:9500 0x017f8C7d1Cb04dE974B8aC1a6B8d3d74bC74E7E1 0x4e59AeD3aCbb0cb66AF94E893BEE7df8B414dAB1
 
 # cross transfer ERC20 from eth to hmy (receipt is the recipient address)
 # crossTo <ethUrl> <ethBridge> <hmyUrl> <hmyBridge> <token> <receipt> <amount>
-yarn cli Bridge crossTo http://localhost:8645 0x3Ceb74A902dc5fc11cF6337F68d04cB834AE6A22 http://localhost:9500 0x3Ceb74A902dc5fc11cF6337F68d04cB834AE6A22 0x82305ac469bc60D88D66b7259e3789fB8CD54A88 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266 100
+yarn cli Bridge crossTo http://localhost:8645 0x017f8C7d1Cb04dE974B8aC1a6B8d3d74bC74E7E1 http://localhost:9500 0x017f8C7d1Cb04dE974B8aC1a6B8d3d74bC74E7E1 0x4e59AeD3aCbb0cb66AF94E893BEE7df8B414dAB1 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266 100
 
 # cross transfer HRC20 from hmy back to eth (receipt is the recipient address)
 # crossBack <hmyUrl> <hmyBridge> <ethUrl> <ethBridge> <token> <receipt> <amount>
-yarn cli Bridge crossBack http://localhost:9500 0x3Ceb74A902dc5fc11cF6337F68d04cB834AE6A22  http://localhost:8645 0x3Ceb74A902dc5fc11cF6337F68d04cB834AE6A22 0x017f8C7d1Cb04dE974B8aC1a6B8d3d74bC74E7E1 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266 100
+yarn cli Bridge crossBack http://localhost:9500 0x017f8C7d1Cb04dE974B8aC1a6B8d3d74bC74E7E1  http://localhost:8645 0x017f8C7d1Cb04dE974B8aC1a6B8d3d74bC74E7E1 0x4e59AeD3aCbb0cb66AF94E893BEE7df8B414dAB1 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266 100
 ```
 
 ## Setting up the codebase
@@ -376,11 +377,14 @@ In the original codebase deployments of contracts where made upgradeable via the
 
 Currently requirements around upgradeability are under review. 
 
-Alernate ways to achieve this are
+Alernate ways to achieve this (each with there own npm package and plugins) are
 1. Hardhat Upgrades: Open Zepplin provides an [upgrade plugin](https://docs.openzeppelin.com/upgrades-plugins/1.x/hardhat-upgrades) via [this npm package](https://www.npmjs.com/package/@openzeppelin/hardhat-upgrades).  
-2. [EIP-2535 Diamonds, Multi-Facet Proxy](https://eips.ethereum.org/EIPS/eip-2535): Diamonds are [supported by hardhat-deploy](https://github.com/wighawag/hardhat-deploy/tree/master#builtin-in-support-for-diamonds-eip2535) and have [reference-implementations](https://github.com/mudgen/diamond-3-hardhat).
+2. [Hardhat Deploy](https://github.com/wighawag/hardhat-deploy): There is a [hardhat community plugin](https://www.npmjs.com/package/hardhat-deploy)for deployment which can alsoe be used. Some information about combining hardhat-deploy with open-zepplin upgrade is [here](https://github.com/wighawag/hardhat-deploy/issues/82). Also if combining you will need to use the `OpenZeppelinTransparentProxy` as described in the bottom of the [Deploying and Upgrading Proxies section](https://github.com/wighawag/hardhat-deploy#deploying-and-upgrading-proxies)
+3. [Hardhat Deploy](https://github.com/wighawag/hardhat-deploy): [EIP-2535 Diamonds, Multi-Facet Proxy](https://eips.ethereum.org/EIPS/eip-2535): Diamonds are [supported by hardhat-deploy](https://github.com/wighawag/hardhat-deploy/tree/master#builtin-in-support-for-diamonds-eip2535) and have [reference-implementations](https://github.com/mudgen/diamond-3-hardhat).
 
 Recommendation: Diamonds appear to be the more robust solution and will enable upgrading of functionality long term as we evolve our relay and verification functionality. If time is a constraint can use Hardhat Upgrades initially and then migrate to Diamonds at a later point. However this will incur a migration cost.
+
+*Note: An alternate deploy strategy not using Proxies was deployed under a branch [refactorBeforeProxyChanges](https://github.com/johnwhitton/horizon/tree/refactorBeforeProxyChanges) this had the benefit of being able to leverage hadhat deployments to get the address of the deployed contracts. When moving to using proxies we consolidated the deploy scripts per network so they could use the adresses easily. Another way to do this is using the `.openzepplin` files as mentioned [here](https://forum.openzeppelin.com/t/how-can-i-find-implementation-contract-address/6937)
 
 ## CLI
 A CLI has been developed to facilitate testing. Complete with mutliple commands and help functionality. We will provide an overview of the functionality it provides and also how to use it for end to end testing.

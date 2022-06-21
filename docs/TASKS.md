@@ -51,6 +51,7 @@
 - [ ] Update deploys to use proxies 
 - [ ] Parameterize deploys.
 - [ ] Modify Deploy scripts to dynamically use network (e.g. for getting blockHeader) instead of the current use of environment variables `HMY_URL` and `ETH_URL`which need to be changed in `.env` when deploying to new networks.
+- [ ] Update MerkleRoot.sol to have an initialize function and so we can deploy without modifying the contract
 
 **Code Optimization**
 - [ ] Ensure compatablity with [node version 18](https://nodejs.org/en/about/releases/) [hardhat compatability](https://hardhat.org/reference/stability-guarantees#node.js-versions-support) intital test with node version 18.4.0 gave an error on deploy `Error HH108: Cannot connect to the network localgeth.` see [here](https://github.com/NomicFoundation/hardhat/pull/2705)
@@ -75,7 +76,7 @@
 
 **Outstanding Issues**
 - [ ] Review [bridgeMapError](https://gist.github.com/johnwhitton/14b2a62f18c53e76d4bdd1f97759e5fd)
-- [ ] Update MerkleRoot.sol to have an initialize function and so we can deploy without modifying the contract
+
 
 **Production ready improvements**
 - [ ] Prepare demo of local environment and testing

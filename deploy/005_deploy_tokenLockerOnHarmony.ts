@@ -34,6 +34,6 @@ const deployFunction: DeployFunction = async function (
     console.log(`owner         : ${await tokenLockerOnHarmony.owner()}`)
 }
 
-deployFunction.dependencies = []
+deployFunction.dependencies = ['EthereumLightClient']
 deployFunction.tags = ['TokenLockerOnHarmony', 'Harmony', 'Production']
 export default deployFunction

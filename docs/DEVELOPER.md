@@ -37,7 +37,7 @@ yarn deploy-localgeth
 yarn deploy-localnet
 
 # Start the relayer (note: replace the etherum light client address below)
-yarn cli ethRelay relay http://localhost:8645 http://localhost:9500 0x0b84F276Ee85dD856Fb920dE270acF388688aeeA -d ./src/cli/.dag
+ yarn cli ethRelay relay http://localhost:8645 http://localhost:9500 0x0b84F276Ee85dD856Fb920dE270acF388688aeeA
 
 # Map the Tokens
 # map <ethUrl> <ethBridge> <hmyUrl> <hmyBridge> <token>
@@ -592,6 +592,7 @@ Following is an overview of the components which make up the horizon bridge.
 * [Ethereum Block Architecture](https://ethereum.stackexchange.com/questions/268/ethereum-block-architecture)
 * [Harmony API docs](https://api.hmny.io/?version=latest#01148e4f-72bb-426d-a123-718a161eaec0)
 * [Harmony API Endpoints](https://docs.harmony.one/home/developers/api)
+* [Harmony Network status](https://monitor.hmny.io/status)
 * [Ethereum Testnets](https://ethereum.org/en/developers/docs/networks/#ethereum-testnets)
 * [Ethereum Sepolia Testnet](https://sepolia.dev/)
 

@@ -49,10 +49,11 @@
 
 **Deploy updates**
 - [ ] Update deploys to use proxies 
-- [ ] Parameterize deploys and add in dependencies.
+- [ ] Parameterize deploys.
 - [ ] Modify Deploy scripts to dynamically use network (e.g. for getting blockHeader) instead of the current use of environment variables `HMY_URL` and `ETH_URL`which need to be changed in `.env` when deploying to new networks.
 
 **Code Optimization**
+- [ ] Ensure compatablity with [node version 18](https://nodejs.org/en/about/releases/) [hardhat compatability](https://hardhat.org/reference/stability-guarantees#node.js-versions-support) intital test with node version 18.4.0 gave an error on deploy `Error HH108: Cannot connect to the network localgeth.` see [here](https://github.com/NomicFoundation/hardhat/pull/2705)
 - [ ] Capture all Payloads for relay and TokenMap 
 - [ ] Update unit tests to use sample input files
 - [ ] Clean up lib (move deploys to deploy and tests to test and remove upgrade)
@@ -112,4 +113,5 @@ From @polymorpher on [PR Refactor #38](https://github.com/harmony-one/horizon/pu
 - [x] Include config.js and replace use of process.env throughout codebase
 - [x] Add Logger similar to [this](https://github.com/polymorpher/one-wallet/blob/master/code/test/util.js#L25) with optional [debug](https://github.com/polymorpher/one-wallet/blob/master/code/lib/debug.js) and using a config.js similar to [this](https://github.com/polymorpher/one-wallet/blob/master/code/config.js)
 - [x] Consolidate dag data under data folder
+- [x] Add dependency for LightClient to TokenLocker on Deploy
 

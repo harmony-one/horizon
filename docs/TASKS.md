@@ -64,6 +64,7 @@
 - [ ] DAG Generation Process works
 
 **Code Optimization**
+- [ ] Write bridge.js proof calls (currently passing incorrect parameters to Harmony TokenLocker `validateAndExecuteProof`)
 - [ ] Update ethWeb3 and hmyWeb3 to check result of gas calc and default to env variables
 - [ ] Ensure compatablity with [node version 18](https://nodejs.org/en/about/releases/) [hardhat compatability](https://hardhat.org/reference/stability-guarantees#node.js-versions-support) intital test with node version 18.4.0 gave an error on deploy `Error HH108: Cannot connect to the network localgeth.` see [here](https://github.com/NomicFoundation/hardhat/pull/2705)
 - [ ] Capture all Payloads for relay and TokenMap 

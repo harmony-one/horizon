@@ -19,25 +19,33 @@ class Bridge {
 
     async ExecProof (proofData) {
         Logger.debug('In exec Proof')
-        Logger.debug(`proofData: ${JSON.stringify(proofData)}`)
+        // Logger.debug(`proofData: ${JSON.stringify(proofData)}`)
         const { hash, root, key, proof } = proofData
-        // try {
-        const tx = await this.tokenLocker.validateAndExecuteProof(
-            hash,
-            root,
-            key,
-            proof,
-            options
-        )
-        await tx.wait()
-        Logger.debug('Leaving exec Proof')
-        return tx
-        // } catch (err) {
-        //     // const code = err.data.replace('Reverted ', '')
-        //     console.log(`err: ${err}`)
-        //     // const reason = this.ethers.utils.toUtf8String('0x' + code.substr(138))
-        //     // console.log('revert reason:', reason)
-        // }
+        try {
+        // const proofError = await this.tokenLocker.callStatic.validateAndExecuteProof(
+        //     hash,
+        //     root,
+        //     key,
+        //     proof,
+        //     options
+        // )
+        // Logger.debug(`proofError: ${JSON.stringify(proofError)}`)
+            const tx = await this.tokenLocker.validateAndExecuteProof(
+                hash,
+                root,
+                key,
+                proof,
+                options
+            )
+            await tx.wait()
+            Logger.debug('Leaving exec Proof')
+            return tx
+        } catch (error) {
+            // const code = err.data.replace('Reverted ', '')
+            console.log(`err: ${error}`)
+            // const reason = this.ethers.utils.toUtf8String('0x' + code.substr(138))
+            // console.log('revert reason:', reason)
+        }
     }
 
     async Initialize () {

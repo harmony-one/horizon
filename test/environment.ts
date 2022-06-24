@@ -3,10 +3,15 @@ const { ethers } = require('ethers')
 const Web3 = require('web3')
 const config = require('../config.js')
 const { Logger } = require('../src/lib/logger.js')
-const EthLockerSol = require('../build/contracts/TokenLockerOnEthereum.sol/TokenLockerOnEthereum.json')
+const EthTokenLockerSol = require('../build/contracts/TokenLockerOnEthereum.sol/TokenLockerOnEthereum.json')
 const EthlcSol = require('../build/contracts/EthereumLightClient.sol/EthereumLightClient.json')
 const HmylcSol = require('../build/contracts/HarmonyLightClient.sol/HarmonyLightClient.json')
+const HmyTokenLockerSol = require('../build/contracts/TokenLockerOnHarmony.sol/TokenLockerOnHarmony.json')
 const TokenSol = require('../build/contracts/FaucetToken.sol/FaucetToken.json')
+const options = {
+    gasLimit: config.gasLimit,
+    gasPrice: config.gasPrice
+}
 // const options = {
 //     gasLimit: config.gasLimit,
 //     gasPrice: config.gasPrice
@@ -20,6 +25,10 @@ async function main () {
     const hmyToken = await new ethers.Contract(hmyTokenAddress, TokenSol.abi, hmySigner)
     const hmyElcAddress = '0x3Ceb74A902dc5fc11cF6337F68d04cB834AE6A22'
     const hmyElc = await new ethers.Contract(hmyElcAddress, EthlcSol.abi, hmySigner)
+    const hmyTokenLockerAddress = '0x017f8C7d1Cb04dE974B8aC1a6B8d3d74bC74E7E1'
+    const hmyTokenLocker = await new ethers.Contract(hmyTokenLockerAddress, HmyTokenLockerSol.abi, hmySigner)
+    const sampleProofData = require('./data/proofData.json')
+    const { hash, root, key, proof } = sampleProofData
 
     const ethTokenAddress = '0x4e59AeD3aCbb0cb66AF94E893BEE7df8B414dAB1'
     const ethProvider = await new ethers.providers.JsonRpcProvider(config.ethURL)
@@ -33,7 +42,7 @@ async function main () {
     const ethHlc = await new ethers.Contract(ethHlcAddress, HmylcSol.abi, ethSigner)
     const web3EthHlc = new web3.eth.Contract(HmylcSol.abi, ethHlcAddress)
     const ethLockerAddress = '0x017f8C7d1Cb04dE974B8aC1a6B8d3d74bC74E7E1'
-    const ethLocker = await new ethers.Contract(ethLockerAddress, EthLockerSol.abi, ethSigner)
+    const ethLocker = await new ethers.Contract(ethLockerAddress, EthTokenLockerSol.abi, ethSigner)
 
     const hardhatTokenAddress = '0x4e59AeD3aCbb0cb66AF94E893BEE7df8B414dAB1'
     const hardhatProvider = await new ethers.providers.JsonRpcProvider(config.hardhatURL)
@@ -53,6 +62,16 @@ async function main () {
     Logger.debug('Harmony LastBlockNo:', hmyLastBlockNo.toString())
     const hmyFirstBlockNo = await hmyElc.firstBlock()
     Logger.debug('Harmony firstBlock:', hmyFirstBlockNo.toString())
+    const tx = await hmyTokenLocker.validateAndExecuteProof(
+        hash,
+        root,
+        key,
+        proof,
+        options
+    )
+    await tx.wait()
+    Logger.debug(`Harmony validateAndExecuteProof : ${JSON.stringify(tx)}`)
+    Logger.debug('Leaving exec Proof')
     console.log('============ Ending Harmony ===========')
 
     console.log('============ Starting LocalGeth =======')

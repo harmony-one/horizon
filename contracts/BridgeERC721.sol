@@ -3,27 +3,33 @@
 pragma solidity ^0.8.0;
 pragma experimental ABIEncoderV2;
 
-import "@openzeppelin/contracts-upgradeable/token/ERC20/extensions/ERC20BurnableUpgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 
 contract BridgeERC721 is
-    ERC20Upgradeable,
-    ERC20BurnableUpgradeable,
+    ERC721Upgradeable,
     OwnableUpgradeable
 {
+
+    mapping(uint256 => string) tokenURIs;
+
     function initialize(
         string memory name,
-        string memory symbol,
-        uint8 decimals
+        string memory symbol
     ) external initializer {
-        __ERC20_init(name, symbol);
-        __ERC20Burnable_init();
-        // decimals(decimals);
-        // _setupDecimals(decimals);
+        __ERC721_init(name, symbol);
     }
 
-    function mint(address to, uint256 amount) external onlyOwner {
-        _mint(to, amount);
+    function mint(address to, uint256 tokenId) external onlyOwner {
+        _mint(to, tokenId);
+    }
+
+    function setTokenURI(uint256 tokenId, string memory uri) external{
+        tokenURIs[tokenId] = uri;
+    }
+
+    function tokenURI(uint256 tokenId) public view override returns (string memory) {
+        //_requireMinted(tokenId);
+        return tokenURIs[tokenId];
     }
 }

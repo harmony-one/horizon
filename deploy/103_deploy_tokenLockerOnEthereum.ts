@@ -26,12 +26,13 @@ const deployFunction: DeployFunction = async function (
     // // const harmonyLightClient = await ethers.getContractAt('HarmonyLightClient', HarmonyLightClient.address)
     // console.log(`harmonyLightClient.address: ${HarmonyLightClient.address}`)
     // const tx = await tokenLockerOnEthereum.changeLightClient(HarmonyLightClient.address)
-    // await ethers.provider.waitForTransaction(tx.hash)
+    const tx = await tokenLockerOnEthereum.changeLightClient('0x3Ceb74A902dc5fc11cF6337F68d04cB834AE6A22')
+    await ethers.provider.waitForTransaction(tx.hash)
 
     console.log(`lightclient   : ${await tokenLockerOnEthereum.lightclient()}`)
     console.log(`owner         : ${await tokenLockerOnEthereum.owner()}`)
 }
 
-deployFunction.dependencies = ['HarmonyLightClient']
+deployFunction.dependencies = []
 deployFunction.tags = ['TokenLockerOnEthereum']
 export default deployFunction

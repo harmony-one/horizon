@@ -25,6 +25,11 @@ const deployFunction: DeployFunction = async function (
         funder = new ethers.Wallet(config.localnetPrivateKey, ethers.provider)
         break
     }
+    // hardhatNode
+    case '31337': {
+        funder = new ethers.Wallet(config.hardhatPrivateKey, ethers.provider)
+        break
+    }
     }
     if (funder !== undefined) {
         const tx = await funder.sendTransaction({

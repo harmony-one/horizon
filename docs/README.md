@@ -130,13 +130,14 @@ Both hardhat and ganache have difficulty set to zero. Which is incompatible with
 
 If you want to use the pregenerated blockchain and dag data (Recommended).
 Copy and uncompress [this zip file](https://drive.google.com/file/d/1NyKfx-2vukDntcj8NmK3BNfblpBhh9rI/view?usp=sharing) to the same parent directory as your horizon repository and the run `yarn init-chain`
-* `yarn localgeth` : runs a local geth network
+* `yarn geth-local` : runs a local geth network
 
 If you want to generate the data yourself do the following
 ```
 cd localgeth
 geth init --datadir data genesis.json
-yarn localgeth
+cd ..
+yarn geth-local
 ```
 *Note: when generating your own data and dag you will also need to update `MerkleRoot.sol` with the encoded root information which you can retrieve by running the relayer and seeing `proofs.root`.*
 
@@ -299,8 +300,9 @@ info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this comm
 ```
 
 **Sample Coverage Report**
-* coverage reports are run using `yarn coverage`
+* coverage reports are created using `yarn coverage`
 * coverage for a specific test file can be generated with `yarn coverage --testfiles ./test/EthereumLightClient.ts`
+* once coverage reports have been generated an interactive website can also be viewed at http://loclahost:7800 by running `yarn show-coverage` (assumes you have python3 installed)
 
 ```
 ----------------------------|----------|----------|----------|----------|----------------|

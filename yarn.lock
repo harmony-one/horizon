@@ -6057,7 +6057,7 @@ isomorphic-fetch@^2.2.1:
     node-fetch "^1.0.1"
     whatwg-fetch ">=0.10.0"
 
-isomorphic-rpc@^1.2.1:
+isomorphic-rpc@1.2.2, isomorphic-rpc@^1.2.1:
   version "1.2.2"
   resolved "https://registry.yarnpkg.com/isomorphic-rpc/-/isomorphic-rpc-1.2.2.tgz#6ef1d1659ec55d399bb4b3aa3da48a371162527e"
   integrity sha512-0lhERXlo5ySVfSDRQT9aCt38yMsxTe8nOv9Zqu+ft2Jl3ETyBe09pjVGGe8FZuOGpuuuBLV+Yet6OgxUARDJsQ==

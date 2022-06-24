@@ -2,9 +2,9 @@ const { Bridge } = require('./bridge')
 const { EthBridge } = require('./ethBridge')
 const { HmyBridge } = require('./hmyBridge')
 const { FaucetERC20, ERC20 } = require('./token')
-const { EthWeb3 } = require('../lib/ethWeb3')
-const { Logger } = require('../../lib/logger.js')
-const FakeClient = require('../../../build/contracts/EthereumLightClient.sol/EthereumLightClient.json')
+const { EthEthers } = require('../lib/ethEthers')
+const { Logger } = require('../lib/logger.js')
+const FakeClient = require('../../build/contracts/EthereumLightClient.sol/EthereumLightClient.json')
 
 async function deployBridges (ethUrl, hmyUrl) {
     const ethBridge = await EthBridge.deploy(ethUrl)
@@ -44,7 +44,7 @@ async function tokenTo (
     const destBridge = new HmyBridge(destUrl, destBridgeAddress)
 
     if (amount > 0) {
-        const erc20 = new ERC20(srcBridge.web3, token)
+        const erc20 = new ERC20(srcBridge.ethers, token)
         await erc20.approve(srcBridge.contract._address, amount)
         await Bridge.TokenTo(srcBridge, destBridge, token, receipt, amount)
     }
@@ -63,7 +63,7 @@ async function tokenBack (
     const srcBridge = new HmyBridge(srcUrl, srcBridgeAddress)
     const destBridge = new EthBridge(destUrl, destBridgeAddress)
     if (amount > 0) {
-        const erc20 = new ERC20(srcBridge.web3, token)
+        const erc20 = new ERC20(srcBridge.ethers, token)
         await erc20.approve(srcBridge.contract._address, amount)
         await Bridge.TokenBack(srcBridge, destBridge, token, receipt, amount)
     }
@@ -76,22 +76,21 @@ function ChangeLightClient (rpcUrl, bridgeAddress, clientAddress) {
 }
 
 async function deployFakeLightClient (rpcUrl) {
-    const web3 = new EthWeb3(rpcUrl)
-    const tx = web3.ContractDeploy(FakeClient.abi, FakeClient.bytecode)
-    const client = await web3.sendTx(tx)
-    return client.options.address
+    const ethers = new EthEthers(rpcUrl)
+    const client = await ethers.ContractDeploy(FakeClient.abi, FakeClient.bytecode)
+    return client.address
 }
 
 async function deployFaucet (ethUrl) {
-    const web3 = new EthWeb3(ethUrl)
-    return FaucetERC20.deploy(web3)
+    const ethers = new EthEthers(ethUrl)
+    return FaucetERC20.deploy(ethers)
 }
 
-async function tokenStatus (web3, address, user) {
-    const token = new ERC20(web3, address)
+async function tokenStatus (ethers, address, user) {
+    const token = new ERC20(ethers, address)
     const name = await token.name()
     const balance = await token.balanceOf(user)
-    return { token: address, name, account: web3.address, balance }
+    return { token: address, name, account: ethers.address, balance }
 }
 
 module.exports = {

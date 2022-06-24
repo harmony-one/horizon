@@ -43,9 +43,40 @@
 * EProver: `get receipt proof of a transaction from ethereum`
 * EVerifier: `ethereum receipt verify cli`
 
+## Functionality Assumptions and Process Items
+- [ ] DAG Production
+  * Are relayers compensated for creating DAG's?
+  * What is the ideal number of epochs DAGs are created for? 
+  * How are DAG's distributed to relayers
+  * Aare there any performance issues with creating multipe (e.g. a years worth) of DAGs up front?
+  - [ ] Implementation Review: Process of MerkleRoot.sol updating the contract, which currently appears to be linked to an upgrade to the proxy of the whole EthHash.sol and ELC implementation. Would prefer to do this less frequently and ideally only upgrade the merkelRoot library (see EIP2535 Diamonds). 
+- [ ] Gas Fees when Linking or Bridging Tokens.
+  * Are Gas fees on the receiving chain paid by users or the bridge.
+  - [ ] Implementation Review: Currently for the CLI we are using one wallet as we move forward to integrating with the front end, the various providers and signers need to be accomodated.
 
 
 ### Notes and recommendations
+
+**Functionality Testing**
+- [x] Deployments Work
+- [x] Relayer Works
+- [ ] Bridge Works
+- [ ] DAG Generation Process works
+
+**Code Optimization**
+- [ ] Update ethWeb3 and hmyWeb3 to check result of gas calc and default to env variables
+- [ ] Ensure compatablity with [node version 18](https://nodejs.org/en/about/releases/) [hardhat compatability](https://hardhat.org/reference/stability-guarantees#node.js-versions-support) intital test with node version 18.4.0 gave an error on deploy `Error HH108: Cannot connect to the network localgeth.` see [here](https://github.com/NomicFoundation/hardhat/pull/2705)
+- [ ] Capture all Payloads for relay and TokenMap 
+- [ ] Update unit tests to use sample input files
+- [ ] Upgrade CLI commands into functional stages (e.g.
+  - [ ] infrastructure
+  - [ ] deployment *Note: may use hardhat cli for deployments*
+  - [ ] relayer (ethRelayer and ethHashProof (DAG))
+  - [ ] bridge (bridge, eprover, tokenLocker, tokenRegistry, etc))
+- [ ] For deployments use [hardhat-deploy](https://github.com/wighawag/hardhat-deploy#deploying-and-upgrading-proxies) instead of [openzepplin Upgrades Plugin](https://docs.openzeppelin.com/upgrades-plugins/1.x/api-hardhat-upgrades)
+- [ ] Review SmartContract error handling (e.g. [custom errors](https://blog.ricmoo.com/highlights-ethers-js-may-2021-2826e858277d))
+- [ ] Consolidate Packages relayer, tokenLocker(bridge) see [sushiswap sdk example](https://github.com/sushiswap/sdk/tree/canary/packages)
+- [ ] Review use of ethereumjs and ethereumjs-util in elc and eprover
 
 **Deploy updates**
 - [ ] Parameterize deploys (evaluate using [hardhat tasks](https://hardhat.org/guides/create-task) see [here](https://stackoverflow.com/questions/69111785/hardhat-run-with-parameters))
@@ -53,26 +84,8 @@
 - [ ] Update MerkleRoot.sol to have an initialize function and so we can deploy without modifying the contract
 - [ ] Add linkage of Token Lockers to Deployments (migrate `lib\config.js` to a deploy task)
 - [ ] Write and Test Upgrade Process 
-
-**Code Optimization**
-- [ ] Ensure compatablity with [node version 18](https://nodejs.org/en/about/releases/) [hardhat compatability](https://hardhat.org/reference/stability-guarantees#node.js-versions-support) intital test with node version 18.4.0 gave an error on deploy `Error HH108: Cannot connect to the network localgeth.` see [here](https://github.com/NomicFoundation/hardhat/pull/2705)
-- [ ] Capture all Payloads for relay and TokenMap 
-- [ ] Update unit tests to use sample input files
-- [ ] Consolidate helpers for cli and lib (create one js file per are in cli if needed e.g. `bridge.js`)
-  - [ ] `src/cli/bridge` => `src/bridge`
-  - [ ] `src/cli/elc` => `src/elc`
-  - [ ] `src/cli/eth2hmy-relay` => `src/eth2hmy-relay`
-  - [ ] `src/cli/ethashProof` => `src/ethashProof` (this is DAG related)
-  - [ ] `src/cli/verifier` => `src/eprover`
-  - [ ] `src/cli/lib` => `lib` (also update ethWeb3 and hmyWeb3 to use ethers)
-- [ ] Update ethWeb3 and hmyWeb3 to check result of gas calc and default to env variables
-- [ ] Move from web3 to ethers
-- [ ] make consistent use of `ethers.js` replacing libraries such as `web3`, `rlp`, `bigNumber`, `ethereumjs-util`. Recommendation is `ethers` vs `web3` based on hardhat integration [this article](https://moralis.io/web3-js-vs-ethers-js-guide-to-eth-javascript-libraries/), [these stats](https://npm-stat.com/charts.html?package=ethers&package=web3&from=2021-01-01&to=2021-06-01) and these comments `Ethers.js loads slightly faster thanks to its noticeably smaller size, which may offer better performance.` and `However, the blockchain industry as a whole is slowly migrating towards a younger alternative – Ethers.js. `
-- [ ] Upgrade CLI commands into functional stages (e.g.
-  - [ ] infrastructure
-  - [ ] deployment
-  - [ ] relayer (ethRelayer and ethHashProof (DAG))
-  - [ ] bridge (bridge, eprover, tokenLocker, tokenRegistry, etc))
+- [ ] Update initData on Google Drive with new localgeth data with only 50 blocks
+- [ ] Configure Sepolia Testnet *Note: we will probably have to host our own node as it is not supported by Infura or Alchemy*
 
 **Outstanding Issues**
 - [ ] Review [bridgeMapError](https://gist.github.com/johnwhitton/14b2a62f18c53e76d4bdd1f97759e5fd)
@@ -120,4 +133,14 @@ From @polymorpher on [PR Refactor #38](https://github.com/harmony-one/horizon/pu
 - [x] Remove hardcoded deploy variables (use `config.js` instead)
 - [x] Remove deploy tasks from lib and place under deploy
 - [x] Clean up lib (move deploys to deploy and tests to test and remove upgrade)
+- [x] Upgrade  isomorphic-rpc `yarn upgrade isomorphic-rpc@1.2.2` to fix `node:53398) UnhandledPromiseRejectionWarning: Error: {"jsonrpc":"2.0","id":1,"error":{"code":-32601,"message":"the method toJSON does not exist/is not available"}}`
+- [x] Move from web3 to ethers
+- [x] make consistent use of `ethers.js` replacing libraries such as `web3`, `rlp`, `bigNumber`, `ethereumjs-util`. Recommendation is `ethers` vs `web3` based on hardhat integration [this article](https://moralis.io/web3-js-vs-ethers-js-guide-to-eth-javascript-libraries/), [these stats](https://npm-stat.com/charts.html?package=ethers&package=web3&from=2021-01-01&to=2021-06-01) and these comments `Ethers.js loads slightly faster thanks to its noticeably smaller size, which may offer better performance.` and `However, the blockchain industry as a whole is slowly migrating towards a younger alternative – Ethers.js. `
+- [x] Consolidate helpers for cli and lib (create one js file per are in cli if needed e.g. `bridge.js`)
+  - [x] `src/cli/bridge` => `src/bridge`
+  - [x] `src/cli/elc` => `src/elc.js`
+  - [x] `src/cli/eth2hmy-relay` => `src/eth2hmy-relay`
+  - [x] `src/cli/ethashProof` => `src/ethashProof` (this is DAG related)
+  - [x] `src/cli/verifier` => `src/eprover`
+  - [x] `src/cli/lib` => `lib` (also update ethWeb3 and hmyWeb3 to use ethers)
 

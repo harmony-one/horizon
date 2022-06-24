@@ -4,7 +4,7 @@
     "description": "Harmony Horizon Bridge",
     "scripts": {
         "libInit": "tar -zxf ethereumjs-ethash-dist.tar.gz -C node_modules/@ethereumjs/ethash",
-        "init-yarn": "yarn install; cd ./src/cli; yarn install; cd ../elc; yarn install; cd ../eprover; yarn install; cd ../eth2hmy-relay; yarn install; cd ../..; hardhat clean; hardhat compile",
+        "init-yarn": "yarn install; yarn upgrade isomorphic-rpc@1.2.2; cd ./src/cli; yarn install; cd ../elc; yarn install; cd ../eprover; yarn install; cd ../eth2hmy-relay; yarn install; cd ../..; hardhat clean; hardhat compile",
         "init-chain": "rm -rf ./localgeth/data; cp -rf ../initData/localgeth/data ./localgeth/.; rm -rf ./data/dag/*; cp -rf ../initData/dag/* ./data/dag/.; rm -rf ./deployments/localgeth; rm -rf ./deployments/localnet; rm ./.openzeppelin/unknown-8788.json; rm ./.openzeppelin/unknown-1666700000.json",
         "clean": "hardhat clean",
         "check": "hardhat check",
@@ -31,6 +31,7 @@
         "lint": "eslint ./deploy ./src ./test",
         "lint-fix": "eslint ./deploy ./src ./test --fix",
         "coverage": "npx hardhat coverage",
+        "show-coverage": "cd ./coverage; python3 -m http.server 7800",
         "deploy": "npx hardhat run scripts/deploy.ts",
         "deployFaucet": "npx hardhat deploy --tags Deploy",
         "deployFaucetRopsten": "npx hardhat deploy --tags DeployRopsten",
@@ -82,6 +83,7 @@
         "typescript": "^4.6.4"
     },
     "dependencies": {
-        "eslint-plugin-n": "^15.2.2"
+        "eslint-plugin-n": "^15.2.2",
+        "isomorphic-rpc": "1.2.2"
     }
 }

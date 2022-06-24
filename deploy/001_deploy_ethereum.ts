@@ -27,7 +27,8 @@ const deployFunction: DeployFunction = async function (
     const harmonyLightClient = await upgrades.deployProxy(
         HarmonyLightClient,
         [initialBlockRlp, relayers, threshold],
-        { initializer: 'initialize', unsafeAllow: ['external-library-linking'] }
+        { initializer: 'initialize' }
+        // { initializer: 'initialize', unsafeAllow: ['external-library-linking'] }
     )
 
     await harmonyLightClient.deployed()
@@ -36,7 +37,7 @@ const deployFunction: DeployFunction = async function (
     console.log(`DEFAULT_ADMIN_ROLE   : ${await harmonyLightClient.DEFAULT_ADMIN_ROLE()}`)
     console.log(`RELAYER_ROLE         : ${await harmonyLightClient.RELAYER_ROLE()}`)
     console.log(`paused               : ${await harmonyLightClient.paused()}`)
-
+    console.log(`oldestEpochStored    : ${await harmonyLightClient.oldestEpochStored()}`)
     const TokenLockerOnEthereum = await ethers.getContractFactory('TokenLockerOnEthereum')
     const tokenLockerOnEthereum = await upgrades.deployProxy(
         TokenLockerOnEthereum,

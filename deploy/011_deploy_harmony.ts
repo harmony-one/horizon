@@ -34,7 +34,8 @@ const deployFunction: DeployFunction = async function (
     const tokenLockerOnHarmony = await upgrades.deployProxy(
         TokenLockerOnHarmony,
         [],
-        { initializer: 'initialize', unsafeAllow: ['external-library-linking'] }
+        { initializer: 'initialize' }
+        // { initializer: 'initialize', unsafeAllow: ['external-library-linking'] }
     )
 
     await tokenLockerOnHarmony.deployed()

@@ -153,7 +153,7 @@ class Ethash {
                     cacheSize: this.cacheSize,
                     fullSize: this.fullSize,
                     seed: this.seed,
-                    cache: cache
+                    cache
                 },
                 this.dbOpts
             )

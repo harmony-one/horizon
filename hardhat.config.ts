@@ -33,7 +33,8 @@ const hardhatUserconfig: HardhatUserConfig = {
             optimizer: {
                 enabled: true,
                 runs: 200
-            }
+            },
+            evmVersion: 'london'
         }
     },
     namedAccounts: {
@@ -50,6 +51,12 @@ const hardhatUserconfig: HardhatUserConfig = {
                 auto: false,
                 interval: 2000
             }
+        },
+        hardhatNode: {
+            url: config.hardhatURL,
+            accounts: [`0x${config.privateKey}`],
+            gasPrice: 20000000000,
+            gas: 6000000
         },
         localnet: {
             url: config.localnetURL,

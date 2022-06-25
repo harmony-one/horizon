@@ -207,7 +207,6 @@ contract TokenLocker is TokenRegistry, ERC721Registry {
         }
     }
 
-    //This argument passing is an excellent example of how to get around stack too deep
     function onBurnEvent(bytes32[] memory topics, bytes memory data) private {
         address token = address(uint160(uint256(topics[1])));
         //address sender = address(uint160(uint256(topics[2])));
@@ -217,6 +216,17 @@ contract TokenLocker is TokenRegistry, ERC721Registry {
         );
         IERC20Upgradeable lockedToken = TxMappedInv[token];
         lockedToken.safeTransfer(recipient, amount);
+    }
+
+    function onERC721BurnEvent(bytes32[] memory topics, bytes memory data) private {
+        address token = address(uint160(uint256(topics[1])));
+        //address sender = address(uint160(uint256(topics[2])));
+        (uint256 id, address recipient) = abi.decode(
+            data,
+            (uint256, address)
+        );
+        IERC721Upgradeable lockedToken = Tx721MappedInv[token];
+        lockedToken.transferFrom(address(this), recipient, id);
     }
 
     function onLockEvent(bytes32[] memory topics, bytes memory data) private {

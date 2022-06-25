@@ -5,6 +5,7 @@ pragma experimental ABIEncoderV2;
 
 import "./lib/RLPReader.sol";
 import "./BridgedToken.sol";
+import "./BridgeERC721.sol";
 import "./TokenRegistry.sol";
 import "./ERC721Registry.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC20/utils/SafeERC20Upgradeable.sol";
@@ -75,6 +76,29 @@ contract TokenLocker is TokenRegistry, ERC721Registry {
         );
         token.burnFrom(msg.sender, amount);
         emit Burn(address(token), msg.sender, amount, recipient);
+    }
+
+    function erc721Unlock(
+        BridgeERC721 token,
+        address recipient,
+        uint256 id
+    )
+        external
+    {
+        require(
+            recipient != address(0),
+            "recipient is a zero address"
+        );
+        require(
+            Rx721MappedInv[address(token)] != address(0),
+            "bridge does not exist"
+        );
+        require(
+            token.ownerOf(id) == msg.sender,
+            "Caller does not own this token"
+        );
+        token.burn(id);
+        emit ERC721Burn(address(token), msg.sender, id, recipient);
     }
 
     function lock(

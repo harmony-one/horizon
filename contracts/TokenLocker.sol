@@ -240,4 +240,16 @@ contract TokenLocker is TokenRegistry, ERC721Registry {
         require(address(mintToken) != address(0));
         mintToken.mint(recipient, amount);
     }
+
+    function onERC721LockEvent(bytes32[] memory topics, bytes memory data) private {
+        address token = address(uint160(uint256(topics[1])));
+        //address sender = address(uint160(uint256(topics[2])));
+        (uint256 id, address recipient, string memory uri) = abi.decode(
+            data,
+            (uint256, address, string)
+        );
+        BridgeERC721 mintToken = Rx721Mapped[token];
+        require(address(mintToken) != address(0));
+        mintToken.mint(recipient, id, uri);
+    }
 }

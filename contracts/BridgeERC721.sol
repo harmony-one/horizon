@@ -20,11 +20,12 @@ contract BridgeERC721 is
         __ERC721_init(name, symbol);
     }
 
-    function mint(address to, uint256 tokenId) external onlyOwner {
+    function mint(address to, uint256 tokenId, string memory uri) external onlyOwner {
         _mint(to, tokenId);
+        setTokenURI(tokenId, uri);
     }
 
-    function setTokenURI(uint256 tokenId, string memory uri) external{
+    function setTokenURI(uint256 tokenId, string memory uri) internal{
         tokenURIs[tokenId] = uri;
     }
 

@@ -214,6 +214,16 @@ contract TokenLocker is TokenRegistry, ERC721Registry {
                 events++;
                 continue;
             }
+            if (topics[0] == ERC721MapReqEventSig) {
+                onERC721MapReqEvent(topics, Data);
+                events++;
+                continue;
+            }
+            if (topics[0] == ERC721MapAckEventSig) {
+                onTokenERC721AckEvent(topics);
+                events++;
+                continue;
+            }
         }
     }
 

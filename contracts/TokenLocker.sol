@@ -11,6 +11,7 @@ import "./ERC721Registry.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC20/utils/SafeERC20Upgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC721/IERC721Upgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/utils/math/SafeMathUpgradeable.sol";
 // import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
@@ -36,7 +37,8 @@ contract TokenLocker is TokenRegistry, ERC721Registry {
         address indexed token,
         address indexed sender,
         uint256 id,
-        address recipient
+        address recipient,
+        string metadata
     );
 
     event Burn(
@@ -56,7 +58,7 @@ contract TokenLocker is TokenRegistry, ERC721Registry {
     bytes32 constant lockEventSig =
         keccak256("Locked(address,address,uint256,address)");
     bytes32 constant ERC721LockEventSig =
-        keccak256("ERC721Locked(address,address,uint256,address)");
+        keccak256("ERC721Locked(address,address,uint256,address,string)");
     bytes32 constant burnEventSig =
         keccak256("Burn(address,address,uint256,address)");
     bytes32 constant ERC721BurnEventSig =
@@ -117,6 +119,44 @@ contract TokenLocker is TokenRegistry, ERC721Registry {
         uint256 balanceAfter = token.balanceOf(address(this));
         uint256 actualAmount = balanceAfter.sub(balanceBefore);
         emit Locked(address(token), msg.sender, actualAmount, recipient);
+    }
+
+    function erc721Lock(
+        IERC721Upgradeable token,
+        address recipient,
+        uint256 id
+    )
+        external
+    {
+        require(recipient != address(0), "recipient is a zero address");
+        require(
+            Tx721Mapped[address(token)] != address(0),
+            "bridge does not exist"
+        );
+        //Check if metadata, fill default value if not
+        bytes memory data = abi.encodeWithSignature(
+            'tokenURI(uint256)',
+            id
+        );
+        (bool success, bytes memory resultData) = address(token).call(
+            data
+        );
+        string memory uri;
+        if(success){
+            uri = abi.decode(resultData, (string));
+        }
+        else{
+            uri = "Metadata Not Provided";
+        }
+        //transfer from user
+        token.transferFrom(msg.sender, address(this), id);
+        //double check transfer happened (Redundant?)
+        require(
+            token.ownerOf(id) == address(this),
+            "Token failed to transfer"
+        );
+        //emit event
+        emit ERC721Locked(address(token), msg.sender, id, recipient, uri);
     }
 
     function toReceiptItems(bytes memory rlpdata) private pure returns(RLPReader.RLPItem[] memory receipt) {

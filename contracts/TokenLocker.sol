@@ -6,6 +6,7 @@ pragma experimental ABIEncoderV2;
 import "./lib/RLPReader.sol";
 import "./BridgedToken.sol";
 import "./TokenRegistry.sol";
+import "./ERC721Registry.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC20/utils/SafeERC20Upgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol";
@@ -17,7 +18,7 @@ import "@openzeppelin/contracts-upgradeable/utils/math/SafeMathUpgradeable.sol";
 // import "openzeppelin-solidity/contracts/access/Ownable.sol";
 // import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 
-contract TokenLocker is TokenRegistry {
+contract TokenLocker is TokenRegistry, ERC721Registry {
     using RLPReader for RLPReader.RLPItem;
     using RLPReader for bytes;
     using SafeERC20Upgradeable for IERC20Upgradeable;
@@ -30,6 +31,13 @@ contract TokenLocker is TokenRegistry {
         address recipient
     );
 
+    event ERC721Locked(
+        address indexed token,
+        address indexed sender,
+        uint256 id,
+        address recipient
+    );
+
     event Burn(
         address indexed token,
         address indexed sender,
@@ -37,10 +45,21 @@ contract TokenLocker is TokenRegistry {
         address recipient
     );
 
+    event ERC721Burn(
+        address indexed token,
+        address indexed sender,
+        uint256 id,
+        address recipient
+    );
+
     bytes32 constant lockEventSig =
         keccak256("Locked(address,address,uint256,address)");
+    bytes32 constant ERC721LockEventSig =
+        keccak256("ERC721Locked(address,address,uint256,address)");
     bytes32 constant burnEventSig =
         keccak256("Burn(address,address,uint256,address)");
+    bytes32 constant ERC721BurnEventSig =
+        keccak256("ERC721Burn(address,address,uint256,address)");
 
     address public otherSideBridge;
 

@@ -16,7 +16,7 @@ contract BridgedToken is
         uint8 decimals
     ) external initializer {
         __ERC20_init(name, symbol);
-        __ERC20Burnable_init();
+        __Ownable_init();
         // decimals(decimals);
         // _setupDecimals(decimals);
     }

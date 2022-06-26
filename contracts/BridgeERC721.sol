@@ -18,6 +18,7 @@ contract BridgeERC721 is
         string memory symbol
     ) external initializer {
         __ERC721_init(name, symbol);
+        __Ownable_init();
     }
 
     function mint(address to, uint256 tokenId, string memory uri) external onlyOwner {

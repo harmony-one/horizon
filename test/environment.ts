@@ -29,6 +29,7 @@ async function main () {
     const hmyTokenLocker = await new ethers.Contract(hmyTokenLockerAddress, HmyTokenLockerSol.abi, hmySigner)
     const sampleProofData = require('./data/proofData.json')
     const { hash, root, key, proof } = sampleProofData
+    const txReceipt = require('./data/transactionReceipt.json')
 
     const ethTokenAddress = '0x4e59AeD3aCbb0cb66AF94E893BEE7df8B414dAB1'
     const ethProvider = await new ethers.providers.JsonRpcProvider(config.ethURL)
@@ -62,15 +63,39 @@ async function main () {
     Logger.debug('Harmony LastBlockNo:', hmyLastBlockNo.toString())
     const hmyFirstBlockNo = await hmyElc.firstBlock()
     Logger.debug('Harmony firstBlock:', hmyFirstBlockNo.toString())
-    const tx = await hmyTokenLocker.validateAndExecuteProof(
-        hash,
-        root,
-        key,
-        proof,
+    // const lockerError = await hmyTokenLocker.callStatic.validateAndExecuteProof(
+    //     hash,
+    //     root,
+    //     key,
+    //     proof,
+    //     options
+    // )
+    // console.log(`lockerError: ${JSON.stringify(`lockerError: ${lockerError}`)}`)
+    // const tx = await hmyTokenLocker.validateAndExecuteProof(
+    //     hash,
+    //     root,
+    //     key,
+    //     proof,
+    //     options
+    // )
+    const txErr = await hmyTokenLocker.callStatic.validateAndExecuteProof(
+        txReceipt.blockNumber,
+        txReceipt.transactionHash, // dummy root,
+        txReceipt.blockNumber, // dummy proofPath,
+        txReceipt.blockHash, // dummy proof,
         options
     )
-    await tx.wait()
+    Logger.debug(`Harmony validateAndExecuteProof txErr : ${JSON.stringify(txErr)}`)
+    const tx = await hmyTokenLocker.validateAndExecuteProof(
+        txReceipt.blockNumber,
+        txReceipt.transactionHash, // dummy root,
+        txReceipt.blockNumber, // dummy proofPath,
+        txReceipt.blockHash, // dummy proof,
+        options
+    )
+    const txReceipt2 = await tx.wait()
     Logger.debug(`Harmony validateAndExecuteProof : ${JSON.stringify(tx)}`)
+    Logger.debug(`Harmony validateAndExecuteProof Receipt : ${JSON.stringify(txReceipt2)}`)
     Logger.debug('Leaving exec Proof')
     console.log('============ Ending Harmony ===========')
 

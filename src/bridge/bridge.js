@@ -11,17 +11,54 @@ class Bridge {
         this.prover = prover
     }
 
-    async getProof (txHash) {
+    async getProof (transactionHash) {
         Logger.debug('getting Proof of Mapping Request')
-        const tx = await this.prover.receiptProof(txHash, options)
+        const tx = await this.prover.receiptProof(transactionHash, options)
         return tx
     }
 
-    async ExecProof (proofData) {
+    async ExecProofHmy (txReceipt, proofData) {
+        Logger.debug('In exec Proof')
+        // Logger.debug(`proofData: ${JSON.stringify(proofData)}`)
+        // uint256 blockNo,
+        // bytes32 rootHash,
+        // uint256 proofPath,
+        // bytes calldata proof
+        // const { hash, root, key, proof } = proofData
+        // const proofPath = txReceipt.blockNumber
+        // try {
+        // const proofError = await this.tokenLocker.callStatic.validateAndExecuteProof(
+        // txReceipt.blockNumber, // blockno
+        // txReceipt.transactionHash, // root,
+        // txReceipt.blockNumber, // proofPath,
+        // txReceipt.blockHash, // proof,
+        // options
+        // )
+        // Logger.debug(`proofError: ${JSON.stringify(proofError)}`)
+        const tx = await this.tokenLocker.validateAndExecuteProof(
+            txReceipt.blockNumber, // blockno
+            txReceipt.transactionHash, // root,
+            txReceipt.blockNumber, // proofPath,
+            txReceipt.blockHash, // proof,
+            options
+        )
+        console.log(`ExecProofHmy tx: ${JSON.stringify(tx)}`)
+        const txReceiptHmy = await tx.wait()
+        Logger.debug('Leaving exec Proof')
+        return txReceiptHmy
+        // } catch (error) {
+        //     // const code = err.data.replace('Reverted ', '')
+        //     console.log(`err: ${error}`)
+        //     // const reason = this.ethers.utils.toUtf8String('0x' + code.substr(138))
+        //     // console.log('revert reason:', reason)
+        // }
+    }
+
+    async ExecProofEth (proofData) {
         Logger.debug('In exec Proof')
         // Logger.debug(`proofData: ${JSON.stringify(proofData)}`)
         const { hash, root, key, proof } = proofData
-        try {
+        // try {
         // const proofError = await this.tokenLocker.callStatic.validateAndExecuteProof(
         //     hash,
         //     root,
@@ -30,22 +67,22 @@ class Bridge {
         //     options
         // )
         // Logger.debug(`proofError: ${JSON.stringify(proofError)}`)
-            const tx = await this.tokenLocker.validateAndExecuteProof(
-                hash,
-                root,
-                key,
-                proof,
-                options
-            )
-            await tx.wait()
-            Logger.debug('Leaving exec Proof')
-            return tx
-        } catch (error) {
-            // const code = err.data.replace('Reverted ', '')
-            console.log(`err: ${error}`)
-            // const reason = this.ethers.utils.toUtf8String('0x' + code.substr(138))
-            // console.log('revert reason:', reason)
-        }
+        const tx = await this.tokenLocker.validateAndExecuteProof(
+            hash,
+            root,
+            key,
+            proof,
+            options
+        )
+        await tx.wait()
+        Logger.debug('Leaving exec Proof')
+        return tx
+        // } catch (error) {
+        //     // const code = err.data.replace('Reverted ', '')
+        //     console.log(`err: ${error}`)
+        //     // const reason = this.ethers.utils.toUtf8String('0x' + code.substr(138))
+        //     // console.log('revert reason:', reason)
+        // }
     }
 
     async Initialize () {
@@ -68,8 +105,9 @@ class Bridge {
 
     async IssueTokenMapReq (token) {
         const tx = await this.tokenLocker.issueTokenMapReq(token)
-        await this.ethers.provider.waitForTransaction(tx.hash)
-        return tx
+        const txReceipt = await this.ethers.provider.waitForTransaction(tx.hash)
+        console.log(`IssueTokenMapReq txReceipt: ${JSON.stringify(txReceipt)}`)
+        return txReceipt
     }
 
     async Lock (token, to, amount) {
@@ -91,10 +129,31 @@ class Bridge {
         return isTx ? pair : pair.reverse()
     }
 
-    // src: src Bridge
-    // dest: dest Bridge
+    // ethBridge: src Bridge Ethereum
+    // hmyBridge: dest Bridge Harmony
+    // txReceipt: txReceipt on Ethereum
+    static async CrossRelayEthHmy (ethBridge, hmyBridge, txReceipt) {
+        // getProof of tx on Ethereum
+        const ethProof = await ethBridge.getProof(txReceipt.transactionHash)
+        Logger.debug(`txReceipt: ${JSON.stringify(txReceipt)}`)
+        Logger.debug(`ethProof: ${JSON.stringify(ethProof)}`)
+        // ExecProof of Transaction on Harmony
+        const txHmyProof = await hmyBridge.ExecProofHmy(txReceipt, ethProof)
+        console.log(`txHmyProof: ${JSON.stringify(txHmyProof)}`)
+
+        // return the Harmony acknowledgement Transaction
+        // const tx2 = await src.getProof(tx).then((proof) => dest.ExecProof(proof))
+        // await tx2.wait()
+        return txHmyProof
+    }
+
+    // src: src Bridge Harmony
+    // dest: dest Bridge Ethereum
     // tx: tx hash on src chain
-    static async CrossRelay (src, dest, tx) {
+    static async CrossRelayHmyEth (src, dest, tx) {
+        // getProof of tx on Harmony
+        // ExecProof on Harmony
+        // return the Ethereum Acknowledgement Transaction
         const tx2 = await src.getProof(tx).then((proof) => dest.ExecProof(proof))
         await tx2.wait()
         return tx2
@@ -108,9 +167,9 @@ class Bridge {
         Logger.debug('======== Calling issueTokenMapReq ===========')
         const mapReq = await src.IssueTokenMapReq(token)
         Logger.debug('=========== Have mapReq ============')
-        const mapAck = await Bridge.CrossRelay(src, dest, mapReq.hash)
-        Logger.debug('FinalBridgeCrossRelay')
-        return Bridge.CrossRelay(dest, src, mapAck.transactionHash)
+        const mapAck = await Bridge.CrossRelayEthHmy(src, dest, mapReq)
+        Logger.debug('=========== Have First Cross Relay ====')
+        return Bridge.CrossRelayHmyEth(dest, src, mapAck.transactionHash)
     }
 
     // src: src Bridge

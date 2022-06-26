@@ -1,4 +1,6 @@
 const { ethers } = require('ethers')
+// import { ethers } from 'hardhat'
+// const { ethers } = require('hardhat')
 const config = require('../../config.js')
 const { Logger } = require('./logger.js')
 

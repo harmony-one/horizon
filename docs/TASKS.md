@@ -78,6 +78,7 @@
 - [ ] Review SmartContract error handling (e.g. [custom errors](https://blog.ricmoo.com/highlights-ethers-js-may-2021-2826e858277d))
 - [ ] Consolidate Packages relayer, tokenLocker(bridge) see [sushiswap sdk example](https://github.com/sushiswap/sdk/tree/canary/packages)
 - [ ] Review use of ethereumjs and ethereumjs-util in elc and eprover
+- [ ] Improve error validation for invalid parameters for contract calls see [this gist](https://gist.github.com/johnwhitton/90e2ed533001f5293b0edbd58d9e2f18). *Note options include [callStatic](https://docs.ethers.io/v5/api/contract/contract/#contract-callStatic) to validate the function without updates, [queryFilter](https://docs.ethers.io/v5/api/contract/contract/#Contract-queryFilter) to retrieve the events. But these only occur if the contract was called with valid input parameters.*
 
 **Deploy updates**
 - [ ] Parameterize deploys (evaluate using [hardhat tasks](https://hardhat.org/guides/create-task) see [here](https://stackoverflow.com/questions/69111785/hardhat-run-with-parameters))

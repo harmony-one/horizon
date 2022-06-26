@@ -41,6 +41,10 @@ contract TokenLocker is TokenRegistry, ERC721Registry {
         string metadata
     );
 
+    event ERC1155Locked(
+
+    );
+
     event Burn(
         address indexed token,
         address indexed sender,
@@ -55,14 +59,22 @@ contract TokenLocker is TokenRegistry, ERC721Registry {
         address recipient
     );
 
+    event ERC1155Burn(
+
+    );
+
     bytes32 constant lockEventSig =
         keccak256("Locked(address,address,uint256,address)");
     bytes32 constant ERC721LockEventSig =
         keccak256("ERC721Locked(address,address,uint256,address,string)");
+    bytes32 constant ERC1155LockEventSig =
+        keccak256("ERC1155Locked()");
     bytes32 constant burnEventSig =
         keccak256("Burn(address,address,uint256,address)");
     bytes32 constant ERC721BurnEventSig =
         keccak256("ERC721Burn(address,address,uint256,address)");
+    bytes32 constant ERC1155BurnEventSig =
+        keccak256("ERC1155Burn()");
 
     address public otherSideBridge;
 
@@ -204,6 +216,16 @@ contract TokenLocker is TokenRegistry, ERC721Registry {
                 events++;
                 continue;
             }
+            if (topics[0] == ERC1155BurnEventSig) {
+                onERC1155BurnEvent(topics, Data);
+                events++;
+                continue;
+            }
+            if (topics[0] == ERC1155LockEventSig) {
+                onERC1155LockEvent(topics, Data);
+                events++;
+                continue;
+            }
             if (topics[0] == TokenMapReqEventSig) {
                 onTokenMapReqEvent(topics, Data);
                 events++;
@@ -221,6 +243,16 @@ contract TokenLocker is TokenRegistry, ERC721Registry {
             }
             if (topics[0] == ERC721MapAckEventSig) {
                 onTokenERC721AckEvent(topics);
+                events++;
+                continue;
+            }
+            if (topics[0] == ERC1155MapReqEventSig) {
+                onERC1155MapReqEvent(topics, Data);
+                events++;
+                continue;
+            }
+            if (topics[0] == ERC1155MapAckEventSig) {
+                onTokenERC1155AckEvent(topics);
                 events++;
                 continue;
             }
@@ -249,6 +281,10 @@ contract TokenLocker is TokenRegistry, ERC721Registry {
         lockedToken.transferFrom(address(this), recipient, id);
     }
 
+    function onERC1155BurnEvent(bytes32[] memory topics, bytes memory data) private {
+
+    }
+
     function onLockEvent(bytes32[] memory topics, bytes memory data) private {
         address token = address(uint160(uint256(topics[1])));
         //address sender = address(uint160(uint256(topics[2])));
@@ -271,5 +307,9 @@ contract TokenLocker is TokenRegistry, ERC721Registry {
         BridgeERC721 mintToken = Rx721Mapped[token];
         require(address(mintToken) != address(0));
         mintToken.mint(recipient, id, uri);
+    }
+
+    function onERC1155LockEvent(bytes32[] memory topics, bytes memory data) private {
+
     }
 }

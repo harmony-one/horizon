@@ -11,6 +11,7 @@ import 'hardhat-abi-exporter'
 import '@atixlabs/hardhat-time-n-mine'
 import 'hardhat-spdx-license-identifier'
 import 'hardhat-deploy'
+import 'hardhat-contract-sizer'
 import '@openzeppelin/hardhat-upgrades'
 
 dotenv.config()

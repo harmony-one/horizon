@@ -53,8 +53,8 @@ Product Management, including rollout strategies and timelines will be managed s
   * Are relayers compensated for creating DAG's?
   * What is the ideal number of epochs DAGs are created for? 
   * How are DAG's distributed to relayers
-  * Aare there any performance issues with creating multipe (e.g. a years worth) of DAGs up front?
-  - [ ] Implementation Review: Process of MerkleRoot.sol updating the contract, which currently appears to be linked to an upgrade to the proxy of the whole EthHash.sol and ELC implementation. Would prefer to do this less frequently and ideally only upgrade the merkelRoot library (see EIP2535 Diamonds). 
+  * Are there any performance issues with creating multipe (e.g. a years worth) of DAGs up front?
+  - [ ] MerkleRoot.sol updating the contract, which currently appears to be linked to an upgrade to the proxy of the whole EthHash.sol and ELC implementation. Would prefer to do this less frequently and ideally only upgrade the merkelRoot library (see EIP2535 Diamonds). 
 - [ ] Gas Fees when Linking or Bridging Tokens.
   * Are Gas fees on the receiving chain paid by users or the bridge.
   - [ ] Implementation Review: Currently for the CLI we are using one wallet as we move forward to integrating with the front end, the various providers and signers need to be accomodated.
@@ -66,6 +66,17 @@ Product Management, including rollout strategies and timelines will be managed s
 
 **Relayer**
 - [ ] Enhance Relay Process to optimize and include batch transfer of headers
+- [ ] `ethRelay.js` needs refactoring to optinmize calls and process multiple blocks in a batch 
+- [ ] EthereumLightClient.sol
+  - [ ] Make confirmations configurable `function isVerified`: currently hardcoded to 25
+  - [ ] Make configurable 
+    - [ ] `DEFAULT_FINALITY_CONFIRMS = 13;`
+    - [ ] `BLOCK_EXPIRED = 30 days;`
+    - [ ] `MAX_PRUNE_ONCE = 16`
+  - [ ] Seperate process for pruning blocks so we don't slow down adding blocks; 
+  - [ ] Remove ` _pruneBlocks(block.timestamp - BLOCK_EXPIRED);` from `addBlockHeader`
+- [ ] TokenLockerOnHarmony.sol
+  - [ ] Create batch function `validateAndExecuteProofs` to validate multiple proofs
 
 **Bridge**
 - [ ] Seperate local transaction from the bridging of proofs 
@@ -81,7 +92,7 @@ Product Management, including rollout strategies and timelines will be managed s
 **FrontEnd**
 
 **Infrastructure**
-- [ ] Slow down localgeth production of blocks to better enable testing and be more representative of Ethereum Mainnet.
+- [ ] Slow down localgeth production of blocks to better enable testing and be more representative of Ethereum Mainnet. This can be done by setting `"difficulty": "1000000",` in `genesis.json` to give approx 4 second block time. The higher the difficulty the longer the blocktime.
 
 ### Notes and recommendations
 

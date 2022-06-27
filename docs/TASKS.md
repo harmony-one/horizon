@@ -1,3 +1,8 @@
+# Development Tasks
+This document is being used to track many granular tasks and for development discussions. The goal is this document will become redundant and replaced with issues and pull requests for development efforts. 
+
+Product Management, including rollout strategies and timelines will be managed seperately. An initial launch preparation, which is somewhat outdated, can be found [here](https://harmonyone.notion.site/Trustless-Eth-bridge-launch-prep-dde21137582d4ddabc32828abeea0752).
+
 ## Process Overview
 - [x] Run Local Networks
 - [x] Deploy Contracts

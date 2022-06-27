@@ -59,14 +59,29 @@ Product Management, including rollout strategies and timelines will be managed s
   * Are Gas fees on the receiving chain paid by users or the bridge.
   - [ ] Implementation Review: Currently for the CLI we are using one wallet as we move forward to integrating with the front end, the various providers and signers need to be accomodated.
 
+### Functional Task Breakdown
+
+**Relayer**
+
+**Bridge**
+
+**Proofs**
+
+**CLI**
+
+**API**
+
+**FrontEnd**
+
+**Infrastructure**
 
 ### Notes and recommendations
 
 **Functionality Testing**
-- [x] Deployments Work
-- [x] Relayer Works
-- [ ] Bridge Works
-- [ ] DAG Generation Process works
+- [x] Deployments Work (using Proxies)
+- [x] Relayer Works (eth to harmony)
+- [ ] Bridge Works (token transfer)
+- [ ] DAG Generation Process works (this is not chain specific)
 
 **Code Optimization**
 - [ ] Write bridge.js proof calls (currently passing incorrect parameters to Harmony TokenLocker `validateAndExecuteProof`)
@@ -79,7 +94,6 @@ Product Management, including rollout strategies and timelines will be managed s
   - [ ] deployment *Note: may use hardhat cli for deployments*
   - [ ] relayer (ethRelayer and ethHashProof (DAG))
   - [ ] bridge (bridge, eprover, tokenLocker, tokenRegistry, etc))
-- [ ] For deployments use [hardhat-deploy](https://github.com/wighawag/hardhat-deploy#deploying-and-upgrading-proxies) instead of [openzepplin Upgrades Plugin](https://docs.openzeppelin.com/upgrades-plugins/1.x/api-hardhat-upgrades)
 - [ ] Review SmartContract error handling (e.g. [custom errors](https://blog.ricmoo.com/highlights-ethers-js-may-2021-2826e858277d))
 - [ ] Consolidate Packages relayer, tokenLocker(bridge) see [sushiswap sdk example](https://github.com/sushiswap/sdk/tree/canary/packages)
 - [ ] Review use of ethereumjs and ethereumjs-util in elc and eprover
@@ -92,7 +106,9 @@ Product Management, including rollout strategies and timelines will be managed s
 - [ ] Add linkage of Token Lockers to Deployments (migrate `lib\config.js` to a deploy task)
 - [ ] Write and Test Upgrade Process 
 - [ ] Update initData on Google Drive with new localgeth data with only 50 blocks
-- [ ] Configure Sepolia Testnet *Note: we will probably have to host our own node as it is not supported by Infura or Alchemy*
+- [ ] Configure [Sepolia](https://sepolia.dev/) Testnet *Note: Sepolia is not supported by Infura or Alchemy, bug we may not have to host our own node as Sepolia has a hosted endpoint https://rpc.sepolia.dev*
+- [ ] For deployments use [hardhat-deploy](https://github.com/wighawag/hardhat-deploy#deploying-and-upgrading-proxies) instead of [openzepplin Upgrades Plugin](https://docs.openzeppelin.com/upgrades-plugins/1.x/api-hardhat-upgrades)
+
 
 **Outstanding Issues**
 - [ ] Review [bridgeMapError](https://gist.github.com/johnwhitton/14b2a62f18c53e76d4bdd1f97759e5fd)

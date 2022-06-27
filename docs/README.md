@@ -71,28 +71,46 @@ A `.env.sample` file is provided here is a copy of it annotated to show how to u
 
 ```
 # These variable should be set once with all the system information
+LOCALNET_PRIVATE_KEY=1f84c95ac16e6a50f08d44c7bde7aff8742212fda6e4321fde48bf83bef266dc
+LOCALGETH_PRIVATE_KEY=ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80
+HARDHAT_PRIVATE_KEY=ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80
 HARDHAT_URL=http://localhost:8545
 LOCALNET_URL=http://localhost:9500
 DEVNET_URL=https://api.s0.ps.hmny.io/
 TESTNET_URL=https://api.s0.b.hmny.io
 MAINNET_URL=https://api.harmony.one
 LOCALGETH_URL=http://localhost:8645
-ROPSTEN_URL=https://ropsten.infura.io/v3/<YOUR INFURA KEY>
-ETEHERUM_URL=https://mainnet.infura.io/v3/<YOUR INFURA KEY>
-ETHERSCAN_API_KEY=ABC123ABC123ABC123ABC123ABC123ABC1
-
-# These variables are environment specific and need to be updated when changing networks and deploying new contracts.
+ROPSTEN_URL =https://ropsten.infura.io/v3/32c32c32c32c32c32c32c32c32c32c32
+ETHEREUM_URL=https://mainnet.infura.io/v3/32c32c32c32c32c32c32c32c32c32c32
+ETHERSCAN_API_KEY=R8N14TD8CJ5NJ1BAGBJ23E718K9CWHUHEM
 PRIVATE_KEY=1f84c95ac16e6a50f08d44c7bde7aff8742212fda6e4321fde48bf83bef266dc
 HMY_URL=http://localhost:9500
 ETH_URL=http://localhost:8645
 GAS_LIMIT=6000000
 GAS_PRICE=20000000000
 ERC20=0x876dEfe099Ff0C2E13b0c7B4b9101859e52c07c6
-HMY_TOKEN_LOCKER=0x4c97F77fa1D2ceB60A6Ee76929439B33D34A219A
-ETH_TOKEN_LOCKER=0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0
+HMY_TOKEN_LOCKER=0x017f8C7d1Cb04dE974B8aC1a6B8d3d74bC74E7E1
+ETH_TOKEN_LOCKER=0x017f8C7d1Cb04dE974B8aC1a6B8d3d74bC74E7E1
+VERBOSE=true
+HLC_INITIAL_BLOCK=1
+RELAYERS=["0x0B585F8DaEfBC68a311FbD4cB20d9174aD174016"]
+THRESHOLD=1
+ELC_INIITAL_BLOCK=55
 ```
 
 *Note: moving forward we may move to using configuration from `hardhat.config.ts` for gas information and the `deployments` folder for deployment information`.*
+
+### Use of config.js
+For ease of use we have a `config.js` file which reads the environment variables. When adding new environment variables you need to update both your `.env` file and `config.js`.
+
+A sample code snippet demonstrating how to access configuration is as follows
+```
+const config = require('../../config.js')
+const options = {
+    gasLimit: config.gasLimit,
+    gasPrice: config.gasPrice
+}
+```
 
 ## Setting up the Infrastructure 
 
@@ -105,6 +123,7 @@ ETH_TOKEN_LOCKER=0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0
 | Local       | localgeth | Ethereum local network      | local build                    |
 | Devnet      | devnet    | Harmony developer network   | hosted by Harmony              |
 | Testnet     | testnet   | Harmony test network        | hosted by Harmony              |
+| Testnet     | sepolia   | Ethereum test network       | hosted by sepolia team         |
 | Testnet     | ropsten   | Ethereum test network       | hosted using infura or alchemy |
 | Production  | mainnet   | Harmony production network  | hosted by harmony              |
 | Production  | ethereum  | Ethereum production network | hosted using infura or alchemy |
@@ -113,11 +132,11 @@ ETH_TOKEN_LOCKER=0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0
 
 ### Running Local Nodes
 
-Initial data, including DAG and blockchain data for localgeth can be found [here](https://drive.google.com/file/d/1NyKfx-2vukDntcj8NmK3BNfblpBhh9rI/view?usp=sharing). This will save developers some time as the generation of DAG 0 can take 2 to 3 hours.
+Initial data, including DAG and blockchain data for localgeth can be found [here](https://drive.google.com/file/d/1wrh3CyZ6V8sjeW9Epnbc8HdkP2zzEXHR/view?usp=sharing). This will save developers some time as the generation of DAG 0 can take 2 to 3 hours.
 To use this download the file and place it's contents in the same parent directory as where you have cloned the horizon repository. Then use `yarn init-chain` to copy the directories required into local folders. 
 
-**Hardhat Node**
-We use hardhat to run a local ethereum node. This allows us to debug using `console.log` and provides additional tools for development. However as deploy scripts are specific to chains. We do not wish to run the deploys when we start a node. 
+**Hardhat Node: Debugging and Testing**
+We use hardhat to run a local node for debugging and testing. This allows us to debug using `console.log` and provides additional tools for development. However as deploy scripts are specific to chains. We do not wish to run the deploys when we start a node. 
 
 To start a local hardhat(ethereum) node use
 `yarn eth local`
@@ -151,22 +170,28 @@ At the time of writing we need to build the node locally. This should be done fr
 
 See [here](https://github.com/harmony-one/harmony#debugging) for build instructions
 
+To run the local harmony node we use
+```
+yarn harmony-local 
+```
+
+Which does the following
+
 ```
 cd $(go env GOPATH)/src/github.com/harmony-one/harmony
 make debug
 ```
-To stop the network use `^C` or `make debug-kill`
+
+To stop the network use `^C` and then `yarn harmony-local-kill`
 
 *Note: If using a later version of openssl (e.g. openssl v3.3) on a mac you may need to modify `scripts\go_executable_build.sh` changing this line `LIB[libcrypto.3.dylib]=/usr/local/opt/openssl/lib/libcrypto.3.dylib`*
 
-To run a local harmony network use
-`yarn harmony-local`
-
-To stop the local harmony network use
-`^C` or `make debug-kill` or `yarn harmony-local-kill`
-
-
 ### Running Testnet Nodes
+
+**Sepolia Node**
+[Sepolia](https://sepolia.dev/) is the [Ethereum Testnet](https://ethereum.org/en/developers/docs/networks/#sepolia) which provides *A proof-of-work testnet; this means it's the best like-for-like representation of Ethereum. Sepolia is expected to undergo The Merge to proof-of-stake in summer 2022. It is not yet certain whether it will then be maintained long term.* 
+
+It has a hosted rpc endpoint which we use without needing to set up an infura or alchemy project.
 
 **Ethereum (Ropsten) Node**
 We use an an infura account to integrate with a Ropsten Node.
@@ -174,23 +199,24 @@ We use an an infura account to integrate with a Ropsten Node.
 Create an [Infura Account](https://infura.io/) and create an ethereum project. Add the INFURA_PROJECT_ID to the `.env` file.
 
 **Harmony node**
-There is a pull request which needs to be pushed to Harmony Testnet to enable the bridging functionality. [we need this PR to be pushed to testnet (should be done by May 27th, 2022)](https://github.com/harmony-one/harmony/pull/3872).
+There is a pull request which needs to be pushed to Harmony Testnet to enable the bridging functionality. [[WIP] MMR-HardFork: add go-merklemountainrange and modified merkle proof logic](https://github.com/harmony-one/harmony/pull/3872).
 
 ### Funding the Deployer Account
 
 **Local Deployer Accounts**
-Harmony localnet has a default account of `0xA5241513DA9F4463F1d4874b548dFBAC29D91f34` which has funds, as defined in core/genesis.go. The private key for this address is `1f84c95ac16e6a50f08d44c7bde7aff8742212fda6e4321fde48bf83bef266dc`
+We have left the private keys for both localgeth and Harmony localnet in the .env.example files. **These keys are known publicly and should never be used in any production setting** 
 
-For testing purposes we used account `0x8875fc2A47E35ACD1784bB5f58f563dFE86A8451` and funded it with 1000 ONE on localnet and 1 ETH on Ropsten, but you can use any acccount you like as long as you know the private key or mnemonic.
+There is a funding script `000_fund_deployer.ts` which will transfer funds to the deployer account of your choosing, you just need to update the `PRIVATE_KEY` in the `.env` file with the private key to your account. By default we have left the harmony localnet key in `.env.example` but it is recommended you change it.
 
 **Testnet Funding of Accounts**
-Create a deployer account and fund it in both Harmony Testnet and Ropsten using Faucets. Add the PRIVATE_KEY to the `.env` file
+Create a deployer account and fund it in both Harmony Testnet and Ethereum Testnet using Faucets. Add the PRIVATE_KEY to the `.env` file
 
-* [Here](https://ropsten.oregonctf.org/) is a ropsten faucet.
 * [Here](http://dev.faucet.easynode.one/) is a devnet faucet.
 * [Here](https://faucet.pops.one/) is a testnet faucet.
+* [Here](https://faucet.sepolia.dev/) is a sepolia faucet.
+* [Here](https://ropsten.oregonctf.org/) is a ropsten faucet.
 
-To fund your harmony account use the [harmony cli](https://docs.harmony.one/home/general/wallets/harmony-cli) or metamask and transfer funds from the following account.
+*We recommend using faucets and metamsk for funding. But another alternative to fund your harmony account is to use the [harmony cli](https://docs.harmony.one/home/general/wallets/harmony-cli).*
 
 ## Smart Contracts
 
@@ -375,9 +401,9 @@ yarn deploy-hardhat
 ### Upgrading Smart Contracts
 
 **Proxies and Upgradability**
-In the original codebase deployments of contracts where made upgradeable via the use of [upgrade scripts](https://github.com/harmony-one/horizon/tree/main/scripts/upgrade) and `await upgrades.deployProxy` (e.g. see [deploy_erc20.js](https://github.com/harmony-one/horizon/blob/main/scripts/deploy_erc20.js)).
+We currently use OpenZepplin upgrade plugin to deploy proxy contracts.
 
-Currently requirements around upgradeability are under review. 
+Currently requirements around upgradeability are under review and upgrade scripts are still to be developed. 
 
 Alernate ways to achieve this (each with there own npm package and plugins) are
 1. Hardhat Upgrades: Open Zepplin provides an [upgrade plugin](https://docs.openzeppelin.com/upgrades-plugins/1.x/hardhat-upgrades) via [this npm package](https://www.npmjs.com/package/@openzeppelin/hardhat-upgrades).  

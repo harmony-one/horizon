@@ -106,7 +106,6 @@ Product Management, including rollout strategies and timelines will be managed s
 - [ ] Add linkage of Token Lockers to Deployments (migrate `lib\config.js` to a deploy task)
 - [ ] Write and Test Upgrade Process 
 - [ ] Update initData on Google Drive with new localgeth data with only 50 blocks
-- [ ] Configure [Sepolia](https://sepolia.dev/) Testnet *Note: Sepolia is not supported by Infura or Alchemy, bug we may not have to host our own node as Sepolia has a hosted endpoint https://rpc.sepolia.dev*
 - [ ] For deployments use [hardhat-deploy](https://github.com/wighawag/hardhat-deploy#deploying-and-upgrading-proxies) instead of [openzepplin Upgrades Plugin](https://docs.openzeppelin.com/upgrades-plugins/1.x/api-hardhat-upgrades)
 
 
@@ -166,4 +165,4 @@ From @polymorpher on [PR Refactor #38](https://github.com/harmony-one/horizon/pu
   - [x] `src/cli/ethashProof` => `src/ethashProof` (this is DAG related)
   - [x] `src/cli/verifier` => `src/eprover`
   - [x] `src/cli/lib` => `lib` (also update ethWeb3 and hmyWeb3 to use ethers)
-
+- [x] Configure [Sepolia](https://sepolia.dev/) Testnet *Note: Sepolia is not supported by Infura or Alchemy, bug we may not have to host our own node as Sepolia has a hosted endpoint https://rpc.sepolia.dev*

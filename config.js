@@ -11,6 +11,7 @@ module.exports = {
     mainnetURL: process.env.MAINNET_URL,
     localgethURL: process.env.LOCALGETH_URL,
     ropstenURL: process.env.ROPSTEN_URL,
+    sepoliaURL: process.env.SEPOLIA_URL,
     ethereumURL: process.env.ETHEREUM_URL,
     etherscanAPI: process.env.ETHERSCAN_API_KEY,
     privateKey: process.env.PRIVATE_KEY,

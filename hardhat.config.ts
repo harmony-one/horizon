@@ -107,6 +107,17 @@ const hardhatUserconfig: HardhatUserConfig = {
             gas: 6000000,
             gasMultiplier: 2
         },
+        sepolia: {
+            url: config.sepoliaURL,
+            accounts: [`0x${config.privateKey}`],
+            chainId: 11155111,
+            live: true,
+            saveDeployments: true,
+            tags: ['staging'],
+            gasPrice: 20000000000,
+            gas: 6000000,
+            gasMultiplier: 2
+        },
         ethereum: {
             url: config.ethereumURL,
             accounts: [`0x${config.privateKey}`],

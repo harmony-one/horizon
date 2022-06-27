@@ -60,20 +60,28 @@ Product Management, including rollout strategies and timelines will be managed s
   - [ ] Implementation Review: Currently for the CLI we are using one wallet as we move forward to integrating with the front end, the various providers and signers need to be accomodated.
 
 ### Functional Task Breakdown
+*Note: The development approach is to focus on bridging tokens from Ethereum to Harmony first and then Harmony to Ethereum. This means that tasks such as Relaying block headers, mapping tokens and transferring tokens from Harmony to Ethereum will be worked on after end to end Ethereum to Harmony is working.*
+
+*Also note there is a dependency on the relayer to relay the block headers before transactions can be proved. This means that we need to seperate the logic in the cli to perform the local transactions independently of tasks such as `validateAndExecuteProof` on the destination chain.*
 
 **Relayer**
+- [ ] Enhance Relay Process to optimize and include batch transfer of headers
 
 **Bridge**
+- [ ] Seperate local transaction from the bridging of proofs 
 
 **Proofs**
+- [ ] Review `validateAndExecuteProof` logic and the population of input fields.
 
 **CLI**
+- [ ] Remove (or replace) deployment tasks in the CLI as we can use hardhat.
 
 **API**
 
 **FrontEnd**
 
 **Infrastructure**
+- [ ] Slow down localgeth production of blocks to better enable testing and be more representative of Ethereum Mainnet.
 
 ### Notes and recommendations
 

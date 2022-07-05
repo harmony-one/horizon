@@ -18,13 +18,13 @@ contract BridgeERC1155 is
         __Ownable_init();
     }
 
-    function mint(address to, uint256 tokenId, uint256 amount, string memory uri) external onlyOwner {
+    function mint(address to, uint256 tokenId, uint256 amount, string memory newUri) external onlyOwner {
         _mint(to, tokenId, amount, "");
-        _setTokenURI(tokenId, uri);
+        _setTokenURI(tokenId, newUri);
     }
 
-    function _setTokenURI(uint256 tokenId, string memory uri) internal{
-        tokenURIs[tokenId] = uri;
+    function _setTokenURI(uint256 tokenId, string memory newUri) internal{
+        tokenURIs[tokenId] = newUri;
     }
 
     function uri(uint256 tokenId) public view override returns (string memory) {

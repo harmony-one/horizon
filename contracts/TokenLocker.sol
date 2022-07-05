@@ -8,6 +8,7 @@ import "./BridgedToken.sol";
 import "./BridgeERC721.sol";
 import "./TokenRegistry.sol";
 import "./ERC721Registry.sol";
+import "./ERC1155Registry.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC20/utils/SafeERC20Upgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol";
@@ -20,7 +21,7 @@ import "@openzeppelin/contracts-upgradeable/utils/math/SafeMathUpgradeable.sol";
 // import "openzeppelin-solidity/contracts/access/Ownable.sol";
 // import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 
-contract TokenLocker is TokenRegistry, ERC721Registry {
+contract TokenLocker is TokenRegistry, ERC721Registry, ERC1155Registry {
     using RLPReader for RLPReader.RLPItem;
     using RLPReader for bytes;
     using SafeERC20Upgradeable for IERC20Upgradeable;
@@ -42,7 +43,12 @@ contract TokenLocker is TokenRegistry, ERC721Registry {
     );
 
     event ERC1155Locked(
-
+        address indexed token,
+        address indexed sender,
+        uint256 id,
+        uint256 amount,
+        address recipient,
+        string metadata
     );
 
     event Burn(
@@ -60,7 +66,11 @@ contract TokenLocker is TokenRegistry, ERC721Registry {
     );
 
     event ERC1155Burn(
-
+        address indexed token,
+        address indexed sender,
+        uint256 id,
+        uint256 amount,
+        address recipient
     );
 
     bytes32 constant lockEventSig =
@@ -68,13 +78,13 @@ contract TokenLocker is TokenRegistry, ERC721Registry {
     bytes32 constant ERC721LockEventSig =
         keccak256("ERC721Locked(address,address,uint256,address,string)");
     bytes32 constant ERC1155LockEventSig =
-        keccak256("ERC1155Locked()");
+        keccak256("ERC1155Locked(address,address,uint256,uint256,address,string)");
     bytes32 constant burnEventSig =
         keccak256("Burn(address,address,uint256,address)");
     bytes32 constant ERC721BurnEventSig =
         keccak256("ERC721Burn(address,address,uint256,address)");
     bytes32 constant ERC1155BurnEventSig =
-        keccak256("ERC1155Burn()");
+        keccak256("ERC1155Burn(address,address,uint256,uint256,address)");
 
     address public otherSideBridge;
 
@@ -113,6 +123,26 @@ contract TokenLocker is TokenRegistry, ERC721Registry {
         );
         token.burn(id);
         emit ERC721Burn(address(token), msg.sender, id, recipient);
+    }
+
+    function erc1155Unlock(
+        BridgeERC1155 token,
+        address recipient,
+        uint256 id,
+        uint256 amount
+    )
+        external
+    {
+        require(
+            recipient != address(0),
+            "recipient is a zero address"
+        );
+        require(
+            Rx1155MappedInv[address(token)] != address(0),
+            "bridge does not exist"
+        );
+        token.burn(msg.sender, id, amount);
+        emit ERC1155Burn(address(token), msg.sender, id, amount, recipient);
     }
 
     function lock(
@@ -169,6 +199,41 @@ contract TokenLocker is TokenRegistry, ERC721Registry {
         );
         //emit event
         emit ERC721Locked(address(token), msg.sender, id, recipient, uri);
+    }
+
+    function erc1155Lock(
+        BridgeERC1155 token,
+        address recipient,
+        uint256 id,
+        uint256 amount
+    )
+        external
+    {
+        require(recipient != address(0), "recipient is a zero address");
+        require(
+            Tx1155Mapped[address(token)] != address(0),
+            "bridge does not exist"
+        );
+        //Check if metadata, fill default value if not
+        bytes memory data = abi.encodeWithSignature(
+            'uri(uint256)',
+            id
+        );
+        (bool success, bytes memory resultData) = address(token).call(
+            data
+        );
+        string memory uri;
+        if(success){
+            uri = abi.decode(resultData, (string));
+        }
+        else{
+            uri = "Metadata Not Provided";
+        }
+        //transfer from user
+        //@TODO Implement ERC1155 Reciever flow
+        token.safeTransferFrom(msg.sender, address(this), id, amount, "");
+        //emit event
+        emit ERC1155Locked(address(token), msg.sender, id, amount, recipient, uri);
     }
 
     function toReceiptItems(bytes memory rlpdata) private pure returns(RLPReader.RLPItem[] memory receipt) {

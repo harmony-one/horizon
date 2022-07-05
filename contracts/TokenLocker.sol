@@ -230,7 +230,6 @@ contract TokenLocker is TokenRegistry, ERC721Registry, ERC1155Registry {
             uri = "Metadata Not Provided";
         }
         //transfer from user
-        //@TODO Implement ERC1155 Reciever flow
         token.safeTransferFrom(msg.sender, address(this), id, amount, "");
         //emit event
         emit ERC1155Locked(address(token), msg.sender, id, amount, recipient, uri);
@@ -347,7 +346,14 @@ contract TokenLocker is TokenRegistry, ERC721Registry, ERC1155Registry {
     }
 
     function onERC1155BurnEvent(bytes32[] memory topics, bytes memory data) private {
-
+        address token = address(uint160(uint256(topics[1])));
+        //address sender = address(uint160(uint256(topics[2])));
+        (uint256 id, uint256 amount, address recipient) = abi.decode(
+            data,
+            (uint256, uint256, address)
+        );
+        IERC1155Upgradeable lockedToken = Tx1155MappedInv[token];
+        lockedToken.safeTransferFrom(address(this), recipient, id, amount, "");
     }
 
     function onLockEvent(bytes32[] memory topics, bytes memory data) private {
@@ -375,6 +381,14 @@ contract TokenLocker is TokenRegistry, ERC721Registry, ERC1155Registry {
     }
 
     function onERC1155LockEvent(bytes32[] memory topics, bytes memory data) private {
-
+        address token = address(uint160(uint256(topics[1])));
+        //address sender = address(uint160(uint256(topics[2])));
+        (uint256 id, uint256 amount, address recipient, string memory uri) = abi.decode(
+            data,
+            (uint256, uint256, address, string)
+        );
+        BridgeERC1155 mintToken = Rx1155Mapped[token];
+        require(address(mintToken) != address(0));
+        mintToken.mint(recipient, id, amount, uri);
     }
 }

@@ -6,9 +6,10 @@ pragma experimental ABIEncoderV2;
 import "./lib/RLPReader.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC1155/IERC1155Upgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC1155/ERC1155Upgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC1155/IERC1155ReceiverUpgradeable.sol";
 import "./BridgeERC1155.sol";
 
-contract ERC1155Registry {
+contract ERC1155Registry is IERC1155ReceiverUpgradeable {
     using RLPReader for RLPReader.RLPItem;
     using RLPReader for bytes;
 
@@ -84,5 +85,34 @@ contract ERC1155Registry {
         Tx1155Mapped[tokenReq] = tokenAck;
         Tx1155MappedInv[tokenAck] = IERC1155Upgradeable(tokenReq);
         Tx1155Tokens.push(IERC1155Upgradeable(tokenReq));
+    }
+
+    //Define erc1155 receiver to allow this contract to accept single transfers
+    function onERC1155Received(
+        address operator,
+        address from,
+        uint256 id,
+        uint256 value,
+        bytes calldata data
+    ) external returns (bytes4)
+    {
+        return bytes4(keccak256("onERC1155Received(address,address,uint256,uint256,bytes)"));
+    }
+
+    //Return another value to specify that the contract does not accept erc1155 batch transfers
+    function onERC1155BatchReceived(
+        address operator,
+        address from,
+        uint256[] calldata ids,
+        uint256[] calldata values,
+        bytes calldata data
+    ) external returns (bytes4)
+    {
+        return bytes4(0);
+    }
+
+    function supportsInterface(bytes4 interfaceID) external view returns (bool) {
+        return  interfaceID == 0x01ffc9a7 ||    // ERC-165 support (i.e. `bytes4(keccak256('supportsInterface(bytes4)'))`).
+        interfaceID == 0x4e2312e0;      // ERC-1155 `ERC1155TokenReceiver` support (i.e. `bytes4(keccak256("onERC1155Received(address,address,uint256,uint256,bytes)")) ^ bytes4(keccak256("onERC1155BatchReceived(address,address,uint256[],uint256[],bytes)"))`).
     }
 }

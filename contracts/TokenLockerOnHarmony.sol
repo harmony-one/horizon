@@ -33,16 +33,37 @@ contract TokenLockerOnHarmony is TokenLocker, OwnableUpgradeable {
         otherSideBridge = otherSide;
     }
 
+    function _validateEthTransaction(
+        bytes32 blockHash,
+        bytes32 rootHash,
+        uint256 proofPath,
+        bytes calldata proof
+    )
+        internal
+        returns (bytes memory rlpdata)
+    {
+        require(
+            lightclient.VerifyReceiptsHash(blockHash, rootHash),
+            "wrong receipt hash"
+        );
+        rlpdata = MPTValidatorV2.validateProof(
+            rootHash,
+            proofPath,
+            proof
+        );
+    }
+
     function validateAndExecuteProof(
-        uint256 blockNo,
+        bytes32 blockHash,
         bytes32 rootHash,
         uint256 proofPath,
         bytes calldata proof
     ) external {
-        bytes32 blockHash = bytes32(lightclient.blocksByHeight(blockNo, 0));
-        require(
-            lightclient.VerifyReceiptsHash(blockHash, rootHash),
-            "wrong receipt hash"
+        bytes memory rlpdata = _validateEthTransaction(
+            blockHash,
+            rootHash,
+            proofPath,
+            proof
         );
         require(
             lightclient.isVerified(uint256(blockHash)),
@@ -52,13 +73,33 @@ contract TokenLockerOnHarmony is TokenLocker, OwnableUpgradeable {
             abi.encodePacked(blockHash, rootHash, proofPath)
         );
         require(spentReceipt[receiptHash] == false, "double spent!");
-        bytes memory rlpdata = MPTValidatorV2.validateProof(
+        spentReceipt[receiptHash] = true;
+        uint256 executedEvents = execute(rlpdata);
+        require(executedEvents > 0, "no valid event");
+    }
+
+    function userValidateAndExecuteProof(
+        bytes32 blockHash,
+        bytes32 rootHash,
+        uint256 proofPath,
+        bytes calldata proof,
+        address targetAddress
+    )
+        external
+    {
+        bytes memory rlpdata = _validateEthTransaction(
+            blockHash,
             rootHash,
             proofPath,
             proof
         );
+        //Adding a parameter makes the concept of a "receiptHash" a little less valid, but no need to declare another mapping due to entropy of keccak256
+        bytes32 receiptHash = keccak256(
+            abi.encodePacked(blockHash, rootHash, proofPath, targetAddress)
+        );
+        require(spentReceipt[receiptHash] == false, "double spent!");
         spentReceipt[receiptHash] = true;
-        uint256 executedEvents = execute(rlpdata);
+        uint256 executedEvents = userExecute(rlpdata, targetAddress);
         require(executedEvents > 0, "no valid event");
     }
 }

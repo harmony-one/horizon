@@ -9,6 +9,7 @@ import "./HarmonyProver.sol";
 import "./TokenLocker.sol";
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 
+
 contract TokenLockerOnEthereum is TokenLocker, OwnableUpgradeable {
     HarmonyLightClient public lightclient;
 
@@ -29,22 +30,59 @@ contract TokenLockerOnEthereum is TokenLocker, OwnableUpgradeable {
         otherSideBridge = otherSide;
     }
 
-    function validateAndExecuteProof(
+    function _validateHarmonyTransaction(
         HarmonyParser.BlockHeader memory header,
         MMRVerifier.MMRProof memory mmrProof,
         HarmonyProver.MerkleProof memory receiptdata
-    ) external {
+    )
+        internal
+        returns (bytes32 blockHash, bytes32 rootHash)
+    {
         require(lightclient.isValidCheckPoint(header.epoch, mmrProof.root), "checkpoint validation failed");
-        bytes32 blockHash = HarmonyParser.getBlockHash(header);
-        bytes32 rootHash = header.receiptsRoot;
+        blockHash = HarmonyParser.getBlockHash(header);
+        rootHash = header.receiptsRoot;
         (bool status, string memory message) = HarmonyProver.verifyHeader(
             header,
             mmrProof
         );
         require(rootHash == receiptdata.root, "invalid proof root");
         require(status, "block header could not be verified");
+    }
+
+    function validateAndExecuteProof(
+        HarmonyParser.BlockHeader memory header,
+        MMRVerifier.MMRProof memory mmrProof,
+        HarmonyProver.MerkleProof memory receiptdata
+    ) external {
+        (bytes32 blockHash, bytes32 rootHash) = _validateHarmonyTransaction(
+            header,
+            mmrProof,
+            receiptdata
+        );
         bytes32 receiptHash = keccak256(
             abi.encodePacked(blockHash, rootHash, receiptdata.paths)
+        );
+        require(spentReceipt[receiptHash] == false, "double spent!");
+        spentReceipt[receiptHash] = true;
+        bytes memory receipt = HarmonyProver.verifyReceipt(header, receiptdata);
+        uint256 executedEvents = execute(receipt);
+        require(executedEvents > 0, "no valid event");
+    }
+
+    function userValidateAndExecuteProof(
+        HarmonyParser.BlockHeader memory header,
+        MMRVerifier.MMRProof memory mmrProof,
+        HarmonyProver.MerkleProof memory receiptdata,
+        address targetAddress
+    ) external {
+        (bytes32 blockHash, bytes32 rootHash) = _validateHarmonyTransaction(
+            header,
+            mmrProof,
+            receiptdata
+        );
+        //Adding a parameter makes the concept of a "receiptHash" a little less valid, but no need to declare another mapping due to entropy of keccak256
+        bytes32 receiptHash = keccak256(
+            abi.encodePacked(blockHash, rootHash, receiptdata.paths, targetAddress)
         );
         require(spentReceipt[receiptHash] == false, "double spent!");
         spentReceipt[receiptHash] = true;

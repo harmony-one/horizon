@@ -67,7 +67,8 @@ class EProver {
             key,
             tree,
             node,
-            proofIndex: Buffer.from(proofIndex)
+            proofIndex: Buffer.from(proofIndex),
+            blockHash : targetReceipt.blockHash
         }
     }
 
@@ -75,7 +76,7 @@ class EProver {
         const resp = await this.receiptProof(txHash)
         if (resp.proofIndex.length > 32) throw 'proof index too long'
         return {
-            hash: keccak256(resp.header.serialize()),
+            blockHash: resp.blockHash,
             root: resp.tree.root,
             proof: rlpEncode(resp.proof),
             key: BigNumber.from(Buffer.from(resp.proofIndex).reverse())

@@ -10,11 +10,6 @@ ETH_NODE_URL=process.env.ETH_NODE_URL;
 
 module.exports = {
   networks: {
-    develop:{
-      host: "127.0.0.1",
-      port: 8545,
-      network_id: '*'
-    },
     hmy_local: {
       provider: () => new HDWalletProvider(privateKey, localnet),
       network_id: 1666700000,

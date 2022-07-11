@@ -37,10 +37,21 @@ contract TokenLocker is TokenRegistry {
         address recipient
     );
 
+    event HorizonExecute(
+        address indexed sendTo,
+        bytes transactionData
+    );
+
     bytes32 constant lockEventSig =
         keccak256("Locked(address,address,uint256,address)");
     bytes32 constant burnEventSig =
         keccak256("Burn(address,address,uint256,address)");
+    //Horizon Execute is both the name of the function on the other chain to call, and the event to emit to call it
+    //This is the encoding for the event
+    bytes32 constant userEventSig =
+        keccak256("HorizonExecute(address,bytes)");
+
+    address constant ZERO_ADDRESS = 0x0000000000000000000000000000000000000000;
 
     address public otherSideBridge;
 
@@ -76,7 +87,7 @@ contract TokenLocker is TokenRegistry {
         emit Locked(address(token), msg.sender, actualAmount, recipient);
     }
 
-    function toReceiptItems(bytes memory rlpdata) private pure returns(RLPReader.RLPItem[] memory receipt) {
+    function toReceiptItems(bytes memory rlpdata) private pure returns(RLPReader.RLPItem[] memory) {
         RLPReader.RLPItem memory stacks = rlpdata.toRlpItem();
         if(rlpdata[0] <= 0x7f) { // if rlpdata[0] between [0,0x7f], it means TransactionType of EIP-2718.
             stacks.memPtr += 1;
@@ -85,22 +96,39 @@ contract TokenLocker is TokenRegistry {
         return stacks.toList();
     }
 
-    function execute(bytes memory rlpdata) internal returns (uint256 events) {
+    function parseLogs(bytes memory rlpdata)
+        internal
+        pure
+        returns (RLPReader.RLPItem[] memory)
+    {
         RLPReader.RLPItem[] memory receipt = toReceiptItems(rlpdata);
         // TODO: check txs is revert or not
         uint256 postStateOrStatus = receipt[0].toUint();
         require(postStateOrStatus == 1, "revert receipt");
-        RLPReader.RLPItem[] memory logs = receipt[3].toList();
+        return receipt[3].toList();
+    }
+
+    function parseTopics(RLPReader.RLPItem[] memory rlpLog)
+        internal
+        pure
+        returns (bytes32[] memory topics, bytes memory Data)
+    {
+        RLPReader.RLPItem[] memory Topics = rlpLog[1].toList(); // TODO: if is lock event
+        topics = new bytes32[](Topics.length);
+        for (uint256 j = 0; j < Topics.length; j++) {
+            topics[j] = bytes32(Topics[j].toUint());
+        }
+        Data = rlpLog[2].toBytes();
+        return (topics, Data);
+    }
+
+    function execute(bytes memory rlpdata) internal returns (uint256 events) {
+        RLPReader.RLPItem[] memory logs = parseLogs(rlpdata);
         for (uint256 i = 0; i < logs.length; i++) {
             RLPReader.RLPItem[] memory rlpLog = logs[i].toList();
             address Address = rlpLog[0].toAddress();
             if (Address != otherSideBridge) continue;
-            RLPReader.RLPItem[] memory Topics = rlpLog[1].toList(); // TODO: if is lock event
-            bytes32[] memory topics = new bytes32[](Topics.length);
-            for (uint256 j = 0; j < Topics.length; j++) {
-                topics[j] = bytes32(Topics[j].toUint());
-            }
-            bytes memory Data = rlpLog[2].toBytes();
+            (bytes32[] memory topics, bytes memory Data) = parseTopics(rlpLog);
             if (topics[0] == lockEventSig) {
                 onLockEvent(topics, Data);
                 events++;
@@ -122,6 +150,35 @@ contract TokenLocker is TokenRegistry {
                 continue;
             }
         }
+    }
+
+    function userExecute(bytes memory rlpdata, address userTarget) internal returns (uint256 events) {
+        RLPReader.RLPItem[] memory logs = parseLogs(rlpdata);
+        for (uint256 i = 0; i < logs.length; i++) {
+            RLPReader.RLPItem[] memory rlpLog = logs[i].toList();
+            address Address = rlpLog[0].toAddress();
+            if (Address != userTarget) continue;
+            (bytes32[] memory topics, bytes memory Data) = parseTopics(rlpLog);
+            if (topics[0] == userEventSig) {
+                onUserEvent(topics, Data, Address);
+                events++;
+                continue;
+            }
+        }
+    }
+
+
+    //DO Not check for success on this call, since arbitrary user calls may revert.
+    //Also I did a test in remix to confirm that on solidity 7.3 calling a contract with .call does not revert main contract if that contract reverts
+    function onUserEvent(bytes32[] memory topics, bytes memory data, address otherSideCaller) private {
+        address target = address(uint160(uint256(topics[1])));
+        target.call(
+            abi.encodeWithSignature(
+                "HorizonExecute(address,bytes)", //This is the encoding for the Horizon Execute function call
+                otherSideCaller,
+                data
+            )
+        );
     }
 
     //This argument passing is an excellent example of how to get around stack too deep

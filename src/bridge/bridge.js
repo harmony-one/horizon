@@ -19,6 +19,9 @@ class Bridge {
 
     async ExecProofHmy (txReceipt, proofData) {
         Logger.debug('In exec Proof')
+        Logger.debug(`txReceipt: ${JSON.stringify(txReceipt)}`)
+        Logger.debug(`options: ${JSON.stringify(options)}`)
+        Logger.debug(`proofData: ${JSON.stringify(proofData)}`)
         // Logger.debug(`proofData: ${JSON.stringify(proofData)}`)
         // uint256 blockNo,
         // bytes32 rootHash,

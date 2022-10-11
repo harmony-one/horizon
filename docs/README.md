@@ -117,7 +117,7 @@ const options = {
 ### Network Overview
 
 | Environment | Network   | Description                 | Notes                          |
-| ----------- | --------- | --------------------------  | ------------------------------ |
+| ----------- | --------- | --------------------------- | ------------------------------ |
 | Local       | localnet  | Harmony local network       | local build                    |
 | Local       | hardhat   | Ethereum local network      | local build                    |
 | Local       | localgeth | Ethereum local network      | local build                    |
@@ -332,47 +332,47 @@ info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this comm
 
 ```
 ----------------------------|----------|----------|----------|----------|----------------|
-File                        |  % Stmts | % Branch |  % Funcs |  % Lines |Uncovered Lines |
-----------------------------|----------|----------|----------|----------|----------------|
- contracts/                 |     7.31 |     8.75 |     9.09 |     4.82 |                |
-  BridgedToken.sol          |        0 |      100 |        0 |        0 |       20,21,27 |
-  EthereumLightClient.sol   |     5.56 |        0 |    13.33 |     5.48 |... 323,325,327 |
-  EthereumParser.sol        |    25.35 |       25 |       50 |       25 |... 129,139,141 |
-  EthereumProver.sol        |        0 |        0 |        0 |        0 |... 287,289,292 |
-  FaucetToken.sol           |       25 |      100 |       50 |       25 |       19,20,21 |
-  HarmonyLightClient.sol    |     1.32 |        0 |     7.14 |     1.27 |... 226,229,233 |
-  HarmonyParser.sol         |    11.22 |    15.96 |     7.14 |    10.08 |... 381,383,392 |
-  HarmonyProver.sol         |        0 |        0 |        0 |        0 |... 188,196,204 |
-  Migrations.sol            |        0 |        0 |        0 |        0 |       10,14,18 |
-  TokenLocker.sol           |        0 |        0 |        0 |        0 |... 146,147,148 |
-  TokenLockerOnEthereum.sol |     6.67 |        0 |       25 |     6.67 |... 50,51,52,53 |
-  TokenLockerOnHarmony.sol  |     8.33 |        0 |       25 |     8.33 |... 55,60,61,62 |
-  TokenRegistry.sol         |        0 |        0 |        0 |        0 |... 100,101,102 |
- contracts/ethash/          |        0 |        0 |        0 |        0 |                |
-  MerkelRoot.sol            |        0 |        0 |        0 |        0 |    12,13,14,15 |
-  Prime.sol                 |        0 |        0 |        0 |        0 |... 85,88,89,91 |
-  binary.sol                |        0 |      100 |        0 |        0 |... 46,55,56,64 |
-  ethash.sol                |        0 |      100 |        0 |        0 |... 503,504,505 |
-  keccak512.sol             |        0 |        0 |        0 |        0 |... 285,286,288 |
- contracts/lib/             |     8.99 |     8.48 |     11.7 |     9.25 |                |
-  ECVerify.sol              |        0 |        0 |        0 |        0 |... 22,24,27,29 |
-  EthUtils.sol              |        0 |        0 |        0 |        0 |... 81,82,84,87 |
-  MMR.sol                   |        0 |        0 |        0 |        0 |... 532,533,535 |
-  MMRVerifier.sol           |        0 |        0 |        0 |        0 |... 209,210,212 |
-  MMRWrapper.sol            |        0 |      100 |        0 |        0 |... 52,57,58,60 |
-  MPT.sol                   |        0 |        0 |        0 |        0 |... 282,283,285 |
-  MPTValidatorV2.sol        |        0 |        0 |        0 |        0 |... 39,40,42,43 |
-  RLPEncode.sol             |        0 |        0 |        0 |        0 |... 251,253,295 |
-  RLPReader.sol             |    46.36 |     41.3 |       50 |    47.75 |... 374,376,377 |
-  SafeCast.sol              |        0 |        0 |        0 |        0 |... 17,18,22,23 |
- contracts/mocks/           |        0 |      100 |        0 |        0 |                |
-  LightClient.sol           |        0 |      100 |        0 |        0 |    21,30,31,32 |
-  MPTTest.sol               |        0 |      100 |        0 |        0 |             13 |
- contracts/test_contracts/  |        0 |        0 |        0 |        0 |                |
-  TestEthLightClient.sol    |        0 |        0 |        0 |        0 |... 35,36,43,46 |
-----------------------------|----------|----------|----------|----------|----------------|
-All files                   |     6.76 |     8.22 |      9.3 |     5.81 |                |
-----------------------------|----------|----------|----------|----------|----------------|
+| File                         | % Stmts    | % Branch   | % Funcs    | % Lines    | Uncovered Lines  |
+| ---------------------------- | ---------- | ---------- | ---------- | ---------- | ---------------- |
+| contracts/                   | 7.31       | 8.75       | 9.09       | 4.82       |                  |
+| BridgedToken.sol             | 0          | 100        | 0          | 0          | 20,21,27         |
+| EthereumLightClient.sol      | 5.56       | 0          | 13.33      | 5.48       | ... 323,325,327  |
+| EthereumParser.sol           | 25.35      | 25         | 50         | 25         | ... 129,139,141  |
+| EthereumProver.sol           | 0          | 0          | 0          | 0          | ... 287,289,292  |
+| FaucetToken.sol              | 25         | 100        | 50         | 25         | 19,20,21         |
+| HarmonyLightClient.sol       | 1.32       | 0          | 7.14       | 1.27       | ... 226,229,233  |
+| HarmonyParser.sol            | 11.22      | 15.96      | 7.14       | 10.08      | ... 381,383,392  |
+| HarmonyProver.sol            | 0          | 0          | 0          | 0          | ... 188,196,204  |
+| Migrations.sol               | 0          | 0          | 0          | 0          | 10,14,18         |
+| TokenLocker.sol              | 0          | 0          | 0          | 0          | ... 146,147,148  |
+| TokenLockerOnEthereum.sol    | 6.67       | 0          | 25         | 6.67       | ... 50,51,52,53  |
+| TokenLockerOnHarmony.sol     | 8.33       | 0          | 25         | 8.33       | ... 55,60,61,62  |
+| TokenRegistry.sol            | 0          | 0          | 0          | 0          | ... 100,101,102  |
+| contracts/ethash/            | 0          | 0          | 0          | 0          |                  |
+| MerkelRoot.sol               | 0          | 0          | 0          | 0          | 12,13,14,15      |
+| Prime.sol                    | 0          | 0          | 0          | 0          | ... 85,88,89,91  |
+| binary.sol                   | 0          | 100        | 0          | 0          | ... 46,55,56,64  |
+| ethash.sol                   | 0          | 100        | 0          | 0          | ... 503,504,505  |
+| keccak512.sol                | 0          | 0          | 0          | 0          | ... 285,286,288  |
+| contracts/lib/               | 8.99       | 8.48       | 11.7       | 9.25       |                  |
+| ECVerify.sol                 | 0          | 0          | 0          | 0          | ... 22,24,27,29  |
+| EthUtils.sol                 | 0          | 0          | 0          | 0          | ... 81,82,84,87  |
+| MMR.sol                      | 0          | 0          | 0          | 0          | ... 532,533,535  |
+| MMRVerifier.sol              | 0          | 0          | 0          | 0          | ... 209,210,212  |
+| MMRWrapper.sol               | 0          | 100        | 0          | 0          | ... 52,57,58,60  |
+| MPT.sol                      | 0          | 0          | 0          | 0          | ... 282,283,285  |
+| MPTValidatorV2.sol           | 0          | 0          | 0          | 0          | ... 39,40,42,43  |
+| RLPEncode.sol                | 0          | 0          | 0          | 0          | ... 251,253,295  |
+| RLPReader.sol                | 46.36      | 41.3       | 50         | 47.75      | ... 374,376,377  |
+| SafeCast.sol                 | 0          | 0          | 0          | 0          | ... 17,18,22,23  |
+| contracts/mocks/             | 0          | 100        | 0          | 0          |                  |
+| LightClient.sol              | 0          | 100        | 0          | 0          | 21,30,31,32      |
+| MPTTest.sol                  | 0          | 100        | 0          | 0          | 13               |
+| contracts/test_contracts/    | 0          | 0          | 0          | 0          |                  |
+| TestEthLightClient.sol       | 0          | 0          | 0          | 0          | ... 35,36,43,46  |
+| ---------------------------- | ---------- | ---------- | ---------- | ---------- | ---------------- |
+| All files                    | 6.76       | 8.22       | 9.3        | 5.81       |                  |
+| ---------------------------- | ---------- | ---------- | ---------- | ---------- | ---------------- |
 ```
 
 ### Deploying Smart Contracts
@@ -467,12 +467,12 @@ Here we will walk through end to end testing using the CLI. at the bottom there 
 
 ### Testing Steps Overview
 
-| #   | Step | Notes |
-| --- | ---- | ----- |
-| 0   | Prerequisite: Start local nodes     | See [above](#running-local-nodes)for running hardhart and harmony localnet |
-| 1   | Deploying Smart Contracts           | Deploy scripts are above, below we will use CLI Functionality |
-| 2   | Generate DAG Merkle Tree            | A DAG Merkle tree needs to be generated from the Ethereum Chain |
-| 3   | Relay Blocks Between the Two Chains | Blocks need to be relayed proven and verified |
+| #   | Step                                | Notes                                                                             |
+| --- | ----------------------------------- | --------------------------------------------------------------------------------- |
+| 0   | Prerequisite: Start local nodes     | See [above](#running-local-nodes)for running hardhart and harmony localnet        |
+| 1   | Deploying Smart Contracts           | Deploy scripts are above, below we will use CLI Functionality                     |
+| 2   | Generate DAG Merkle Tree            | A DAG Merkle tree needs to be generated from the Ethereum Chain                   |
+| 3   | Relay Blocks Between the Two Chains | Blocks need to be relayed proven and verified                                     |
 | 4   | Bridge Tokens                       | Deploy tokens to be bridged and transfer tokens back and forth between two chains |
 
 ### 0: Start Local Nodes
@@ -484,17 +484,17 @@ See [Smart Contracts](#smart-contracts) for information on deploying the require
 
 Below gives an overview of how to deploy these contracts for the CLI.
 
-| Network  | Contract                  | Example LocalNet Command  | Notes        |
-| -------- | ------------------------- | ------------------------------------------------------- | ------------ |
-| Harmony  | EthereumLightClient.sol   | `yarn cli ELC deploy -b 0 -u "http://localhost:8645" "http://localhost:9500"`| Can also pass an rlp Header |
-| Harmony  | TokenLockerOnEthereum.sol | `yarn cli Bridge deploy http://localhost:8645 http://localhost:9500`  |  One command deploys both lockers on Ethereum and Harmony   |
-| Harmony  | EthereumProver.sol        | `yarn cli EVerifier deploy "http://localhost:8645"` | |
-| Harmony  | FaucetToken.sol           | `yarn cli Bridge deployFaucet "http://localhost:9500" -m 10000` | Testing Only |
-| Harmony  | EthereumLightClient.sol   | `yarn cli Bridge deployFakeClient "http://localhost:9500"` | TESTING ONLY **Need to clarify whether this is needed** |
-| Ethereum | HarmonyLightClient.sol    |                       |              | **Do we deploy this?**
-| Ethereum | TokenLockerOnHarmony.sol  |  `yarn cli Bridge deploy http://localhost:8645 http://localhost:9500`  | One command deploys both lockers on Ethereum and Harmony  |
-| Ethereum | FaucetToken.sol           | `yarn cli Bridge deployFaucet "http://localhost:8645" -m 10000`                           | Testing Only |
-| Ethereum  | EthereumLightClient.sol   | `yarn cli Bridge deployFakeClient "http://localhost:8645"` | TESTING ONLY **Need to clarify whether this is needed** |
+| Network  | Contract                  | Example LocalNet Command                                                      | Notes                                                    |
+| -------- | ------------------------- | ----------------------------------------------------------------------------- | -------------------------------------------------------- |
+| Harmony  | EthereumLightClient.sol   | `yarn cli ELC deploy -b 0 -u "http://localhost:8645" "http://localhost:9500"` | Can also pass an rlp Header                              |
+| Harmony  | TokenLockerOnEthereum.sol | `yarn cli Bridge deploy http://localhost:8645 http://localhost:9500`          | One command deploys both lockers on Ethereum and Harmony |
+| Harmony  | EthereumProver.sol        | `yarn cli EVerifier deploy "http://localhost:8645"`                           |                                                          |
+| Harmony  | FaucetToken.sol           | `yarn cli Bridge deployFaucet "http://localhost:9500" -m 10000`               | Testing Only                                             |
+| Harmony  | EthereumLightClient.sol   | `yarn cli Bridge deployFakeClient "http://localhost:9500"`                    | TESTING ONLY **Need to clarify whether this is needed**  |
+| Ethereum | HarmonyLightClient.sol    |                                                                               |                                                          | **Do we deploy this?** |
+| Ethereum | TokenLockerOnHarmony.sol  | `yarn cli Bridge deploy http://localhost:8645 http://localhost:9500`          | One command deploys both lockers on Ethereum and Harmony |
+| Ethereum | FaucetToken.sol           | `yarn cli Bridge deployFaucet "http://localhost:8645" -m 10000`               | Testing Only                                             |
+| Ethereum | EthereumLightClient.sol   | `yarn cli Bridge deployFakeClient "http://localhost:8645"`                    | TESTING ONLY **Need to clarify whether this is needed**  |
 
 
 ### 2: Generate DAG Merkle Tree
@@ -520,6 +520,16 @@ getBlockHeightMax: 0
 ```
 
 ### 4: Bridge Tokens
+
+* Tokens are deployed on each chain above
+* Map the Tokens (eth to harmony): `yarn cli Bridge map http://localhost:8645 0x017f8C7d1Cb04dE974B8aC1a6B8d3d74bC74E7E1 http://localhost:9500 0x017f8C7d1Cb04dE974B8aC1a6B8d3d74bC74E7E1 0x4e59AeD3aCbb0cb66AF94E893BEE7df8B414dAB1`
+
+This performs the following
+1. Create an ERC20 token on Harmony
+2. Map the token on Harmony `TokenRegistry.sol:IssueTokenMapReq`
+3. Get the proof of the Mapping Request on Harmony
+4. Validate the Harmony Proof on Ethereum
+5. Map the token on Ethereum
 
 
 * Deploying Bridged Tokens: `node src/cli/index.js  Bridge deploy http://localhost:8645 http://localhost:9500`
@@ -583,37 +593,37 @@ If to find the latest epoch on Harmony you can look at [explorer](https://stakin
 # Component Overview
 Following is an overview of the components which make up the horizon bridge.
 
-| #       | Component                   | Function                   | Status   | Notes  |
-| ------- | --------------------------- | -------------------------- |--------- |------- |
-| **1**   | **contracts**               | **On chain Functionality** | Untested |        |
-| 1.1     | HarmonyLightClient.sol      | 
-| 1.2     | TokenLockerOnEtherum.sol    |
-| 1.3     | FaucetToken.sol             |
-| 1.4     | EthereumLightClient.sol     |
-| 1.5     | TokenLockerOnHarmony.sol    |
-| 1.6     | FaucetToken.sol             |
-| **2**   | tools                       |
-| 2.1     | elc                         |
-| 2.2     | eprover                     |
-| 2.3     | eth2my-relay                |
-| **3**   | **cli**                     |
-| 3.1     | elc                         |
-| 3.2     | ethashProof                 |
-| 3.3     | eth2hmy-relay               |
-| 3.4     | bridge                      |
-| 3.5     | everifier                   |
-| **4**   | **scripts**                 |
-| 4.0     | utils.js                    |
-| 4.1     | deploy_eth_side.js          |
-| 4.2     | deploy_hmy_side.js          |
-| 4.3     | deploy_erc20.js             |
-| 4.4     | upgrade                     |
-| 4.5     | configure.js                |
-| 4.6     | test.js                     |
-| 4.7     | newtest.js                  |
-| 4.8     | end2end.js                  |
-| **5**   | **test**                    |
-| 5.1     | bridge.hmy.js               |
+| #     | Component                | Function                   | Status   | Notes |
+| ----- | ------------------------ | -------------------------- | -------- | ----- |
+| **1** | **contracts**            | **On chain Functionality** | Untested |       |
+| 1.1   | HarmonyLightClient.sol   |
+| 1.2   | TokenLockerOnEtherum.sol |
+| 1.3   | FaucetToken.sol          |
+| 1.4   | EthereumLightClient.sol  |
+| 1.5   | TokenLockerOnHarmony.sol |
+| 1.6   | FaucetToken.sol          |
+| **2** | tools                    |
+| 2.1   | elc                      |
+| 2.2   | eprover                  |
+| 2.3   | eth2my-relay             |
+| **3** | **cli**                  |
+| 3.1   | elc                      |
+| 3.2   | ethashProof              |
+| 3.3   | eth2hmy-relay            |
+| 3.4   | bridge                   |
+| 3.5   | everifier                |
+| **4** | **scripts**              |
+| 4.0   | utils.js                 |
+| 4.1   | deploy_eth_side.js       |
+| 4.2   | deploy_hmy_side.js       |
+| 4.3   | deploy_erc20.js          |
+| 4.4   | upgrade                  |
+| 4.5   | configure.js             |
+| 4.6   | test.js                  |
+| 4.7   | newtest.js               |
+| 4.8   | end2end.js               |
+| **5** | **test**                 |
+| 5.1   | bridge.hmy.js            |
 
 
 ### Additional References

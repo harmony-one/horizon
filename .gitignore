@@ -4,6 +4,7 @@
 */.env
 .env
 */node_modules
+.nvmrc
 /old_contracts
 /back
 build

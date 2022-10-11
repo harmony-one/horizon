@@ -22,11 +22,11 @@ Product Management, including rollout strategies and timelines will be managed s
 3. Get destBridge Contract (on Hamony)
 4. Call IssueTokenMapReq (on the Ethreum Locker)
 5. Send the IssueTokenMapReq.hash to Harmony (CrossRelay first call)
-5.1. This gets the proof of the transaction on Ethereum via prover.ReceiptProof
-5.2 Then validateAndExecuteProof on Harmony via ExecProof which calls the HarmonyTokenLocker.ExecProof
+  * This gets the proof of the transaction on Ethereum via prover.ReceiptProof
+  * Then validateAndExecuteProof on Harmony via ExecProof which calls the HarmonyTokenLocker.ExecProof
 6. We then prove the Harmony mapping acknowledgment on Ethereum (Cross Relay second call)
-6.1 This gets the proof of the acknowledgement transaction on Harmony via prover.ReceiptProof
-6.2 Then validateAndExecuteProof on Ethereum via ExecProof which calls the EthereumTokenLocker.ExecProof
+  * This gets the proof of the acknowledgement transaction on Harmony via prover.ReceiptProof
+  * Then validateAndExecuteProof on Ethereum via ExecProof which calls the EthereumTokenLocker.ExecProof
 7. Upon completion of tokenMap control is passed back to Bridge Map which
 8. Calls TokenPair on Ethereum
 9. Calls ethTokenInfo to get the status of the ERC20

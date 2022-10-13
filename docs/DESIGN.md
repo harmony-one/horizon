@@ -2,25 +2,21 @@
 
 ## Overview 
 
-This document reviews the current implementation, development tasks that need to be done to support POW and offers some thoughts on next steps to support Ethereum 2.0 and other chains. Further thoughts on Multichain Design including a review of other Multichain Bridges is included in [Multichain Trustless Bridge : Draft](./MultiChainTrustlessBridgeDraft.pdf)
+This document reviews the current implementation, development tasks that need to be done to support POW and offers some thoughts on next steps to support Ethereum 2.0 and other chains. 
 
-The current design needs to be updated for ETH 2.0. This involves removing the ETHHASH logic and SPV client and replacing with MMR trees per epoch and checkpoints similar to Harmony Light Client on Ethereum. However it is unclear whether ETH 2.0 support MMRs. Need further review of [Vitalik’s Annotated Ethereum 2.0 Spec](https://notes.ethereum.org/@vbuterin/SkeyEI3xv), [Prysm Documentation](https://docs.prylabs.network/docs/how-prysm-works/prysm-validator-client) and [prysm github](https://github.com/prysmaticlabs/prysm).
+Further thoughs on ETH 2.0 support, removing the ETHHASH logic and SPV client and potentially replacing with MMR trees per epoch and checkpoints similar to Harmony Light Client on Ethereum, can be found in [ETH2_0.md](./ETH2_0.md).
 
+Further thoughts on Multichain Design including a review of other Multichain Bridges is included in [Multichain Trustless Bridge : Draft](./MultiChainTrustlessBridgeDraft.pdf)
 
 ## Next Steps
 
 Following are some of the improvements needed broken down by functional areas.
 
 ### Ethereum Light Client
-1. Needs to be refactored to support Proof of Stake (POS) and remove POW and DAG Generation. Following are some documents for review to see whether we can implement a Ethereum Light Client potentially interacting with the Prysm Implementaion of Consenuse and using Merkle Mountain Ranges similar to Harmony.
-    * Harmony [MMR PR Review](https://github.com/harmony-one/harmony/pull/3872) and [latest PR](https://github.com/harmony-one/harmony/pull/4198/files)
-    * ETH 2.0 Review
-        * [Beacon Chain Specification](https://github.com/ethereum/consensus-specs/blob/master/specs/phase0/beacon-chain.md)
-        * [Extended light client protocol](https://notes.ethereum.org/@vbuterin/extended_light_client_protocol)
-        * [Altair Light Client -- Light Client](https://github.com/ethereum/consensus-specs/blob/dev/specs/altair/light-client/light-client.md)
-        * [Altair Light Client -- Sync Protocol](https://github.com/ethereum/consensus-specs/blob/dev/specs/altair/light-client/sync-protocol.md)
+1. ETH 2.0 support see [here](./ETH2_0.md)
 2. Queuing mechanism should be implemented to queue bridge transactions. The queue can be polled as part of the block relay functionality to process bridge transactions once the blocks have been relayed.
 3. Consider whether we can use p2p messaging to receive published blocks rather than looping and polling via an RPC.
+
 
 ### Harmony Light Client
 1. Needs to implement a process to `submitCheckpoint`.

@@ -31,7 +31,7 @@ For this we review three Key items
 
     Such environments include resource-constrained devices (e.g. phones for trust-minimized wallets)and metered VMs (e.g. blockchain VMs for cross-chain bridges).
 
-    This document suggests a minimal light client design for the beacon chain thatuses sync committees introduced in [this beacon chain extension]((https://github.com/ethereum/consensus-specs/blob/dev/specs/altair/beacon-chain.md).
+    This document suggests a minimal light client design for the beacon chain thatuses sync committees introduced in [this beacon chain extension](https://github.com/ethereum/consensus-specs/blob/dev/specs/altair/beacon-chain.md).
 
     Additional documents describe how the light client sync protocol can be used:
     - [Full node](https://github.com/ethereum/consensus-specs/blob/dev/specs/altair/light-client/full-node.md)

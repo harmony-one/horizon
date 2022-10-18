@@ -112,230 +112,46 @@ For this we review three Key items
 * [(WIP) Light client p2p interface Specification](https://github.com/ethereum/consensus-specs/pull/2786): a PR to get the conversation going about a p2p approach.
 
 ### Near Rainbow Bridge Light Client Walkthrough
+The following is a walkthrough of how a transaction executed on Ethereum is propogated to NEAR's [eth2-client](https://github.com/aurora-is-near/rainbow-bridge/tree/master/contracts/near/eth2-client). 
 
-#### ETH TO NEAR
 
-The following is a walkthrough of how a transaction executed on Ethereum is propogated to NEAR's [eth2-client](https://github.com/aurora-is-near/rainbow-bridge/tree/master/contracts/near/eth2-client). Key components involved in the process are
-* []
+**At a high level the ethereum light client contract**
+* Optionally accepts client updates only from a trusted client
+* Can pause functions
+* Validates a sync committee exists for the curremt slot(epoch)
+* Validates sync committe has greater than the minimum required sync committee members
+* Validates 2/3 or more of the committe members have signed the blocks
+* Validates bls signatures (i.e. the bls signatures of the sync comittee for the blocks propogated)
+* Stores the hashes of the blocks for the past `hashes_gc_threshold` headers.  Events that happen past this threshold cannot be verified by the client. It is desirable that this number is larger than 7 days' worth of headers, which is roughly 51k Ethereum blocks. So this number should be 51k in production.
+* Stores the Ethereum Network (e.g. mainnet, kiln)
+* Stores Hashes of the finalized execution blocks mapped to their numbers. 
+* Stores All unfinalized execution blocks' headers hashes mapped to their `HeaderInfo`. 
+* Stores `AccountId`s mapped to their number of submitted headers. 
+* Stores Max number of unfinalized blocks allowed to be stored by one submitter account. This value should be at least 32 blocks (1 epoch), but the recommended value is 1024 (32 epochs)
+* Stores minimum balance that should be attached to register a new submitter account.
+* Stores finalized beacon header
+* Stores finalized execution header
+* Stores current_sync_committee
+* Stores next_sync_committee
 
-Process Walkthrough
+#### Ethereum to NEAR block propogation flow
+
 * [Light Clients are deployed on Near](https://github.com/aurora-is-near/rainbow-bridge/blob/master/eth2near/eth2near-block-relay-rs/src/main.rs#L107): 
     * [init_contract](https://github.com/aurora-is-near/rainbow-bridge/blob/master/eth2near/eth2near-block-relay-rs/src/main.rs#L107): The eth2near relayer is called with an argument to initialize the [eth2-client contract](https://github.com/aurora-is-near/rainbow-bridge/blob/master/contracts/near/eth2-client/src/lib.rs)
         * [eth_client_contract](https://github.com/aurora-is-near/rainbow-bridge/blob/master/eth2near/eth2near-block-relay-rs/src/main.rs#L108): is created using a contract_wrapper
             * `let mut eth_client_contract = EthClientContract::new(get_eth_contract_wrapper(&config));`
-        * [EthClientContract Wrapper](https://github.com/aurora-is-near/rainbow-bridge/blob/master/eth2near/contract_wrapper/src/eth_client_contract.rs): creates an instance of [eth2-client contract](https://github.com/aurora-is-near/rainbow-bridge/blob/master/contracts/near/eth2-client/src/lib.rs)  with the following arguments
-          * `network` - the name of Ethereum network such as `mainnet`, `goerli`, `kiln`, etc.
-          * `finalized_execution_header` - the finalized execution header to start initialization with.
-          * `finalized_beacon_header` - correspondent finalized beacon header.
-          * `current_sync_committee` - sync committee correspondent for finalized block.
-          * `next_sync_committee` - sync committee for the next period after period for finalized block.
-          * `hashes_gs_threshold` - the maximum number of stored finalized blocks.
-          * `max_submitted_block_by_account` - the maximum number of unfinalized blocks which one relay can store in the client's storage.
-          * `trusted_signer` - the account address of the trusted signer which is allowed to submit light client updates.
-        * [EthClientContract Wrapper](https://github.com/aurora-is-near/rainbow-bridge/blob/master/eth2near/contract_wrapper/src/eth_client_contract.rs): supports [eth2-client contract](https://github.com/aurora-is-near/rainbow-bridge/blob/master/contracts/near/eth2-client/src/lib.rs) functions `impl EthClientContractTrait for EthClientContract `
-            * `fn get_last_submitted_slot(&self) -> u64`
-            * `fn is_known_block(&self, execution_block_hash: &H256) -> Result<bool, Box<dyn Error>>`
-            * `fn send_light_client_update(&mut self, light_client_update: LightClientUpdate,) -> Result<FinalExecutionOutcomeView, Box<dyn Error>>`
-            * `fn get_finalized_beacon_block_hash(&self) -> Result<H256, Box<dyn Error>> `
-            * `fn get_finalized_beacon_block_slot(&self) -> Result<u64, Box<dyn Error>>`
-            * `fn send_headers(&mut self, headers: &[BlockHeader], end_slot: u64,) -> Result<FinalExecutionOutcomeView, Box<dyn std::error::Error>> `
-            * `fn get_min_deposit(&self) -> Result<Balance, Box<dyn Error>>`
-            * `fn register_submitter(&self) -> Result<FinalExecutionOutcomeView, Box<dyn Error>>`
-            * `fn is_submitter_registered(&self,account_id: Option<AccountId>,) -> Result<bool, Box<dyn Error>>`
-            * `fn get_light_client_state(&self) -> Result<LightClientState, Box<dyn Error>> `
-            * `fn get_num_of_submitted_blocks_by_account(&self) -> Result<u32, Box<dyn Error>> `
-            * `fn get_max_submitted_blocks_by_account(&self) -> Result<u32, Box<dyn Error>>`
-        * [eth2-client contract](https://github.com/aurora-is-near/rainbow-bridge/blob/master/contracts/near/eth2-client/src/lib.rs): provides the `Eth2Client` public data stucture
-  
-            ```
-            pub struct Eth2Client {
-                /// If set, only light client updates by the trusted signer will be accepted
-                trusted_signer: Option<AccountId>,
-                /// Mask determining all paused functions
-                paused: Mask,
-                /// Whether the client validates the updates.
-                /// Should only be set to `false` for debugging, testing, and diagnostic purposes
-                validate_updates: bool,
-                /// Whether the client verifies BLS signatures.
-                verify_bls_signatures: bool,
-                /// We store the hashes of the blocks for the past `hashes_gc_threshold` headers.
-                /// Events that happen past this threshold cannot be verified by the client.
-                /// It is desirable that this number is larger than 7 days' worth of headers, which is roughly
-                /// 51k Ethereum blocks. So this number should be 51k in production.
-                hashes_gc_threshold: u64,
-                /// Network. e.g. mainnet, kiln
-                network: Network,
-                /// Hashes of the finalized execution blocks mapped to their numbers. Stores up to `hashes_gc_threshold` entries.
-                /// Execution block number -> execution block hash
-                finalized_execution_blocks: LookupMap<u64, H256>,
-                /// All unfinalized execution blocks' headers hashes mapped to their `HeaderInfo`.
-                /// Execution block hash -> ExecutionHeaderInfo object
-                unfinalized_headers: UnorderedMap<H256, ExecutionHeaderInfo>,
-                /// `AccountId`s mapped to their number of submitted headers.
-                /// Submitter account -> Num of submitted headers
-                submitters: LookupMap<AccountId, u32>,
-                /// Max number of unfinalized blocks allowed to be stored by one submitter account
-                /// This value should be at least 32 blocks (1 epoch), but the recommended value is 1024 (32 epochs)
-                max_submitted_blocks_by_account: u32,
-                // The minimum balance that should be attached to register a new submitter account
-                min_storage_balance_for_submitter: Balance,
-                /// Light client state
-                finalized_beacon_header: ExtendedBeaconBlockHeader,
-                finalized_execution_header: LazyOption<ExecutionHeaderInfo>,
-                current_sync_committee: LazyOption<SyncCommittee>,
-                next_sync_committee: LazyOption<SyncCommittee>,
-            }            
-            ```
-
-        * [eth2-client contract](https://github.com/aurora-is-near/rainbow-bridge/blob/master/contracts/near/eth2-client/src/lib.rs): provides the following functions in  `impl Eth2Client`
-            * `fn validate_light_client_update(&self, update: &LightClientUpdate)`
-            * `fn verify_finality_branch(&self, update: &LightClientUpdate, finalized_period: u64)`
-            * `fn verify_bls_signatures(&self, update: &LightClientUpdate, sync_committee_bits: BitVec<u8>, finalized_period: u64,)`
-            * `fn update_finalized_header(&mut self, finalized_header: ExtendedBeaconBlockHeader)`
-            * `fn commit_light_client_update(&mut self, update: LightClientUpdate)`
-            * `fn gc_finalized_execution_blocks(&mut self, mut header_number: u64)`
-            * `fn update_submitter(&mut self, submitter: &AccountId, value: i64)`
-            * `fn is_light_client_update_allowed(&self)`
+       * [EthClientContract Wrapper](https://github.com/aurora-is-near/rainbow-bridge/blob/master/eth2near/contract_wrapper/src/eth_client_contract.rs): creates an instance of [eth2-client contract](https://github.com/aurora-is-near/rainbow-bridge/blob/master/contracts/near/eth2-client/src/lib.rs)  with the following arguments
+            * `network` - the name of Ethereum network such as `mainnet`, `goerli`, `kiln`, etc.
+            * `finalized_execution_header` - the finalized execution header to start initialization with.
+            * `finalized_beacon_header` - correspondent finalized beacon header.
+            * `current_sync_committee` - sync committee correspondent for finalized block.
+            * `next_sync_committee` - sync committee for the next period after period for finalized block.
+            * `hashes_gs_threshold` - the maximum number of stored finalized blocks.
+            * `max_submitted_block_by_account` - the maximum number of unfinalized blocks which one relay can store in the client's storage.
+            * `trusted_signer` - the account address of the trusted signer which is allowed to submit light client updates.
 * [Relayer is Created](https://github.com/aurora-is-near/rainbow-bridge/blob/master/eth2near/eth2near-block-relay-rs/src/main.rs#L111):
     * [eth2near_relay](https://github.com/aurora-is-near/rainbow-bridge/blob/master/eth2near/eth2near-block-relay-rs/src/main.rs#L111) is created using the following arguments
         * `let mut eth2near_relay = Eth2NearRelay::init(&config, get_eth_client_contract(&config), args.enable_binary_search, args.submit_only_finalized_blocks,);`
-        * [Eth2NearRelay](https://github.com/aurora-is-near/rainbow-bridge/blob/master/eth2near/eth2near-block-relay-rs/src/eth2near_relay.rs#L84): has the following public structure
-
-            ```
-            pub struct Eth2NearRelay {
-                beacon_rpc_client: BeaconRPCClient,
-                eth1_rpc_client: Eth1RPCClient,
-                near_rpc_client: NearRPCClient,
-                eth_client_contract: Box<dyn EthClientContractTrait>,
-                headers_batch_size: u64,
-                ethereum_network: String,
-                interval_between_light_client_updates_submission_in_epochs: u64,
-                max_blocks_for_finalization: u64,
-                near_network_name: String,
-                last_slot_searcher: LastSlotSearcher,
-                terminate: bool,
-                submit_only_finalized_blocks: bool,
-                next_light_client_update: Option<LightClientUpdate>,
-                sleep_time_on_sync_secs: u64,
-                sleep_time_after_submission_secs: u64,
-                max_submitted_blocks_by_account: u32,
-            }
-            ```
-        * [Eth2NearRelay](https://github.com/aurora-is-near/rainbow-bridge/blob/master/eth2near/eth2near-block-relay-rs/src/eth2near_relay.rs#L103): Implements the following functions
-            * `fn get_max_slot_for_submission(&self) -> Result<u64, Box<dyn Error>>`
-            * `fn get_last_eth2_slot_on_near(&mut self, max_slot: u64) -> Result<u64, Box<dyn Error>>`
-            * `fn get_last_finalized_slot_on_near(&self) -> Result<u64, Box<dyn Error>>`
-            * `fn get_last_finalized_slot_on_eth(&self) -> Result<u64, Box<dyn Error>>`
-            * **`pub fn run(&mut self, max_iterations: Option<u64>) `**
-            * `fn wait_for_synchronization(&self) -> Result<(), Box<dyn Error>>`
-            * `fn get_light_client_update_from_file(config: &Config, beacon_rpc_client: &BeaconRPCClient,) -> Result<Option<LightClientUpdate>, Box<dyn Error>> `
-            * `fn set_terminate(&mut self, iter_id: u64, max_iterations: Option<u64>)`
-            * `fn get_execution_blocks_between(&self, start_slot: u64, last_eth2_slot_on_eth_chain: u64,) -> Result<(Vec<BlockHeader>, u64), Box<dyn Error>>`
-            * `fn submit_execution_blocks(&mut self, headers: Vec<BlockHeader>, current_slot: u64,last_eth2_slot_on_near: &mut u64,)`
-            * `fn verify_bls_signature_for_finality_update(&mut self, light_client_update: &LightClientUpdate,) -> Result<bool, Box<dyn Error>>`
-            * `fn get_execution_block_by_slot(&self, slot: u64) -> Result<BlockHeader, Box<dyn Error>>`
-        * [Eth2NearRelay](https://github.com/aurora-is-near/rainbow-bridge/blob/master/eth2near/eth2near-block-relay-rs/src/eth2near_relay.rs#L461): has a second implementation of functions for submitting light client updates
-            * ` fn is_enough_blocks_for_light_client_update(&self, last_submitted_slot: u64,last_finalized_slot_on_near: u64, last_finalized_slot_on_eth: u64,) -> bool`
-            * `fn is_shot_run_mode(&self) -> bool`
-            * `fn send_light_client_updates_with_checks(&mut self, last_submitted_slot: u64) -> bool`
-            * `fn send_light_client_updates(&mut self, last_submitted_slot: u64, last_finalized_slot_on_near: u64, last_finalized_slot_on_eth: u64,)`
-            * `fn send_light_client_update_from_file(&mut self, last_submitted_slot: u64)`
-            * `fn send_regular_light_client_update(&mut self, last_finalized_slot_on_eth: u64,last_finalized_slot_on_near: u64,)`
-            * `fn get_attested_slot(&mut self, last_finalized_slot_on_near: u64,) -> Result<u64, Box<dyn Error>>`
-            * `fn send_hand_made_light_client_update(&mut self, last_finalized_slot_on_near: u64)`
-            * `fn send_specific_light_client_update(&mut self, light_client_update: LightClientUpdate)`
-        * [eth2near-block-relay-rs](https://github.com/aurora-is-near/rainbow-bridge/tree/master/eth2near/eth2near-block-relay-rs) includes (but not limited to) the following additional components
-            * [beacon_block_body_merkle_tree.rs](https://github.com/aurora-is-near/rainbow-bridge/blob/master/eth2near/eth2near-block-relay-rs/src/beacon_block_body_merkle_tree.rs): implements merkle trees for the Beacon and the ExecutionPayload
-                * `BeaconBlockBodyMerkleTree` is built on the `BeaconBlockBody` data structure, where the leaves of the Merkle Tree are the hashes of the high-level fields of the `BeaconBlockBody`.  The hashes of each element are produced by using `ssz` serialization.
-                * `ExecutionPayloadMerkleTree` is a built on the `ExecutionPayload` data structure, where the leaves of the Merkle Tree are the hashes of the high-level fields of the `ExecutionPayload`. The hashes of each element are produced by using `ssz` serialization. `ExecutionPayload` is one of the field in BeaconBlockBody.  The hash of the root of `ExecutionPlayloadMerkleTree` is the 9th leaf in BeaconBlockBody Merkle Tree.
-            * [beacon_rpc_client.rs](https://github.com/aurora-is-near/rainbow-bridge/blob/master/eth2near/eth2near-block-relay-rs/src/beacon_rpc_client.rs): allows getting beacon block body, beacon block header and light client updates using [Beacon RPC API](https://ethereum.github.io/beacon-APIs/). It has the following functions
-                * `pub fn new(endpoint_url: &str, timeout_seconds: u64, timeout_state_seconds: u64) -> Self `: Creates `BeaconRPCClient` for the given BeaconAPI `endpoint_url`
-                * `pub fn get_beacon_block_body_for_block_id(&self, block_id: &str,) -> Result<BeaconBlockBody<MainnetEthSpec>, Box<dyn Error>> `: Returns `BeaconBlockBody` struct for the given `block_id`. It uses the following arguments
-                    * `block_id` - Block identifier. Can be one of: "head" (canonical head in node's view),"genesis", "finalized", <slot>, <hex encoded blockRoot with 0x prefix>(see [beacon-APIs/#/Beacon/getBlockV2](https://ethereum.github.io/beacon-APIs/#/Beacon/getBlockV2)).
-                * `pub fn get_beacon_block_header_for_block_id(&self, block_id: &str,) -> Result<types::BeaconBlockHeader, Box<dyn Error>>`: Returns `BeaconBlockHeader` struct for the given `block_id`. It uses the following arguments
-                    * `block_id` - Block identifier. Can be one of: "head" (canonical head in node's view),"genesis", "finalized", <slot>, <hex encoded blockRoot with 0x prefix>(see [beacon-APIs/#/Beacon/getBlockV2](https://ethereum.github.io/beacon-APIs/#/Beacon/getBlockV2)).
-                *  `pub fn get_light_client_update(&self, period: u64,) -> Result<LightClientUpdate, Box<dyn Error>>`: Returns `LightClientUpdate` struct for the given `period`. It uses the following arguments
-                      *  `period` - period id for which `LightClientUpdate` is fetched. On Mainnet, one period consists of 256 epochs, and one epoch consists of 32 slots
-                * `pub fn get_bootstrap(&self, block_root: String,) -> Result<LightClientSnapshotWithProof, Box<dyn Error>> `: Fetch a bootstrapping state with a proof to a trusted block root.  The trusted block root should be fetched with similar means to a weak subjectivity checkpoint.  Only block roots for checkpoints are guaranteed to be available.
-                * `pub fn get_checkpoint_root(&self) -> Result<String, Box<dyn Error>>`
-                * `pub fn get_last_finalized_slot_number(&self) -> Result<types::Slot, Box<dyn Error>> `: Return the last finalized slot in the Beacon chain
-                * `pub fn get_last_slot_number(&self) -> Result<types::Slot, Box<dyn Error>>`: Return the last slot in the Beacon chain
-                * `pub fn get_slot_by_beacon_block_root(&self, beacon_block_hash: H256,) -> Result<u64, Box<dyn Error>>`
-                * `pub fn get_block_number_for_slot(&self, slot: types::Slot) -> Result<u64, Box<dyn Error>> `
-                * `pub fn get_finality_light_client_update(&self) -> Result<LightClientUpdate, Box<dyn Error>>`
-                * `pub fn get_finality_light_client_update_with_sync_commity_update(&self,) -> Result<LightClientUpdate, Box<dyn Error>>`
-                * `pub fn get_beacon_state(&self, state_id: &str,) -> Result<BeaconState<MainnetEthSpec>, Box<dyn Error>>`
-                * `pub fn is_syncing(&self) -> Result<bool, Box<dyn Error>>`
-                * `fn get_json_from_client(client: &Client, url: &str) -> Result<String, Box<dyn Error>>`
-                * `fn get_json_from_raw_request(&self, url: &str) -> Result<String, Box<dyn Error>>`
-                * `fn get_body_json_from_rpc_result(block_json_str: &str,) -> Result<std::string::String, Box<dyn Error>>`
-                * `fn get_header_json_from_rpc_result(json_str: &str,) -> Result<std::string::String, Box<dyn Error>>`
-                * `fn get_attested_header_from_light_client_update_json_str(light_client_update_json_str: &str,) -> Result<BeaconBlockHeader, Box<dyn Error>>`
-                * `fn get_sync_aggregate_from_light_client_update_json_str(light_client_update_json_str: &str,) -> Result<SyncAggregate, Box<dyn Error>>`
-                * `fn get_signature_slot(&self, light_client_update_json_str: &str,) -> Result<Slot, Box<dyn Error>>`: `signature_slot` is not provided in the current API. The slot is brute-forced until `SyncAggregate` in `BeconBlockBody` in the current slot is equal to `SyncAggregate` in `LightClientUpdate`
-                * `fn get_finality_update_from_light_client_update_json_str(&self, light_client_update_json_str: &str,) -> Result<FinalizedHeaderUpdate, Box<dyn Error>>`
-                * `fn get_sync_committee_update_from_light_client_update_json_str(light_client_update_json_str: &str,) -> Result<SyncCommitteeUpdate, Box<dyn Error>>`
-                * `pub fn get_period_for_slot(slot: u64) -> u64`
-                * `pub fn get_non_empty_beacon_block_header(&self, start_slot: u64,) -> Result<types::BeaconBlockHeader, Box<dyn Error>>`
-                * `fn check_block_found_for_slot(&self, json_str: &str) -> Result<(), Box<dyn Error>>`
-            * [config.rs](https://github.com/aurora-is-near/rainbow-bridge/blob/master/eth2near/eth2near-block-relay-rs/src/config.rs): 
-            * [eth1_rpc_client.rs](https://github.com/aurora-is-near/rainbow-bridge/blob/master/eth2near/eth2near-block-relay-rs/src/eth1_rpc_client.rs): Is used to get block headers and check sync status. It has the following functions
-                * `pub fn new(endpoint_url: &str) -> Self`
-                * `pub fn get_block_header_by_number(&self, number: u64) -> Result<BlockHeader, Box<dyn Error>>`
-                * `pub fn is_syncing(&self) -> Result<bool, Box<dyn Error>>`
-            * [execution_block_proof.rs](https://github.com/aurora-is-near/rainbow-bridge/blob/master/eth2near/eth2near-block-relay-rs/src/execution_block_proof.rs): `ExecutionBlockProof` contains a `block_hash` (execution block) and a proof of its inclusion in the `BeaconBlockBody` tree hash.  The `block_hash` is the 12th field in execution_payload, which is the 9th field in `BeaconBlockBody`. The first 4 elements in proof correspondent to the proof of inclusion of `block_hash` in Merkle tree built for `ExecutionPayload`.  The last 4 elements of the proof of `ExecutionPayload` in the Merkle tree are built on high-level `BeaconBlockBody` fields.  The proof starts from the leaf. It has the following structure and functions
-                * `pub struct ExecutionBlockProof {block_hash: H256, proof: [H256; Self::PROOF_SIZE],}`
-                * `pub fn construct_from_raw_data(block_hash: &H256, proof: &[H256; Self::PROOF_SIZE]) -> Self`
-                * `pub fn construct_from_beacon_block_body(beacon_block_body: &BeaconBlockBody<MainnetEthSpec>,) -> Result<Self, Box<dyn Error>>`
-                * `pub fn get_proof(&self) -> [H256; Self::PROOF_SIZE]`
-                * `pub fn get_execution_block_hash(&self) -> H256`
-                * `pub fn verify_proof_for_hash(&self, beacon_block_body_hash: &H256,) -> Result<bool, IncorrectBranchLength>`
-                * `fn merkle_root_from_branch(leaf: H256, branch: &[H256], depth: usize, index: usize,) -> Result<H256, IncorrectBranchLength>`
-            * [hand_made_finality_light_client_update.rs](https://github.com/aurora-is-near/rainbow-bridge/blob/master/eth2near/eth2near-block-relay-rs/src/hand_made_finality_light_client_update.rs): Has two implementations
-                * The first implementation which calls functions in the second
-                    * `pub fn get_finality_light_client_update(beacon_rpc_client: &BeaconRPCClient, attested_slot: u64, include_next_sync_committee: bool,) -> Result<LightClientUpdate, Box<dyn Error>>` 
-                    * `pub fn get_finality_light_client_update_from_file(beacon_rpc_client: &BeaconRPCClient, file_name: &str,) -> Result<LightClientUpdate, Box<dyn Error>>`
-                    * `pub fn get_light_client_update_from_file_with_next_sync_committee(beacon_rpc_client: &BeaconRPCClient, attested_state_file_name: &str, finality_state_file_name: &str,) -> Result<LightClientUpdate, Box<dyn Error>>`
-                * The second implementation
-                    * `fn get_attested_slot_with_enough_sync_committee_bits_sum(beacon_rpc_client: &BeaconRPCClient,attested_slot: u64,) -> Result<(u64, u64), Box<dyn Error>>`
-                    * `fn get_state_from_file(file_name: &str) -> Result<BeaconState<MainnetEthSpec>, Box<dyn Error>>`
-                    * `fn get_finality_light_client_update_for_state(beacon_rpc_client: &BeaconRPCClient,attested_slot: u64, signature_slot: u64, beacon_state: BeaconState<MainnetEthSpec>, finality_beacon_state: Option<BeaconState<MainnetEthSpec>>,) -> Result<LightClientUpdate, Box<dyn Error>>`
-                    * `fn get_next_sync_committee(beacon_state: &BeaconState<MainnetEthSpec>,) -> Result<SyncCommitteeUpdate, Box<dyn Error>>`
-                    * `fn from_lighthouse_beacon_header(beacon_header: &BeaconBlockHeader,) -> eth_types::eth2::BeaconBlockHeader`
-                    * `fn get_sync_committee_bits(sync_committee_signature: &types::SyncAggregate<MainnetEthSpec>,) -> Result<[u8; 64], Box<dyn Error>>`
-                    * `fn get_finality_branch(beacon_state: &BeaconState<MainnetEthSpec>,) -> Result<Vec<H256>, Box<dyn Error>>`
-                    * `fn get_finality_update(finality_header: &BeaconBlockHeader, beacon_state: &BeaconState<MainnetEthSpec>, finalized_block_body: &BeaconBlockBody<MainnetEthSpec>,) -> Result<FinalizedHeaderUpdate, Box<dyn Error>>`
-            * [init_contract.rs](https://github.com/aurora-is-near/rainbow-bridge/blob/master/eth2near/eth2near-block-relay-rs/src/init_contract.rs): Verifies light client snapshot and initializes the Ethereum Light Contract on Near.
-                * `pub fn verify_light_client_snapshot(block_root: String, light_client_snapshot: &LightClientSnapshotWithProof,) -> bool `: Verifies the light client by checking the snapshot format getting the current consensus branch and verifying it via a merkle proof. 
-                * `pub fn init_contract(config: &Config, eth_client_contract: &mut EthClientContract, mut init_block_root: String,) -> Result<(), Box<dyn std::error::Error>>`: Initializes the Ethereum Light Client Contract on Near.
-            * [last_slot_searcher.rs](https://github.com/aurora-is-near/rainbow-bridge/blob/master/eth2near/eth2near-block-relay-rs/src/last_slot_searcher.rs): Implementation of functions for searching last slot on NEAR contract. Supports both binary and linear searches.
-                * `pub fn get_last_slot(&mut self, last_eth_slot: u64, beacon_rpc_client: &BeaconRPCClient, eth_client_contract: &Box<dyn EthClientContractTrait>,) -> Result<u64, Box<dyn Error>> `
-                * `n binary_slot_search(&self, slot: u64, finalized_slot: u64, last_eth_slot: u64, beacon_rpc_client: &BeaconRPCClient, eth_client_contract: &Box<dyn EthClientContractTrait>,) -> Result<u64, Box<dyn Error>>` : Search for the slot before the first unknown slot on NEAR.  Assumptions: (1) start_slot is known on NEAR (2) last_slot is unknown on NEAR. Return error in case of problem with network connection.
-                * `fn binsearch_slot_forward(&self, slot: u64, max_slot: u64, beacon_rpc_client: &BeaconRPCClient,eth_client_contract: &Box<dyn EthClientContractTrait>,) -> Result<u64, Box<dyn Error>> {`: Search for the slot before the first unknown slot on NEAR. Assumptions: (1) start_slot is known on NEAR (2) last_slot is unknown on NEAR. Return error in case of problem with network connection. 
-                * `fn binsearch_slot_range(&self, start_slot: u64, last_slot: u64, beacon_rpc_client: &BeaconRPCClient, eth_client_contract: &Box<dyn EthClientContractTrait>,) -> Result<u64, Box<dyn Error>>`: Search for the slot before the first unknown slot on NEAR. Assumptions: (1) start_slot is known on NEAR (2) last_slot is unknown on NEAR. Return error in case of problem with network connection.
-                * `fn linear_slot_search(&self, slot: u64, finalized_slot: u64, last_eth_slot: u64, beacon_rpc_client: &BeaconRPCClient, eth_client_contract: &Box<dyn EthClientContractTrait>,) -> Result<u64, Box<dyn Error>>`: Returns the last slot known with block known on NEAR. `Slot` -- expected last known slot. `finalized_slot` -- last finalized slot on NEAR, assume as known slot.  `last_eth_slot` -- head slot on Eth.
-                * `fn linear_search_forward(&self, slot: u64, max_slot: u64, beacon_rpc_client: &BeaconRPCClient,eth_client_contract: &Box<dyn EthClientContractTrait>,) -> Result<u64, Box<dyn Error>>`: Returns the slot before the first unknown block on NEAR. The search range is [slot .. max_slot). If there is no unknown block in this range max_slot - 1 will be returned. Assumptions: (1) block for slot is submitted to NEAR. (2) block for max_slot is not submitted to NEAR.
-                * `fn linear_search_backward(&self, start_slot: u64, last_slot: u64, beacon_rpc_client: &BeaconRPCClient, eth_client_contract: &Box<dyn EthClientContractTrait>,) -> Result<u64, Box<dyn Error>> `: Returns the slot before the first unknown block on NEAR. The search range is [last_slot .. start_slot). If no such block are found the start_slot will be returned. Assumptions: (1) block for start_slot is submitted to NEAR (2) block for last_slot + 1 is not submitted to NEAR.
-                * `fn find_left_non_error_slot(&self, left_slot: u64, right_slot: u64, step: i8, beacon_rpc_client: &BeaconRPCClient, eth_client_contract: &Box<dyn EthClientContractTrait>,) -> (u64, bool)`: Find the leftmost non-empty slot. Search range: [left_slot, right_slot). Returns pair: (1) slot_id and (2) is this block already known on Eth client on NEAR. Assume that right_slot is non-empty and it's block were submitted to NEAR, so if non correspondent block is found we return (right_slot, false).
-                * `fn block_known_on_near( &self, slot: u64, beacon_rpc_client: &BeaconRPCClient,eth_client_contract: &Box<dyn EthClientContractTrait>,) -> Result<bool, Box<dyn Error>>`: Check if the block for current slot in Eth2 already were submitted to NEAR. Returns Error if slot doesn't contain any block.
-            * [light_client_snapshot_with_proof.rs](https://github.com/aurora-is-near/rainbow-bridge/blob/master/eth2near/eth2near-block-relay-rs/src/light_client_snapshot_with_proof.rs): contains the structure for `LightClientSnapshotWithProof`
-                ```
-                pub struct LightClientSnapshotWithProof {
-                    pub beacon_header: BeaconBlockHeader,
-                    pub current_sync_committee: SyncCommittee,
-                    pub current_sync_committee_branch: Vec<H256>,
-                }
-                ```
-            * [main.rs](https://github.com/aurora-is-near/rainbow-bridge/blob/master/eth2near/eth2near-block-relay-rs/src/main.rs): [Command Line Argument Parser](https://docs.rs/clap/latest/clap/) used to run the Ethereum to Near Block Relay. It contains the following functions
-                * `fn get_eth_contract_wrapper(config: &Config) -> Box<dyn ContractWrapper> `
-                * `fn get_dao_contract_wrapper(config: &Config) -> Box<dyn ContractWrapper>`
-                * `fn get_eth_client_contract(config: &Config) -> Box<dyn EthClientContractTrait>`
-                * `fn init_log(args: &Arguments, config: &Config)`
-                * `fn main() -> Result<(), Box<dyn std::error::Error>>`
-            * [near_rpc_client.rs](https://github.com/aurora-is-near/rainbow-bridge/blob/master/eth2near/eth2near-block-relay-rs/src/near_rpc_client.rs)
-                * `pub fn new(endpoint_url: &str) -> Self`
-                * `pub fn check_account_exists(&self, account_id: &str) -> Result<bool, Box<dyn Error>> `
-                * `pub fn is_syncing(&self) -> Result<bool, Box<dyn Error>> `
 * [Relayer is Started](https://github.com/aurora-is-near/rainbow-bridge/blob/master/eth2near/eth2near-block-relay-rs/src/main.rs):
     * The relayer is started using `eth2near_relay.run(None);`
     * This executes the [eth2near_relay run function](https://github.com/aurora-is-near/rainbow-bridge/blob/master/eth2near/eth2near-block-relay-rs/src/eth2near_relay.rs#L257) `pub fn run(&mut self, max_iterations: Option<u64>)` which runs until terminated doing using the following loop `while !self.terminate`
@@ -362,9 +178,218 @@ Process Walkthrough
                       * `sleep(Duration::from_secs(self.sleep_time_after_submission_secs));`: sleeps for the configured submission sleep time.
         * `if !were_submission_on_iter {thread::sleep(Duration::from_secs(self.sleep_time_on_sync_secs));}`: if there were submissions sleep for however many seconds were configured for sync sleep time.
 
+#### Ethereum to NEAR block propogration components
+
+* [EthClientContract Wrapper](https://github.com/aurora-is-near/rainbow-bridge/blob/master/eth2near/contract_wrapper/src/eth_client_contract.rs): supports [eth2-client contract](https://github.com/aurora-is-near/rainbow-bridge/blob/master/contracts/near/eth2-client/src/lib.rs) functions `impl EthClientContractTrait for EthClientContract `
+    * `fn get_last_submitted_slot(&self) -> u64`
+    * `fn is_known_block(&self, execution_block_hash: &H256) -> Result<bool, Box<dyn Error>>`
+    * `fn send_light_client_update(&mut self, light_client_update: LightClientUpdate,) -> Result<FinalExecutionOutcomeView, Box<dyn Error>>`
+    * `fn get_finalized_beacon_block_hash(&self) -> Result<H256, Box<dyn Error>> `
+    * `fn get_finalized_beacon_block_slot(&self) -> Result<u64, Box<dyn Error>>`
+    * `fn send_headers(&mut self, headers: &[BlockHeader], end_slot: u64,) -> Result<FinalExecutionOutcomeView, Box<dyn std::error::Error>> `
+    * `fn get_min_deposit(&self) -> Result<Balance, Box<dyn Error>>`
+    * `fn register_submitter(&self) -> Result<FinalExecutionOutcomeView, Box<dyn Error>>`
+    * `fn is_submitter_registered(&self,account_id: Option<AccountId>,) -> Result<bool, Box<dyn Error>>`
+    * `fn get_light_client_state(&self) -> Result<LightClientState, Box<dyn Error>> `
+    * `fn get_num_of_submitted_blocks_by_account(&self) -> Result<u32, Box<dyn Error>> `
+    * `fn get_max_submitted_blocks_by_account(&self) -> Result<u32, Box<dyn Error>>`
+* [eth2-client contract](https://github.com/aurora-is-near/rainbow-bridge/blob/master/contracts/near/eth2-client/src/lib.rs): 
+    * High level storage overview
+    * provides the `Eth2Client` public data stucture
+
+    ```
+    pub struct Eth2Client {
+        /// If set, only light client updates by the trusted signer will be accepted
+        trusted_signer: Option<AccountId>,
+        /// Mask determining all paused functions
+        paused: Mask,
+        /// Whether the client validates the updates.
+        /// Should only be set to `false` for debugging, testing, and diagnostic purposes
+        validate_updates: bool,
+        /// Whether the client verifies BLS signatures.
+        verify_bls_signatures: bool,
+        /// We store the hashes of the blocks for the past `hashes_gc_threshold` headers.
+        /// Events that happen past this threshold cannot be verified by the client.
+        /// It is desirable that this number is larger than 7 days' worth of headers, which is roughly
+        /// 51k Ethereum blocks. So this number should be 51k in production.
+        hashes_gc_threshold: u64,
+        /// Network. e.g. mainnet, kiln
+        network: Network,
+        /// Hashes of the finalized execution blocks mapped to their numbers. Stores up to `hashes_gc_threshold` entries.
+        /// Execution block number -> execution block hash
+        finalized_execution_blocks: LookupMap<u64, H256>,
+        /// All unfinalized execution blocks' headers hashes mapped to their `HeaderInfo`.
+        /// Execution block hash -> ExecutionHeaderInfo object
+        unfinalized_headers: UnorderedMap<H256, ExecutionHeaderInfo>,
+        /// `AccountId`s mapped to their number of submitted headers.
+        /// Submitter account -> Num of submitted headers
+        submitters: LookupMap<AccountId, u32>,
+        /// Max number of unfinalized blocks allowed to be stored by one submitter account
+        /// This value should be at least 32 blocks (1 epoch), but the recommended value is 1024 (32 epochs)
+        max_submitted_blocks_by_account: u32,
+        // The minimum balance that should be attached to register a new submitter account
+        min_storage_balance_for_submitter: Balance,
+        /// Light client state
+        finalized_beacon_header: ExtendedBeaconBlockHeader,
+        finalized_execution_header: LazyOption<ExecutionHeaderInfo>,
+        current_sync_committee: LazyOption<SyncCommittee>,
+        next_sync_committee: LazyOption<SyncCommittee>,
+    }            
+    ```
+
+* [eth2-client contract](https://github.com/aurora-is-near/rainbow-bridge/blob/master/contracts/near/eth2-client/src/lib.rs): provides the following functions in  `impl Eth2Client`
+    * `fn validate_light_client_update(&self, update: &LightClientUpdate)`
+    * `fn verify_finality_branch(&self, update: &LightClientUpdate, finalized_period: u64)`
+    * `fn verify_bls_signatures(&self, update: &LightClientUpdate, sync_committee_bits: BitVec<u8>, finalized_period: u64,)`
+    * `fn update_finalized_header(&mut self, finalized_header: ExtendedBeaconBlockHeader)`
+    * `fn commit_light_client_update(&mut self, update: LightClientUpdate)`
+    * `fn gc_finalized_execution_blocks(&mut self, mut header_number: u64)`
+    * `fn update_submitter(&mut self, submitter: &AccountId, value: i64)`
+    * `fn is_light_client_update_allowed(&self)`
+* [Eth2NearRelay](https://github.com/aurora-is-near/rainbow-bridge/blob/master/eth2near/eth2near-block-relay-rs/src/eth2near_relay.rs#L84): has the following public structure
+
+    ```
+    pub struct Eth2NearRelay {
+        beacon_rpc_client: BeaconRPCClient,
+        eth1_rpc_client: Eth1RPCClient,
+        near_rpc_client: NearRPCClient,
+        eth_client_contract: Box<dyn EthClientContractTrait>,
+        headers_batch_size: u64,
+        ethereum_network: String,
+        interval_between_light_client_updates_submission_in_epochs: u64,
+        max_blocks_for_finalization: u64,
+        near_network_name: String,
+        last_slot_searcher: LastSlotSearcher,
+        terminate: bool,
+        submit_only_finalized_blocks: bool,
+        next_light_client_update: Option<LightClientUpdate>,
+        sleep_time_on_sync_secs: u64,
+        sleep_time_after_submission_secs: u64,
+        max_submitted_blocks_by_account: u32,
+    }
+    ```
+* [Eth2NearRelay](https://github.com/aurora-is-near/rainbow-bridge/blob/master/eth2near/eth2near-block-relay-rs/src/eth2near_relay.rs#L103): Implements the following functions
+    * `fn get_max_slot_for_submission(&self) -> Result<u64, Box<dyn Error>>`
+    * `fn get_last_eth2_slot_on_near(&mut self, max_slot: u64) -> Result<u64, Box<dyn Error>>`
+    * `fn get_last_finalized_slot_on_near(&self) -> Result<u64, Box<dyn Error>>`
+    * `fn get_last_finalized_slot_on_eth(&self) -> Result<u64, Box<dyn Error>>`
+    * **`pub fn run(&mut self, max_iterations: Option<u64>) `**
+    * `fn wait_for_synchronization(&self) -> Result<(), Box<dyn Error>>`
+    * `fn get_light_client_update_from_file(config: &Config, beacon_rpc_client: &BeaconRPCClient,) -> Result<Option<LightClientUpdate>, Box<dyn Error>> `
+    * `fn set_terminate(&mut self, iter_id: u64, max_iterations: Option<u64>)`
+    * `fn get_execution_blocks_between(&self, start_slot: u64, last_eth2_slot_on_eth_chain: u64,) -> Result<(Vec<BlockHeader>, u64), Box<dyn Error>>`
+    * `fn submit_execution_blocks(&mut self, headers: Vec<BlockHeader>, current_slot: u64,last_eth2_slot_on_near: &mut u64,)`
+    * `fn verify_bls_signature_for_finality_update(&mut self, light_client_update: &LightClientUpdate,) -> Result<bool, Box<dyn Error>>`
+    * `fn get_execution_block_by_slot(&self, slot: u64) -> Result<BlockHeader, Box<dyn Error>>`
+* [Eth2NearRelay](https://github.com/aurora-is-near/rainbow-bridge/blob/master/eth2near/eth2near-block-relay-rs/src/eth2near_relay.rs#L461): has a second implementation of functions for submitting light client updates
+    * ` fn is_enough_blocks_for_light_client_update(&self, last_submitted_slot: u64,last_finalized_slot_on_near: u64, last_finalized_slot_on_eth: u64,) -> bool`
+    * `fn is_shot_run_mode(&self) -> bool`
+    * `fn send_light_client_updates_with_checks(&mut self, last_submitted_slot: u64) -> bool`
+    * `fn send_light_client_updates(&mut self, last_submitted_slot: u64, last_finalized_slot_on_near: u64, last_finalized_slot_on_eth: u64,)`
+    * `fn send_light_client_update_from_file(&mut self, last_submitted_slot: u64)`
+    * `fn send_regular_light_client_update(&mut self, last_finalized_slot_on_eth: u64,last_finalized_slot_on_near: u64,)`
+    * `fn get_attested_slot(&mut self, last_finalized_slot_on_near: u64,) -> Result<u64, Box<dyn Error>>`
+    * `fn send_hand_made_light_client_update(&mut self, last_finalized_slot_on_near: u64)`
+    * `fn send_specific_light_client_update(&mut self, light_client_update: LightClientUpdate)`
+* [eth2near-block-relay-rs](https://github.com/aurora-is-near/rainbow-bridge/tree/master/eth2near/eth2near-block-relay-rs) includes (but not limited to) the following additional components
+    * [beacon_block_body_merkle_tree.rs](https://github.com/aurora-is-near/rainbow-bridge/blob/master/eth2near/eth2near-block-relay-rs/src/beacon_block_body_merkle_tree.rs): implements merkle trees for the Beacon and the ExecutionPayload
+        * `BeaconBlockBodyMerkleTree` is built on the `BeaconBlockBody` data structure, where the leaves of the Merkle Tree are the hashes of the high-level fields of the `BeaconBlockBody`.  The hashes of each element are produced by using `ssz` serialization.
+        * `ExecutionPayloadMerkleTree` is a built on the `ExecutionPayload` data structure, where the leaves of the Merkle Tree are the hashes of the high-level fields of the `ExecutionPayload`. The hashes of each element are produced by using `ssz` serialization. `ExecutionPayload` is one of the field in BeaconBlockBody.  The hash of the root of `ExecutionPlayloadMerkleTree` is the 9th leaf in BeaconBlockBody Merkle Tree.
+    * [beacon_rpc_client.rs](https://github.com/aurora-is-near/rainbow-bridge/blob/master/eth2near/eth2near-block-relay-rs/src/beacon_rpc_client.rs): allows getting beacon block body, beacon block header and light client updates using [Beacon RPC API](https://ethereum.github.io/beacon-APIs/). It has the following functions
+        * `pub fn new(endpoint_url: &str, timeout_seconds: u64, timeout_state_seconds: u64) -> Self `: Creates `BeaconRPCClient` for the given BeaconAPI `endpoint_url`
+        * `pub fn get_beacon_block_body_for_block_id(&self, block_id: &str,) -> Result<BeaconBlockBody<MainnetEthSpec>, Box<dyn Error>> `: Returns `BeaconBlockBody` struct for the given `block_id`. It uses the following arguments
+            * `block_id` - Block identifier. Can be one of: "head" (canonical head in node's view),"genesis", "finalized", <slot>, <hex encoded blockRoot with 0x prefix>(see [beacon-APIs/#/Beacon/getBlockV2](https://ethereum.github.io/beacon-APIs/#/Beacon/getBlockV2)).
+        * `pub fn get_beacon_block_header_for_block_id(&self, block_id: &str,) -> Result<types::BeaconBlockHeader, Box<dyn Error>>`: Returns `BeaconBlockHeader` struct for the given `block_id`. It uses the following arguments
+            * `block_id` - Block identifier. Can be one of: "head" (canonical head in node's view),"genesis", "finalized", <slot>, <hex encoded blockRoot with 0x prefix>(see [beacon-APIs/#/Beacon/getBlockV2](https://ethereum.github.io/beacon-APIs/#/Beacon/getBlockV2)).
+        *  `pub fn get_light_client_update(&self, period: u64,) -> Result<LightClientUpdate, Box<dyn Error>>`: Returns `LightClientUpdate` struct for the given `period`. It uses the following arguments
+              *  `period` - period id for which `LightClientUpdate` is fetched. On Mainnet, one period consists of 256 epochs, and one epoch consists of 32 slots
+        * `pub fn get_bootstrap(&self, block_root: String,) -> Result<LightClientSnapshotWithProof, Box<dyn Error>> `: Fetch a bootstrapping state with a proof to a trusted block root.  The trusted block root should be fetched with similar means to a weak subjectivity checkpoint.  Only block roots for checkpoints are guaranteed to be available.
+        * `pub fn get_checkpoint_root(&self) -> Result<String, Box<dyn Error>>`
+        * `pub fn get_last_finalized_slot_number(&self) -> Result<types::Slot, Box<dyn Error>> `: Return the last finalized slot in the Beacon chain
+        * `pub fn get_last_slot_number(&self) -> Result<types::Slot, Box<dyn Error>>`: Return the last slot in the Beacon chain
+        * `pub fn get_slot_by_beacon_block_root(&self, beacon_block_hash: H256,) -> Result<u64, Box<dyn Error>>`
+        * `pub fn get_block_number_for_slot(&self, slot: types::Slot) -> Result<u64, Box<dyn Error>> `
+        * `pub fn get_finality_light_client_update(&self) -> Result<LightClientUpdate, Box<dyn Error>>`
+        * `pub fn get_finality_light_client_update_with_sync_commity_update(&self,) -> Result<LightClientUpdate, Box<dyn Error>>`
+        * `pub fn get_beacon_state(&self, state_id: &str,) -> Result<BeaconState<MainnetEthSpec>, Box<dyn Error>>`
+        * `pub fn is_syncing(&self) -> Result<bool, Box<dyn Error>>`
+        * `fn get_json_from_client(client: &Client, url: &str) -> Result<String, Box<dyn Error>>`
+        * `fn get_json_from_raw_request(&self, url: &str) -> Result<String, Box<dyn Error>>`
+        * `fn get_body_json_from_rpc_result(block_json_str: &str,) -> Result<std::string::String, Box<dyn Error>>`
+        * `fn get_header_json_from_rpc_result(json_str: &str,) -> Result<std::string::String, Box<dyn Error>>`
+        * `fn get_attested_header_from_light_client_update_json_str(light_client_update_json_str: &str,) -> Result<BeaconBlockHeader, Box<dyn Error>>`
+        * `fn get_sync_aggregate_from_light_client_update_json_str(light_client_update_json_str: &str,) -> Result<SyncAggregate, Box<dyn Error>>`
+        * `fn get_signature_slot(&self, light_client_update_json_str: &str,) -> Result<Slot, Box<dyn Error>>`: `signature_slot` is not provided in the current API. The slot is brute-forced until `SyncAggregate` in `BeconBlockBody` in the current slot is equal to `SyncAggregate` in `LightClientUpdate`
+        * `fn get_finality_update_from_light_client_update_json_str(&self, light_client_update_json_str: &str,) -> Result<FinalizedHeaderUpdate, Box<dyn Error>>`
+        * `fn get_sync_committee_update_from_light_client_update_json_str(light_client_update_json_str: &str,) -> Result<SyncCommitteeUpdate, Box<dyn Error>>`
+        * `pub fn get_period_for_slot(slot: u64) -> u64`
+        * `pub fn get_non_empty_beacon_block_header(&self, start_slot: u64,) -> Result<types::BeaconBlockHeader, Box<dyn Error>>`
+        * `fn check_block_found_for_slot(&self, json_str: &str) -> Result<(), Box<dyn Error>>`
+    * [config.rs](https://github.com/aurora-is-near/rainbow-bridge/blob/master/eth2near/eth2near-block-relay-rs/src/config.rs): 
+    * [eth1_rpc_client.rs](https://github.com/aurora-is-near/rainbow-bridge/blob/master/eth2near/eth2near-block-relay-rs/src/eth1_rpc_client.rs): Is used to get block headers and check sync status. It has the following functions
+        * `pub fn new(endpoint_url: &str) -> Self`
+        * `pub fn get_block_header_by_number(&self, number: u64) -> Result<BlockHeader, Box<dyn Error>>`
+        * `pub fn is_syncing(&self) -> Result<bool, Box<dyn Error>>`
+    * [execution_block_proof.rs](https://github.com/aurora-is-near/rainbow-bridge/blob/master/eth2near/eth2near-block-relay-rs/src/execution_block_proof.rs): `ExecutionBlockProof` contains a `block_hash` (execution block) and a proof of its inclusion in the `BeaconBlockBody` tree hash.  The `block_hash` is the 12th field in execution_payload, which is the 9th field in `BeaconBlockBody`. The first 4 elements in proof correspondent to the proof of inclusion of `block_hash` in Merkle tree built for `ExecutionPayload`.  The last 4 elements of the proof of `ExecutionPayload` in the Merkle tree are built on high-level `BeaconBlockBody` fields.  The proof starts from the leaf. It has the following structure and functions
+        * `pub struct ExecutionBlockProof {block_hash: H256, proof: [H256; Self::PROOF_SIZE],}`
+        * `pub fn construct_from_raw_data(block_hash: &H256, proof: &[H256; Self::PROOF_SIZE]) -> Self`
+        * `pub fn construct_from_beacon_block_body(beacon_block_body: &BeaconBlockBody<MainnetEthSpec>,) -> Result<Self, Box<dyn Error>>`
+        * `pub fn get_proof(&self) -> [H256; Self::PROOF_SIZE]`
+        * `pub fn get_execution_block_hash(&self) -> H256`
+        * `pub fn verify_proof_for_hash(&self, beacon_block_body_hash: &H256,) -> Result<bool, IncorrectBranchLength>`
+        * `fn merkle_root_from_branch(leaf: H256, branch: &[H256], depth: usize, index: usize,) -> Result<H256, IncorrectBranchLength>`
+    * [hand_made_finality_light_client_update.rs](https://github.com/aurora-is-near/rainbow-bridge/blob/master/eth2near/eth2near-block-relay-rs/src/hand_made_finality_light_client_update.rs): Has two implementations
+        * The first implementation which calls functions in the second
+            * `pub fn get_finality_light_client_update(beacon_rpc_client: &BeaconRPCClient, attested_slot: u64, include_next_sync_committee: bool,) -> Result<LightClientUpdate, Box<dyn Error>>` 
+            * `pub fn get_finality_light_client_update_from_file(beacon_rpc_client: &BeaconRPCClient, file_name: &str,) -> Result<LightClientUpdate, Box<dyn Error>>`
+            * `pub fn get_light_client_update_from_file_with_next_sync_committee(beacon_rpc_client: &BeaconRPCClient, attested_state_file_name: &str, finality_state_file_name: &str,) -> Result<LightClientUpdate, Box<dyn Error>>`
+        * The second implementation
+            * `fn get_attested_slot_with_enough_sync_committee_bits_sum(beacon_rpc_client: &BeaconRPCClient,attested_slot: u64,) -> Result<(u64, u64), Box<dyn Error>>`
+            * `fn get_state_from_file(file_name: &str) -> Result<BeaconState<MainnetEthSpec>, Box<dyn Error>>`
+            * `fn get_finality_light_client_update_for_state(beacon_rpc_client: &BeaconRPCClient,attested_slot: u64, signature_slot: u64, beacon_state: BeaconState<MainnetEthSpec>, finality_beacon_state: Option<BeaconState<MainnetEthSpec>>,) -> Result<LightClientUpdate, Box<dyn Error>>`
+            * `fn get_next_sync_committee(beacon_state: &BeaconState<MainnetEthSpec>,) -> Result<SyncCommitteeUpdate, Box<dyn Error>>`
+            * `fn from_lighthouse_beacon_header(beacon_header: &BeaconBlockHeader,) -> eth_types::eth2::BeaconBlockHeader`
+            * `fn get_sync_committee_bits(sync_committee_signature: &types::SyncAggregate<MainnetEthSpec>,) -> Result<[u8; 64], Box<dyn Error>>`
+            * `fn get_finality_branch(beacon_state: &BeaconState<MainnetEthSpec>,) -> Result<Vec<H256>, Box<dyn Error>>`
+            * `fn get_finality_update(finality_header: &BeaconBlockHeader, beacon_state: &BeaconState<MainnetEthSpec>, finalized_block_body: &BeaconBlockBody<MainnetEthSpec>,) -> Result<FinalizedHeaderUpdate, Box<dyn Error>>`
+    * [init_contract.rs](https://github.com/aurora-is-near/rainbow-bridge/blob/master/eth2near/eth2near-block-relay-rs/src/init_contract.rs): Verifies light client snapshot and initializes the Ethereum Light Contract on Near.
+        * `pub fn verify_light_client_snapshot(block_root: String, light_client_snapshot: &LightClientSnapshotWithProof,) -> bool `: Verifies the light client by checking the snapshot format getting the current consensus branch and verifying it via a merkle proof. 
+        * `pub fn init_contract(config: &Config, eth_client_contract: &mut EthClientContract, mut init_block_root: String,) -> Result<(), Box<dyn std::error::Error>>`: Initializes the Ethereum Light Client Contract on Near.
+    * [last_slot_searcher.rs](https://github.com/aurora-is-near/rainbow-bridge/blob/master/eth2near/eth2near-block-relay-rs/src/last_slot_searcher.rs): Implementation of functions for searching last slot on NEAR contract. Supports both binary and linear searches.
+        * `pub fn get_last_slot(&mut self, last_eth_slot: u64, beacon_rpc_client: &BeaconRPCClient, eth_client_contract: &Box<dyn EthClientContractTrait>,) -> Result<u64, Box<dyn Error>> `
+        * `n binary_slot_search(&self, slot: u64, finalized_slot: u64, last_eth_slot: u64, beacon_rpc_client: &BeaconRPCClient, eth_client_contract: &Box<dyn EthClientContractTrait>,) -> Result<u64, Box<dyn Error>>` : Search for the slot before the first unknown slot on NEAR.  Assumptions: (1) start_slot is known on NEAR (2) last_slot is unknown on NEAR. Return error in case of problem with network connection.
+        * `fn binsearch_slot_forward(&self, slot: u64, max_slot: u64, beacon_rpc_client: &BeaconRPCClient,eth_client_contract: &Box<dyn EthClientContractTrait>,) -> Result<u64, Box<dyn Error>> {`: Search for the slot before the first unknown slot on NEAR. Assumptions: (1) start_slot is known on NEAR (2) last_slot is unknown on NEAR. Return error in case of problem with network connection. 
+        * `fn binsearch_slot_range(&self, start_slot: u64, last_slot: u64, beacon_rpc_client: &BeaconRPCClient, eth_client_contract: &Box<dyn EthClientContractTrait>,) -> Result<u64, Box<dyn Error>>`: Search for the slot before the first unknown slot on NEAR. Assumptions: (1) start_slot is known on NEAR (2) last_slot is unknown on NEAR. Return error in case of problem with network connection.
+        * `fn linear_slot_search(&self, slot: u64, finalized_slot: u64, last_eth_slot: u64, beacon_rpc_client: &BeaconRPCClient, eth_client_contract: &Box<dyn EthClientContractTrait>,) -> Result<u64, Box<dyn Error>>`: Returns the last slot known with block known on NEAR. `Slot` -- expected last known slot. `finalized_slot` -- last finalized slot on NEAR, assume as known slot.  `last_eth_slot` -- head slot on Eth.
+        * `fn linear_search_forward(&self, slot: u64, max_slot: u64, beacon_rpc_client: &BeaconRPCClient,eth_client_contract: &Box<dyn EthClientContractTrait>,) -> Result<u64, Box<dyn Error>>`: Returns the slot before the first unknown block on NEAR. The search range is [slot .. max_slot). If there is no unknown block in this range max_slot - 1 will be returned. Assumptions: (1) block for slot is submitted to NEAR. (2) block for max_slot is not submitted to NEAR.
+        * `fn linear_search_backward(&self, start_slot: u64, last_slot: u64, beacon_rpc_client: &BeaconRPCClient, eth_client_contract: &Box<dyn EthClientContractTrait>,) -> Result<u64, Box<dyn Error>> `: Returns the slot before the first unknown block on NEAR. The search range is [last_slot .. start_slot). If no such block are found the start_slot will be returned. Assumptions: (1) block for start_slot is submitted to NEAR (2) block for last_slot + 1 is not submitted to NEAR.
+        * `fn find_left_non_error_slot(&self, left_slot: u64, right_slot: u64, step: i8, beacon_rpc_client: &BeaconRPCClient, eth_client_contract: &Box<dyn EthClientContractTrait>,) -> (u64, bool)`: Find the leftmost non-empty slot. Search range: [left_slot, right_slot). Returns pair: (1) slot_id and (2) is this block already known on Eth client on NEAR. Assume that right_slot is non-empty and it's block were submitted to NEAR, so if non correspondent block is found we return (right_slot, false).
+        * `fn block_known_on_near( &self, slot: u64, beacon_rpc_client: &BeaconRPCClient,eth_client_contract: &Box<dyn EthClientContractTrait>,) -> Result<bool, Box<dyn Error>>`: Check if the block for current slot in Eth2 already were submitted to NEAR. Returns Error if slot doesn't contain any block.
+    * [light_client_snapshot_with_proof.rs](https://github.com/aurora-is-near/rainbow-bridge/blob/master/eth2near/eth2near-block-relay-rs/src/light_client_snapshot_with_proof.rs): contains the structure for `LightClientSnapshotWithProof`
+        ```
+        pub struct LightClientSnapshotWithProof {
+            pub beacon_header: BeaconBlockHeader,
+            pub current_sync_committee: SyncCommittee,
+            pub current_sync_committee_branch: Vec<H256>,
+        }
+        ```
+    * [main.rs](https://github.com/aurora-is-near/rainbow-bridge/blob/master/eth2near/eth2near-block-relay-rs/src/main.rs): [Command Line Argument Parser](https://docs.rs/clap/latest/clap/) used to run the Ethereum to Near Block Relay. It contains the following functions
+        * `fn get_eth_contract_wrapper(config: &Config) -> Box<dyn ContractWrapper> `
+        * `fn get_dao_contract_wrapper(config: &Config) -> Box<dyn ContractWrapper>`
+        * `fn get_eth_client_contract(config: &Config) -> Box<dyn EthClientContractTrait>`
+        * `fn init_log(args: &Arguments, config: &Config)`
+        * `fn main() -> Result<(), Box<dyn std::error::Error>>`
+    * [near_rpc_client.rs](https://github.com/aurora-is-near/rainbow-bridge/blob/master/eth2near/eth2near-block-relay-rs/src/near_rpc_client.rs)
+        * `pub fn new(endpoint_url: &str) -> Self`
+        * `pub fn check_account_exists(&self, account_id: &str) -> Result<bool, Box<dyn Error>> `
+        * `pub fn is_syncing(&self) -> Result<bool, Box<dyn Error>> `
+
+#### Token Transfer Process Flow
 * [Token Transfer Created on Ethereum]()
 * [Transaction is proved]()
 * [Tokens are minted on Near]()
+
+#### Token Transfer Components
 
 #### References
 * [Lighthouse Documentation](https://lighthouse-book.sigmaprime.io/): ETH 2.0 Consensus Client Lighthouse documentation

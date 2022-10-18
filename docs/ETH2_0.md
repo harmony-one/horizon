@@ -24,6 +24,7 @@ For this we review three Key items
 2. Near Rainbow Bridge Light Client Walkthrough include [eth2near-block-relay-rs](https://github.com/aurora-is-near/rainbow-bridge/tree/master/eth2near/eth2near-block-relay-rs), [nearbridge contracts](https://github.com/aurora-is-near/rainbow-bridge/tree/master/contracts/eth/nearbridge) and [nearprover contracts](https://github.com/aurora-is-near/rainbow-bridge/tree/master/contracts/eth/nearprover)
 3. Prysm light-client [prototype](https://github.com/jinfwhuang/prysm/tree/jin-light/cmd/light-client)
 
+*Note: Time on Ethereum 2.0 Proof of Stake is divided into slots and epochs. One slot is 12 seconds. One epoch is 6.4 minutes, consisting of 32 slots. One block can be created for each slot.*
 ### Light Client Specification
 
 #### Altair Light Client -- Sync Protocol
@@ -112,13 +113,13 @@ For this we review three Key items
 * [(WIP) Light client p2p interface Specification](https://github.com/ethereum/consensus-specs/pull/2786): a PR to get the conversation going about a p2p approach.
 
 ### Near Rainbow Bridge Light Client Walkthrough
-The following is a walkthrough of how a transaction executed on Ethereum is propogated to NEAR's [eth2-client](https://github.com/aurora-is-near/rainbow-bridge/tree/master/contracts/near/eth2-client). 
+The following is a walkthrough of how a transaction executed on Ethereum is propogated to NEAR's [eth2-client](https://github.com/aurora-is-near/rainbow-bridge/tree/master/contracts/near/eth2-client). See [Cryptographic Primitives](#cryptographic-primitives) for more information on the cryptography used.
 
 
 **At a high level the ethereum light client contract**
 * Optionally accepts client updates only from a trusted client
 * Can pause functions
-* Validates a sync committee exists for the curremt slot(epoch)
+* Validates a sync committee exists for the curremt slot
 * Validates sync committe has greater than the minimum required sync committee members
 * Validates 2/3 or more of the committe members have signed the blocks
 * Validates bls signatures (i.e. the bls signatures of the sync comittee for the blocks propogated)
@@ -166,13 +167,14 @@ The following is a walkthrough of how a transaction executed on Ethereum is prop
         * `were_submission_on_iter |= self.send_light_client_updates_with_checks(last_eth2_slot_on_near);`: send light_client updates with checks and updates the submission flag to true if if passes. Following is some key logic 
             * `self.is_enough_blocks_for_light_client_update`: Checks if there are enough blocks for a light client update
               * `self.send_light_client_updates` calls `send_light_client_update` which
-                  * `if last_finalized_slot_on_eth >= last_finalized_slot_on_near + self.max_blocks_for_finalization`: checks if the gap is too big (i.e. we are at a new slot (epoch)) between slot of finalized block on NEAR and ETH. If it is it sends a hand made client update (which will loop getting the new slots (epochs) sync committees) otherwise it sends a regular client update (which propogates the block headers)
+                  * `if last_finalized_slot_on_eth >= last_finalized_slot_on_near + self.max_blocks_for_finalization`: checks if the gap is too big (i.e. we are at a new slot) between slot of finalized block on NEAR and ETH. If it is it sends a hand made client update (which will loop getting the new slots sync committees) otherwise it sends a regular client update (which propogates the block headers)
                       * `self.send_hand_made_light_client_update(last_finalized_slot_on_near);`
                           * `let include_next_sync_committee = BeaconRPCClient::get_period_for_slot (last_finalized_slot_on_near) != BeaconRPCClient::get_period_for_slot(attested_slot);`
                       * `self.send_regular_light_client_update(last_finalized_slot_on_eth, last_finalized_slot_on_near,);`
                   * `self.send_specific_light_client_update(light_client_update)` is called for both regular and hand made updates. 
                       * `self.eth_client_contract.is_known_block`: Checks if the block is already known on the Etherum Client Contract on NEAR
-                      * `self.verify_bls_signature_for_finality_update(&light_client_update)`: Verifies the BLS signatures
+                      * `self.verify_bls_signature_for_finality_update(&light_client_update)`: Verifies the BLS signatures. This calls `is_correct_finality_update` in `eth2near/finality-update-verify/src/lib.rs`
+                          * 
                       * `self.eth_client_contract.send_light_client_update(light_client_update.clone())`: Updates the light client with the finalized block
                       * `self.beacon_rpc_client.get_block_number_for_slot(types::Slot::new(light_client_update.finality_update.header_update.beacon_header.slot.as_u64())),`: Validates Finalized block number is correct on Ethereum usng the `beacon_rpc_client`.
                       * `sleep(Duration::from_secs(self.sleep_time_after_submission_secs));`: sleeps for the configured submission sleep time.
@@ -193,7 +195,7 @@ The following is a walkthrough of how a transaction executed on Ethereum is prop
     * `fn get_light_client_state(&self) -> Result<LightClientState, Box<dyn Error>> `
     * `fn get_num_of_submitted_blocks_by_account(&self) -> Result<u32, Box<dyn Error>> `
     * `fn get_max_submitted_blocks_by_account(&self) -> Result<u32, Box<dyn Error>>`
-* [eth2-client contract](https://github.com/aurora-is-near/rainbow-bridge/blob/master/contracts/near/eth2-client/src/lib.rs): 
+* [eth2-client contract storage](https://github.com/aurora-is-near/rainbow-bridge/blob/master/contracts/near/eth2-client/src/lib.rs): 
     * High level storage overview
     * provides the `Eth2Client` public data stucture
 
@@ -236,8 +238,19 @@ The following is a walkthrough of how a transaction executed on Ethereum is prop
         next_sync_committee: LazyOption<SyncCommittee>,
     }            
     ```
+* [eth2-client dependencies](https://github.com/aurora-is-near/rainbow-bridge/blob/master/contracts/near/eth2-client/Cargo.toml) relys heavily on the [lighthouse](https://github.com/aurora-is-near/lighthouse) codebase for it's consensus and cryptogrphic primitives. See [Cryptographic Primitives](#cryptographic-primitives) for more information.
+    * `ethereum-types = "0.9.2"`
+    * `eth-types =  { path = "../eth-types" }`
+    * `eth2-utility =  { path = "../eth2-utility" }`
+    * `tree_hash = { git = "https://github.com/aurora-is-near/lighthouse.git", rev = "b624c3f0d3c5bc9ea46faa14c9cb2d90ee1e1dec" }`
+    * `merkle_proof = { git = "https://github.com/aurora-is-near/lighthouse.git", rev = "b624c3f0d3c5bc9ea46faa14c9cb2d90ee1e1dec" }`
+    * `bls = { git = "https://github.com/aurora-is-near/lighthouse.git", optional = true, rev = "b624c3f0d3c5bc9ea46faa14c9cb2d90ee1e1dec", default-features = false, features = ["milagro"]}`
+    * `admin-controlled =  { path = "../admin-controlled" }`
+    * `near-sdk = "4.0.0"`
+    * `borsh = "0.9.3"`
+    * `bitvec = "1.0.0"`
 
-* [eth2-client contract](https://github.com/aurora-is-near/rainbow-bridge/blob/master/contracts/near/eth2-client/src/lib.rs): provides the following functions in  `impl Eth2Client`
+* [eth2-client contract functions](https://github.com/aurora-is-near/rainbow-bridge/blob/master/contracts/near/eth2-client/src/lib.rs): provides the following functions in  `impl Eth2Client`
     * `fn validate_light_client_update(&self, update: &LightClientUpdate)`
     * `fn verify_finality_branch(&self, update: &LightClientUpdate, finalized_period: u64)`
     * `fn verify_bls_signatures(&self, update: &LightClientUpdate, sync_committee_bits: BitVec<u8>, finalized_period: u64,)`
@@ -384,6 +397,98 @@ The following is a walkthrough of how a transaction executed on Ethereum is prop
         * `pub fn check_account_exists(&self, account_id: &str) -> Result<bool, Box<dyn Error>> `
         * `pub fn is_syncing(&self) -> Result<bool, Box<dyn Error>> `
 
+#### Ethereum Light Client Finality Update Verify Components
+[finality-update-verify](https://github.com/aurora-is-near/rainbow-bridge/tree/master/eth2near/finality-update-verify) is called from [fn verify_bls_signature_for_finality_update](https://github.com/aurora-is-near/rainbow-bridge/blob/master/eth2near/eth2near-block-relay-rs/src/eth2near_relay.rs#L422) to verify signatures as part of light_client updates. It relies heavily on the [lighthouse](https://github.com/aurora-is-near/lighthouse) codebase for it's consensus and cryptogrphic primitives. See [Cryptographic Primitives](#cryptographic-primitives) for more information.
+
+* Dependencies in [Cargo.toml](https://github.com/aurora-is-near/rainbow-bridge/blob/master/eth2near/finality-update-verify/Cargo.toml)
+    * `eth-types = { path ="../../contracts/near/eth-types/", features = ["eip1559"]}`
+    * `bls = { git = "https://github.com/aurora-is-near/lighthouse.git", rev = "b624c3f0d3c5bc9ea46faa14c9cb2d90ee1e1dec" }`
+    * `eth2-utility  = { path ="../../contracts/near/eth2-utility"}`
+    * `tree_hash = { git = "https://github.com/aurora-is-near/lighthouse.git", rev = "b624c3f0d3c5bc9ea46faa14c9cb2d90ee1e1dec" }`
+    * `types =  { git = "https://github.com/aurora-is-near/lighthouse.git", rev = "b624c3f0d3c5bc9ea46faa14c9cb2d90ee1e1dec" }`
+    * `bitvec = "1.0.0"`
+
+* Functions in [lib.rs](https://github.com/aurora-is-near/rainbow-bridge/blob/master/eth2near/finality-update-verify/src/lib.rs)
+    * `fn h256_to_hash256(hash: H256) -> Hash256`
+    * `fn tree_hash_h256_to_eth_type_h256(hash: tree_hash::Hash256) -> eth_types::H256`
+    * `fn to_lighthouse_beacon_block_header(bridge_beacon_block_header: &BeaconBlockHeader,) -> types::BeaconBlockHeader `
+    * `pub fn is_correct_finality_update(ethereum_network: &str, light_client_update: &LightClientUpdate,   sync_committee: SyncCommittee,) -> Result<bool, Box<dyn Error>> `
+
+#### Cryptographic Primitives
+Following are cryptographic primitives used in the [eth2-client contract](https://github.com/aurora-is-near/rainbow-bridge/tree/master/contracts/near/eth2-client) and [finality-update-verify](https://github.com/aurora-is-near/rainbow-bridge/tree/master/eth2near/finality-update-verify). Many are from the [lighthouse](https://github.com/aurora-is-near/lighthouse) codebase. Specifically [consensus](https://github.com/aurora-is-near/lighthouse/tree/stable/consensus) and [crypto](https://github.com/aurora-is-near/lighthouse/tree/stable/crypto) functions.
+
+Some common primitives
+* [bitvec](https://docs.rs/bitvec/1.0.1/bitvec/): Addresses memory by bits, for packed collections and bitfields
+* [eth2_serde_utils](https://docs.rs/eth2_serde_utils/0.1.0/eth2_serde_utils/): Serialization and deserialization utilities useful for JSON representations of Ethereum 2.0 types.
+* [eth2_hashing](https://docs.rs/eth2_hashing/0.2.0/eth2_hashing/): Hashing primitives used in Ethereum 2.0
+* [blst](https://docs.rs/blst/0.3.10/blst/): The blst crate provides a rust interface to the blst BLS12-381 signature library.
+* [tree_hash](https://docs.rs/tree_hash/0.4.0/tree_hash/): Efficient Merkle-hashing as used in Ethereum 2.0
+* [eth2_ssz_types](https://docs.rs/eth2_ssz_types/0.2.1/ssz_types/): Provides types with unique properties required for SSZ serialization and Merklization.
+
+Some Primitives from Lighthouse
+* [bls](https://github.com/aurora-is-near/lighthouse/tree/stable/crypto/bls): [Boneh–Lynn–Shacham](https://en.wikipedia.org/wiki/BLS_digital_signature) digital signature support
+    * [impls](https://github.com/aurora-is-near/lighthouse/tree/stable/crypto/bls/src/impls): Implementations
+        * [blst](https://github.com/aurora-is-near/lighthouse/blob/stable/crypto/bls/src/impls/blst.rs)
+        * [fake_crypto](https://github.com/aurora-is-near/lighthouse/blob/stable/crypto/bls/src/impls/fake_crypto.rs)
+        * [milagro](https://github.com/aurora-is-near/lighthouse/blob/stable/crypto/bls/src/impls/milagro.rs): support for [Apache Milagro](https://milagro.apache.org/docs/milagro-intro/)
+      * [functionality](https://github.com/aurora-is-near/lighthouse/tree/stable/crypto/bls/src)
+          * [generic_aggregate_public_key](https://github.com/aurora-is-near/lighthouse/blob/stable/crypto/bls/src/generic_aggregate_public_key.rs)
+          * [generic_aggregate_signature](https://github.com/aurora-is-near/lighthouse/blob/stable/crypto/bls/src/generic_aggregate_signature.rs)
+          * [generic_keypair](https://github.com/aurora-is-near/lighthouse/blob/stable/crypto/bls/src/generic_keypair.rs)
+          * [generic_public_key](https://github.com/aurora-is-near/lighthouse/blob/stable/crypto/bls/src/generic_public_key.rs)
+          * [generic_public_key_bytes](https://github.com/aurora-is-near/lighthouse/blob/stable/crypto/bls/src/generic_public_key_bytes.rs)
+          * [generic_secret_key](https://github.com/aurora-is-near/lighthouse/blob/stable/crypto/bls/src/generic_secret_key.rs)
+          * [generic_signature](https://github.com/aurora-is-near/lighthouse/blob/stable/crypto/bls/src/generic_signature.rs)
+          * [generic_signature_bytes](https://github.com/aurora-is-near/lighthouse/blob/stable/crypto/bls/src/generic_signature_bytes.rs)
+          * [generic_signature_set](https://github.com/aurora-is-near/lighthouse/blob/stable/crypto/bls/src/generic_signature_set.rs)
+          * [get_withdrawal_credentials](https://github.com/aurora-is-near/lighthouse/blob/stable/crypto/bls/src/get_withdrawal_credentials.rs)
+          * [zeroize_hash](https://github.com/aurora-is-near/lighthouse/blob/stable/crypto/bls/src/zeroize_hash.rs)
+* [merkle_proof](https://github.com/aurora-is-near/lighthouse/tree/stable/consensus/merkle_proof)
+* [tree_hash](https://github.com/aurora-is-near/lighthouse/tree/stable/consensus/tree_hash)
+* [types](https://github.com/aurora-is-near/lighthouse/tree/stable/consensus/types/src): Implements Ethereum 2.0 types including but not limited to
+    * [attestation](https://github.com/aurora-is-near/lighthouse/blob/stable/consensus/types/src/attestation.rs)
+    * [beacon_block](https://github.com/aurora-is-near/lighthouse/blob/stable/consensus/types/src/beacon_block.rs)
+    * [beacon_committee](https://github.com/aurora-is-near/lighthouse/blob/stable/consensus/types/src/beacon_committee.rs)
+    * [beacon_state](https://github.com/aurora-is-near/lighthouse/blob/stable/consensus/types/src/beacon_state.rs)
+    * [builder_bid](https://github.com/aurora-is-near/lighthouse/blob/stable/consensus/types/src/builder_bid.rs)
+    * [chain_spec](https://github.com/aurora-is-near/lighthouse/blob/stable/consensus/types/src/chain_spec.rs)
+    * [checkpoint](https://github.com/aurora-is-near/lighthouse/blob/stable/consensus/types/src/checkpoint.rs)
+    * [contribution_and_proof](https://github.com/aurora-is-near/lighthouse/blob/stable/consensus/types/src/contribution_and_proof.rs): A Validators aggregate sync committee contribution and selection proof.
+    * [deposit](https://github.com/aurora-is-near/lighthouse/blob/stable/consensus/types/src/deposit.rs): A deposit to potentially become a beacon chain validator.
+    * [enr_fork_id](https://github.com/aurora-is-near/lighthouse/blob/stable/consensus/types/src/enr_fork_id.rs): Specifies a fork which allows nodes to identify each other on the network. This fork is used in a nodes local ENR.
+    * [eth_spec](https://github.com/aurora-is-near/lighthouse/blob/stable/consensus/types/src/eth_spec.rs): Ethereum Foundation specifications.
+    * [execution_block_hash](https://github.com/aurora-is-near/lighthouse/blob/stable/consensus/types/src/execution_block_hash.rs)
+    * [execution_payload](https://github.com/aurora-is-near/lighthouse/blob/stable/consensus/types/src/execution_payload.rs)
+    * [fork](https://github.com/aurora-is-near/lighthouse/blob/stable/consensus/types/src/fork.rs): Specifies a fork of the `BeaconChain`, to prevent replay attacks.
+    * [free_attestation](https://github.com/aurora-is-near/lighthouse/blob/stable/consensus/types/src/free_attestation.rs): Note: this object does not actually exist in the spec.  We use it for managing attestations that have not been aggregated.
+    * [payload](https://github.com/aurora-is-near/lighthouse/blob/stable/consensus/types/src/payload.rs)
+    * [signed_aggregate_and_proof](https://github.com/aurora-is-near/lighthouse/blob/stable/consensus/types/src/signed_aggregate_and_proof.rs): A Validators signed aggregate proof to publish on the `beacon_aggregate_and_proof` gossipsub topic.
+    * [signed_beacon_block](https://github.com/aurora-is-near/lighthouse/blob/stable/consensus/types/src/signed_beacon_block.rs): A `BeaconBlock` and a signature from its proposer.
+    * [slot_data]: (https://github.com/aurora-is-near/lighthouse/blob/stable/consensus/types/src/slot_data.rs): A trait providing a `Slot` getter for messages that are related to a single slot. Useful in making parts of attestation and sync committee processing generic.
+    * [slot_epoch](https://github.com/aurora-is-near/lighthouse/blob/stable/consensus/types/src/slot_epoch.rs): The `Slot` and `Epoch` types are defined as new types over u64 to enforce type-safety between the two types. Note: Time on Ethereum 2.0 Proof of Stake is divided into slots and epochs. One slot is 12 seconds. One epoch is 6.4 minutes, consisting of 32 slots. One block can be created for each slot.
+    * [sync_aggregate](https://github.com/aurora-is-near/lighthouse/blob/stable/consensus/types/src/sync_aggregate.rs): Create a `SyncAggregate` from a slice of `SyncCommitteeContribution`s.  Equivalent to `process_sync_committee_contributions` from the spec.
+    * [sync_committee](https://github.com/aurora-is-near/lighthouse/blob/stable/consensus/types/src/sync_committee.rs)
+    * [tree_hash_impls](https://github.com/aurora-is-near/lighthouse/blob/stable/consensus/types/src/tree_hash_impls.rs): contains custom implementations of `CachedTreeHash` for ETH2-specific types.  It makes some assumptions about the layouts and update patterns of other structs in this crate, and should be updated carefully whenever those structs are changed.
+    * [validator](https://github.com/aurora-is-near/lighthouse/blob/stable/consensus/types/src/validator.rs): Information about a `BeaconChain` validator.
+
+
+Some Primitives from NEAR Rainbow Bridge
+* [eth-types](https://github.com/aurora-is-near/rainbow-bridge/tree/master/contracts/near/eth-types): utilities to serialize and encode eth2 types using [borsh](https://borsh.io/) and [rlp](https://ethereum.org/en/developers/docs/data-structures-and-encoding/rlp).
+* [eth2-utility](https://github.com/aurora-is-near/rainbow-bridge/tree/master/contracts/near/eth2-utility): Utility functions used for Ethereum 2.0 Consensus. Functions include
+    * `fn from_str(input: &str) -> Result<Network, Self::Err> `
+    * `pub fn new(network: &Network) -> Self`
+    * `pub fn compute_fork_version(&self, epoch: Epoch) -> Option<ForkVersion>`
+    * `pub fn compute_fork_version_by_slot(&self, slot: Slot) -> Option<ForkVersion> `
+    * `pub const fn compute_epoch_at_slot(slot: Slot) -> u64`
+    * `pub const fn compute_sync_committee_period(slot: Slot) -> u64`
+    * `pub const fn floorlog2(x: u32) -> u32`: Compute floor of log2 of a u32.
+    * `pub const fn get_subtree_index(generalized_index: u32) -> u32`
+    * `pub fn compute_domain(domain_constant: DomainType, fork_version: ForkVersion, genesis_validators_root: H256,) -> H256`
+    * `pub fn compute_signing_root(object_root: H256, domain: H256) -> H256`
+    * `pub fn get_participant_pubkeys(public_keys: &[PublicKeyBytes], sync_committee_bits: &BitVec<u8, Lsb0>,) -> Vec<PublicKeyBytes>`
+    * `pub fn convert_branch(branch: &[H256]) -> Vec<ethereum_types::H256>`
+    * `pub fn validate_beacon_block_header_update(header_update: &HeaderUpdate) -> bool`
+    * `pub fn calculate_min_storage_balance_for_submitter(max_submitted_blocks_by_account: u32,) -> Balance `
 #### Token Transfer Process Flow
 * [Token Transfer Created on Ethereum]()
 * [Transaction is proved]()

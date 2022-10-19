@@ -471,6 +471,16 @@ Some Primitives from Lighthouse
     * [tree_hash_impls](https://github.com/aurora-is-near/lighthouse/blob/stable/consensus/types/src/tree_hash_impls.rs): contains custom implementations of `CachedTreeHash` for ETH2-specific types.  It makes some assumptions about the layouts and update patterns of other structs in this crate, and should be updated carefully whenever those structs are changed.
     * [validator](https://github.com/aurora-is-near/lighthouse/blob/stable/consensus/types/src/validator.rs): Information about a `BeaconChain` validator.
 
+Some Smart Contracts deployed on Ethereum
+* [nearprover](https://github.com/aurora-is-near/rainbow-bridge/tree/master/contracts/eth/nearprover)
+    * [ProofDecoder.sol](https://github.com/aurora-is-near/rainbow-bridge/blob/master/contracts/eth/nearprover/contracts/ProofDecoder.sol) 
+    * [NearProver.sol](https://github.com/aurora-is-near/rainbow-bridge/blob/master/contracts/eth/nearprover/contracts/NearProver.sol)
+* [nearbridge](https://github.com/aurora-is-near/rainbow-bridge/tree/master/contracts/eth/nearbridge/contracts)
+    * [NearDecoder.sol](https://github.com/aurora-is-near/rainbow-bridge/blob/master/contracts/eth/nearbridge/contracts/NearDecoder.sol): handles decoing of Public Keys, Signatures, BlockProducers and LightClientBlocks using `Borsh.sol`
+    * [Utils.sol](https://github.com/aurora-is-near/rainbow-bridge/blob/master/contracts/eth/nearbridge/contracts/Utils.sol): handles reading and writing to memory, memoryToBytes and has functions such as `keccak256Raw` and `sha256Raw`
+    * [Borsh.sol](https://github.com/aurora-is-near/rainbow-bridge/blob/master/contracts/eth/nearbridge/contracts/Borsh.sol): [Borsh](https://borsh.io/): Binary Object Representation Serializer for Hashing. It is meant to be used in security-critical projects as it prioritizes consistency, safety, speed; and comes with a strict specification.
+    * [Ed25519.sol](https://github.com/aurora-is-near/rainbow-bridge/blob/master/contracts/eth/nearbridge/contracts/Ed25519.sol): [Ed25519](https://ed25519.cr.yp.to/) high-speed high-security signatures 
+
 
 Some Primitives from NEAR Rainbow Bridge
 * [eth-types](https://github.com/aurora-is-near/rainbow-bridge/tree/master/contracts/near/eth-types): utilities to serialize and encode eth2 types using [borsh](https://borsh.io/) and [rlp](https://ethereum.org/en/developers/docs/data-structures-and-encoding/rlp).
@@ -498,7 +508,7 @@ Following is an overview of timing and anticipated costs
 * Sending assets from Ethereum to NEAR takes about six minutes (20 blocks) and for ERC-20 costs about $10 on average.
 * Sending assets from NEAR back to Ethereum currently takes a maximum of sixteen hours (due to Ethereum finality times) and costs around $60 (due to ETH gas costs and at current ETH price). These costs and speeds will improve in the near future.
 
-
+*Note: This uses Ethreum [ERC20](https://eips.ethereum.org/EIPS/eip-20) and NEAR [NEP-141](https://nomicon.io/Standards/Tokens/FungibleToken/Core) initally developed for [NEP-21](https://github.com/near/NEPs/pull/21)*
 
 **[Generic ERC-20/NEP-141 connector for Rainbow Bridge](https://github.com/aurora-is-near/rainbow-token-connector/blob/master/README.md)**
 
@@ -651,10 +661,25 @@ Testing NEAR side
 make res/bridge_token_factory.wasm
 cargo test --all
 ```
-* [Transaction is proved]()
-* [Tokens are minted on Near]()
 
 #### Token Transfer Components
+
+*Note: This uses Ethreum [ERC20](https://eips.ethereum.org/EIPS/eip-20) and NEAR [NEP-141](https://nomicon.io/Standards/Tokens/FungibleToken/Core) initally developed for [NEP-21](https://github.com/near/NEPs/pull/21)*
+
+* [rainbow-token-connector](https://github.com/aurora-is-near/rainbow-token-connector)
+    * NEAR rust based contracts
+        * [bridge-common](https://github.com/aurora-is-near/rainbow-token-connector/tree/master/bridge-common): Common functions for NEAR, currently only `pub fn parse_recipient(recipient: String) -> Recipient `
+        * [bridge-token-factory](https://github.com/aurora-is-near/rainbow-token-connector/tree/master/bridge-token-factory): Functions for managing tokens on NEAR including but not limited to `update_metadata`, `deposit`, `get_tokens`, `finish_updating_metadata`, `finish_updating_metadata`, `finish_withdraw`, `deploy_bridge_token`, `get_bridge_token_account_id`, `is_used_proof`, `record_proof`
+        * [bridge-token](https://github.com/aurora-is-near/rainbow-token-connector/tree/master/bridge-token): Token functions on NEAR including but not limited to `mint` and `withdraw`
+        * [token-locker](https://github.com/aurora-is-near/rainbow-token-connector/tree/master/token-locker): Token Locker functions on NEAR including but not limited to `withdraw`, `finish_deposit`, `is_used_proof`
+    * Ethereum solidity based contracts
+        * [erc20-bridge-token](https://github.com/aurora-is-near/rainbow-token-connector/tree/master/erc20-bridge-token): Ethereum Bridge token contracts including but not limited to
+            * [BridgeToken.sol](https://github.com/aurora-is-near/rainbow-token-connector/blob/master/erc20-bridge-token/contracts/BridgeToken.sol)
+            * [BridgeTokenFactory.sol](https://github.com/aurora-is-near/rainbow-token-connector/blob/master/erc20-bridge-token/contracts/BridgeTokenFactory.sol)
+            * [BridgeTokenProxy.sol](https://github.com/aurora-is-near/rainbow-token-connector/blob/master/erc20-bridge-token/contracts/BridgeTokenProxy.sol)
+            * [ProofConsumer.sol](https://github.com/aurora-is-near/rainbow-token-connector/blob/master/erc20-bridge-token/contracts/ProofConsumer.sol)
+            * [ResultsDecoder](https://github.com/aurora-is-near/rainbow-token-connector/blob/master/erc20-bridge-token/contracts/ResultsDecoder.sol)
+        * [erc20-connector](https://github.com/aurora-is-near/rainbow-token-connector/tree/master/erc20-connector): has [ERC20Locker.sol](https://github.com/aurora-is-near/rainbow-token-connector/blob/master/erc20-connector/contracts/ERC20Locker.sol) which is used to lock and unlock tokens. It is linked to the bridge token factory on NEAR side. It also links to the prover that it uses to unlock the tokens. (see [here](https://github.com/aurora-is-near/rainbow-bridge/tree/master/contracts/eth/nearbridge/contracts))
 
 #### References
 * [Lighthouse Documentation](https://lighthouse-book.sigmaprime.io/): ETH 2.0 Consensus Client Lighthouse documentation
@@ -663,6 +688,7 @@ cargo test --all
 * [eth2near-block-relay-rs](https://github.com/aurora-is-near/rainbow-bridge/tree/master/eth2near/eth2near-block-relay-rs)
 * [nearbridge contracts](https://github.com/aurora-is-near/rainbow-bridge/tree/master/contracts/eth/nearbridge)
 * [nearprover contracts](https://github.com/aurora-is-near/rainbow-bridge/tree/master/contracts/eth/nearprover)
+
 
 ### Prysm Light Client
 
@@ -897,7 +923,7 @@ The following smart contracts are deployed on NEAR and work in conjunction with 
 
 The following smart contracts are deployed on Ethereum and used for propogating blocks from NEAR to Ethereum.
 * [Smart Contracts deployed on Ethereum](https://github.com/aurora-is-near/rainbow-bridge/tree/master/contracts/eth) including
-    * [Near Bridge Contracts](https://github.com/aurora-is-near/rainbow-bridge/tree/master/contracts/eth/nearbridge/contracts) including [NearBrige.sol](https://github.com/aurora-is-near/rainbow-bridge/blob/master/contracts/eth/nearbridge/contracts/NearBridge.sol) which the interface [INearBridge.sol](https://github.com/aurora-is-near/rainbow-bridge/blob/master/contracts/eth/nearbridge/contracts/INearBridge.sol)
+    * [Near Bridge Contracts](https://github.com/aurora-is-near/rainbow-bridge/tree/master/contracts/eth/nearbridge/contracts) including [NearBridge.sol](https://github.com/aurora-is-near/rainbow-bridge/blob/master/contracts/eth/nearbridge/contracts/NearBridge.sol) which the interface [INearBridge.sol](https://github.com/aurora-is-near/rainbow-bridge/blob/master/contracts/eth/nearbridge/contracts/INearBridge.sol)
     * Interface Overview
 
         ```

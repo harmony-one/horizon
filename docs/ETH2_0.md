@@ -5,6 +5,38 @@ The current design needs to be updated for ETH 2.0. This involves removing the E
 
 Below are some reference material and a review of Harmony MMR trees and the Near Rainbow Bridge implementation which interacts with the Ethereum 2.0 beacon chain for proof of finality.
 
+## Table of Contents
+- [Ethereum 2.0 Support](#ethereum-20-support)
+  - [Table of Contents](#table-of-contents)
+  - [Ethereum 2.0 Specifications](#ethereum-20-specifications)
+  - [Ethereum 2.0 Light Client Support](#ethereum-20-light-client-support)
+    - [Light Client Specification](#light-client-specification)
+      - [Altair Light Client -- Sync Protocol](#altair-light-client----sync-protocol)
+      - [The Portal Network](#the-portal-network)
+      - [Transaction Proofs](#transaction-proofs)
+      - [References](#references)
+    - [Near Rainbow Bridge Ethereum Light Client Walkthrough](#near-rainbow-bridge-ethereum-light-client-walkthrough)
+      - [Ethereum to NEAR block propogation flow](#ethereum-to-near-block-propogation-flow)
+      - [Ethereum to NEAR block propogation components](#ethereum-to-near-block-propogation-components)
+      - [Ethereum Light Client Finality Update Verify Components](#ethereum-light-client-finality-update-verify-components)
+      - [Cryptographic Primitives](#cryptographic-primitives)
+    - [Near Rainbow Bridge Near Light Client Walkthrough](#near-rainbow-bridge-near-light-client-walkthrough)
+      - [NEAR to Ethereum block propogation flow](#near-to-ethereum-block-propogation-flow)
+      - [NEAR to Ethereum block propogation components](#near-to-ethereum-block-propogation-components)
+      - [NEAR Rainbow Bridge Utils](#near-rainbow-bridge-utils)
+      - [nearbridge finality update and verify components](#nearbridge-finality-update-and-verify-components)
+      - [nearbridge cryptographic primitives](#nearbridge-cryptographic-primitives)
+    - [Token Transfer Process Flow](#token-transfer-process-flow)
+      - [Token Transfer Components](#token-transfer-components)
+      - [References](#references-1)
+    - [Prysm Light Client](#prysm-light-client)
+      - [References](#references-2)
+  - [Harmony Merkle Mount Range](#harmony-merkle-mount-range)
+  - [Near Rainbow Bridge Review](#near-rainbow-bridge-review)
+    - [NEAR Rainbow Bridge: Component Overview](#near-rainbow-bridge-component-overview)
+
+
+
 
 ## Ethereum 2.0 Specifications
 
@@ -91,7 +123,7 @@ For this we review three Key items
     
 * TODO: Review of Retrieving a transaction proof not just retrieving data on-demand
 
-### References
+#### References
 * Ethereum 2.0 Specifications
     * [Beacon Chain Specification](https://github.com/ethereum/consensus-specs/blob/master/specs/phase0/beacon-chain.md)
     * [Extended light client protocol](https://notes.ethereum.org/@vbuterin/extended_light_client_protocol)
@@ -112,7 +144,7 @@ For this we review three Key items
 * [Distributed Hash Table (DHT) Overview](https://github.com/ethereum/portal-network-specs/blob/master/beacon-chain/beacon-state-network.md#dht-overview): allows network participants to have retrieve data on-demand based on a content key.
 * [(WIP) Light client p2p interface Specification](https://github.com/ethereum/consensus-specs/pull/2786): a PR to get the conversation going about a p2p approach.
 
-### Near Rainbow Bridge Light Client Walkthrough
+### Near Rainbow Bridge Ethereum Light Client Walkthrough
 The following is a walkthrough of how a transaction executed on Ethereum is propogated to NEAR's [eth2-client](https://github.com/aurora-is-near/rainbow-bridge/tree/master/contracts/near/eth2-client). See [Cryptographic Primitives](#cryptographic-primitives) for more information on the cryptography used.
 
 
@@ -180,7 +212,7 @@ The following is a walkthrough of how a transaction executed on Ethereum is prop
                       * `sleep(Duration::from_secs(self.sleep_time_after_submission_secs));`: sleeps for the configured submission sleep time.
         * `if !were_submission_on_iter {thread::sleep(Duration::from_secs(self.sleep_time_on_sync_secs));}`: if there were submissions sleep for however many seconds were configured for sync sleep time.
 
-#### Ethereum to NEAR block propogration components
+#### Ethereum to NEAR block propogation components
 
 * [EthClientContract Wrapper](https://github.com/aurora-is-near/rainbow-bridge/blob/master/eth2near/contract_wrapper/src/eth_client_contract.rs): supports [eth2-client contract](https://github.com/aurora-is-near/rainbow-bridge/blob/master/contracts/near/eth2-client/src/lib.rs) functions `impl EthClientContractTrait for EthClientContract `
     * `fn get_last_submitted_slot(&self) -> u64`
@@ -499,8 +531,198 @@ Some Primitives from NEAR Rainbow Bridge
     * `pub fn convert_branch(branch: &[H256]) -> Vec<ethereum_types::H256>`
     * `pub fn validate_beacon_block_header_update(header_update: &HeaderUpdate) -> bool`
     * `pub fn calculate_min_storage_balance_for_submitter(max_submitted_blocks_by_account: u32,) -> Balance `
-#### Token Transfer Process Flow
-The [NEAR Rainbow Bridge](https://near.org/bridge/) uses ERC-20 connectors which are developed in [rainbow-token-connector](https://github.com/aurora-is-near/rainbow-token-connector) and [rainbow-bridge-client](https://github.com/aurora-is-near/rainbow-bridge-client). 
+
+### Near Rainbow Bridge Near Light Client Walkthrough
+The following is a walkthrough of how a transaction executed on NEAR is propogated to Ethereum's [nearbridge](https://github.com/aurora-is-near/rainbow-bridge/tree/master/contracts/eth/nearbridge). See [Cryptographic Primitives](#nearbridge-cryptographic-primitives) for more information on the cryptography used.
+
+**NearOnEthClient Overview**
+
+*The following is an excerpt from a blog by near on [eth-near-rainbow-bridge](https://near.org/blog/eth-near-rainbow-bridge/)*
+
+NearOnEthClient is an implementation of the NEAR light client in Solidity as an Ethereum contract. Unlike EthOnNearClient it does not need to verify every single NEAR header and can skip most of them as long as it verifies at least one header per NEAR epoch, which is about 43k blocks and lasts about half a day. As a result, NearOnEthClient can memorize hashes of all submitted NEAR headers in history, so if you are making a transfer from NEAR to Ethereum and it gets interrupted you don’t need to worry and you can resume it any time, even months later. Another useful property of the NEAR light client is that every NEAR header contains a root of the merkle tree computed from all headers before it. As a result, if you have one NEAR header you can efficiently verify any event that happened in any header before it.
+
+Another useful property of the NEAR light client is that it only accepts final blocks, and final blocks cannot leave the canonical chain in NEAR. This means that NearOnEthClient does not need to worry about forks.
+
+However, unfortunately, NEAR uses [Ed25519](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-665.md) to sign messages of the validators who approve the blocks, and this signature is not available as an EVM precompile. It makes verification of all signatures of a single NEAR header prohibitively expensive. So technically, we cannot verify one NEAR header within one contract call to NearOnEthClient. Therefore we adopt the [optimistic approach](https://medium.com/@deaneigenmann/optimistic-contracts-fb75efa7ca84) where NearOnEthClient verifies everything in the NEAR header except the signatures. Then anyone can challenge a signature in a submitted header within a 4-hour challenge window. The challenge requires verification of a single Ed25519 signature which would cost about 500k Ethereum gas (expensive, but possible). The user submitting the NEAR header would have to post a bond in Ethereum tokens, and a successful challenge would burn half of the bond and return the other half to the challenger. The bond should be large enough to pay for the gas even if the gas price increases exponentially during the 4 hours. For instance, a 20 ETH bond would cover gas price hikes up to 20000 Gwei. This optimistic approach requires having a watchdog service that monitors submitted NEAR headers and challenges any headers with invalid signatures. For added security, independent  users can run several watchdog services.
+
+Once EIP665 is accepted, Ethereum will have the Ed25519 signature available as an EVM precompile. This will make watchdog services and the 4-hour challenge window unnecessary.
+
+At its bare minimum, Rainbow Bridge consists of EthOnNearClient and NearOnEthClient contracts, and three services: Eth2NearRelay, Near2EthRelay, and the Watchdog. We might argue that this already constitutes a bridge since we have established a cryptographic link between two blockchains, but practically speaking it requires a large portion of additional code to make application developers even consider using the Rainbow Bridge for their applications.
+
+*The following information on sending assets from NEAR back to Ethereum is an excerpt from [https://near.org/bridge/](https://near.org/bridge/).*
+
+Sending assets from NEAR back to Ethereum currently takes a maximum of sixteen hours (due to Ethereum finality times) and costs around $60 (due to ETH gas costs and at current ETH price). These costs and speeds will improve in the near future.
+
+#### NEAR to Ethereum block propogation flow
+
+#### NEAR to Ethereum block propogation components
+
+* [eth2near-relay](https://github.com/aurora-is-near/rainbow-bridge/blob/master/cli/commands/start/eth2near-relay.js): Command to start the NEAR to Ethereum relay. See sample invocation [here](https://github.com/aurora-is-near/rainbow-bridge/blob/master/docs/development.md#near2eth-relay)
+* [near2eth-block-relay](https://github.com/aurora-is-near/rainbow-bridge/tree/master/near2eth/near2eth-block-relay) is written in javascript
+    * Has [dependencies](https://github.com/aurora-is-near/rainbow-bridge/blob/master/near2eth/near2eth-block-relay/package.json) including [rainbow-bridge-utils](https://github.com/aurora-is-near/rainbow-bridge/tree/master/utils) see [here](near-rainbow-bridge-utils) for more information. It's other dependencies are also included in `rainbow-bridge-utils`.
+        * [ethereumjs-util](https://www.npmjs.com/package/ethereumjs-util): A collection of utility functions for Ethereum. 
+    * Has the following functions and classes
+        * `class Near2EthRelay`
+            * `async initialize ({nearNodeUrl, nearNetworkId, ethNodeUrl, ethMasterSk, ethClientArtifactPath, ethClientAddress, ethGasMultiplier, metricsPort })`
+            * `async withdraw ({ethGasMultiplier})`
+            * `async runInternal ({submitInvalidBlock, near2ethRelayMinDelay, near2ethRelayMaxDelay, near2ethRelayErrorDelay, near2ethRelayBlockSelectDuration, near2ethRelayNextBlockSelectDelayMs, near2ethRelayAfterSubmitDelayMs, ethGasMultiplier, ethUseEip1559, logVerbose})`
+            * `run (options) {return this.runInternal({...options, submitInvalidBlock: false}) }`
+* [NearBridge.sol](https://github.com/aurora-is-near/rainbow-bridge/blob/master/contracts/eth/nearbridge/contracts/NearBridge.sol): Is the NEAR light client deployed on ethereum.
+    * It imports the following contracts (see [nearbridge cryptographic primitives](#nearbridge-cryptographic-primitives))
+        * `import "./AdminControlled.sol";`
+        * `import "./INearBridge.sol";`
+        * `import "./NearDecoder.sol";`
+        * `import "./Ed25519.sol";`
+    * It provides the following structure for Bridge State.  If there is currently no unconfirmed block, the last three fields are zero. 
+        * `uint currentHeight;`: Height of the current confirmed block
+        * `uint nextTimestamp;`: Timestamp of the current unconfirmed block
+        * `uint nextValidAt;`: Timestamp when the current unconfirmed block will be confirmed
+        * `uint numBlockProducers;`: Number of block producers for the current unconfirmed block
+    * It provides the following storage
+        * `uint constant MAX_BLOCK_PRODUCERS = 100;`:  Assumed to be even and to not exceed 256.
+        * `struct Epoch {bytes32 epochId; uint numBPs; bytes [MAX_BLOCK_PRODUCERS] keys; bytes32[MAX_BLOCK_PRODUCERS / 2] packedStakes; uint256 stakeThreshold;}`
+        * `uint256 public lockEthAmount;`
+        * `uint256 public lockDuration;`: lockDuration and replaceDuration shouldn't be extremely big, so adding them to an uint64 timestamp should not overflow uint256.
+        * `uint256 public replaceDuration;`: replaceDuration is in nanoseconds, because it is a difference between NEAR timestamps.
+        * `Ed25519 immutable edwards;`
+        * `uint256 public lastValidAt;`: End of challenge period. If zero, *`untrusted`* fields and `lastSubmitter` are not meaningful.
+        * `uint64 curHeight;`
+        * `uint64 untrustedHeight;`: The most recently added block. May still be in its challenge period, so should not be trusted.
+        * `address lastSubmitter;`: Address of the account which submitted the last block.
+        * `bool public initialized;`: Whether the contract was initialized.
+        * `bool untrustedNextEpoch;`
+        * `bytes32 untrustedHash;`
+        * `bytes32 untrustedMerkleRoot;`
+        * `bytes32 untrustedNextHash;`
+        * `uint256 untrustedTimestamp;`
+        * `uint256 untrustedSignatureSet;`
+        * `NearDecoder.Signature[MAX_BLOCK_PRODUCERS] untrustedSignatures;`
+        * `Epoch[3] epochs;`
+        * `uint256 curEpoch;`
+        * `mapping(uint64 => bytes32) blockHashes_;`
+        * `mapping(uint64 => bytes32) blockMerkleRoots_;`
+        * `mapping(address => uint256) public override balanceOf;`
+    * It provides the following functions
+        * `constructor(Ed25519 ed, uint256 lockEthAmount_, uint256 lockDuration_, uint256 replaceDuration_, address admin_, uint256 pausedFlags_)`
+        * `function deposit() public payable override pausable(PAUSED_DEPOSIT)`
+        * `function withdraw() public override pausable(PAUSED_WITHDRAW)`
+        * `function challenge(address payable receiver, uint signatureIndex) external override pausable(PAUSED_CHALLENGE`
+        * `function checkBlockProducerSignatureInHead(uint signatureIndex) public view override returns (bool)`
+        * `function initWithValidators(bytes memory data) public override onlyAdmin`: The first part of initialization -- setting the validators of the current epoch.
+        * `function initWithBlock(bytes memory data) public override onlyAdmin`: The second part of the initialization -- setting the current head.
+        * `function bridgeState() public view returns (BridgeState memory res)`
+        * `function bridgeState() public view returns (BridgeState memory res)`
+        * `function addLightClientBlock(bytes memory data) public override pausable(PAUSED_ADD_BLOCK)`
+        * `function setBlockProducers(NearDecoder.BlockProducer[] memory src, Epoch storage epoch) internal `
+        * `function blockHashes(uint64 height) public view override pausable(PAUSED_VERIFY) returns (bytes32 res)`
+        * `function blockMerkleRoots(uint64 height) public view override pausable(PAUSED_VERIFY) returns (bytes32 res)`
+
+#### NEAR Rainbow Bridge Utils
+[rainbow-bridge-utils](https://github.com/aurora-is-near/rainbow-bridge/tree/master/utils) provides a set of utilities for the near rainbow bridte
+* It has the following [dependencies](https://github.com/aurora-is-near/rainbow-bridge/blob/master/utils/package.json)
+    * [bn.js](https://www.npmjs.com/package/bn.js): Big number implementation in pure javascript
+    * [bsert](https://www.npmjs.com/package/bsert): Minimal assert with type checking.
+    * [bs58](https://www.npmjs.com/package/bs58): JavaScript component to compute base 58 encoding
+    * [change-case](https://www.npmjs.com/package/change-case): Transform a string between camelCase, PascalCase, Capital Case, snake_case, param-case, CONSTANT_CASE and others.
+    * [configstore](https://www.npmjs.com/package/configstore): Easily load and save config without having to think about where and how
+    * [eth-object](https://github.com/near/eth-object#383b6ea68c7050bea4cab6950c1d5a7fa553e72b): re-usable and composable objects that you can just call Object.from to ingest new data to serialize Ethereum Trie / LevelDB data from hex, buffers and rpc into the same format.
+    * [eth-util-lite](https://github.com/near/eth-util-lite): a low-dependency utility for Ethereum. It replaces a small subset of the ethereumjs-util and ethjs-util APIs.
+    * [lodash](https://www.npmjs.com/package/lodash): A set of utilities for working with arrays, numbers, objects, strings, etc.
+    * [near-api-js](https://www.npmjs.com/package/near-api-js): JavaScript library to interact with NEAR Protocol via RPC API
+    * [web3](https://www.npmjs.com/package/web3): Ethereum JavaScript API
+* It provides the following functions
+    * [address-watcher](https://github.com/aurora-is-near/rainbow-bridge/blob/master/utils/address-watcher.js): Watches a group of near and ethereum acccounts polling NEAR and Ethereum every second and updating ` nearAccount.balanceGauge`, `nearAccount.stateStorageGauge` and `ethereumAccount.balanceGauge`.
+    * [borsh](https://github.com/aurora-is-near/rainbow-bridge/blob/master/utils/borsh.js): provides the following functions for Binary Object Representation Serializer for Hashing [borsh](https://borsh.io/)
+        * `function serializeField (schema, value, fieldType, writer)`
+        * `function deserializeField (schema, fieldType, reader)`
+        *  `function serialize (schema, fieldType, obj)`: Serialize given object using schema of the form: `{ class_name -> [ [field_name, field_type], .. ], .. }`
+        * `class BinaryReader`: Includes utilities to read numbers, strings arrays and burggers
+        * `function deserialize (schema, fieldType, buffer)`
+        * `const signAndSendTransactionAsync = async (accessKey, account, receiverId,actions) => `
+        * `const txnStatus = async (account, txHash, retries = RETRY_TX_STATUS, wait = 1000) => `
+        * `function getBorshTransactionLastResult (txResult)`
+        * `class BorshContract {`
+            * `constructor (borshSchema, account, contractId, options)`
+            * `async accessKeyInit ()`
+        * `function borshify (block)`
+        * `function borshifyInitialValidators (initialValidators)`
+        * `const hexToBuffer = (hex) => `
+        * `const readerToHex = (len) =>`
+    * [borshify-proof](https://github.com/aurora-is-near/rainbow-bridge/blob/master/utils/borshify-proof.js)
+        * `function borshifyOutcomeProof (proof)`
+    * [robust](https://github.com/aurora-is-near/rainbow-bridge/blob/master/utils/robust.js): his module gives a few utils for robust error handling, and wrap web3 with error handling and retry
+    * [utils](https://github.com/aurora-is-near/rainbow-bridge/blob/master/utils/utils.js)
+        * `async function setupNear (config)`
+        * `async function setupEth (config)`
+        * `async function setupEthNear (config) `:  Setup connection to NEAR and Ethereum from given configuration.
+        * `function remove0x (value)`: Remove 0x if prepended
+        * `function normalizeHex (value)`
+        * `async function accountExists (connection, accountId)`
+        * `async function createLocalKeyStore (networkId, keyPath)`
+        * `function getWeb3 (config)`
+        * `function getEthContract (web3, path, address)`
+        * `function addSecretKey (web3, secretKey) `
+        * `async function ethCallContract (contract, methodName, args)`: Wrap pure calls to Web3 contract to handle errors/reverts/gas usage.
+ 
+
+
+
+#### nearbridge finality update and verify components
+
+#### nearbridge cryptographic primitives
+
+* [Ed25519.sol](https://github.com/aurora-is-near/rainbow-bridge/blob/master/contracts/eth/nearbridge/contracts/Ed25519.sol): Solidity implementation of the [Ed25519](https://en.wikipedia.org/wiki/EdDSA) which is the EdDSA signature scheme using SHA-512 (SHA-2) and Curve25519. It has the following functions
+    * `function pow22501(uint256 v) private pure returns (uint256 p22501, uint256 p11)` : Computes (v^(2^250-1), v^11) mod p
+    * `function check(bytes32 k, bytes32 r, bytes32 s, bytes32 m1, bytes9 m2)` : has the following steps
+        * Step 1: compute SHA-512(R, A, M)
+        * Step 2: unpack k
+        * Step 3: compute multiples of k
+        * Step 4: compute s*G - h*A
+        * Step 5: compare the points
+* [Utils.sol](https://github.com/aurora-is-near/rainbow-bridge/blob/master/contracts/eth/nearbridge/contracts/Utils.sol): A set of utilty functions for byte manipulation, memory updates and  [keccak](https://keccak.team/keccak_specs_summary.html) functions.
+    * `function swapBytes2(uint16 v) internal pure returns (uint16)`
+    * `function swapBytes4(uint32 v) internal pure returns (uint32)`
+    * `function swapBytes8(uint64 v) internal pure returns (uint64)`
+    * `function swapBytes16(uint128 v) internal pure returns (uint128)`
+    * `function swapBytes32(uint256 v) internal pure returns (uint256)`
+    * `function readMemory(uint ptr) internal pure returns (uint res)`
+    * `function writeMemory(uint ptr, uint value) internal pure`
+    * `function memoryToBytes(uint ptr, uint length) internal pure returns (bytes memory res)`
+    * `function keccak256Raw(uint ptr, uint length) internal pure returns (bytes32 res)`
+    * `function sha256Raw(uint ptr, uint length) internal view returns (bytes32 res)`
+* [Borsh.sol](https://github.com/aurora-is-near/rainbow-bridge/blob/master/contracts/eth/nearbridge/contracts/Borsh.sol) provides Binary Object Representation Serializer for Hashing [borsh](https://borsh.io/) functionality and imports `Utils.sols`. Styructures and functions include
+    * `struct Data {uint ptr; uint end;}`
+    * `function from(bytes memory data) internal pure returns (Data memory res)`
+    * `function requireSpace(Data memory data, uint length) internal pure`: This function assumes that length is reasonably small, so that data.ptr + length will not overflow. In the current code, length is always less than 2^32.
+    * `function read(Data memory data, uint length) internal pure returns (bytes32 res)`
+    * `function done(Data memory data) internal pure`
+    * `function peekKeccak256(Data memory data, uint length) internal pure returns (bytes32)`: Same considerations as for requireSpace.
+    * `function peekSha256(Data memory data, uint length) internal view returns (bytes32)`: Same considerations as for requireSpace.
+    * `function decodeU8(Data memory data) internal pure returns (uint8)`
+    * `function decodeU16(Data memory data) internal pure returns (uint16)`
+    * `function decodeU32(Data memory data) internal pure returns (uint32)`
+    * `function decodeU64(Data memory data) internal pure returns (uint64)`
+    * `function decodeU128(Data memory data) internal pure returns (uint128)`
+    * `function decodeU256(Data memory data) internal pure returns (uint256)`
+    * `function decodeBytes20(Data memory data) internal pure returns (bytes20)`
+    * `function decodeBytes32(Data memory data) internal pure returns (bytes32)`
+    * `function decodeBool(Data memory data) internal pure returns (bool)`
+    * `function skipBytes(Data memory data) internal pure`
+    * `function decodeBytes(Data memory data) internal pure returns (bytes memory res)`
+* [NearDecoder.sol](https://github.com/aurora-is-near/rainbow-bridge/blob/master/contracts/eth/nearbridge/contracts/NearDecoder.sol): Imports `Borsh.sol` and has utilities for decoding Public Keys, Signatures, Block Producers, Block Headers and Light Client Blocks.
+    * `function decodePublicKey(Borsh.Data memory data) internal pure returns (PublicKey memory res)`
+    * `function decodeSignature(Borsh.Data memory data) internal pure returns (Signature memory res)`
+    * `function decodeBlockProducer(Borsh.Data memory data) internal pure returns (BlockProducer memory res)`
+    * `function decodeBlockProducers(Borsh.Data memory data) internal pure returns (BlockProducer[] memory res)`
+    * `function decodeOptionalBlockProducers(Borsh.Data memory data) internal view returns (OptionalBlockProducers memory res)`
+    * `function decodeOptionalSignature(Borsh.Data memory data) internal pure returns (OptionalSignature memory res)`
+    * `function decodeBlockHeaderInnerLite(Borsh.Data memory data) internal view returns (BlockHeaderInnerLite memory res)`
+    * `function decodeLightClientBlock(Borsh.Data memory data) internal view returns (LightClientBlock memory res)`
+
+
+
+### Token Transfer Process Flow
+The [NEAR Rainbow Bridge](https://near.org/bridge/) uses ERC-20 connectors which are developed in [rainbow-token-connector](https://github.com/aurora-is-near/rainbow-token-connector) and [rainbow-bridge-client](https://github.com/aurora-is-near/rainbow-bridge-client). Also see [eth2near-fun-transfer.md](https://github.com/aurora-is-near/rainbow-bridge/blob/master/docs/workflows/eth2near-fun-transfer.md).
 
 Following is an overview of timing and anticipated costs
 * Once on NEAR, transactions will confirm in 1-2 seconds and cost well under $1 in most cases.

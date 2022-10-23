@@ -21,11 +21,9 @@ Below are some reference material and a review of Harmony MMR trees and the Near
       - [Ethereum Light Client Finality Update Verify Components](#ethereum-light-client-finality-update-verify-components)
       - [Cryptographic Primitives](#cryptographic-primitives)
     - [Near Rainbow Bridge Near Light Client Walkthrough](#near-rainbow-bridge-near-light-client-walkthrough)
-      - [NEAR to Ethereum block propogation flow](#near-to-ethereum-block-propogation-flow)
       - [NEAR to Ethereum block propogation components](#near-to-ethereum-block-propogation-components)
       - [NEAR Rainbow Bridge Utils](#near-rainbow-bridge-utils)
-      - [nearbridge finality update and verify components](#nearbridge-finality-update-and-verify-components)
-      - [nearbridge cryptographic primitives](#nearbridge-cryptographic-primitives)
+      - [nearbridge Cryptographic Primitives](#nearbridge-cryptographic-primitives)
     - [Token Transfer Process Flow](#token-transfer-process-flow)
       - [Token Transfer Components](#token-transfer-components)
       - [References](#references-1)
@@ -533,7 +531,7 @@ Some Primitives from NEAR Rainbow Bridge
     * `pub fn calculate_min_storage_balance_for_submitter(max_submitted_blocks_by_account: u32,) -> Balance `
 
 ### Near Rainbow Bridge Near Light Client Walkthrough
-The following is a walkthrough of how a transaction executed on NEAR is propogated to Ethereum's [nearbridge](https://github.com/aurora-is-near/rainbow-bridge/tree/master/contracts/eth/nearbridge). See [Cryptographic Primitives](#nearbridge-cryptographic-primitives) for more information on the cryptography used.
+The following is a walkthrough of how a transaction executed on NEAR is propogated to Ethereum's [nearbridge](https://github.com/aurora-is-near/rainbow-bridge/tree/master/contracts/eth/nearbridge). See [nearbridge Cryptographic Primitives](#nearbridge-cryptographic-primitives) for more information on the cryptography used.
 
 **NearOnEthClient Overview**
 
@@ -552,8 +550,6 @@ At its bare minimum, Rainbow Bridge consists of EthOnNearClient and NearOnEthCli
 *The following information on sending assets from NEAR back to Ethereum is an excerpt from [https://near.org/bridge/](https://near.org/bridge/).*
 
 Sending assets from NEAR back to Ethereum currently takes a maximum of sixteen hours (due to Ethereum finality times) and costs around $60 (due to ETH gas costs and at current ETH price). These costs and speeds will improve in the near future.
-
-#### NEAR to Ethereum block propogation flow
 
 #### NEAR to Ethereum block propogation components
 
@@ -667,9 +663,7 @@ Sending assets from NEAR back to Ethereum currently takes a maximum of sixteen h
 
 
 
-#### nearbridge finality update and verify components
-
-#### nearbridge cryptographic primitives
+#### nearbridge Cryptographic Primitives
 
 * [Ed25519.sol](https://github.com/aurora-is-near/rainbow-bridge/blob/master/contracts/eth/nearbridge/contracts/Ed25519.sol): Solidity implementation of the [Ed25519](https://en.wikipedia.org/wiki/EdDSA) which is the EdDSA signature scheme using SHA-512 (SHA-2) and Curve25519. It has the following functions
     * `function pow22501(uint256 v) private pure returns (uint256 p22501, uint256 p11)` : Computes (v^(2^250-1), v^11) mod p

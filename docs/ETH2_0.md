@@ -21,6 +21,8 @@ Below are some reference material and a review of Harmony MMR trees and the Near
       - [Ethereum Light Client Finality Update Verify Components](#ethereum-light-client-finality-update-verify-components)
       - [Cryptographic Primitives](#cryptographic-primitives)
     - [Near Rainbow Bridge Near Light Client Walkthrough](#near-rainbow-bridge-near-light-client-walkthrough)
+      - [NEAR to Ethereum block propogation flow](#near-to-ethereum-block-propogation-flow)
+      - [NEAR to Ethereum watchdog](#near-to-ethereum-watchdog)
       - [NEAR to Ethereum block propogation components](#near-to-ethereum-block-propogation-components)
       - [NEAR Rainbow Bridge Utils](#near-rainbow-bridge-utils)
       - [nearbridge Cryptographic Primitives](#nearbridge-cryptographic-primitives)
@@ -551,6 +553,100 @@ The following is a walkthrough of how a transaction executed on NEAR is propogat
 
 > Sending assets from NEAR back to Ethereum currently takes a maximum of sixteen hours (due to Ethereum finality times) and costs around $60 (due to ETH gas costs and at current ETH price). These costs and speeds will improve in the near future.
 
+#### NEAR to Ethereum block propogation flow
+
+* [Light Clients are deployed on Ethereum](https://github.com/aurora-is-near/rainbow-bridge/blob/master/cli/index.js#L518) via the CLI using [eth-contracts.js](https://github.com/aurora-is-near/rainbow-bridge/blob/master/cli/init/eth-contracts.js)
+    * [init-eth-ed25519](https://github.com/aurora-is-near/rainbow-bridge/blob/master/cli/index.js#L505): Deploys `Ed25519.sol` see more information under [nearbridge Cryptographic Primitives](#nearbridge-cryptographic-primitives)
+    * [init-eth-client](https://github.com/aurora-is-near/rainbow-bridge/blob/master/cli/index.js#L520): Deploys `NearBridge.sol` see more information under [NEAR to Ethereum block propogation components](#near-to-ethereum-block-propogation-components). It takes the following arguments
+        * `ethEd25519Address`: The address of the ECDSA signature checker using Ed25519 curve (see [here](https://nbeguier.medium.com/a-real-world-comparison-of-the-ssh-key-algorithms-b26b0b31bfd9))
+        * `lockEthAmount`: The amount that `BLOCK_PRODUCERS` need to deposit (in wei)to be able to provide blocks. This amount will be slashed if the block is challenged and proven not to have a valid signature. Default value is 100000000000000000000 WEI = 100 ETH.
+        * `lockDuration` : 30 seconds
+        * `replaceDuration`: 60 seconds it is passed in nanoseconds, because it is a difference between NEAR timestamps.
+        * `ethAdminAddress`: Bridge Administrator Address
+        * `0` : Indicates nothing is paused `UNPAUSE_ALL`
+    * [init-eth-prover](https://github.com/aurora-is-near/rainbow-bridge/blob/master/cli/index.js#L538): Deploys `NearProver.sol` see more information under [NEAR to Ethereum block propogation components](#near-to-ethereum-block-propogation-components). It takes the following arguments
+        * `ethClientAddress`: Interface to `NearBridge.sol`
+        * `ethAdminAddress`: Administrator address
+        * `0`: paused indicator defaults to `UNPAUSE_ALL = 0`
+* [Relayer is Started](https://github.com/aurora-is-near/rainbow-bridge/blob/master/cli/commands/start/near2eth-relay.js)
+    * Relayer is started using the following command
+  
+        ```
+        cli/index.js start near2eth-relay \
+        --eth-node-url http://127.0.0.1:8545/ \
+        --eth-master-sk 0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80 \
+        --near-node-url https://rpc.testnet.near.org/ \
+        --near-network-id testnet \
+        --eth-client-address 0xe7f1725e7734ce288f8367e1bb143e90bb3f0512 \
+        --eth-use-eip-1559 true \
+        --near2eth-relay-max-delay 10 \
+        --near2eth-relay-block-select-duration 30 \
+        --near2eth-relay-after-submit-delay-ms 1000 \
+        --log-verbose true \
+        --daemon false
+        ```
+* [Relayer Logic](https://github.com/aurora-is-near/rainbow-bridge/blob/master/near2eth/near2eth-block-relay/index.js)
+    * Loops `while (true)`
+        * Get the bridge state (including `currentHeight`, `nextTimestamp`, `nextValidAt`, `numBlockProducers` )
+        * Get the `currentBlockHash` the hash of the current untrursted block based on `lastValidAt`
+        * Gets the `lastBlock` by calling the NEAR rpc `next_light_client_block` using the hash of last untrusted block `bs58.encode(currentBlockHash)`
+        * Get's the `replaceDuration` by `clientContract.methods.replaceDuration().call()` this will be 60 seconds if we deployed `NearBridge.sol` with the default values above
+        * Sets `nextValidAt` from the bridge state `web3.utils.toBN(bridgeState.nextValidAt)`
+        * Sets `replaceDelay` to 0 then updates it to the `nextTimestamp` + `replaceDuration` - `lastBlock.inner_lite.timestamp` i.e. The new block has to be at least 60 seconds after the current block stored on the light client.
+        * Checks the height of the `currentHeight` of the bridge is less than the `lastblock` from the near light client `(bridgeState.currentHeight < lastBlock.inner_lite.height)`
+        * Serializes the `lastBlock` using Borsh and check that the block is suitable
+        * Checks that the `replaceDelay` has been met, if not sleeps until it has
+        * Checks that the Master Account (the one submitting the block) has enough locked ETH (if not tries to deposit more). So that it can be slashed if the block proposed is invalid.
+        * Adds the light client block `await clientContract.methods.addLightClientBlock(nextBlockSelection.borshBlock).send`
+            * Checks `NearBridge.sol` (the light client) has been initialized
+            * Checks `balanceOf[msg.sender] >= lockEthAmount` that the sender has locked enough Eth to allow them to submit blocks
+            * Decodes the nearBlock using `Borsh.from(data)` and `borsh.decodeLightClientBlock()`
+            * Commis the previous block, or make sure that it is OK to replace it using
+                * `lastValidAt = 0;`
+                * `blockHashes_[curHeight] = untrustedHash;`
+                * `blockMerkleRoots_[curHeight] = untrustedMerkleRoot;`
+            * Check that the new block's height is greater than the current one's. `nearBlock.inner_lite.height > curHeight`
+            * Check that the new block is from the same epoch as the current one, or from the next one.
+            * Check that the new block is signed by more than 2/3 of the validators.
+            * If the block is from the next epoch, make sure that the Block producers `next_bps` are supplied and have a correct hash.
+            * Add the Block to the Light client
+                * Updates untrusted information to this block including `untrustedHeight`, `untrustedTimestamp`, `untrustedHash`, `untrustedMerkleRoot`, `untrustedNextHash`, `untrustedSignatureSet`, `untrustedNextEpoch`
+                * If `fromNextEpoch` also update the Block Producers
+                * Updates the `lastSubmitter` and `lastValidAt`
+        * Cleans up the selected block to prevent submitting the same block again `await sleep(afterSubmitDelayMs)`
+        * Sets the HeightGauuges to the correct block height
+            * `clientHeightGauge.set(Number(BigInt(bridgeState.currentHeight))`
+            * `chainHeightGauge.set(Number(BigInt(lastBlock.inner_lite.height)))`
+        * Sleeps for delay calculated from the maximum of the relayer days (10 seconds) and differnce between the current and next block time stamps and `await sleep(1000 * delay)`
+
+
+#### NEAR to Ethereum watchdog
+The [watchdog](https://github.com/aurora-is-near/rainbow-bridge/blob/master/near2eth/watchdog/index.js) runs every 10 seconds and validates blocks on `NearBridge.sol` challenging blocks with incorrect signatures. *Note: It uses [heep-prometheus](https://github.com/aurora-is-near/rainbow-bridge/blob/master/utils/http-prometheus.js) for monitoring and storing block and producer information using `gauges` and `counters`.*
+
+*Note: Have not identified how the block submitters are rewarded for submitting blocks. Currently have only identified them locking ETH to be able to submit blocks and being slashed if they submit blocks with invalid signatures.*
+
+* [watchdog is started](https://github.com/aurora-is-near/rainbow-bridge/blob/master/cli/commands/start/watchdog.js) from the CLI
+* [watchdog logic](https://github.com/aurora-is-near/rainbow-bridge/blob/master/near2eth/watchdog/index.js)
+    * Initializes monitoring information on `Prometheus`
+        * `const httpPrometheus = new HttpPrometheus(this.metricsPort, 'near_bridge_watchdog_')`
+        * `const lastBlockVerified = httpPrometheus.gauge('last_block_verified', 'last block that was already verified')`
+        * `const totBlockProducers = httpPrometheus.gauge('block_producers', 'number of block producers for current block')`
+        * `const incorrectBlocks = httpPrometheus.counter('incorrect_blocks', 'number of incorrect blocks found')`
+        * `const challengesSubmitted = httpPrometheus.counter('challenges_submitted', 'number of blocks challenged')`
+    * Loops `while (true) `
+        * Gets the `bridgeState`
+        * Loops through all blockProducers checking their signatures
+        * `for (let i = 0; i < numBlockProducers; i++)`
+            * Check each signature `this.clientContract.methods.checkBlockProducerSignatureInHead(i).call()`
+            * If invalid challenge the signature: `this.clientContract.methods.challenge(this.ethMasterAccount, i).encodeABI()` calls [challenge function](https://github.com/aurora-is-near/rainbow-bridge/blob/master/contracts/eth/nearbridge/contracts/NearBridge.sol#L93)
+                * `function challenge(address payable receiver, uint signatureIndex) external override pausable(PAUSED_CHALLENGE)`
+                    * checks block.timestamp is less than lastValidAt `block.timestamp < lastValidAt,`
+                    * Check if the signature is valid `!checkBlockProducerSignatureInHead(signatureIndex)`
+                    * slashes the last submitter `balanceOf[lastSubmitter] = balanceOf[lastSubmitter] - lockEthAmount;`
+                    * resets lastValidAt `lastValidAt = 0;`
+                    * Refunds half of the funds to the watchdog account `receiver.call{value: lockEthAmount / 2}("");`
+            * Sleeps for watchdog Delay seconds `await sleep(watchdogDelay * 1000)`
+
 #### NEAR to Ethereum block propogation components
 
 * [eth2near-relay](https://github.com/aurora-is-near/rainbow-bridge/blob/master/cli/commands/start/eth2near-relay.js): Command to start the NEAR to Ethereum relay. See sample invocation [here](https://github.com/aurora-is-near/rainbow-bridge/blob/master/docs/development.md#near2eth-relay)
@@ -599,7 +695,13 @@ The following is a walkthrough of how a transaction executed on NEAR is propogat
         * `mapping(uint64 => bytes32) blockMerkleRoots_;`
         * `mapping(address => uint256) public override balanceOf;`
     * It provides the following functions
-        * `constructor(Ed25519 ed, uint256 lockEthAmount_, uint256 lockDuration_, uint256 replaceDuration_, address admin_, uint256 pausedFlags_)`
+        * `constructor(Ed25519 ed, uint256 lockEthAmount_, uint256 lockDuration_, uint256 replaceDuration_, address admin_, uint256 pausedFlags_)`: *Note: require the `lockDuration` (in seconds) to be at least one second less than the `replaceDuration` (in nanoseconds) `require(replaceDuration_ > lockDuration_ * 1000000000);`
+            * `ethEd25519Address`: The address of the ECDSA signature checker using Ed25519 curve (see [here](https://nbeguier.medium.com/a-real-world-comparison-of-the-ssh-key-algorithms-b26b0b31bfd9))
+            * `lockEthAmount`: The amount that `BLOCK_PRODUCERS` need to deposit (in wei)to be able to provide blocks. This amount will be slashed if the block is challenged and proven not to have a valid signature. Default value is 100000000000000000000 WEI = 100 ETH.
+            * `lockDuration` : 30 seconds
+            * `replaceDuration`: 60 seconds it is passed in nanoseconds, because it is a difference between NEAR timestamps.
+            * `ethAdminAddress`: Bridge Administrator Address
+            * `0` : Indicates nothing is paused `UNPAUSE_ALL` 
         * `function deposit() public payable override pausable(PAUSED_DEPOSIT)`
         * `function withdraw() public override pausable(PAUSED_WITHDRAW)`
         * `function challenge(address payable receiver, uint signatureIndex) external override pausable(PAUSED_CHALLENGE`
@@ -612,9 +714,20 @@ The following is a walkthrough of how a transaction executed on NEAR is propogat
         * `function setBlockProducers(NearDecoder.BlockProducer[] memory src, Epoch storage epoch) internal `
         * `function blockHashes(uint64 height) public view override pausable(PAUSED_VERIFY) returns (bytes32 res)`
         * `function blockMerkleRoots(uint64 height) public view override pausable(PAUSED_VERIFY) returns (bytes32 res)`
+* [NearProver.sol](https://github.com/aurora-is-near/rainbow-bridge/blob/master/contracts/eth/nearprover/contracts/NearProver.sol): Is used to prove the validity of NEAR blocks on Ethereum.
+    * It imports the following contracts (see [nearbridge cryptographic primitives](#nearbridge-cryptographic-primitives))
+        * `import "rainbow-bridge-sol/nearbridge/contracts/NearDecoder.sol";`
+        * `import "./ProofDecoder.sol";`
+    * It has the following functions
+        * `constructor(INearBridge _bridge, address _admin, uint _pausedFlags)`
+            * `_bridge`: Interface to `NearBridge.sol`
+            * `_admin`: Administrator address
+            * `_pausedFlags`: paused indicator defaults to `UNPAUSE_ALL = 0`
+        * `function proveOutcome(bytes memory proofData, uint64 blockHeight)`
+        * `function _computeRoot(bytes32 node, ProofDecoder.MerklePath memory proof) internal pure returns (bytes32 hash)`
 
 #### NEAR Rainbow Bridge Utils
-[rainbow-bridge-utils](https://github.com/aurora-is-near/rainbow-bridge/tree/master/utils) provides a set of utilities for the near rainbow bridte
+[rainbow-bridge-utils](https://github.com/aurora-is-near/rainbow-bridge/tree/master/utils) provides a set of utilities for the near rainbow bridge written in javascript.
 * It has the following [dependencies](https://github.com/aurora-is-near/rainbow-bridge/blob/master/utils/package.json)
     * [bn.js](https://www.npmjs.com/package/bn.js): Big number implementation in pure javascript
     * [bsert](https://www.npmjs.com/package/bsert): Minimal assert with type checking.
@@ -665,7 +778,7 @@ The following is a walkthrough of how a transaction executed on NEAR is propogat
 
 #### nearbridge Cryptographic Primitives
 
-* [Ed25519.sol](https://github.com/aurora-is-near/rainbow-bridge/blob/master/contracts/eth/nearbridge/contracts/Ed25519.sol): Solidity implementation of the [Ed25519](https://en.wikipedia.org/wiki/EdDSA) which is the EdDSA signature scheme using SHA-512 (SHA-2) and Curve25519. It has the following functions
+* [Ed25519.sol](https://github.com/aurora-is-near/rainbow-bridge/blob/master/contracts/eth/nearbridge/contracts/Ed25519.sol): Solidity implementation of the [Ed25519](https://en.wikipedia.org/wiki/EdDSA) which is the EdDSA signature scheme using SHA-512 (SHA-2) and Curve25519 (see [here](https://nbeguier.medium.com/a-real-world-comparison-of-the-ssh-key-algorithms-b26b0b31bfd9)). It has the following functions
     * `function pow22501(uint256 v) private pure returns (uint256 p22501, uint256 p11)` : Computes (v^(2^250-1), v^11) mod p
     * `function check(bytes32 k, bytes32 r, bytes32 s, bytes32 m1, bytes9 m2)` : has the following steps
         * Step 1: compute SHA-512(R, A, M)
@@ -684,7 +797,7 @@ The following is a walkthrough of how a transaction executed on NEAR is propogat
     * `function memoryToBytes(uint ptr, uint length) internal pure returns (bytes memory res)`
     * `function keccak256Raw(uint ptr, uint length) internal pure returns (bytes32 res)`
     * `function sha256Raw(uint ptr, uint length) internal view returns (bytes32 res)`
-* [Borsh.sol](https://github.com/aurora-is-near/rainbow-bridge/blob/master/contracts/eth/nearbridge/contracts/Borsh.sol) provides Binary Object Representation Serializer for Hashing [borsh](https://borsh.io/) functionality and imports `Utils.sols`. Styructures and functions include
+* [Borsh.sol](https://github.com/aurora-is-near/rainbow-bridge/blob/master/contracts/eth/nearbridge/contracts/Borsh.sol) provides Binary Object Representation Serializer for Hashing [borsh](https://borsh.io/) functionality and imports `Utils.sols`. Structures and functions include
     * `struct Data {uint ptr; uint end;}`
     * `function from(bytes memory data) internal pure returns (Data memory res)`
     * `function requireSpace(Data memory data, uint length) internal pure`: This function assumes that length is reasonably small, so that data.ptr + length will not overflow. In the current code, length is always less than 2^32.
@@ -712,6 +825,35 @@ The following is a walkthrough of how a transaction executed on NEAR is propogat
     * `function decodeOptionalSignature(Borsh.Data memory data) internal pure returns (OptionalSignature memory res)`
     * `function decodeBlockHeaderInnerLite(Borsh.Data memory data) internal view returns (BlockHeaderInnerLite memory res)`
     * `function decodeLightClientBlock(Borsh.Data memory data) internal view returns (LightClientBlock memory res)`
+* [ProofDecoder.sol](https://github.com/aurora-is-near/rainbow-bridge/blob/master/contracts/eth/nearprover/contracts/ProofDecoder.sol): Imports `Borsh.sol` and `NearDecoder.sol` and has utilities for decoding Proofs, BlockHeader, ExecutionStatus, ExecutionOutcome and MerklePaths. Structures and functions include
+    * `struct FullOutcomeProof {ExecutionOutcomeWithIdAndProof outcome_proof; MerklePath outcome_root_proof; BlockHeaderLight block_header_lite; MerklePath block_proof;}`
+    * `function decodeFullOutcomeProof(Borsh.Data memory data) internal view returns (FullOutcomeProof memory proof)`
+    * `struct BlockHeaderLight {bytes32 prev_block_hash; bytes32 inner_rest_hash; NearDecoder.BlockHeaderInnerLite inner_lite; bytes32 hash;}`
+    * `function decodeBlockHeaderLight(Borsh.Data memory data) internal view returns (BlockHeaderLight memory header)`
+    * `struct ExecutionStatus {uint8 enumIndex; bool unknown; bool failed; bytes successValue; bytes32 successReceiptId;}`
+        *  `successValue` indicates if the final action succeeded and returned some value or an empty vec. 
+        *  `successReceiptId` is the final action of the receipt returned a promise or the signed transaction was converted to a receipt. Contains the receipt_id of the generated receipt. 
+    * `function decodeExecutionStatus(Borsh.Data memory data) internal pure returns (ExecutionStatus memory executionStatus)`
+    * `struct ExecutionOutcome {bytes[] logs; bytes32[] receipt_ids; uint64 gas_burnt; uint128 tokens_burnt; bytes executor_id; ExecutionStatus status; bytes32[] merkelization_hashes;}`
+        * `bytes[] logs;`:  Logs from this transaction or receipt.
+        * `bytes32[] receipt_ids;`:  Receipt IDs generated by this transaction or receipt.
+        * `uint64 gas_burnt;`: The amount of the gas burnt by the given transaction or receipt.
+        * `uint128 tokens_burnt;`:  The total number of the tokens burnt by the given transaction or receipt.
+        * `bytes executor_id;`: Hash of the transaction or receipt id that produced this outcome.
+        * `ExecutionStatus status`: Execution status. Contains the result in case of successful execution.
+        * `bytes32[] merkelization_hashes;`
+    * `function decodeExecutionOutcome(Borsh.Data memory data) internal view returns (ExecutionOutcome memory outcome)`
+    * `struct ExecutionOutcomeWithId {bytes32 id; ExecutionOutcome outcome; bytes32 hash;}`
+        * `bytes32 id`: is the transaction hash or the receipt ID.
+    * `function decodeExecutionOutcomeWithId(Borsh.Data memory data) internal view returns (ExecutionOutcomeWithId memory outcome)`
+    * `struct MerklePathItem {bytes32 hash; uint8 direction;}`
+        * `uint8 direction`: where 0 = left, 1 = right
+    * `function decodeMerklePathItem(Borsh.Data memory data) internal pure returns (MerklePathItem memory item)`
+    * `struct MerklePath {MerklePathItem[] items;}`
+    * `function decodeMerklePath(Borsh.Data memory data) internal pure returns (MerklePath memory path) `
+    * `struct ExecutionOutcomeWithIdAndProof {MerklePath proof; bytes32 block_hash; ExecutionOutcomeWithId outcome_with_id;}`
+    * `function decodeExecutionOutcomeWithIdAndProof(Borsh.Data memory data)internal view returns (ExecutionOutcomeWithIdAndProof memory outcome)`
+  
 
 
 

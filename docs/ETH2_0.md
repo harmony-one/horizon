@@ -554,6 +554,24 @@ The following is a walkthrough of how a transaction executed on NEAR is propogat
 > Sending assets from NEAR back to Ethereum currently takes a maximum of sixteen hours (due to Ethereum finality times) and costs around $60 (due to ETH gas costs and at current ETH price). These costs and speeds will improve in the near future.
 
 #### NEAR to Ethereum block propogation flow
+[NEAR Light Client Documentation](https://nomicon.io/ChainSpec/LightClient) gives an overview of how light clients work. At a high level the light client needs to fetch at least one block per [epoch](https://docs.near.org/concepts/basics/epoch) i.e. every 42,200 blocks or approxmiately 12 hours. Also Having the LightClientBlockView for block B is sufficient to be able to verify any statement about state or outcomes in any block in the ancestry of B (including B itself).
+
+The current scripts and codebase indicates that a block would be fetched every 30 seconds with a max delay of 10 seconds. It feels that this would be expensive to update Ethereum so frequently. [NEAR's bridge documentation](https://near.org/bridge/) states *Sending assets from NEAR back to Ethereum currently takes a maximum of sixteen hours (due to Ethereum finality times)*. This seems to align with sending light client updates once per NEAR epoch. The block fetch period is configurable in the relayer.
+* [NearBridge.sol on Ethereum Block Explorer]()
+* [NEAR ERC20Locker on Ethereum Block Explorer](https://etherscan.io/address/0x23ddd3e3692d1861ed57ede224608875809e127f#code)
+
+*Below is an excerpt from [NEAR Light Client Block Documentation](https://nomicon.io/ChainSpec/LightClient#light-client-block)*
+
+> The RPC returns the LightClientBlock for the block as far into the future from the last known hash as possible for the light client to still accept it. Specifically, it either returns the last final block of the next epoch, or the last final known block. If there's no newer final block than the one the light client knows about, the RPC returns an empty result.
+>
+> A standalone light client would bootstrap by requesting next blocks until it receives an empty result, and then periodically request the next light client block.
+>
+> A smart contract-based light client that enables a bridge to NEAR on a different blockchain naturally cannot request blocks itself. Instead external oracles query the next light client block from one of the full nodes, and submit it to the light client smart contract. The smart contract-based light client performs the same checks described above, so the oracle doesn't need to be trusted.
+
+Block Submitters stake ETH to be allowed to submit blocks which get's slashed if the watchdog identifies blocks with invalid signatures.
+
+*Note: Have not identified how the block submitters are rewarded for submitting blocks. Currently have only identified them locking ETH to be able to submit blocks and being slashed if they submit blocks with invalid signatures.*
+
 
 * [Light Clients are deployed on Ethereum](https://github.com/aurora-is-near/rainbow-bridge/blob/master/cli/index.js#L518) via the CLI using [eth-contracts.js](https://github.com/aurora-is-near/rainbow-bridge/blob/master/cli/init/eth-contracts.js)
     * [init-eth-ed25519](https://github.com/aurora-is-near/rainbow-bridge/blob/master/cli/index.js#L505): Deploys `Ed25519.sol` see more information under [nearbridge Cryptographic Primitives](#nearbridge-cryptographic-primitives)
@@ -622,8 +640,6 @@ The following is a walkthrough of how a transaction executed on NEAR is propogat
 
 #### NEAR to Ethereum watchdog
 The [watchdog](https://github.com/aurora-is-near/rainbow-bridge/blob/master/near2eth/watchdog/index.js) runs every 10 seconds and validates blocks on `NearBridge.sol` challenging blocks with incorrect signatures. *Note: It uses [heep-prometheus](https://github.com/aurora-is-near/rainbow-bridge/blob/master/utils/http-prometheus.js) for monitoring and storing block and producer information using `gauges` and `counters`.*
-
-*Note: Have not identified how the block submitters are rewarded for submitting blocks. Currently have only identified them locking ETH to be able to submit blocks and being slashed if they submit blocks with invalid signatures.*
 
 * [watchdog is started](https://github.com/aurora-is-near/rainbow-bridge/blob/master/cli/commands/start/watchdog.js) from the CLI
 * [watchdog logic](https://github.com/aurora-is-near/rainbow-bridge/blob/master/near2eth/watchdog/index.js)

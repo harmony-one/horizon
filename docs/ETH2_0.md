@@ -16,14 +16,15 @@ Below are some reference material and a review of Harmony MMR trees and the Near
       - [Transaction Proofs](#transaction-proofs)
       - [References](#references)
     - [Near Rainbow Bridge Ethereum Light Client Walkthrough](#near-rainbow-bridge-ethereum-light-client-walkthrough)
-      - [Ethereum to NEAR block propogation flow](#ethereum-to-near-block-propogation-flow)
-      - [Ethereum to NEAR block propogation components](#ethereum-to-near-block-propogation-components)
+      - [Ethereum to NEAR block propagation flow](#ethereum-to-near-block-propagation-flow)
+      - [Ethereum to NEAR block propagation components](#ethereum-to-near-block-propagation-components)
       - [Ethereum Light Client Finality Update Verify Components](#ethereum-light-client-finality-update-verify-components)
       - [Cryptographic Primitives](#cryptographic-primitives)
     - [Near Rainbow Bridge Near Light Client Walkthrough](#near-rainbow-bridge-near-light-client-walkthrough)
-      - [NEAR to Ethereum block propogation flow](#near-to-ethereum-block-propogation-flow)
+      - [NEAR to Ethereum block propagation costing](#near-to-ethereum-block-propagation-costing)
+      - [NEAR to Ethereum block propagation flow](#near-to-ethereum-block-propagation-flow)
       - [NEAR to Ethereum watchdog](#near-to-ethereum-watchdog)
-      - [NEAR to Ethereum block propogation components](#near-to-ethereum-block-propogation-components)
+      - [NEAR to Ethereum block propagation components](#near-to-ethereum-block-propagation-components)
       - [NEAR Rainbow Bridge Utils](#near-rainbow-bridge-utils)
       - [nearbridge Cryptographic Primitives](#nearbridge-cryptographic-primitives)
     - [Token Transfer Process Flow](#token-transfer-process-flow)
@@ -167,7 +168,7 @@ The following is a walkthrough of how a transaction executed on Ethereum is prop
 * Stores current_sync_committee
 * Stores next_sync_committee
 
-#### Ethereum to NEAR block propogation flow
+#### Ethereum to NEAR block propagation flow
 
 * [Light Clients are deployed on Near](https://github.com/aurora-is-near/rainbow-bridge/blob/master/eth2near/eth2near-block-relay-rs/src/main.rs#L107): 
     * [init_contract](https://github.com/aurora-is-near/rainbow-bridge/blob/master/eth2near/eth2near-block-relay-rs/src/main.rs#L107): The eth2near relayer is called with an argument to initialize the [eth2-client contract](https://github.com/aurora-is-near/rainbow-bridge/blob/master/contracts/near/eth2-client/src/lib.rs)
@@ -212,7 +213,7 @@ The following is a walkthrough of how a transaction executed on Ethereum is prop
                       * `sleep(Duration::from_secs(self.sleep_time_after_submission_secs));`: sleeps for the configured submission sleep time.
         * `if !were_submission_on_iter {thread::sleep(Duration::from_secs(self.sleep_time_on_sync_secs));}`: if there were submissions sleep for however many seconds were configured for sync sleep time.
 
-#### Ethereum to NEAR block propogation components
+#### Ethereum to NEAR block propagation components
 
 * [EthClientContract Wrapper](https://github.com/aurora-is-near/rainbow-bridge/blob/master/eth2near/contract_wrapper/src/eth_client_contract.rs): supports [eth2-client contract](https://github.com/aurora-is-near/rainbow-bridge/blob/master/contracts/near/eth2-client/src/lib.rs) functions `impl EthClientContractTrait for EthClientContract `
     * `fn get_last_submitted_slot(&self) -> u64`
@@ -556,14 +557,23 @@ The following is a walkthrough of how a transaction executed on NEAR is propogat
 
 > Sending assets from NEAR back to Ethereum currently takes a maximum of sixteen hours (due to Ethereum finality times) and costs around $60 (due to ETH gas costs and at current ETH price). These costs and speeds will improve in the near future.
 
-#### NEAR to Ethereum block propogation flow
+#### NEAR to Ethereum block propagation costing
+The following links provide the production Ethereum addresses and blockexplorer views for NearBridge.sol and the ERC20 Locker
+* [Ethereum Mainnet Bridge addresses and parameters](https://github.com/aurora-is-near/rainbow-bridge-client/tree/main/packages/client#ethereum-mainnet-bridge-addresses-and-parameters)
+* [NearBridge.sol on Ethereum Block Explorer](https://etherscan.io/address/0x3fefc5a4b1c02f21cbc8d3613643ba0635b9a873)
+    * [Sample `addLightClientBlock(bytes data)` function call](https://etherscan.io/tx/0xa0fbf1405747dbc1c1bda1227e46bc7c5feac36c0eeaab051022cfdb268e60cc/advanced)
+* [NEAR ERC20Locker on Ethereum Block Explorer](https://etherscan.io/address/0x23ddd3e3692d1861ed57ede224608875809e127f#code)
+
+At time of writing (Oct 26th, 2022). 
+* NEAR Light Client Blocks are propogated every `4 hours`
+* Sample Transaction fee `0.061600109576901025 Ether ($96.56)`
+* Daily Transaction fees cost approximately `$600`
+* *Note: Infrastructure costs for running relayer, watchdog, etc are not included.*
+
+#### NEAR to Ethereum block propagation flow
 [NEAR Light Client Documentation](https://nomicon.io/ChainSpec/LightClient) gives an overview of how light clients work. At a high level the light client needs to fetch at least one block per [epoch](https://docs.near.org/concepts/basics/epoch) i.e. every 42,200 blocks or approxmiately 12 hours. Also Having the LightClientBlockView for block B is sufficient to be able to verify any statement about state or outcomes in any block in the ancestry of B (including B itself).
 
 The current scripts and codebase indicates that a block would be fetched every 30 seconds with a max delay of 10 seconds. It feels that this would be expensive to update Ethereum so frequently. [NEAR's bridge documentation](https://near.org/bridge/) states *Sending assets from NEAR back to Ethereum currently takes a maximum of sixteen hours (due to Ethereum finality times)*. This seems to align with sending light client updates once per NEAR epoch. The block fetch period is configurable in the relayer.
-* [NearBridge.sol on Ethereum Block Explorer]()
-* [NEAR ERC20Locker on Ethereum Block Explorer](https://etherscan.io/address/0x23ddd3e3692d1861ed57ede224608875809e127f#code)
-
-*Below is an excerpt from [NEAR Light Client Block Documentation](https://nomicon.io/ChainSpec/LightClient#light-client-block)*
 
 > The RPC returns the LightClientBlock for the block as far into the future from the last known hash as possible for the light client to still accept it. Specifically, it either returns the last final block of the next epoch, or the last final known block. If there's no newer final block than the one the light client knows about, the RPC returns an empty result.
 >
@@ -578,14 +588,14 @@ Block Submitters stake ETH to be allowed to submit blocks which get's slashed if
 
 * [Light Clients are deployed on Ethereum](https://github.com/aurora-is-near/rainbow-bridge/blob/master/cli/index.js#L518) via the CLI using [eth-contracts.js](https://github.com/aurora-is-near/rainbow-bridge/blob/master/cli/init/eth-contracts.js)
     * [init-eth-ed25519](https://github.com/aurora-is-near/rainbow-bridge/blob/master/cli/index.js#L505): Deploys `Ed25519.sol` see more information under [nearbridge Cryptographic Primitives](#nearbridge-cryptographic-primitives)
-    * [init-eth-client](https://github.com/aurora-is-near/rainbow-bridge/blob/master/cli/index.js#L520): Deploys `NearBridge.sol` see more information under [NEAR to Ethereum block propogation components](#near-to-ethereum-block-propogation-components). It takes the following arguments
+    * [init-eth-client](https://github.com/aurora-is-near/rainbow-bridge/blob/master/cli/index.js#L520): Deploys `NearBridge.sol` see more information under [NEAR to Ethereum block propagation components](#near-to-ethereum-block-propagation-components). It takes the following arguments
         * `ethEd25519Address`: The address of the ECDSA signature checker using Ed25519 curve (see [here](https://nbeguier.medium.com/a-real-world-comparison-of-the-ssh-key-algorithms-b26b0b31bfd9))
         * `lockEthAmount`: The amount that `BLOCK_PRODUCERS` need to deposit (in wei)to be able to provide blocks. This amount will be slashed if the block is challenged and proven not to have a valid signature. Default value is 100000000000000000000 WEI = 100 ETH.
         * `lockDuration` : 30 seconds
         * `replaceDuration`: 60 seconds it is passed in nanoseconds, because it is a difference between NEAR timestamps.
         * `ethAdminAddress`: Bridge Administrator Address
         * `0` : Indicates nothing is paused `UNPAUSE_ALL`
-    * [init-eth-prover](https://github.com/aurora-is-near/rainbow-bridge/blob/master/cli/index.js#L538): Deploys `NearProver.sol` see more information under [NEAR to Ethereum block propogation components](#near-to-ethereum-block-propogation-components). It takes the following arguments
+    * [init-eth-prover](https://github.com/aurora-is-near/rainbow-bridge/blob/master/cli/index.js#L538): Deploys `NearProver.sol` see more information under [NEAR to Ethereum block propagation components](#near-to-ethereum-block-propagation-components). It takes the following arguments
         * `ethClientAddress`: Interface to `NearBridge.sol`
         * `ethAdminAddress`: Administrator address
         * `0`: paused indicator defaults to `UNPAUSE_ALL = 0`
@@ -666,7 +676,7 @@ The [watchdog](https://github.com/aurora-is-near/rainbow-bridge/blob/master/near
                     * Refunds half of the funds to the watchdog account `receiver.call{value: lockEthAmount / 2}("");`
             * Sleeps for watchdog Delay seconds `await sleep(watchdogDelay * 1000)`
 
-#### NEAR to Ethereum block propogation components
+#### NEAR to Ethereum block propagation components
 
 * [eth2near-relay](https://github.com/aurora-is-near/rainbow-bridge/blob/master/cli/commands/start/eth2near-relay.js): Command to start the NEAR to Ethereum relay. See sample invocation [here](https://github.com/aurora-is-near/rainbow-bridge/blob/master/docs/development.md#near2eth-relay)
 * [near2eth-block-relay](https://github.com/aurora-is-near/rainbow-bridge/tree/master/near2eth/near2eth-block-relay) is written in javascript

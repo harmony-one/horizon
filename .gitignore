@@ -4,18 +4,21 @@
 */.env
 .env
 */node_modules
+.nvmrc
 /old_contracts
 /back
 build
 cache
+
+# Ignore dag and data ffiles
+data
 */.dag
 */dag*
 */*/.dag/*
 */*/dag/
-.openzeppelin
+#.openzeppelin
 
 node_modules
-build/contracts
 yarn-error.log
 coverage
 coverage.json
@@ -32,10 +35,17 @@ dist/**/*
 # Ignore solidity documentation until code has been documented
 docs/solidity
 
-data/abi
+# Ignore solidity files used for analysis
+docs/slither
+
+# Ignore generated easy to read abi definitions
+docs/abi
 
 # Ignore generated typescript definitions
 typechain
 
 # webstorm
 .idea
+
+# Local Network data
+localgeth/data

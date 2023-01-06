@@ -1,5 +1,3 @@
-import * as dotenv from 'dotenv'
-
 import { HardhatUserConfig, task } from 'hardhat/config'
 import '@nomiclabs/hardhat-etherscan'
 import '@nomiclabs/hardhat-waffle'
@@ -13,12 +11,7 @@ import 'hardhat-spdx-license-identifier'
 import 'hardhat-deploy'
 import '@openzeppelin/hardhat-upgrades'
 
-dotenv.config()
-
-const LOCALNET_PRIVATE_KEY = process.env.LOCALNET_PRIVATE_KEY
-const HARMONY_PRIVATE_KEY = process.env.HARMONY_PRIVATE_KEY
-const PRIVATE_KEY = process.env.PRIVATE_KEY
-const PROJECT_ID = process.env.INFURA_PROJECT_ID
+const config = require('./config.js')
 
 // This is a sample Hardhat task. To learn how to create your own go to
 // https://hardhat.org/guides/create-task.html
@@ -33,14 +26,15 @@ task('accounts', 'Prints the list of accounts', async (taskArgs, hre) => {
 // You need to export an object to set up your config
 // Go to https://hardhat.org/config/ to learn more
 
-const config: HardhatUserConfig = {
+const hardhatUserconfig: HardhatUserConfig = {
     solidity: {
         version: '0.8.9',
         settings: {
             optimizer: {
                 enabled: true,
                 runs: 200
-            }
+            },
+            evmVersion: 'london'
         }
     },
     namedAccounts: {
@@ -58,23 +52,53 @@ const config: HardhatUserConfig = {
                 interval: 2000
             }
         },
-        localnet: {
-            url: 'http://localhost:9500',
-            accounts: [`0x${LOCALNET_PRIVATE_KEY}`],
+        hardhatNode: {
+            url: config.hardhatURL,
+            accounts: [`0x${config.privateKey}`],
             gasPrice: 20000000000,
             gas: 6000000
         },
+        localnet: {
+            url: config.localnetURL,
+            accounts: [`0x${config.privateKey}`],
+            gasPrice: 20000000000,
+            gas: 6000000
+        },
+        devnet: {
+            url: config.devnetURL,
+            accounts: [`0x${config.privateKey}`],
+            chainId: 1666900000,
+            live: true,
+            saveDeployments: true,
+            tags: ['staging'],
+            gas: 2100000,
+            gasPrice: 5000000000,
+            gasMultiplier: 2
+        },
         testnet: {
-            url: 'https://api.s0.b.hmny.io',
-            accounts: [`0x${HARMONY_PRIVATE_KEY}`]
+            url: config.testnetURL,
+            accounts: [`0x${config.privateKey}`],
+            chainId: 1666700000,
+            live: true,
+            saveDeployments: true,
+            tags: ['staging'],
+            gas: 2100000,
+            gasPrice: 5000000000,
+            gasMultiplier: 2
         },
         mainnet: {
-            url: 'https://api.harmony.one',
-            accounts: [`0x${HARMONY_PRIVATE_KEY}`]
+            url: config.mainnetURL,
+            accounts: [`0x${config.privateKey}`]
+        },
+        localgeth: {
+            url: config.localgethURL,
+            accounts: [`0x${config.privateKey}`],
+            gasPrice: 20000000000,
+            gas: 6000000
         },
         ropsten: {
-            url: process.env.ROPSTEN_URL,
-            accounts: [`0x${PRIVATE_KEY}`],
+            url: config.ropstenURL,
+            accounts: [`0x${config.privateKey}`],
             chainId: 3,
             live: true,
             saveDeployments: true,
@@ -82,14 +106,31 @@ const config: HardhatUserConfig = {
             gasPrice: 20000000000,
             gas: 6000000,
             gasMultiplier: 2
+        },
+        sepolia: {
+            url: config.sepoliaURL,
+            accounts: [`0x${config.privateKey}`],
+            chainId: 11155111,
+            live: true,
+            saveDeployments: true,
+            tags: ['staging'],
+            gasPrice: 20000000000,
+            gas: 6000000,
+            gasMultiplier: 2
+        },
+        ethereum: {
+            url: config.ethereumURL,
+            accounts: [`0x${config.privateKey}`],
+            gasPrice: 120 * 1000000000,
+            chainId: 1
         }
     },
     gasReporter: {
-        enabled: process.env.REPORT_GAS !== undefined,
+        enabled: config.reportGas,
         currency: 'USD'
     },
     etherscan: {
-        apiKey: process.env.ETHERSCAN_API_KEY
+        apiKey: config.etherscanAPI
     },
     dodoc: {
         runOnCompile: true,
@@ -97,7 +138,7 @@ const config: HardhatUserConfig = {
         outputDir: 'docs/solidity'
     },
     abiExporter: {
-        path: './data/abi',
+        path: './docs/abi',
         runOnCompile: true,
         clear: true,
         flat: true,
@@ -119,4 +160,4 @@ const config: HardhatUserConfig = {
     }
 }
 
-export default config
+export default hardhatUserconfig

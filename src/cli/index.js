@@ -1,15 +1,15 @@
 const { program } = require('commander')
-const { genearateDagMTreeRange } = require('./ethashProof/DagMtreeEpoch')
+const { genearateDagMTreeRange } = require('../ethashProof/DagMtreeEpoch')
 const {
     getHeaderProof,
     parseRlpHeader,
     getBlockByNumber
-} = require('./ethashProof/BlockProof')
-const { blockRelayLoop } = require('./eth2hmy-relay/elcRelay')
-const { deployELC, statusELC } = require('./elc/contract')
-const { merkelRootSol } = require('./ethashProof/MerkelRootSol')
+} = require('../ethashProof/BlockProof')
+const { blockRelayLoop } = require('./ethRelay.js')
+const { deployELC, statusELC } = require('./elc')
+const { merkelRootSol } = require('../ethashProof/MerkelRootSol')
 const { EProver } = require('../eprover')
-const { deployEVerifier, validateMPTProof } = require('./everifier/contract')
+const { deployEVerifier, validateMPTProof } = require('./everifier')
 const {
     deployBridges,
     tokenMap,
@@ -19,8 +19,9 @@ const {
     deployFaucet,
     ChangeLightClient,
     deployFakeLightClient
-} = require('./bridge/contract')
+} = require('../bridge/contract')
 const fs = require('fs')
+const { Logger } = require('../lib/logger.js')
 
 program.description('Horizon Trustless Bridge CLI')
 
@@ -31,7 +32,7 @@ Dag_CMD.command('generate <epoch_start>')
     .option(
         '-d,--dagDir <dag dir>',
         'direction to store dag merkel tree',
-        './.dag'
+        './data/dag'
     )
     .option('-t,--type <output type>', 'output type: sol,json', 'sol')
     .option('-o,--output <OUTPUT>', 'output file')
@@ -66,7 +67,7 @@ Dag_CMD.command('blockProof')
     .option(
         '-d,--dagDir <dag dir>',
         'direction to store dag merkel tree',
-        './.dag'
+        './data/dag'
     )
     .option('-o,--output <OUTPUT>', 'output file')
     .action(async (options) => {
@@ -129,7 +130,7 @@ ETHRelay_CMD.command('getBlockHeader <ethUrl> <number/hash>')
     .option('-t --type <output format>', 'output format: json/rlp', 'json')
     .action(async (url, block, options) => {
         const header = await getBlockByNumber(url, block)
-        if (options.type == 'rlp') console.log(header.serialize().toString('hex'))
+        if (options.type === 'rlp') console.log(header.serialize().toString('hex'))
         else console.log(header.toJSON())
     })
 
@@ -138,7 +139,7 @@ ETHRelay_CMD.command('relay <ethUrl> <hmyUrl> <elcAddress>')
     .option(
         '-d,--dagDir <dag dir>',
         'direction to store dag merkel tree',
-        './.dag'
+        './data/dag'
     )
     .action(async (ethUrl, hmyUrl, elcAddress, options) => {
         await blockRelayLoop(options.dagDir, ethUrl, hmyUrl, elcAddress)
@@ -179,7 +180,7 @@ CMD_EVerifier.command('verify <ethUrl> <tx_hash> <hmyUrl> <contract address>')
         const proof = await ep.receiptProof(txHash)
         const receiptObj = await validateMPTProof(hmyUrl, evAddress, proof)
         const out =
-      options.type == 'json' ? receiptObj.toJson() : receiptObj.toHex()
+      options.type === 'json' ? receiptObj.toJson() : receiptObj.toHex()
         if (options.output) {
             fs.writeFileSync(options.output, out)
         } else {
@@ -202,13 +203,14 @@ CMD_Bridge.command('deploy <ethUrl> <hmyUrl>')
     )
     .action(async (ethUrl, hmyUrl) => {
         const { ethBridge, hmyBridge } = await deployBridges(ethUrl, hmyUrl)
-        console.log('ethereum bridge address:', ethBridge.contract._address)
-        console.log('harmony bridge address:', hmyBridge.contract._address)
+        console.log('ethereum bridge address:', ethBridge.tokenLocker.address)
+        console.log('harmony bridge address:', hmyBridge.tokenLocker.address)
     })
 
 CMD_Bridge.command('map <ethUrl> <ethBridge> <hmyUrl> <hmyBridge> <token>')
     .description('map ERC20 to HRC20')
     .action(async (ethUrl, ethAddress, hmyUrl, hmyAddress, token) => {
+        Logger.debug('In Bridge Map about to call tokenMap')
         const { ethBridge, hmyBridge } = await tokenMap(
             ethUrl,
             ethAddress,
@@ -216,20 +218,22 @@ CMD_Bridge.command('map <ethUrl> <ethBridge> <hmyUrl> <hmyBridge> <token>')
             hmyAddress,
             token
         )
-
+        Logger.debug('tokenMap succesful')
+        Logger.debug('calling ethBridgeTokenPair')
         const pair = await ethBridge.TokenPair(token)
+        Logger.debug(`pair: ${JSON.stringify(pair)}`)
         const ethTokenInfo = await tokenStatus(
-            ethBridge.web3,
+            ethBridge.ethers,
             pair[0],
-            ethBridge.web3.address
+            ethBridge.ethers.address
         )
-        console.log('ethereum token:', ethTokenInfo)
+        Logger.debug('ethereum token:', ethTokenInfo)
         const hmyTokenInfo = await tokenStatus(
-            hmyBridge.web3,
+            hmyBridge.ethers,
             pair[1],
-            hmyBridge.web3.address
+            hmyBridge.ethers.address
         )
-        console.log('harmony token:', hmyTokenInfo)
+        Logger.debug('harmony token:', hmyTokenInfo)
     })
 
 CMD_Bridge.command(
@@ -250,15 +254,15 @@ CMD_Bridge.command(
 
             const pair = await ethBridge.TokenPair(token)
             const ethTokenInfo = await tokenStatus(
-                ethBridge.web3,
+                ethBridge.ethers,
                 pair[0],
-                ethBridge.web3.address
+                ethBridge.ethers.address
             )
             console.log('ethereum token:', ethTokenInfo)
             const hmyTokenInfo = await tokenStatus(
-                hmyBridge.web3,
+                hmyBridge.ethers,
                 pair[1],
-                hmyBridge.web3.address
+                hmyBridge.ethers.address
             )
             console.log('harmony token:', hmyTokenInfo)
         }
@@ -281,15 +285,15 @@ CMD_Bridge.command(
             )
             const pair = await hmyBridge.TokenPair(token, false)
             const ethTokenInfo = await tokenStatus(
-                ethBridge.web3,
+                ethBridge.ethers,
                 pair[0],
-                ethBridge.web3.address
+                ethBridge.ethers.address
             )
             console.log('ethereum token:', ethTokenInfo)
             const hmyTokenInfo = await tokenStatus(
-                hmyBridge.web3,
+                hmyBridge.ethers,
                 pair[1],
-                hmyBridge.web3.address
+                hmyBridge.ethers.address
             )
             console.log('harmony token:', hmyTokenInfo)
         }
@@ -304,9 +308,9 @@ CMD_Bridge.command('deployFaucet <rpcUrl>')
             await faucet.mint()
         }
         const faucetTokenInfo = await tokenStatus(
-            faucet.web3,
-            faucet.contract._address,
-            faucet.web3.address
+            faucet.ethers,
+            faucet.faucetToken.address,
+            faucet.ethers.address
         )
         console.log(faucetTokenInfo)
     })

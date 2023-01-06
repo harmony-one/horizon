@@ -14,7 +14,10 @@ class EProver {
     }
 
     async receiptProof (txHash) {
+        console.log(`txHash: ${txHash}`)
         const resp = await this.gp.receiptProof(txHash)
+        // const resp = await this.gp.transactionProof(txHash)
+        console.log('Have Proof transaction')
         return {
             hash: sha3(resp.header.serialize()),
             root: resp.header.receiptRoot,

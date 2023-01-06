@@ -1,7 +1,7 @@
 const { expect } = require('chai')
 const { ethers, upgrades } = require('hardhat')
-const block1 = require('./proof1.json')
-const block2 = require('./proof2.json')
+const block1 = require('./data/proof1.json')
+const block2 = require('./data/proof2.json')
 
 function hexToBytes (hex) {
     let bytes

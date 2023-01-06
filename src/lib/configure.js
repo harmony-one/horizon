@@ -1,30 +1,27 @@
 const { ethers } = require('hardhat')
 const Web3 = require('web3')
-require('dotenv').config()
+const config = require('../../config.js')
 
 let tokenLockerOnEthereum, TokenLockerOnEthereum
 let faucetToken, FaucetToken
 const web3 = new Web3(
-    new Web3.providers.HttpProvider(process.env.ETH_NODE_URL)
+    new Web3.providers.HttpProvider(config.ethURL)
 )
 const options = {
-    gasLimit: process.env.GAS_LIMIT,
-    gasPrice: process.env.GAS_PRICE
+    gasLimit: config.gasLimit,
+    gasPrice: config.gasPrice
 }
 
 async function mintFaucet () {
     FaucetToken = await ethers.getContractFactory('FaucetToken')
-    faucetToken = await FaucetToken.attach(process.env.ERC20)
+    faucetToken = await FaucetToken.attach(config.erc20)
 
     await faucetToken.mint()
 }
 
 async function configureEthSide () {
     // set otherside locker to self for testing purpose
-    await tokenLockerOnEthereum.bind(process.env.HMY_TOKEN_LOCKER, options)
-
-    // set lightclient to token locker
-    // await tokenLockerOnEthereum.changeLightClient(process.env.HMY_LIGHT_CLIENT, options);
+    await tokenLockerOnEthereum.bind(config.hmyTokenLocker, options)
 }
 
 // npx hardhat run --network kovan scripts/configure.js
@@ -33,21 +30,10 @@ async function main () {
         'TokenLockerOnEthereum'
     )
     tokenLockerOnEthereum = await TokenLockerOnEthereum.attach(
-        process.env.ETH_TOKEN_LOCKER
+        config.ethTokenLocker
     )
 
     await configureEthSide()
-
-    // await mintFaucet();
-    // let res = await tokenLockerOnEthereum.issueTokenMapReq(process.env.ERC20);
-    // console.log(res);
-
-    // await tokenLockerOnEthereum.lock(
-    //     process.env.ERC20,
-    //     process.env.WALLET_ADDRESS,
-    //     web3.utils.toWei('100', 'ether'),
-    //     options
-    // );
 }
 
 main()

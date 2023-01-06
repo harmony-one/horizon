@@ -1,15 +1,7 @@
-const {
-    BlockHeader
-} = require('@ethereumjs/block')
+const { BlockHeader } = require('@ethereumjs/block')
 const Web3Eth = require('web3-eth')
-const {
-    BN
-} = require('ethereumjs-util')
-const {
-    default: Common,
-    Chain,
-    Hardfork
-} = require('@ethereumjs/common')
+const { BN } = require('ethereumjs-util')
+const { default: Common, Chain, Hardfork } = require('@ethereumjs/common')
 
 const toHex = num => '0x' + (new BN(num)).toString('hex')
 

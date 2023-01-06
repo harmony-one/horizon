@@ -45,20 +45,18 @@ contract TokenRegistry {
         return (TxTokens.length, RxTokens.length);
     }
 
-    function issueTokenMapReq(ERC20Upgradeable thisSideToken)
-        external
-    {
+    function issueTokenMapReq(ERC20Upgradeable thisSideToken) external {
         require(
             TxMapped[address(thisSideToken)] == address(0),
             "token is already mapped"
         );
-        ERC20Upgradeable tokenDetail = thisSideToken;
-        emit TokenMapReq(
-            address(thisSideToken),
-            tokenDetail.decimals(),
-            tokenDetail.name(),
-            tokenDetail.symbol()
-        );
+        // ERC20Upgradeable tokenDetail = thisSideToken;
+        // emit TokenMapReq(
+        //     address(thisSideToken),
+        //     tokenDetail.decimals(),
+        //     tokenDetail.name(),
+        //     tokenDetail.symbol()
+        // );
     }
 
     function onTokenMapReqEvent(bytes32[] memory topics, bytes memory data)
@@ -77,20 +75,14 @@ contract TokenRegistry {
         );
         bytes32 salt = bytes32(uint256(uint160(tokenReq)));
         BridgedToken mintAddress = new BridgedToken{salt: salt}();
-        mintAddress.initialize(
-            name,
-            symbol,
-            decimals
-        );
+        mintAddress.initialize(name, symbol, decimals);
         RxMappedInv[address(mintAddress)] = tokenReq;
         RxMapped[tokenReq] = mintAddress;
         RxTokens.push(mintAddress);
         emit TokenMapAck(tokenReq, address(mintAddress));
     }
 
-    function onTokenMapAckEvent(bytes32[] memory topics)
-        internal
-    {
+    function onTokenMapAckEvent(bytes32[] memory topics) internal {
         address tokenReq = address(uint160(uint256(topics[1])));
         address tokenAck = address(uint160(uint256(topics[2])));
         require(

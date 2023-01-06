@@ -4,42 +4,42 @@ import { ethers, network } from 'hardhat'
 // Constants Definition
 
 describe('TokenLockerOnEthereum', function () {
-  before(async function (this) {
-    [this.deployer, this.relayer, this.alice, this.bob, this.currentTestcarol] = await ethers.getSigners()
-    this.TokenLockerOnEthereum = await ethers.getContractFactory('TokenLockerOnEthereum')
-  })
-  beforeEach(async function (this) {
-    this.snapshotId = await ethers.provider.send('evm_snapshot', [])
-    const TokenLockerOnEthereum = await ethers.getContractFactory('TokenLockerOnEthereum')
-    this.tokenLockerOnEthereum = await TokenLockerOnEthereum.deploy()
-    await this.tokenLockerOnEthereum.deployed()
-    // console.log('TokenLockerOnEthereum deployed to:', this.tokenLockerOnEthereum.address)
-    const tx = await this.tokenLockerOnEthereum.initialize()
-    await ethers.provider.waitForTransaction(tx.hash)
+    before(async function (this) {
+        [this.deployer, this.relayer, this.alice, this.bob, this.currentTestcarol] = await ethers.getSigners()
+        this.TokenLockerOnEthereum = await ethers.getContractFactory('TokenLockerOnEthereum')
+    })
+    beforeEach(async function (this) {
+        this.snapshotId = await ethers.provider.send('evm_snapshot', [])
+        const TokenLockerOnEthereum = await ethers.getContractFactory('TokenLockerOnEthereum')
+        this.tokenLockerOnEthereum = await TokenLockerOnEthereum.deploy()
+        await this.tokenLockerOnEthereum.deployed()
+        // console.log('TokenLockerOnEthereum deployed to:', this.tokenLockerOnEthereum.address)
+        const tx = await this.tokenLockerOnEthereum.initialize()
+        await ethers.provider.waitForTransaction(tx.hash)
     // const receipt = await ethers.provider.waitForTransaction(tx.hash)
     // console.log(`receipt: ${JSON.stringify(receipt)}`)
-  })
+    })
 
-  afterEach(async function (this) {
+    afterEach(async function (this) {
     // console.log(`Reverting Snapshot : ${snapshotId}`);
-    await network.provider.send('evm_revert', [this.snapshotId])
-  })
+        await network.provider.send('evm_revert', [this.snapshotId])
+    })
 
-  describe('TokenLockerOnEthereum Tests', function (this) {
-    it('TokenLockerOnEthereum-1 view functions should work', async function () {
-      expect(await this.tokenLockerOnEthereum.lightclient()).to.equal('0x0000000000000000000000000000000000000000')
-      expect(await this.tokenLockerOnEthereum.owner()).to.equal('0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266')
+    describe('TokenLockerOnEthereum Tests', function (this) {
+        it('TokenLockerOnEthereum-1 view functions should work', async function () {
+            expect(await this.tokenLockerOnEthereum.lightclient()).to.equal('0x0000000000000000000000000000000000000000')
+            expect(await this.tokenLockerOnEthereum.owner()).to.equal('0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266')
+        })
+        // Test all update functions by calling them and checking variables and events after calls
+        // For event testing logic see this example repo https://github.com/fvictorio/hardhat-examples/tree/master/reading-events
+        it('TokenLockerOnEthereum-2 update functions should work', async function () {
+            // "function addBlockHeader(bytes,bytes32[4][64],bytes32[][64]) returns (bool)",
+        })
+        it('TokenLockerOnEthereum-3 reverts should work for negative use cases', async function () {
+        })
+        it('TokenLockerOnEthereum-4 complex tests should work', async function () {
+        })
     })
-    // Test all update functions by calling them and checking variables and events after calls
-    // For event testing logic see this example repo https://github.com/fvictorio/hardhat-examples/tree/master/reading-events
-    it('TokenLockerOnEthereum-2 update functions should work', async function () {
-      // "function addBlockHeader(bytes,bytes32[4][64],bytes32[][64]) returns (bool)",
-    })
-    it('TokenLockerOnEthereum-3 reverts should work for negative use cases', async function () {
-    })
-    it('TokenLockerOnEthereum-4 complex tests should work', async function () {
-    })
-  })
 })
 
 /* List of functiona and events to test from data/abi/TokenLockerOnEthereum.json"
